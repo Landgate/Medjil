@@ -1,0 +1,7 @@
+staff_number,staff_type,staff_length,standard_temperature,correction_factor,calibration_date
+27690,Invar,3,19.8,-0.0000048,12/01/2015
+26296,Invar,3,19.8,0.00000381,12/01/2015
+26909,Invar,3,19.8,0.00000706,12/01/2015
+209,Fibreglass,4,25,0.99976,20/11/2017
+210,Fibreglass,4,25,0.99995,14/06/2018
+212,Fibreglass,4,25,0.99961,9/11/2017
