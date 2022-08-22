@@ -1,0 +1,216 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+<article class="post">
+    <!-- <div class="post-header mt-10 text-center mb-3">
+        <h1>Welcome to Landgate's Survey Instrument Calibration website.</h1>
+        <p>You can now easily calibrate your Digital Levelling Staves and Electronic Distance Measurements using this web application.</p>
+        <p>
+            Step {{ wizard.steps.step1 }} of  {{ wizard.steps.count }}
+        </p>
+    </div> -->
+    <div class="post-content">
+
+        <form  class="site-form" action="." method="post" enctype="multipart/form-data">
+            <div class="mb-5 site-form-header bg-indigo-300 rounded px-2">
+                <h2 class="text-center">Create an new Calibration Site</h2>
+            </div>
+            <div class="mb-3 px-2 site-form-header">
+                <p class="text-center text-lg"><u>Step {{ wizard.steps.step1 }} of  {{ wizard.steps.count }}</u></p>
+            </div>
+            {% csrf_token %}
+            <table>
+                {{ wizard.management_form }}
+                    {% if wizard.form.forms %}
+                        {{ wizard.form.management_form }}
+                        {% for form in wizard.form.forms %}
+                            <tr>{{ form }}</tr>
+                        {% endfor %}
+                    {% else %}
+                        {% for field in form %}
+                            <tr>
+                                {% if 'description' in field.name %}
+                                    <td width="25%" style="vertical-align:top">{{ field.label_tag }}</td>
+                                {% else %}
+                                    <td width="25%">{{ field.label_tag }}</td>
+                                {% endif %}
+                                <td width="65%"> 
+                                    {{ field }} 
+                                    {% for error in field.errors %}
+                                        <p class="error error-danger">{{ error }}</p>
+                                    {% endfor %}
+                                    {% if not field.field.widget.attrs.placeholder and field.help_text %}
+                                        <p class="helptext">{{ field.help_text }}</p>
+                                    {% endif %}
+                                    {% for error in form.non_field_errors %}
+                                        <p class="error error-danger">*** {{ error }} ***</p>
+                                        <br>
+                                        <br>
+                                    {% endfor %}
+                                </td>
+                                <td width="10%">
+
+                                    {% if 'country' in field.name %}
+                                        <a href="/calibrationsites/site/country_create" target="_blank" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" onclick="return showAddPopup(this);" id="add_country">&#43;</a>
+                                        <!-- <a href="{% url 'calibrationsites:country_create' %}?next={{request.path}}" class="px-3 py-2 add-button bg-blue-200" target="__blank"><span class="icon-plus">&#43;</span>Add</a> -->
+                                    {% endif %}
+                                    {% if 'state' in field.name %}
+                                    <a href="/calibrationsites/site/state_create" target="_blank" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" onclick="return showAddPopup(this);" id="add_state">&#43;</a>
+                                        <!-- <a href="{% url 'calibrationsites:state_create' %}?next={{request.path}}" class="px-3 py-2 add-button bg-blue-200" target="__blank"><span class="icon-plus">&#43;</span>Add</a> -->
+                                    {% endif %}
+                                    {% if 'locality' in field.name %}
+                                        <a href="/calibrationsites/site/locality_create" target="_blank" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" onclick="return showAddPopup(this);" id="add_locality">&#43;</a>
+                                        <!-- <a href="{% url 'calibrationsites:locality_create' %}?next={{request.path}}" class="px-3 py-2 add-button bg-blue-200" target="__blank"><span class="icon-plus">&#43;</span>Add</a> -->
+                                    {% endif %}
+                                        
+                                </td>
+                            </tr>
+                        {% endfor %}
+                {% endif %}
+            </table>
+
+            {% if request.GET.next %}
+                <input type="hidden" name="next" value="{{ request.GET.next }}">
+            {% endif %}
+            
+            <div class="wizard-button-container">
+				{% if wizard.steps.prev %}
+					<button class="next-button bg-indigo-400 hover:bg-indigo-300 text-base" name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}" formnovalidate> {% trans "<span>&#171;</span> Previous" %}</button>
+                    <!-- <button class="next-button bg-green-500 hover:bg-green-300" name="wizard_goto_step" type="submit" value="{{ wizard.steps.first }}" formnovalidate>{% trans "First" %}</button> -->
+                {% endif %}
+
+				{% if wizard.steps.next %}
+					<button class="next-button bg-green-400 hover:bg-green-300 text-base" type="submit">Next <span>&#187;</span></button>
+					<a href="{% url 'calibrationsites:home' %}" class="cancelbtn bg-red-500 hover:bg-red-300 text-center">Cancel</a>
+				{% else %}
+					<button class="next-button bg-green-400 hover:bg-green-300 text-base" type="submit">Submit <span>&#187;</span></button>
+					<a href="{% url 'calibrationsites:home' %}" class="cancelbtn bg-red-500 hover:bg-red-300 text-center">Cancel</a>
+				{% endif %}
+			</div>
+        </form>
+    </div>
+</article>
+    <script>
+        // Open Pop up
+        function showAddPopup(triggeringLink) {
+            var name = triggeringLink.id.replace(/^add_/, '');
+            href = triggeringLink.href;
+            var win = window.open(href, name, "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=850,width=500,height=400");
+            win.focus();
+            return false;
+        }
+        
+        // Close Pop up
+        function closePopup(win, newID, newRepr) {
+            window.sessionStorage.setItem('id_value',  newID);
+            win.close();
+        }
+
+        const defaultSiteType = document.querySelector('#id_site_form-site_type option[value=""')
+        if (defaultSiteType) {
+          defaultSiteType.setAttribute('class', 'default');
+        }
+        const countryInput = document.getElementById('id_site_form-country')
+        const defaultCountryText = document.querySelector('#id_site_form-country option[value=""')
+      
+        if (defaultCountryText) {
+            defaultCountryText.setAttribute('class', 'default');
+        }
+      
+        const stateInput = document.getElementById('id_site_form-state')
+        const defaultStateText = document.querySelector('#id_site_form-state option[value=""')
+    
+        if (defaultStateText) {
+            defaultStateText.setAttribute('class', 'default');
+        }
+      
+        defaultCountryValue = countryInput.selectedIndex
+
+        // State Select
+        countryInput.addEventListener('change', e => {
+            countryId = e.target.value;    // get the selected country ID from the HTML input
+            var url = `/calibrationsites/get-states-json/${countryId}/`; // set the url of the request with the countryid param
+      
+            // Set option to empty and fill in with default text
+            stateInput.innerHTML = '';
+            stateInput.appendChild(defaultStateText)
+      
+            // Ajax request
+            $.ajax({                       // initialize an AJAX request
+            type: 'GET',                 // request type
+            url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+            data: {
+                  'country': countryId       // add the country id to the GET parameters
+            },
+            success: function (response) {   // `respose` is the return of the `load_cities` view function
+                window.sessionStorage.setItem('countryId',  countryId);
+                const stateData = response.data;
+                stateData.map(item=> {
+                const option = document.createElement('option');
+                option.textContent = item.name;
+                option.setAttribute('value', item.id)
+                stateInput.appendChild(option)
+                })
+            }
+          });
+        });
+      
+        // Locality Select
+        const localityInput = document.getElementById('id_site_form-locality')
+        const defaultLocalityText = document.querySelector('#id_site_form-locality option[value=""')
+      
+        if (defaultLocalityText) {
+          defaultLocalityText.setAttribute('class', 'default');
+        }
+      
+        stateInput.addEventListener('change', e => {
+            stateId = e.target.value;    // get the selected country ID from the HTML input
+            var url = `/calibrationsites/get-locality-json/${stateId}/`; // set the url of the request with the countryid param
+      
+            // Set option to empty and fill in with default text
+            localityInput.innerHTML = '';
+            localityInput.appendChild(defaultLocalityText)
+      
+            // Ajax request
+            $.ajax({                       // initialize an AJAX request
+            type: 'GET',                 // request type
+            url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+            data: {
+                  'state': stateId       // add the country id to the GET parameters
+            },
+            success: function (response) {   // `respose` is the return of the `load_cities` view function
+                window.sessionStorage.setItem('stateId',  stateId);
+                const localityData = response.data;
+                localityData.map(item=> {
+                const option = document.createElement('option');
+                option.textContent = item.name;
+                option.setAttribute('value', item.id)
+                localityInput.appendChild(option)
+                })
+            }
+          });
+        });
+      
+        // const log = console.log;
+        const defaultCompanyText = document.querySelector('#id_site_form-operator option[value=""')
+          if (defaultCompanyText) {
+              defaultCompanyText.setAttribute('class', 'default');
+          }
+
+        // Store Cookie
+        countryItem = window.sessionStorage.getItem('countryId');
+        if (countryItem) {
+            countryInput.selectedIndex = countryItem;
+        }
+
+        stateItem = window.sessionStorage.getItem('stateId');
+        if (stateItem) {
+            stateInput.selectedIndex = stateItem;
+        }
+
+        window.sessionStorage.clear();
+      
+      </script>
+{% endblock %}

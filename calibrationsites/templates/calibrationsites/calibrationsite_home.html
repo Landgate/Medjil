@@ -1,0 +1,196 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+
+
+{% block content %}
+
+<article class="post-plus-sidebar">
+    {% if messages %}
+		<ul class="alert messages">
+		    {% for message in messages %}
+		    <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+		    {% endfor %}
+		</ul>
+		<br>
+	{% endif %}	
+	
+	<div class="left-sidebar px-3">
+		<div class="mt-5">
+			<h3>Search by</h3>
+			<div class="mt-3">
+				<span>Location: </span>
+				<span>
+					<select id = "id_select-state" style="width:150px; padding:0.5rem" name="site-name">
+						{% for site_id, site_name in state_list %}
+							{% if 'None' in site_id %}
+								<option value="" selected class="default">{{ site_name }}</option>
+							{% else %}
+								<option value="{{ site_id }}">{{ site_name }}</option>
+							{% endif %}
+						{% endfor %}
+					</select>
+				</span>
+			</div>
+		</div>
+		
+	</div>
+
+	<div class="main-post">
+		<div class="post-header mt-5 mb-5 px-6">
+			<h1 class="post-title">Welcome to Landgate's Online Survey Instrument Calibration site.</h1>
+			<!-- <p> Users can now easily register a new EDM calibration baseline or a barcode staff calibration range on this website. Specifications are given here <a href="#">here</a>. </p> -->
+			{% if not user.is_authenticated %}
+				<p>Please 
+					<a href="{% url 'accounts:login' %}" class="hover:a a-link">
+						login
+					</a> or 
+					<a href="{% url 'accounts:signup' %}" class="hover:a a-link">
+						signup
+					</a> to register a Calibrate site.</p>
+			{% endif %}
+		</div>
+	
+		<div class="post-content">
+	
+			<div class="mt-10 px-6">
+				<div class="grid-2 mb-5 items-center">
+					<div class="py-2 text-lg font-medium"> Want to register a new calibration site? </div>
+					<div>
+						<a class="px-4 py-2 border-gray-100 bg-green-500 hover:bg-green-400 rounded-md text-sm text-white focus:outline-none focus:shadow-outline transition duration-150 ease-in-out" href="{% url 'calibrationsites:create-site' %}?reset">
+							Click here
+						</a>
+					</div>
+				</div>  
+				 
+				<div>
+					{% if baselines %}
+					<h2>Currently available EDM Baselines</h2>
+					<table id="site-table">
+						<thead>
+							<tr>
+								<th class="px-3 py-1">Sl No.</th>
+								<th class="px-3 py-1">Site Name</th>
+								<th class="px-3 py-1">No of Pillars/Pins</th>
+								<th class="px-3 py-1">Location</th>
+								<th col-index = "state" class="px-3 py-1">State
+								</th>
+								<th class="px-3 py-1">Operator</th>
+								<th class="px-3 py-1">Access Summary</th>
+								<th class="px-3 py-1">Site Config.</th>
+								<th class="px-3 py-1">Last updated</th>
+							</tr>
+						</thead>
+						{% for element in baselines %}
+						<tbody>
+						<tr class="text-left">
+							<td class="text-center">{{ forloop.counter }}</td>
+							<td> <a class="a_link" href="{{ element.get_absolute_url }}">{{ element.site_name }}</a> </td>
+							<td class="text-center"> {{ element.no_of_pillars|floatformat:0 }} </td>
+							<td>{{ element.locality }}</td>
+							<td>{{ element.state.statecode }}</td>
+							<td>{{ element.operator }}</td>
+							<td>
+								{% if element.access_url %}
+									<a href="{{ element.access_url|default_if_none:'#' }}" target="__blank">Click link</a>
+								{% else %}
+									<a href="#">None</a>
+								{% endif %}
+							</td>
+							<td>
+								{% if element.config_url %}
+									<a href="{{ element.config_url|default_if_none:'#' }}" target="__blank">Click link</a>
+								{% else %}
+									<a href="#">None</a>
+								{% endif %}
+							</td>
+							<td>{{ element.modified_on|date:"d/m/Y" }}</td>
+						</tr>
+						</tbody>
+						{% endfor %}
+					</table>
+					{% endif %}
+				</div>
+				<br>
+				<br>
+				<div>
+					{% if staff_ranges %}
+					<h2>Currently available Barcoded Staff Calibration Ranges</h2>
+					<table id="site-table">
+						<thead>
+							<tr>
+								<th class="px-3 py-1">Sl No.</th>
+								<th class="px-3 py-1">Site Name</th>
+								<th class="px-3 py-1">No of Pillars/Pins</th>
+								<th class="px-3 py-1">Location</th>
+								<th col-index = "state" class="px-3 py-1">State
+								</th>
+								<th class="px-3 py-1">Operator</th>
+								<th class="px-3 py-1">Access Summary</th>
+								<th class="px-3 py-1">Pin Configuration</th>
+								<th class="px-3 py-1">Last updated</th>
+							</tr>
+						</thead>
+						{% for element in staff_ranges %}
+						<tbody>
+						<tr class="text-left">
+							<td class="text-center">{{ forloop.counter }}</td>
+							<td> <a class="a_link" href="{{ element.get_absolute_url }}">{{ element.site_name }}</a> </td>
+							<td> {{ element.no_of_pillars|floatformat:0 }} </td>
+							<td>{{ element.locality }}</td>
+							<td>{{ element.state.statecode }}</td>
+							<td>{{ element.operator }}</td>
+							<td>
+								{% if element.access_url %}
+									<a href="{{ element.access_url|default_if_none:'#' }}" target="__blank">Click link</a>
+								{% else %}
+									<a href="#">None</a>
+								{% endif %}
+							</td>
+							<td>
+								{% if element.config_url %}
+									<a href="{{ element.config_url|default_if_none:'#' }}" target="__blank">Click link</a>
+								{% else %}
+									<a href="#">None</a>
+								{% endif %}
+							</td>
+							<td>{{ element.modified_on|date:"d/m/Y" }}</td>
+						</tr>
+						</tbody>
+						{% endfor %}
+					</table>
+					{% endif %}
+				</div>
+			</div>
+			<br> <br>
+			<hr>
+		</div>
+	</div>    
+        
+</article>
+
+<script>
+	var tableElem = document.querySelector("#site-table > tbody > tr:nth-child(1) > td:nth-child(2)").innerHTML
+
+	const stateInput = document.getElementById('id_select-state')
+	stateInput.addEventListener('change', e => {
+		select = e.target
+		stateid = select.value;    // get the selected country ID from the HTML 
+		statetext = select.selectedOptions[0].text;
+		
+		const tableRows = document.querySelectorAll("#site-table > tbody > tr")
+
+		tableRows.forEach(row=>{
+			cell_value = row.querySelector("td:nth-child(5)").innerHTML
+			
+			if (!stateid) {
+				row.style.display = "table-row"
+			} else if (cell_value != statetext) {
+				row.style.display = "none"
+			} else {
+				row.style.display = "table-row"
+			}
+		})
+	})
+</script>
+
+ {% endblock content %}

@@ -1,0 +1,292 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+{% block content %}
+	<article class="post">
+		<div class="post-header mt-12 text-center mb-3">
+			<h1>Welcome to Landgate's Survey Instrument Calibration website.</h1>
+			<p>You can now easily calibrate your Digital Levelling Staves and Electronic Distance Measurements online.</p>
+		</div>
+
+		{% if messages %}
+        <ul class="message-list">
+            {% for message in messages %}
+                <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        <!-- <br> -->
+        {% endif %}
+		
+		<div class="post-content">
+			<div class="tab-wrap">
+				<input id="tab1" type="radio" name="tabs" checked="checked">
+				<label for="tab1">My Profile</label>
+				<input id="tab2" type="radio" name="tabs">
+				<label for="tab2">List of Users</label>
+				{% if request.user.is_staff %}
+					<input id="tab3" type="radio" name="tabs">
+					<label for="tab3">Companies</label>
+				{% endif %}
+				<input id="tab4" type="radio" name="tabs">
+				<label for="tab4">Calibration Records</label>
+				<!-- tab panel -->
+				<section id="content1">
+					<h3>My Info</h3>
+					<p>You can update your information by clicking the update button.</p>
+					<div class="form-container">
+						<table>
+							<tr>
+								<td><strong>My email</strong></td>
+								<td>{{ this_user.email }}</td>
+							</tr>
+							<tr>
+								<td><strong>My name</strong></td>
+								<td>{{ this_user.first_name }} {{ this_user.last_name }}</td>
+							</tr>
+							<tr>
+								<td><strong>My company</strong></td>
+								<td>{{ this_user.company }}</td>
+							</tr>
+							<tr>
+								<td><strong>My last login</strong></td>
+								<td>{{ this_user.last_login }}</td>
+							</tr>
+						</table>
+						<br>
+						<div class="form-container reset-password-container">
+							<a class="ml-5 px-3 py-2 border border-transparent text-sm leading-3 font-medium rounded text-white bg-gray-600 hover:bg-gray-300 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out" href="{% url 'accounts:user_profile' %}">Update my info</a>
+						</div>
+						<br>
+					</div>
+					
+				</section>
+				<section id="content2">
+					<h3>List of Users</h3>
+				  	{% if request.user.is_staff %}
+					  <p>You can update or delete the users.</p>
+					{% else %}
+						<p>All the users in <strong>{{ request.user.company }}</strong>.</p>
+					{% endif %}
+
+					{% if user_page_obj %}
+						<table>
+							<tr>
+								<th>Sl No.</th>
+								<th>Email address</th>
+								<th>Name</th>
+								{% if request.user.is_staff %}
+									<th>Company</th>
+								{% endif %}
+								<!-- <th>Date joined</th> -->
+								<th>Last active</th>
+								<th>Update/Delete</th>
+							</tr>
+							{% for luser in user_page_obj %}
+								<tr> 
+									<td>{{ forloop.counter|add:-1|add:user_page_obj.start_index }}</td>
+									<td>{{ luser.email }}</td>
+									<td>
+										{% if luser.first_name %} 
+										{{ luser.last_name|default_if_none:"" }}, {{ luser.first_name}}
+										{% else %}
+										{{ "" }}
+										{% endif %}
+									</td>
+									{% if request.user.is_staff %}
+										<td>{{ luser.company.company_name }} </td>
+									{% endif %}
+									<!-- <td>{{ luser.date_joined|date }} </td> -->
+									<td>{{ luser.last_login }} </td>
+									<td class="tab-button">
+										  <a class="svg-icon edit" href="{% url 'accounts:user_update_for_admin' luser.email %}" >
+											<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000" class="bi bi-pencil-fill" viewBox="0 0 16 16">
+												<path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/>
+											</svg>
+										</a>
+										<a class="svg-icon trashcan" href="{% url 'accounts:user_delete_for_admin' luser.email %}" >
+											<svg width="16" height="16" viewBox="0 0 16 16" fill="red" class="bi bi-trash" onclick="return confirmation()">
+												<path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+												<path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+										  </svg> </a>
+									</td>
+								</tr>
+								
+							{% endfor %}
+						</table>
+					{% else %}
+						<p> There are currently no users in our system </p>
+					{% endif %}
+					{% if user_page_obj.has_other_pages  %}
+						<div class="pagination">
+							<span class="step-links">
+								{% if user_page_obj.has_previous %}
+									<a href="?page=1">« first</a>
+									<a href="?page={{ page_obj.previous_page_number }}">previous</a>
+								{% endif %}
+						
+								<span class="current">
+									Page {{ user_page_obj.number }} of {{ user_page_obj.paginator.num_pages }}.
+								</span>
+						
+								{% if user_page_obj.has_next %}
+									<a href="?page={{ user_page_obj.next_page_number }}">next</a>
+									<a href="?page={{ user_page_obj.paginator.num_pages }}">last »</a>
+								{% endif %}
+							</span>
+						</div>
+					{% endif %}
+				</section>
+				{% if request.user.is_staff %}
+				<section id="content3">
+					<h3>List of Companies</h3>
+				  	<p>Scroll down to click the pages. Click <a class="a_link" href="{% url 'accounts:company_create' %}" target="__blank">here</a> to create a new record.</p>
+				  	{% if company_page_obj %}
+				  	<table>
+					  	<tr>
+							<th>Sl No.</th>
+						  	<th>Company Name</th>
+						  	<th>Company Abbreviation</th>
+						  	<th>Update or Delete</th>
+					  	</tr>
+					  	{% for c in company_page_obj %}
+						  	<tr> 
+								<td>{{ forloop.counter|add:-1|add:company_page_obj.start_index }}</td>
+								<td>{{ c.company_name }}</td>
+								<td>{{ c.company_abbrev }}</td>
+								<td class="tab-button">
+									<a class="svg-icon edit" href="{% url 'accounts:company_update' c.id %}" >
+										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000" class="bi bi-pencil-fill" viewBox="0 0 16 16">
+											<path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/>
+										</svg>
+									</a>
+									<a class="svg-icon trashcan" href="{% url 'accounts:company_delete' c.id %}">
+										<svg width="16" height="16" viewBox="0 0 16 16" fill="red" class="bi bi-trash" onclick="return confirmation()">
+										<path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+											<path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+										</svg>
+									</a>
+								</td>
+						  	</tr>
+					  	{% endfor %}
+				  	</table>
+			 	 {% else %}
+				  	<p> There are currently no Companies listed in our system </p>
+			  	{% endif %}
+				{% if company_page_obj.has_other_pages  %}
+				  	<div class="pagination">
+						<span class="step-links">
+							{% if company_page_obj.has_previous %}
+								<a class="a_link" href="?page=1"> First</a>
+								<a class="a_link" href="?page={{ page_obj.previous_page_number }}"><span>&#171;</span>Previous</a>
+							{% endif %}
+					
+							<span class="current">
+								Page {{ company_page_obj.number }} of {{ company_page_obj.paginator.num_pages }}
+							</span>
+					
+							{% if company_page_obj.has_next %}
+								<a class="a_link" href="?page={{ company_page_obj.next_page_number }}">Next<span>&#187;</span></a>
+								<a class="a_link" href="?page={{ company_page_obj.paginator.num_pages }}">Last</a>
+							{% endif %}
+						</span>
+					</div>
+				{% endif %}
+			</section>
+			{% endif %}
+			<section id="content4">
+				<h3>My most recent calibration records</h3>
+				<p>Here is a list of my calibrated instruments.</p>
+				<!-- <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur, exercitationem dolore explicabo alias odio quos enim, ullam reiciendis cum autem atque, optio natus quae nisi dolorum? Voluptates sunt iusto harum?</p> -->
+				{% if staff_list %}
+				<h2>Levelling Staves</h2>
+				<table>
+					<tr>
+						<th>Sl No.</th>
+						<th>Job Number</th>
+						<th>Instrument No</th>
+						<th>Model</th>
+						<th>Type</th>
+						<th>Scale Factor</th>
+						<th>Field Book</th>
+						<th>Calibrated on</th>
+						<th>Certificate</th>
+					</tr>
+					{% for element in staff_list %}
+					<tr>
+						<td>{{ forloop.counter }}</td>
+						<td>{{ element.job_number }}</td>
+						<td> <a class="a_link" href="{{ element.inst_staff.get_absolute_url }}">{{ element.inst_staff.staff_number }}</a> </td>
+						<td>{{ element.inst_staff.staff_model.model }} ({{ element.inst_staff.staff_model.make }})</td>
+						<td>{{ element.inst_staff.staff_type|title }}</td>
+						<td>{{ element.scale_factor|stringformat:"1.6f" }}</td>
+						<td>
+							{% if element.field_url %}
+								<a href="{{ element.field_url|default_if_none:'#' }}" target="__blank">Click link</a></td>
+							{% else %}
+								<a href="#">None</a>
+							{% endif %}
+						<td>{{ element.calibration_date }}</td>
+						
+						<td>
+							{% if element.report_url %}
+								<a href="{{ element.report_url|default_if_none:'#' }}" target="__blank">Click here</a>
+							{% elif element.field_book %}
+								<a href="{% url 'staffcalibration:print-report' element.job_number %}" target="__blank">Click here</a>
+							{% endif %}
+						</td>
+					</tr>
+					
+					{% endfor %}
+				</table>
+				{% endif %}
+				<br>
+
+				{% if edm_list %}
+					<h2>Levelling Staves</h2>
+				{% endif %}
+		
+			</section>
+			</div>
+		</div>
+
+		
+
+	</article>
+	
+	<script type="text/javascript">
+		function confirmation() {
+	      return confirm('Are you sure you want to delete this record? You will not be able to retreive the record later.');
+	    }
+	</script>
+
+	<script>
+		var data_tabs = document.querySelectorAll('input[name="tabs"]');
+		for (var i = 0; i < data_tabs.length; i++) {
+			// console.log(data_tabs[i].checked);
+			data_tabs[i].addEventListener('click', function() {
+				this.setAttribute('checked', 'checked');
+				this.checked = true;
+				window.localStorage.setItem("activeTab", this.id)	
+
+			})
+		}
+
+		var activeTab = window.localStorage.getItem('activeTab');
+		if (activeTab) {
+			for (var i = 0; i < data_tabs.length; i++) {
+				if (data_tabs[i].id == activeTab) {
+					data_tabs[i].checked = true;
+				}
+			}
+		}
+
+		let file;
+		function checkFile() {
+		file = document.querySelector('input[type=file]').files[0];
+		if (file.type != '.pdf' | file.type != '.jpg') {
+			file = null;
+		document.getElementById('id_document').remove();
+		}
+		}
+	</script>
+
+{% endblock %}

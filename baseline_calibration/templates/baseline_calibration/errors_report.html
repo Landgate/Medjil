@@ -1,0 +1,53 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+{% load custom_filter_tags %}
+
+
+{% block content %} 
+
+<article class="post">
+    <div class="post-content">
+      {% if messages %}
+        <ul class="message-list">
+          {% for message in messages %}
+            <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+          {% endfor %} </ul>
+        <br>
+      {% endif %}
+    </div>
+    <div class="post-content">
+        <div class="site-form">
+            {% if Check_Errors.Errors|length > 0 %}
+                <div class="text-center">
+                    <h1><B>Data Errors</B></h1>       
+                </div>
+                <div class="flexbox-container_IB">
+                    <div class="flexbox-item_800_IB flexbox-item-left_IB">                       
+                        {% for e in Check_Errors.Errors %}
+                            <p>{{e}}</p> 
+                        {% endfor %}               
+                    </div>
+                </div>
+            {% endif %}
+            
+            {% if Check_Errors.Warnings|length > 0 %}
+                <h2>Data Warnings</h2>
+                <div class="flexbox-container_IB">
+                    <div class="flexbox-item_800_IB flexbox-item-left_IB">                       
+                        {% for w in Check_Errors.Warnings %}
+                            <p>{{forloop.counter}}. {{w}}</p> 
+                        {% endfor %}               
+                    </div>
+                </div>
+            {% endif %}
+            <div class="button-container">
+                <a onclick=history.back() class="submit-button bg-green-500 hover:bg-green-400" style="text-align: center"> &#8678; Back</button>
+                <a href= "{% url 'baseline_calibration:calibration_home' %}" class="submit-button bg-red-500 hover:bg-green-400" style="text-align: center"> Cancel</a>
+            </div>
+        </div>
+    </div>
+</article>
+
+
+{% endblock content %}
+

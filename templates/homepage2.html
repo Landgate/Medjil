@@ -1,0 +1,118 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+
+{% block slideshow %}
+    <div class="slideshow-container">
+        <div class="homeSlides fade">
+            <img src="{% static 'banners/Home Background2.png' %}" alt="Changes to WA's Transfer of Land Act" class="cropped1">
+            <div style="position:absolute; top: 50%; left: 50%; transform: translate(-50%, -50%)">
+                <span role="status" style="visibility: hidden">Slide: 1</span>
+                <h2 class="px-2 bg-gray-200 rounded text-center text-2xl">Welcome to Landgate's Survey Instrument Calibration site.</h2>
+                <!-- <p class="mt-3 mb-4 px-2 bg-gray-500 rounded text-gray-200">You can now easily process and generate calibration certificates for your Levelling Staves and EDMs online.</p> -->
+            </div>
+        </div>
+        <div class="homeSlides fade">
+            <img src="{% static 'banners/Home Background3.png' %}" alt="Changes to WA's Transfer of Land Act" class="cropped1">
+            <div style="position:absolute; top: 50%; left: 50%; transform: translate(-50%, -50%)">
+                <span role="status" style="visibility: hidden">Slide: 1</span>
+                <h2 class="px-2 bg-gray-200 rounded text-center text-2xl">Welcome to Landgate's Survey Instrument Calibration site.</h2>
+                <!-- <p class="mt-3 mb-4 px-2 bg-gray-500 rounded text-gray-200">You can now easily process and generate calibration certificates for your Levelling Staves and EDMs online.</p> -->
+            </div>
+        </div>
+
+        <div class="homeSlides fade">
+            <img src="{% static 'banners/Home Background4.png' %}" alt="Changes to WA's Transfer of Land Act" class="cropped1">
+            <div style="position:absolute; top: 50%; left: 50%; transform: translate(-50%, -50%)">
+                <span role="status" style="visibility: hidden">Slide: 1</span>
+                <h2 class="px-2 bg-gray-200 rounded text-center text-2xl">Welcome to Landgate's Survey Instrument Calibration site.</h2>
+                <!-- <p class="mt-3 mb-4 px-2 bg-gray-500 rounded text-gray-200">You can now easily process and generate calibration certificates for your Levelling Staves and EDMs online.</p> -->
+            </div>
+        </div>
+        <a class="slideshow-prev" onclick="plusSlides(-1)">&#10094;</a>
+        <a class="slideshow-next" onclick="plusSlides(1)">&#10095;</a>
+    </div>
+{% endblock slideshow %}
+
+{% block content %}
+
+<article class="post mt-8 mb-5">
+    <header class="post-header">
+        <h1 class="post-title">
+            <span class="text-gray-900 text-4xl font-extrabold">
+                Landgate's Online Platform 
+            </span>
+            <br>
+            <span class="text-red-600 text-4xl font-bold">
+                to Calibrate
+            </span>
+            <br>
+            <span class="text-gray-900 text-4xl font-extrabold">
+                Surveying Instruments. 
+            </span>
+        </h1>
+    </header>
+    <div class="post-content mt-8">
+        <div class="grid-2">
+            <div class="flex justify-center items-center">
+                <img class="mt-2 mb-2 px-2 py-1"src="{% static 'images/survey-calibration-1-large.jpg' %}" alt="Calibration" width="350" height="auto">
+            </div>
+
+            <div class="flex flex-col justify-start items-center">
+                <p class="text-gray-800">
+                    <span class="text-2xl">
+                        You can now easily process and generate calibration certificates for your Levelling Staves and Electronic Distance Measurements (EDMs) here.
+                    </span>
+                    <br> <br>
+                    <span class="text-lg text-gray-800">
+                        Read the <a href="{% url 'calibrationguide:home' %}" class="a-link">instrument calibration guides</a> before embarking on your calibration fieldwork.  
+                    </span>
+                </p>
+                {% if not user.is_authenticated %}
+                <!-- <br> -->
+                <br>
+                    <a href="{% url 'accounts:signup' %}" class="px-8 py-3 border border-transparent text-lg font-medium leading-4 rounded text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+                        Sign up
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+<script>
+    let slideIndex = 1;
+    showSlides(slideIndex);
+
+    function plusSlides(n) {
+        showSlides(slideIndex += n);
+    }
+
+    function currentSlide(n) {
+        showSlides(slideIndex = n);
+    }
+
+    function showSlides(n) {
+        let i;
+        let slides = document.getElementsByClassName("homeSlides");
+        // let dots = document.getElementsByClassName("dot");
+        if (n > slides.length) {slideIndex = 1}    
+        if (n < 1) {slideIndex = slides.length}
+        for (i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";  
+        }
+        // for (i = 0; i < dots.length; i++) {
+        //     dots[i].className = dots[i].className.replace(" active", "");
+        // }
+        slides[slideIndex-1].style.display = "block";  
+    // dots[slideIndex-1].className += " active";
+    }
+
+    const edmClick = document.getElementById('edm-click')
+
+    edmClick.addEventListener('click', () => {
+        edmClick.style.display = "block";
+    })
+</script>
+
+ {% endblock content %}

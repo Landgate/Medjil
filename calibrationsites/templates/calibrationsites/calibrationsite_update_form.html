@@ -1,0 +1,84 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+
+
+{% block content %}
+
+<article class="post">
+    {% if messages %}
+		<ul class="alert messages">
+		    {% for message in messages %}
+		    <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+		    {% endfor %}
+		</ul>
+		<br>
+	{% endif %}	
+
+    <div class="post-header mt-12 mb-5">
+        <h1 class="post-title">Update the Calibration Site details here.</h1>
+    </div>
+
+    <div class="post-content">
+      <form action="" class="site-form" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <table>
+          <colgroup>
+              <col span="1" width="20%">
+              <col span="1" width="70%">
+              <!-- <col span="1" width="10%"> -->
+          </colgroup>
+          </tr>
+          {% for field in form %}
+            <tr>
+              <td>{{ field.label_tag }}</td> 
+              <td> 
+                  {{ field }} 
+                  <!-- Errors -->
+                  {% for error in field.errors %}
+                      <p class="error error-danger">{{ error }}</p>
+                  {% endfor %}
+                  <!-- Help text -->
+                  {% if not field.field.widget.attrs.placeholder and field.help_text %}
+                      <p class="helptext">{{ field.help_text }}</p>
+                  {% endif %}
+              </td>
+              <!-- <td>
+                {% if 'country' in field.name %}
+                    <a href="{% url 'calibrationsites:country-create' %}?next={{request.path}}" class="px-3 py-2 add-button bg-blue-200"><span class="icon-plus">&#43;</span>Add</a>
+                {% endif %}
+                {% if 'state' in field.name %}
+                    <a href="{% url 'calibrationsites:state-create' %}?next={{request.path}}" class="px-3 py-2 add-button bg-blue-200"><span class="icon-plus">&#43;</span>Add</a>
+                {% endif %}
+                {% if 'locality' in field.name %}
+                    <a href="{% url 'calibrationsites:locality-create' %}?next={{request.path}}" class="px-3 py-2 add-button bg-blue-200"><span class="icon-plus">&#43;</span>Add</a>
+                {% endif %}
+
+              </td> -->
+          </tr>   
+          {% endfor %}
+
+        </table>
+
+          <div class="button-container">
+            <button class="save-button bg-green-500 hover:bg-green-400" type="submit" >Update</button>
+            <span> <a href="{% url 'calibrationsites:home' %}" class="text-blue-500">Cancel</a></span>
+        </div>
+
+      </form>
+    </div>
+</article>
+
+  <script src="{% static 'calibrationsites/calibration_site.js' %}"></script>
+  <!-- <script>
+    document.getElementById('id_site_type').disabled = true;
+    document.getElementById('id_site_name').disabled = true;
+    document.getElementById('id_site_address').disabled = true;
+    document.getElementById('id_country').disabled = true;
+    document.getElementById('id_state').disabled = true;
+    document.getElementById('id_locality').disabled = true;
+    document.getElementById('id_operator').disabled = true;
+    document.getElementById('id_site_type').disabled = true;
+  </script> -->
+  
+{% endblock %}

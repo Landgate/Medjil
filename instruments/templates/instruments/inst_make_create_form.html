@@ -1,0 +1,45 @@
+{% extends 'base_popup.html' %}
+
+{% load static %}
+
+{% block content %}
+<article class="post">
+    <div class="post-header mt-10 text-center mb-3">
+        <h1>Instrument Make Form</h1>
+    </div>
+    <div class="post-content">
+
+    
+    <form method = 'POST' action= '' enctype = "multipart/form-data" class="site-form" name="model_form">
+        {% csrf_token %}
+        <table style="width:70%">
+            {% for field in form %}
+                <tr>
+                    <td width="25%">{{ field.label_tag }} </td>
+                    <td width="50%"> 
+                        {{ field }}  
+                        <!-- Errors -->
+                        {% for error in field.errors %}
+                            <p class="error error-danger">{{ error }}</p>
+                        {% endfor %}
+                        <!-- Help text -->
+                        {% if not field.field.widget.attrs.placeholder and field.help_text %}
+                            <p class="helptext">{{ field.help_text }}</p>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        <!-- {{form.as_table}} -->
+
+        {% if request.GET.next %}
+            <input type="hidden" name="next" value="{{ request.GET.next }}">
+        {% endif %}
+        <div class="button-container">
+            <button class="submit-button bg-green-500 hover:bg-green-400" type="submit" >Save</button>
+        </div>
+    </form>
+    </div>
+</article>
+
+{% endblock %}

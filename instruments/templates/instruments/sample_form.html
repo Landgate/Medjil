@@ -1,0 +1,67 @@
+{% extends 'base_generic.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block content %} 
+
+<article class="post">
+    <!-- <div class="post-header mt-10 text-center mb-3">
+        <h1>Welcome to Landgate's Survey Instrument Calibration website.</h1>
+        <p>You can now easily calibrate your Digital Levelling Staves and Electronic Distance Measurements using this web application.</p>
+    </div> -->
+
+    <div class="post-content">
+        <form action="." method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="card-form">
+                <div class="card-header bg-red-200 px-2">
+                    <h2 class="text-center">Create a Prism</h2>
+                </div>
+                <div class="card-form-body bg-gray-100 px-2">
+                    <!-- {{ form.non_form_errors }} -->
+                    {{ form.non_form_errors }}
+                    <!-- {{ form.as_p }} -->
+                    <table class="bg-gray-100">
+                        {% for field in form %}
+                            <tr>
+                                <td width="25%">{{ field.label_tag }}</td>
+                                <td width="60%"> {{ field }} 
+                                    {% for error in field.errors %}
+                                        <p class="error error-danger">{{ error }}</p>
+                                    {% endfor %}
+                                    {% if not field.field.widget.attrs.placeholder and field.help_text %}
+                                        <p class="helptext">{{ field.help_text }}</p>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                    <h3 class="text-lg">Add Prism Custodian & Photo (if available)</h3>
+                    {{ meta_formset.non_form_errors }}
+                    {{ meta_formset.management_form }}
+                    <div class="px-2 py-2 bg-gray-200 border-dark">
+                        {% for form in meta_formset %}
+                            <div class="flex flex-row justify-start">
+                                <div class="pxl-3">{{form.inst_type.label}}: <span class="pxl-5">{{ form.inst_type }}</span></div>
+                                <div class="pxl-3">{{form.model.label}}: <span class="pxl-3">{{ form.model }}</span></div>
+                            </div>
+                            <hr>
+                            <br>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="button-container">
+                        <button class="submit-button bg-green-500 hover:bg-green-400" type="submit" >Submit</button>
+                    </div>
+                    
+                </div>
+
+                
+            </div>
+            
+        </form>
+    </div>
+
+</article>
+
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+
+
+{% block content %}
+<article class="post">
+  <div class="post-header mt-12 text-center mb-3">
+      <h1>Welcome to Landgate's Survey Instrument Calibration website.</h1>
+      <p> This form allows to register (or modify) a new (or an existing) calibration site - both Barcode Calibration Range or an EDM Baseline.</p>
+  </div>
+  <hr>
+  <br>
+  <div class="post-content">
+
+    <div class="grid-2"> 
+      <div class="text-center text-base">
+          Site Name: <strong>{{ site_id.site_name }} ({{ site_id.state }})</strong>
+      </div>
+      <div class="text-left text-base">
+          Number of Pillars/Pin: <strong id="number_of_pillars">{{ site_id.number_of_pillars|floatformat:0 }}</strong> (<span style="color:red"> {{existingPillarInfo.number_of_existing_pillars}} found </span>)
+          <p>Probable missing Pillars/Pins: <span style="color:red"> {{ existingPillarInfo.missingPillars }} </span></p>
+      </div>
+    </div>
+    <hr>
+    <div>
+      <h2 class="text-center">Add Pillars or Pins to Calibration Site</h2>
+      <form class="site-form" method="post" novalidate>
+        {% csrf_token %}
+        {{ formset.management_form }}
+        <table>
+          <thead>
+              {% for form in formset.forms %}
+                {% if forloop.first %}
+                  {% for field in form %}
+                    <th>{{ field.label_tag }}</th>
+                  {% endfor %}
+                {% endif %}
+          </thead>
+          <tbody>
+                <tr>
+                    {% for field in form %}
+                        <td>{{ field }}</td>
+                    {% endfor %}
+                </tr>
+              {% endfor %}
+          </tbody>
+          
+        </table>
+        <button id="add-form" type="button">Add Row</button>
+        <div class="button-container">
+          <button class="save-button bg-green-500 hover:bg-green-400" type="submit" >Submit</button>
+        </div>
+
+      </form>
+      
+    </div>
+  </div>
+</article>
+
+<script>
+  const displayForms = document.querySelector("#id_form-TOTAL_FORMS")
+  const totalForms = document.querySelector("#id_form-MAX_NUM_FORMS")
+
+  const pillarForm = document.querySelectorAll('tbody>tr')
+  let formNum = pillarForm.length-1
+  // Count
+  var currentlyDisplayForms = parseInt(displayForms.value)
+  const MaxFormsTotal = parseInt(totalForms.value)
+
+  let addButton = document.getElementById('add-form')
+
+  addButton.addEventListener('click', function(){
+    let newForm = pillarForm[0].cloneNode(true)
+    let formRegex = RegExp(`form-(\\d){1}-`,'g')
+    console.log(formRegex)
+    formNum++
+    newForm.innerHTML = newForm.innerHTML.replace(formRegex, `form-${formNum}-`)
+    container.insertBefore(newForm, addButton)
+            
+    totalForms.setAttribute('value', `${formNum+1}`)
+  })
+</script>
+  
+{% endblock %}

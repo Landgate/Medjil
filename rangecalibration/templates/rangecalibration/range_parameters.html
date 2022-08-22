@@ -1,0 +1,206 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+
+{% block content %}
+
+	<article class="post">
+    
+    <div class="post-content">
+      {% if messages %}
+      <ul class="message-list">
+          {% for message in messages %}
+              <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+          {% endfor %}
+      </ul>
+      <br>
+      {% endif %}
+    </div>
+
+    <header class="post-header mt-5">
+      <h2 class="post-title"> Staff Calibration Range Parameters </h2>
+      <p>The range parameters are height differences between adjacent pins (e.g., 1-2, 2-3, etc.) and each height difference is an averaged value from several instances of measurements over a given month (e.g., Jan, Feb, ...). </p>
+      <p>Laboratory calibrated state-of-the-art invar staves are used to measure the height differences using high precision digital levels. The measurements are regularly carried out in order to monitor the stability of the Calibration Site and update the tabulated range parameters.</p>
+    </header>
+    <!-- <hr> -->
+    <br>
+
+    <div class="post-content">
+      <div class="grid-2">
+        <div>
+          <div>Laboratory Name: <strong>{{ site_info.site_name }}</strong></div>
+          <div>Description: {{ site_info.site_type }} </div>
+        </div>
+        <div>
+          <div>Authority Name: <strong>{{ site_info.operator }}</strong></div>
+          <div>Location: {{ site_info.site_address }} </div>
+        </div>
+      </div>
+      <hr> 
+
+      <br>
+
+      <h3> Mean monthly height differences between pillars </h3>
+
+      <table style="table-layout: fixed; width: 100%"> 
+        <!-- Header -->
+        <tr class="text-center">
+          <th class="text-center font-semibold text-base">Pin</th>
+          {% for month in range_values.month %}
+              <th class="text-center font-semibold text-base"> {{ month }}</th>
+          {% endfor %}
+        </tr>
+
+        <!-- Values -->
+        {% for row in range_values.mean %}
+        <tr class="font-medium text-center">
+          <!-- {{ forloop.counter }} -->
+          {% for value in row %}
+            {% if "-" in value %}
+              <td> {{ value }} </td>
+            {% elif value == 0 %}
+              <td></td>
+            {% else %}
+              <td>{{ value|floatformat:5 }}</td>
+            {% endif %}
+          {% endfor %}
+        </tr>
+        {% endfor %}
+
+        <!-- Sum -->
+        <tr class="font-medium text-blue-800 text-center">
+          <td></td>
+          {% for value in range_param.mean %}
+            {% if value != 'NaN' %}
+              <td>{{ value|floatformat:5 }}</td>
+            {% else %} 
+              <td></td>
+            {% endif %}
+          {% endfor %}
+        </tr>
+      </table>
+
+    <br> 
+    
+    <div id="range-chart" class="flex flex-col justify-end items-center">
+      <h3> Monthly deviation from the mean height difference between Pin 1 and 21</h3>
+      <canvas id="myChart"></canvas>
+    </div>
+    
+  </div>
+</article>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+
+
+<script>
+  // Get the chart div
+  const rangeChart = document.getElementById('range-chart');
+  rangeChart.style.width = '85%';
+  rangeChart.style.margin = 'auto';
+
+  let mMonth = {{ range_param.month|safe }}
+  let mDeviation = {{range_param.deviation|safe}}
+  
+  if (mDeviation.length > 0) {
+    
+    let meanDeviation  = mDeviation.map(x => x*1);
+
+    var ctx = document.getElementById('myChart').getContext('2d');
+    Chart.defaults.global.defaultFontColor = 'black';
+    Chart.defaults.global.defaultFontSize = '12';
+    var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+            labels: mMonth, /*['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],*/
+            datasets: [{
+                label: mMonth,
+                data: meanDeviation,/*[12, 19, 3, 5, 2, 3],*/
+                backgroundColor: [
+                    '#00876c',
+                    '#39956a',
+                    '#5ba268',
+                    '#7caf67',
+                    '#9dbb66',
+                    '#bfc669',
+                    '#e2cf6f',
+                    '#e5b95d',
+                    '#e6a250',
+                    '#e68a49',
+                    '#e37248',
+                    '#dd584b',
+                ],
+                borderColor: [
+                    '#00876c',
+                    '#39956a',
+                    '#5ba268',
+                    '#7caf67',
+                    '#9dbb66',
+                    '#bfc669',
+                    '#e2cf6f',
+                    '#e5b95d',
+                    '#e6a250',
+                    '#e68a49',
+                    '#e37248',
+                    '#dd584b',
+                ],
+                pointRadius: 5,
+            }]
+        },
+        options: {
+            responsive: true,
+            legend: {
+              position: 'bottom',
+            },
+            hover: {
+              mode: 'index'
+            },
+            scales: {
+              xAxes: [{
+                display: true,
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Month'
+                }
+              }],
+              yAxes: [{
+                display: true,
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Difference from mean (mm)'
+                }
+              }]
+            },
+            title: {
+              // display: true,
+              // text: 'Difference from mean height difference between Pin 1 & 21 '
+            },
+            tooltips: {
+              custom: function(tooltip) {
+                if (!tooltip) return;
+                // disable displaying the color box;
+                tooltip.displayColors = false;
+              },
+              callbacks: {
+                title: function(tooltipItems, meanDeviation) {
+                  return;
+                },
+                label: function(tooltipItem, meanDeviation) {
+                  // var label = meanDeviation.datasets[tooltipItem.datasetIndex].label || '';
+
+                  // if (label) {
+                  //     label += ': ';
+                  // }
+                  label = tooltipItem.xLabel + ': ' + Math.round(tooltipItem.yLabel * 100) / 100;
+                  return label+=" mm";
+
+                }
+              }
+            }
+        }
+    });
+  } else {
+    rangeChart.style.display = 'none'
+  }
+</script>
+
+{% endblock content %}

@@ -1,0 +1,49 @@
+
+{% extends 'base_generic.html' %}
+
+{% block content %}
+	
+<article class="post mt-5">
+  	<!-- <header class="post-header">
+    	<h1 class="post-title text-center">Update my details </h1>
+  	</header>
+	<hr>
+	<br> -->
+	<div class="post-content">
+		<form class="site-form" method="post">
+			<div class="mb-5 site-form-header bg-indigo-300 rounded px-2">
+                <h2 class="text-center">Create a new company/firm</h2>
+            </div>
+
+			<div class="form-container">
+				{% csrf_token %}
+				<table>
+					{% for field in form %}
+						<tr>
+							<td width="30%">{{ field.label_tag }}</td>
+							<td width="65%"> 
+								{{ field }} 
+								<!-- Errors -->
+								{% for error in field.errors %}
+									<p class="error error-danger">{{ error }}</p>
+								{% endfor %}
+								<!-- Help text -->
+								{% if not field.field.widget.attrs.placeholder and field.help_text %}
+									<p class="helptext">{{ field.help_text }}</p>
+								{% endif %}
+							</td>
+						</tr>
+					{% endfor %}
+				</table>
+				<!-- {{ form }} -->
+		
+			</div>
+	
+			<div class="button-container">
+				<button class="submit-button bg-green-400 hover:bg-green-300 text-base" type="submit" >Submit</button>
+			</div>
+		</form>
+	</div>
+</article>
+
+ {% endblock %}

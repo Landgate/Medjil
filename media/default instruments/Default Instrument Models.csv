@@ -1,0 +1,135 @@
+TYPE,MAKE,MODEL
+edm,Leica,TS 15
+edm,Leica,TS 16
+edm,Leica,TS 30
+edm,Leica,TS 60
+edm,Leica,TCR 703
+edm,Leica,TCR 803
+edm,Leica,TS 03
+edm,Leica,TS 06
+edm,Leica,TS 07
+edm,Leica,TS 10
+edm,Leica,MS 60
+edm,Leica,TS 13
+edm,Leica,Nova TM 60
+edm,Leica,TC 1000
+edm,Leica,TC 1010
+edm,Leica,TC 1100
+edm,Leica,TC 1100 L
+edm,Leica,TC 1101
+edm,Leica,TC 1102
+edm,Leica,TC 1103
+edm,Leica,TC 1105
+edm,Leica,TC 1500
+edm,Leica,TC 1500 L
+edm,Leica,TC 1600
+edm,Leica,TC 1600 i
+edm,Leica,TC 1600 ii
+edm,Leica,TC 1610
+edm,Leica,TC 1700
+edm,Leica,TC 1700 L
+edm,Leica,TC 1800
+edm,Leica,TC 1800 L
+edm,Leica,TC 2000
+edm,Leica,TC 2002
+edm,Leica,TC 2003
+edm,Leica,TCA 1102
+edm,Leica,TCA 1103
+edm,Leica,TCA 1105
+edm,Leica,TCA 1500
+edm,Leica,TCA 2003
+edm,Leica,TCM 1100
+edm,Leica,TCM 1101
+edm,Leica,TCM 1102
+edm,Leica,TCM 1103
+edm,Leica,TCM 1105
+edm,Leica,TCM 1800
+edm,Leica,TCM 1800 L
+edm,Leica,TCR 110
+edm,Leica,TCR 802 U
+edm,Leica,TCR 803 P
+edm,Leica,TCR 803 U
+edm,Leica,TCR 805 P
+edm,Leica,TCR 805 U
+edm,Leica,TCR 1101
+edm,Leica,TCRM 1101
+edm,Leica,TCRM 1102
+edm,Leica,TCRM 1103
+edm,Leica,TCRM 1105
+edm,Leica,TCRP 1201
+edm,Leica,TCRP 1201+
+edm,Leica,TCRP 1202
+edm,Leica,TCRP 1202+
+edm,Leica,TCRP 1203
+edm,Leica,TCRP 1203+
+edm,Leica,TCRP 1205
+edm,Leica,TCRP 1205+
+edm,Leica,TPS 1000
+edm,Leica,TPS 1100
+edm,Leica,TPS 1200
+edm,Nikon       ,XS
+edm,Nikon       ,N 2
+edm,Nikon       ,N5
+edm,Nikon       ,K 2
+edm,Nikon       ,K 5
+edm,Nikon       ,NPL 322+
+edm,Nikon       ,XF
+edm,Nikon       ,XF HP
+edm,Pentax,R 2500NS
+edm,Pentax,W 2800N
+edm,Pentax,R 2505
+edm,Sokkia      ,SET 1X
+edm,Sokkia      ,SET 2X
+edm,Sokkia      ,SET 3X
+edm,Sokkia      ,SET 4X
+edm,Sokkia      ,SET 5X
+edm,Sokkia      ,iM 50
+edm,Sokkia      ,iM 100
+edm,Sokkia      ,FX
+edm,Sokkia      ,iX 600
+edm,Sokkia      ,iX 1200
+edm,Topcon,OS 200
+edm,Topcon,GM 100
+edm,Topcon,OS Series
+edm,Topcon,GM 50
+edm,Topcon,GPT 3500
+edm,Topcon,GTL 1200
+edm,Topcon,GT 1200/600
+edm,Topcon      ,GTL 1000
+edm,Topcon      ,GT 500V
+edm,Topcon      ,IS-3 Series
+edm,Topcon      ,MS AXII
+edm,Trimble,S 5
+edm,Trimble,S 7
+edm,Trimble,S 9 HP
+edm,Trimble,S 9 HP
+edm,Trimble,SX 12
+edm,Trimble,SX 10
+edm,Trimble,C 5
+edm,Trimble,C 3
+edm,Trimble,C 5 HP
+level,Leica,LS 10
+level,Leica,LS 15
+level,Leica,Sprinter 150
+level,Leica,Sprinter 150M
+level,Leica,Sprinter 250M
+level,Leica,DNA 03
+level,Leica,DNA 10
+level,GeoMax,ZDL 700
+level,Trimble,DiNi 0.3
+level,Trimble,DiNi 0.7
+level,Sokkia      ,SDL 1X
+level,Sokkia      ,SDL 30
+level,Sokkia      ,SDL 50
+level,Sokkia      ,B Series
+level,Trimble,DiNi 21
+level,Trimble,DiNi 22
+level,Topcon,DL 502
+level,Topcon,DL 503
+staff,Leica,GSS 111
+staff,Leica,GSS 113
+staff,Leica,GPCL3
+staff,Leica,GKNL4F
+staff,Leica,GKNL4M
+staff,Leica,GTL4M 
+staff,Leica,GTL4C

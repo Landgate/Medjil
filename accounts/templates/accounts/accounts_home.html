@@ -1,0 +1,30 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+{% block content %}
+
+
+<article class="post">
+	<header class="post-header">
+	    <h1 class="post-title">Welcome to our new Staff Calibration app.</h1>
+	</header>
+
+	<div class="post-content">
+		<p> You can now calibrate your barcode staff online. Read the procedures here</p>
+		
+		<br> 
+		{% if not user.is_authenticated %}
+			<p>Please login or signup to manage and calibrate your staff.</p>
+			<div class="single-item-container">
+				<button class="mr-4 px-2 py-1 border border-transparent text-base font-small rounded text-white bg-blue-500 hover:bg-gray-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out" onclick="location.href='/accounts/login/'">Log in</button>
+				or 
+				<button class="ml-4 px-2 py-1 border border-transparent text-base font-small rounded text-white bg-blue-500 hover:bg-gray-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out" onclick="location.href='/accounts/signup/'">Sign up</button>
+			</div>
+		{% endif %}
+		<br> <br>
+
+		<h2> Are you looking to calibrate a staff? Go to <a href="{% url 'staff_calibration:staff_calibrate %}"> Calibrate my staff</a> </h2>
+
+	</div>
+</article>
+
+{% endblock %}

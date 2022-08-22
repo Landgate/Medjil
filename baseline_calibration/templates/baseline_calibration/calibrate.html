@@ -1,0 +1,218 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+
+
+{% block content %} 
+
+<article class="post">
+    <div class="post-header mt-12 text-center mb-3">
+        {% for pg, Header in Headers.items %}
+            <div class="tgl-{{ pg }}" style="display:none;">
+            <h1>{{ Header }}</h1>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="post-content">
+        <form id="PillarSurveyForm" action="" class="site-form" method="post" enctype="multipart/form-data">
+
+            {% csrf_token %}
+            <table>
+                <colgroup>
+                    <col span="1" width="30%">
+                    <col span="1" width="65%">
+                    <col span="1" width="5%">
+                </colgroup>
+                {% for field in form %}
+                    <tr class="tgl-{{ field.field.widget.attrs.class }}" style="display:none;">
+                        {% if field.field.is_checkbox %}                        
+                            <td>{{ field }}</td>                                        
+                            <td> {{ field.label|title }} </td>
+                        {% else %}
+                            <td>{{ field.label_tag|title }}</td>
+                            <td> {{ field }} 
+                                {% if field.name == "accreditation" and field.url %}
+                                    <label for="id_accreditation"><a href="{{ field.url }}" target="_blank">Download Acreditation Certificate &#10515</a></label>
+                                {% endif %}                        
+                                {% if field.name == "fieldnotes_upload" and qs.fieldnotes_upload.file != none %}
+                                    <label id="fieldnotes_link" for="id_fieldnotes_upload"><a href= "{{ qs.fieldnotes_upload.url }}" target="_blank" style="color:blue; cursor: pointer; cursor: hand;"> ...{{ qs.fieldnotes_upload.name|slice:"-50:" }}</a></label>
+                                {% endif %} 
+                            </td>                            
+                        {% endif %}                     
+                        <td>
+                            {% if field.name == "edm" %}
+                                <a href="{% url 'instruments:inst_level_create' %}?next={{request.path}}" class="px-2 py-1 add-button bg-blue-300 hover:bg-blue-200">
+                                    <span class="icon-plus">&#43;</span>Add</a>
+                            {% endif %}
+                            {% if field.name == "prism" %}
+                                <a href="{% url 'instruments:inst_level_create' %}?next={{request.path}}" class="px-2 py-1 add-button bg-blue-300 hover:bg-blue-200">
+                                    <span class="icon-plus">&#43;</span>Add</a>
+                            {% endif %}
+                            {% if field.name == "level" %}
+                                <a href="{% url 'instruments:inst_level_create' %}?next={{request.path}}" class="px-2 py-1 add-button bg-blue-300 hover:bg-blue-200">
+                                    <span class="icon-plus">&#43;</span>Add</a>
+                            {% endif %}
+                            {% if field.name == "staff" %}
+                                <a href="{% url 'instruments:inst_staff_create' %}?next={{request.path}}" class="px-2 py-1 add-button bg-blue-300 hover:bg-blue-200">
+                                    <span class="icon-plus">&#43;</span>Add</a>
+                            {% endif %}
+                            {% if field.name == "thermometer" %}
+                                <a href="{% url 'instruments:inst_level_create' %}?next={{request.path}}" class="px-2 py-1 add-button bg-blue-300 hover:bg-blue-200">
+                                    <span class="icon-plus">&#43;</span>Add</a>
+                            {% endif %}
+                            {% if field.name == "barometer" %}
+                                <a href="{% url 'instruments:inst_level_create' %}?next={{request.path}}" class="px-2 py-1 add-button bg-blue-300 hover:bg-blue-200">
+                                    <span class="icon-plus">&#43;</span>Add</a>
+                            {% endif %}
+                            {% if field.name == "hygrometer" %}
+                                <a href="{% url 'instruments:inst_level_create' %}?next={{request.path}}" class="px-2 py-1 add-button bg-blue-300 hover:bg-blue-200">
+                                    <span class="icon-plus">&#43;</span>Add</a>
+                            {% endif %}
+                            {% if field.name == "uncertainty_budget" %}
+                                <a href="{% url 'baseline_calibration:uc_budget_create' %}"  target="_blank" class="px-2 py-1 add-button bg-blue-300 hover:bg-blue-200">
+                                    <span class="icon-plus">&#43;</span>Add</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                            
+                    {% for error in field.errors %}
+                    <tr class="tgl-{{ field.field.widget.attrs.class }}" style="display:none;">
+                        <td></td>
+                        <td>
+                            <p style="color:Red;">{{ error }}</p>
+                        </td>
+                        <td></td>
+                    </tr>
+                    {% endfor %}
+                            
+                {% endfor %}
+                {% for field in survey_files %}
+                    <tr class="tgl-{{ field.field.widget.attrs.class }}" style="display:none;">
+                        <td>{{ field.label_tag|title }}</td>
+                        <td>
+                            {{ field }}
+                        </td>
+                    </tr>                 
+                {% endfor %}
+            </table>
+            <div class="button-container">
+                <button type="button" id="prevBtn" onclick="nextPrev(-1)" class="submit-button bg-green-500 hover:bg-green-400" style="text-align: center"> &#8678; Back</button>
+                <a href= "{% url 'baseline_calibration:calibration_home' %}" class="submit-button bg-red-500 hover:bg-green-400" style="text-align: center"> Cancel</a>
+                <button type="button" id="nextBtn" onclick="nextPrev(1)" class="submit-button bg-green-500 hover:bg-green-400" >Next &#8680;</button>
+            </div>
+        </form>
+        <div style="margin-left: auto;margin-right: 0;">
+            <h4 id=pgOfpgs>1</h4>
+        </div>
+    </div>
+</article>
+
+<script>
+// Find Current tab and Last tab
+var currentTab = 0;
+{% for field in form %}
+    {% if field.errors %}
+        currentTab = parseInt('{{ field.field.widget.attrs.class }}'.replace('page',''));
+    {% endif %}
+    {% if forloop.last %}
+        const lastTab = parseInt('{{ field.field.widget.attrs.class }}'.replace('page',''));
+    {% endif %}
+{% endfor %}
+showTab(currentTab); // Display the current tab
+console.log(lastTab)
+
+function showTab(n) {
+  // This function will display the specified tab of the form...
+  var x = document.getElementsByClassName("tgl-page"+(n));
+  for (var i = 0; i < x.length; i++) {
+   x[i].style.display = '';
+   }
+  
+  if (n == 0) {
+    document.getElementById("prevBtn").style.display = "none";
+  } else {
+    document.getElementById("prevBtn").style.display = "inline";
+  }
+  if (n == lastTab) {
+    document.getElementById("nextBtn").innerHTML = "Submit";
+  } else {
+    document.getElementById("nextBtn").innerHTML = "Next";
+  }
+  document.getElementById("pgOfpgs").innerHTML = "Page "+ (n+1) + " of " + (lastTab+1);
+}
+
+function nextPrev(n) {
+  // This function will figure out which tab to display
+  var x = document.getElementsByClassName("tgl-page"+(currentTab));
+  // Exit the function if any field in the current tab is invalid:
+  if (n == 1 && !validateForm()) return false;
+  
+  for (var i = 0; i < x.length; i++) {
+   x[i].style.display = 'none';
+   }
+  currentTab = currentTab + n;
+  
+  if (currentTab > lastTab) {
+    document.getElementById("PillarSurveyForm").submit();
+    return false;
+  }
+  showTab(currentTab);
+}
+
+function validateForm() {
+  // This function deals with validation of the form fields
+  var y, i, valid = true;
+  y = document.getElementsByClassName("page"+(currentTab));
+
+  for (i = y.length-1; i > -1; i--) {
+      if (!y[i].checkValidity()) {
+        y[i].reportValidity();
+        valid = false;
+      }
+    }
+
+  return valid; // return the valid status
+}
+
+function tglEdmFile() {
+  // This function will hide/unhide the EDM file select
+  var chk = document.getElementById("id_change_edm");
+  var slct = document.getElementById("id_edm_file");
+  var e = document.getElementsByClassName("tgl-edm_file");
+  
+  for (var i = 0; i < e.length; i++) {
+     if (chk.checked) {
+          e[i].style.display = '';
+          slct.type = "text";
+          slct.type = "file";
+      } else {
+          e[i].style.display = 'none';
+      }
+  }
+}
+
+function tglLvlFile() {
+  // This function will hide/unhide the Level file select
+  var chk = document.getElementById("id_change_lvl");
+  var slct = document.getElementById("id_lvl_file");
+  var e = document.getElementsByClassName("tgl-lvl_file");
+  
+  for (var i = 0; i < e.length; i++) {
+     if (chk.checked) {
+          e[i].style.display = '';
+          slct.type = "text";
+          slct.type = "file";
+      } else {
+          e[i].style.display = 'none';
+      }
+  }
+}
+
+function ChgNoteFile() {
+  var lnk = document.getElementById("fieldnotes_link");
+  
+  lnk.textContent = '';
+}
+</script>
+
+
+{% endblock %}

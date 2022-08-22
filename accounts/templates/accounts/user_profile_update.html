@@ -1,0 +1,49 @@
+
+{% extends 'base_generic.html' %}
+
+{% block content %}
+	
+<article class="post">
+	{% if messages %}
+		<ul class="alert messages">
+		    {% for message in messages %}
+		    <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+		    {% endfor %}
+		</ul>
+		<br>
+	{% endif %}	
+
+	<div class="post-content mt-5">
+		{% if form.errors or form.non_field_errors %}
+			<div class="post-content alert error">
+			{% for field in form %}
+				{% for error in field.errors %}
+					<p> {{ error }} </p>
+				{% endfor %}
+			{% endfor %}
+
+			{% for error in form.non_field_errors %}
+				<p> {{ error }} </p>
+			{% endfor %}
+			</div>
+			<br>
+		{% endif %}
+
+		<form class="site-form" method="post">
+			<div class="mb-5 site-form-header bg-indigo-300 rounded px-2">
+                <h2 class="text-center">Update my details</h2>
+            </div>
+
+			<div class="form-container">
+				{% csrf_token %}
+				{{ form }}
+			</div>
+	
+			<div class="button-container">
+				<button class="submit-button bg-green-400 hover:bg-green-300 text-base" type="submit" >Update</button>
+			</div>
+		</form>
+	</div>
+</article>
+
+ {% endblock %}

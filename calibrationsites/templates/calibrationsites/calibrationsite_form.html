@@ -1,0 +1,193 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+
+<article class="post">
+  <div class="post-header mt-12 text-center mb-3">
+      <h2>Welcome to Landgate's Survey Instrument Calibration website.</h2>
+      <p> This form allows to register (or modify) a new (or an existing) calibration site - both Barcode Calibration Range or an EDM Baseline.</p>
+  </div>
+
+  <div class="post-content">
+    <form action="" class="site-form" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      
+      <table>
+        <colgroup>
+            <col span="1" width="20%">
+            <col span="1" width="75%">
+            <col span="1" width="5%">
+        </colgroup>
+        
+        {% for field in form %}
+            <tr>
+                <td>{{ field.label_tag }}</td> 
+                <td> 
+                    {{ field }} 
+                    <!-- Errors -->
+                    {% for error in field.errors %}
+                        <p class="error error-danger">{{ error }}</p>
+                    {% endfor %}
+                    <!-- Help text -->
+                    {% if not field.field.widget.attrs.placeholder and field.help_text %}
+                        <p class="helptext">{{ field.help_text }}</p>
+                    {% endif %}
+                </td>
+                <td>
+                  {% if 'country' in field.name %}
+                      <a href="{% url 'calibrationsites:country-create' %}?next={{request.path}}" class="px-3 py-2 add-button bg-blue-200"><span class="icon-plus">&#43;</span>Add</a>
+                  {% endif %}
+                  {% if 'state' in field.name %}
+                      <a href="{% url 'calibrationsites:state-create' %}?next={{request.path}}" class="px-3 py-2 add-button bg-blue-200"><span class="icon-plus">&#43;</span>Add</a>
+                  {% endif %}
+                  {% if 'locality' in field.name %}
+                      <a href="{% url 'calibrationsites:locality-create' %}?next={{request.path}}" class="px-3 py-2 add-button bg-blue-200"><span class="icon-plus">&#43;</span>Add</a>
+                  {% endif %}
+
+                </td>
+            </tr>   
+            <!-- {% if field.name == "operator" %}
+              <tr id="id_company_name">
+                  <td><label for="company_name" class="text-sm text-blue-500">Company Name:</label> </td>
+                  <td> <input type="text" name="company_name" placeholder="Enter Company name" class="text-blue-500"> </td>
+              </tr>
+              <tr id="id_company_abbr">
+                  <td><label for="company_abbrev" class="text-sm text-blue-500">Abbreviation:</label></td> 
+                  <td><input type="text" name="company_abbrev" placeholder="Enter short name" class="text-blue-500"></td> 
+              </tr>
+            {% endif %}      -->
+            
+        {% endfor %}
+      </table>
+
+        <div class="button-container">
+          <button class="save-button bg-green-500 hover:bg-green-400" type="submit" >Submit</button>
+          <span> <a href="{% url 'calibrationsites:home' %}" class="text-blue-500">Cancel</a></span>
+        </div>
+
+    </form>
+  </div>
+</article>
+
+<script>
+
+  const defaultSiteType = document.querySelector('#id_site_type option[value=""')
+  if (defaultSiteType) {
+    defaultSiteType.setAttribute('class', 'default');
+  }
+  const countryInput = document.getElementById('id_country')
+  const defaultCountryText = document.querySelector('#id_country option[value=""')
+
+  if (defaultCountryText) {
+      defaultCountryText.setAttribute('class', 'default');
+  }
+
+  const stateInput = document.getElementById('id_state')
+  const defaultStateText = document.querySelector('#id_state option[value=""')
+
+  if (defaultStateText) {
+      defaultStateText.setAttribute('class', 'default');
+  }
+
+  
+  // State Select
+  countryInput.addEventListener('change', e => {
+      countryId = e.target.value;    // get the selected country ID from the HTML input
+      var url = `/calibrationsites/get-states-json/${countryId}/`; // set the url of the request with the countryid param
+
+      // Set option to empty and fill in with default text
+      stateInput.innerHTML = '';
+      stateInput.appendChild(defaultStateText)
+
+      // Ajax request
+      $.ajax({                       // initialize an AJAX request
+      type: 'GET',                 // request type
+      url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+      data: {
+            'country': countryId       // add the country id to the GET parameters
+      },
+      success: function (response) {   // `respose` is the return of the `load_cities` view function
+          // console.log(response.data)
+          const stateData = response.data;
+          stateData.map(item=> {
+          const option = document.createElement('option');
+          option.textContent = item.name;
+          option.setAttribute('value', item.id)
+          stateInput.appendChild(option)
+          })
+      }
+    });
+  });
+
+  // Locality Select
+  const localityInput = document.getElementById('id_locality')
+  const defaultLocalityText = document.querySelector('#id_locality option[value=""')
+
+  if (defaultLocalityText) {
+    defaultLocalityText.setAttribute('class', 'default');
+  }
+
+  stateInput.addEventListener('change', e => {
+      stateId = e.target.value;    // get the selected country ID from the HTML input
+      var url = `/calibrationsites/get-locality-json/${stateId}/`; // set the url of the request with the countryid param
+
+      // Set option to empty and fill in with default text
+      localityInput.innerHTML = '';
+      localityInput.appendChild(defaultLocalityText)
+
+      // Ajax request
+      $.ajax({                       // initialize an AJAX request
+      type: 'GET',                 // request type
+      url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+      data: {
+            'state': stateId       // add the country id to the GET parameters
+      },
+      success: function (response) {   // `respose` is the return of the `load_cities` view function
+          // console.log(response.data)
+          const localityData = response.data;
+          localityData.map(item=> {
+          const option = document.createElement('option');
+          option.textContent = item.name;
+          option.setAttribute('value', item.id)
+          localityInput.appendChild(option)
+          })
+      }
+    });
+  });
+
+  // const log = console.log;
+  const defaultCompanyText = document.querySelector('#id_operator option[value=""')
+    if (defaultCompanyText) {
+        defaultCompanyText.setAttribute('class', 'default');
+    }
+
+  //   const companySelect = document.querySelector(`[id="id_operator"]`);
+  //   const newCompanyName = document.getElementById("id_company_name")
+  //   const newCompanyAbbr = document.getElementById("id_company_abbr")
+
+    // Display None
+    // newCompanyName.style.display = "none"
+    // newCompanyAbbr.style.display = "none"
+
+    // companySelect.addEventListener(`change`, (e) => {
+    //     // log(`e.target`, e.target);
+    //     const select = e.target;
+    //     const desc = select.options[select.selectedIndex].text;
+    //     // log(`value desc`, value, desc);
+    //     if (desc=="Others") {
+    //     //   document.getElementById("companyDiv").style.display = "table-row";
+    //     newCompanyName.style.display = "table-row";
+    //     newCompanyAbbr.style.display = "table-row";
+    //     } else {
+    //     //   document.getElementById("companyDiv").style.display = "none";
+    //     newCompanyName.style.display = "none";
+    //     newCompanyAbbr.style.display = "none";
+    //     }
+    // });
+</script>
+  <!-- <script src="{% static 'calibrationsites/calibration_site.js' %}"></script> -->
+ 
+  
+{% endblock %}

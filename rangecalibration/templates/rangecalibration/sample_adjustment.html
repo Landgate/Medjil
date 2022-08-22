@@ -1,0 +1,92 @@
+{% extends 'base_generic.html' %}
+
+<article class="post">
+    
+    <div class="post-content">
+      {% if messages %}
+      <ul class="message-list">
+          {% for message in messages %}
+              <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+          {% endfor %}
+      </ul>
+      <br>
+      {% endif %}
+    </div>
+    <br>
+
+  <div class="page-content">
+    <div class="grid-2"> 
+      <div style="text-align:center">
+        <h1>Staff Calibration Report</h1>
+      </div>
+      <div style="text-align:right">
+        <input class="px-5 py-2 border border-transparent text-base leading-4 font-small rounded-md text-white bg-red-600 hover:bg-red-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out" type="submit" value="Print Report &raquo;"> 
+      </div>
+    </div>
+    <hr>
+    <div class="grid-2">
+      <div>
+        <h2>This test information</h2>
+        <div>
+          Unique ID: {{ observation_id }}
+        </div>
+        <div>
+          Observation Date: {{ observation_date }}
+        </div>
+      </div>
+      <div>
+        <h2>Level &amp; staff details </h2>
+        <div>
+          Staff Number: {{ staff_number }}
+        </div>
+        <div>
+          Level Number: {{ level_number}}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+  <div class="page-content">
+    <h2>Displaying adjusted height differences</h2>
+    <table style="width:100%; margin-left:2em; border-collapse: collapse; font-size:1.2em;  "> 
+      <tr style="border-top:1px solid;border-bottom:1px solid">
+        {% for header in output_ht_diff.headers %}
+            <th> <h4> {{ header }} </h4> </th>
+        {% endfor %}
+      </tr>
+
+      {% for data in output_ht_diff.data %}
+        <tr style="text-align:center;">    
+          {% for value in data %}
+            <td>{{ value }}</td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tr>
+    </table>
+    </div>
+    <hr>
+    <div class="page-content">
+    <h1>Displaying the adjustment </h1>
+    <table style="width:100%; margin-left:2em; border-collapse: collapse; font-size:1.2em; "> 
+      <tr style="border-top:1px solid; border-bottom:1px solid">
+        {% for header in output_adjustement.headers %}
+            <th> <h4> {{ header }} </h4> </th>
+        {% endfor %}
+      </tr>
+
+      {% for data in output_adjustement.data %}
+        <tr style="text-align:center;">    
+          {% for value in data %}
+            <td>{{ value }}</td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tr>
+    </table>
+    </div>
+    <hr>
+</article>
+
+{% endblock content %}

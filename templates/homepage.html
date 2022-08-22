@@ -1,0 +1,218 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+
+{% block slideshow %}
+    <div class="slideshow-container">
+        <div class="homeSlides fade">
+            <img src="{% static 'banners/Home Background2.png' %}" alt="Changes to WA's Transfer of Land Act" class="cropped1">
+            <div style="position:absolute; top: 50%; left: 50%; transform: translate(-50%, -50%)">
+                <span role="status" style="visibility: hidden">Slide: 1</span>
+                <h2 class="px-2 bg-gray-200 rounded text-center text-2xl">Welcome to Landgate's Survey Instrument Calibration site.</h2>
+                <!-- <p class="mt-3 mb-4 px-2 bg-gray-500 rounded text-gray-200">You can now easily process and generate calibration certificates for your Levelling Staves and EDMs online.</p> -->
+            </div>
+        </div>
+        <div class="homeSlides fade">
+            <img src="{% static 'banners/Home Background3.png' %}" alt="Changes to WA's Transfer of Land Act" class="cropped1">
+            <div style="position:absolute; top: 50%; left: 50%; transform: translate(-50%, -50%)">
+                <span role="status" style="visibility: hidden">Slide: 1</span>
+                <h2 class="px-2 bg-gray-200 rounded text-center text-2xl">Welcome to Landgate's Survey Instrument Calibration site.</h2>
+                <!-- <p class="mt-3 mb-4 px-2 bg-gray-500 rounded text-gray-200">You can now easily process and generate calibration certificates for your Levelling Staves and EDMs online.</p> -->
+            </div>
+        </div>
+
+        <div class="homeSlides fade">
+            <img src="{% static 'banners/Home Background4.png' %}" alt="Changes to WA's Transfer of Land Act" class="cropped1">
+            <div style="position:absolute; top: 50%; left: 50%; transform: translate(-50%, -50%)">
+                <span role="status" style="visibility: hidden">Slide: 1</span>
+                <h2 class="px-2 bg-gray-200 rounded text-center text-2xl">Welcome to Landgate's Survey Instrument Calibration site.</h2>
+                <!-- <p class="mt-3 mb-4 px-2 bg-gray-500 rounded text-gray-200">You can now easily process and generate calibration certificates for your Levelling Staves and EDMs online.</p> -->
+            </div>
+        </div>
+        <a class="slideshow-prev" onclick="plusSlides(-1)">&#10094;</a>
+        <a class="slideshow-next" onclick="plusSlides(1)">&#10095;</a>
+    </div>
+{% endblock slideshow %}
+
+{% block content %}
+
+<article class="post-plus-sidebar">
+    <div class="left-sidebar px-3">
+        <div class="mt-10">
+			<h3><a href="#">Instrument Calibration</a></h3>
+			<div class="mt-3">
+                <ul class="tab-nav">EDM Instrument Calibration <span>&#8744;</span>
+                    <li class="pxl-2"><a href="#edm-introduction">Introduction</a></li>
+                    <li class="pxl-2"><a href="#edm-legislation">Controlling Legislation</a> </li>
+                    <li class="pxl-2"><a href="#edm-reg13">Regulation 13 Certificate</a></li>
+                    <li class="pxl-2"><a href="#edm-calibration">EDM Calibration</a></li>
+                </ul>
+                <div class="py-2"></div>
+                <div class="py-2">Bar coded Staff Calibration</div>
+                <div class="py-2">GNSS testing facility</div>
+                <div class="py-2">Meteorological Requirements</div>
+                <div class="py-2">Geodetic News</div>
+			</div>
+		</div>
+    </div>
+    <div class="main-post">
+        {% if messages %}
+            <ul class="alert messages">
+                {% for message in messages %}
+                <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+            <br>
+        {% endif %}	
+    
+        <div class="post-header mt-12 text-center mb-3">
+            <!-- <h1>Welcome to Landgate's Survey Instrument Calibration site.</h1>
+            <p>You can now easily process and generate calibration reports and certificates for your Digital Levelling Staves and Electronic Distance Measurements (EDMs) online.</p> -->
+            {% if not user.is_authenticated %}
+                <p class="text-lg">Please 
+                    <a href="{% url 'accounts:login' %}" class="hover:a">
+                        login
+                    </a> or 
+                    <a href="{% url 'accounts:signup' %}" class="hover:a">
+                        signup
+                    </a> to manage and calibrate your surveying instruments.</p>
+            {% endif %}
+        </div>
+
+        <div class="post-content">
+            <div class="mt-10 px-6">
+                <div>
+                    <h2>EDM Calibration</h2>
+                    <div class="mt-3 bg-blue-200">
+                        <h3 id="edm-introduction">Introduction</h3>
+                        <p>An Electronic Distance Measurement (EDM) instrument is calibrated on a baseline to determine instrument constants and errors.</p>
+                        <p>
+                            A series of measurements on a baseline can also be used to check the performance and reliability of the instrument and to assess its precision against the manufacturer’s claims and specified minimum standards.
+                        </p>
+                        <p>
+                            There are a number of sources of error inherent in EDM equipment. The three most influential systematic errors, which may occur in EDM instruments, are:
+                            <ul class="pxl-7">
+                                <li>zero constant or index error;</li>
+                                <li>scale error; and</li>
+                                <li>cyclic or short periodic error</li>
+                            </ul>
+                        </p>
+                        <p>
+                            It is beyond the scope of this procedure to identify all sources of error inherent in EDM equipment. Surveyors should be aware of the limitations of the equipment they use and ensure that it is well maintained and regularly checked by the manufacturer’s agent.
+                        </p>
+                    </div>
+                    <div class="mt-3 bg-gray-200">
+                        <h3 id="edm-legislation">Controlling Legislation</h3>
+                        <p>
+                            Matters relating to the calibration of measuring equipment are detailed in Regulation 20 of the Licensed Surveyors (General Surveying Practice) Regulation 1961.
+                        </p>
+                    </div>
+                    <div class="mt-3 bg-green-300">
+                        <h3 id="edm-reg13">Regulation 13 Certificate</h3>
+                        <p>
+                            A verifying authority is empowered to issue certificates under Regulation 13 of the National Measurement Act that attest to the calibration of a standard of measurement. Such a certificate is evidence of the matters stated in it and may be received as evidence in any court of law.
+                        </p>
+                        <p>
+                            An increasing number of measurements are being made for regulatory purposes and these require traceability within the meaning of Section 10 of the National Measurement Act. The Surveyor General of Western Australia is a verifying authority for length in this State. Surveyors and other clients requiring this service should contact Survey Services at: 
+                            <ul class="pxl-7">
+                                <li>Phone number: +61 (0)8 9273 7114</li>
+                                <li>Email: geodesy@landgate.wa.gov.au</li>
+                            </ul>
+                        </p>
+                    </div>
+                    <div class="mt-3 bg-orange-100">
+                        <h3 id="edm-calibration">Calibration of Electronic Distance Measurement (EDM)</h3>
+                        <p>The following errors are determined by calibration:</p> 
+                        
+                        <h4>Zero constant or index error</h4>
+                        <p>All distances measured by a particular EDM instrument and reflector combination are subject
+                            to a constant error; caused by three factors:
+                            <ul class="pxl-7">
+                                <li>electrical delays, geometrical detours and eccentricities in the instruments</li> 
+                                <li>differences between the electronic centre and the mechanical centre of the instrument; and </li> <li>differences between the optical and mechanical centres of the reflector. </li> 
+                            </ul>
+                            This error may vary with changes of reflector, or after jolts, or with different instrument mounting
+                            and after service. It is an algebraic constant to be applied directly to every measurement.
+                        </p>
+                        <h4>Scale Error</h4>
+                        <p>Scale error is proportional to the length of the line measured and is caused by:</p>
+                        <ul class="pxl-7">
+                            <li>internal frequency errors, including those caused by external temperature and instrument "warm up" effect; </li>
+                            <li>errors of measured temperature, pressure and humidity which affect the velocity of the signal; and</li>
+                            <li>non-homogeneous emissions/reception patterns from the emitting and receiving diodes (phase in-homogeneities).</li>
+                        </ul>
+
+                        <h4>Cyclic Error</h4>
+                        <p>The precision of an EDM instrument is dependent on the precision of the internal phase measurement.</p>
+                        <p>Unwanted interference either through electronic/optical cross talk or multi-path effects of the transmitted signal onto the received signal causes cyclic error. The major form of the cyclic error is sinusoidal with a wavelength equal to the unit length of the instrument.</p>
+                        <p>The unit length is the scale on which the EDM instrument measures the distance, and is derived from the fine measuring frequency. Unit length is equal to one half of the modulation wavelength (Reference Rueger 1984). The magnitude of the cyclic error can be of the order of 5 - 10 mm, but it will vary depending on the actual length measured.</p>
+                    </div>
+                <div class=post-col2>
+                    <div>
+                        <h2>Levelling Staff Calibration</h2>
+                        <p><strong>Note:</strong> Users are encouraged to read the step-by-step guides and calibrate the bar-coded staves using the nearest available Staff Calibration Range. Click <a href="{% url 'calibrationsites:create-site' %}" target="__blank">here</a> to register a new Staff Calibration Range.</p>
+                        <p>
+                            Digital levels have long replaced spirit (optical) levels and is the most preferred technique for precise levelling. Digital levelling systems offer automated staff readings and digital recording of levelling observations, thereby eliminating reading and booking errors. The levelling system uses an bar-coded staff (or a rod) and a digital level with a capability of reading the bar-coded patterns on the staff and the staff distance.   
+                        </p>
+                        <p>
+                            In addition to requiring proper handling and regular maintenance, these bar-code staves and digital levels must be calibrated on a periodic basis to ensure that the levelling system is reliable and accurate. This Calibration system is used to determine the scale value of any bar-coded levelling staves and works in tandem with a well-calibrated Staff Calibration Range consisting of one or more stable observing pillars (to mount the digital level) and a number of fixed points (steel pins) to set up the bar-coded staff (see below).      
+                        </p>
+                        
+                    </div>
+                </div>
+                <div class="post-col2">
+                    Legal traceability
+                    Surveyors have a legal obligation to ensure that their equipment is standardised (s. 20 of the Survey and Mapping Infrastructure Regulation 2014). For distance measurement, this means that measurements are traceable to the national standard. This can be achieved by doing a comparison test on an electronic distance measurement (EDM) calibration range which has a valid Regulation 13 certificate under the National Measurement Act 1960.
+
+                    Although tests carried out during instrument servicing provide a level of confidence that the equipment is performing correctly, they may not give legal traceability of length measurement.
+
+                    To assist surveyors, we maintain electronic distance measurement equipment (EDME) calibration baselines throughout Queensland.
+                
+                    Calibration baselines
+                    Click on the links below for information on baseline location, design, access and Regulation 13 certificate.
+                    https://www.business.qld.gov.au/industries/building-property-development/surveying/calibration-equipment/mica-creek-edm-baseline
+                    Calibration Fieldnotes
+                    Booking form
+
+                    Calibration processing
+                </div>
+            </div>
+        </div>
+    </div>
+</article>
+
+<script>
+    let slideIndex = 1;
+    showSlides(slideIndex);
+
+    function plusSlides(n) {
+        showSlides(slideIndex += n);
+    }
+
+    function currentSlide(n) {
+        showSlides(slideIndex = n);
+    }
+
+    function showSlides(n) {
+        let i;
+        let slides = document.getElementsByClassName("homeSlides");
+        // let dots = document.getElementsByClassName("dot");
+        if (n > slides.length) {slideIndex = 1}    
+        if (n < 1) {slideIndex = slides.length}
+        for (i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";  
+        }
+        // for (i = 0; i < dots.length; i++) {
+        //     dots[i].className = dots[i].className.replace(" active", "");
+        // }
+        slides[slideIndex-1].style.display = "block";  
+    // dots[slideIndex-1].className += " active";
+    }
+
+    const edmClick = document.getElementById('edm-click')
+
+    edmClick.addEventListener('click', () => {
+        edmClick.style.display = "block";
+    })
+</script>
+
+ {% endblock content %}

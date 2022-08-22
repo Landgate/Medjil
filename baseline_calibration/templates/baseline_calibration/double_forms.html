@@ -1,0 +1,194 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+
+
+{% block content %} 
+
+<article class="post">
+   
+    <div class="flexbox-container_IB">
+    		<div class="flexbox-item_1600_IB">
+		       <template id="id_formset_empty_form">
+		           <tr>
+		                {% for field in formset.empty_form %}
+		                    {% if field.label != "Id" %}
+		                        <td>{{ field }}</td>
+		                    {% endif %}
+		                {% endfor %}
+		                <td><a onclick="deleteRow(this)" style="color:red;cursor:pointer;cursor:hand;">Remove</a></td>
+		                <td>{{ form.id }}</td>
+		           </tr>
+		       </template>     
+		       <form id='id_html_form' style="font-size:10.0pt;width:4500px;" action="" class="site-form" method="post" autocomplete="off">
+		       		<div class="flexbox-item_1600_IB">
+        					<h1 style="text-align:center">{{ Header }}</h1>
+    					</div>		
+		       {% if form.non_field_errors %}
+		            <div class="mt-1 mb-2 non-field-errors">
+		              {% for error in form.non_field_errors %}
+		                <p style="color:Red;">{{ error }}</p>
+		              {% endfor %}
+		            </div>
+		        {% endif %}    
+		            {% csrf_token %}
+		            <div class="flexbox-item_1600_IB">
+		                <table style="font-size:10pt;width:100%">
+		                    <colgroup>
+		                        <col span="1" width="20%">
+		                        <col span="1" width="25%">
+		                        <col span="1" width="35%">
+		                        <col span="1" width="20%">
+		                    </colgroup>
+		                    {% for field in form %}
+		                        <tr>
+		                        <td></td>
+		                            {% if field.field.is_checkbox %}                        
+		                                <td>{{ field }}</td>                                        
+		                                <td>{{ field.label|title }}</td>
+		                            {% else %}
+		                                <td>{{ field.label_tag|title }}</td>
+		                                <td>{{ field }}</td>
+		                            {% endif %}
+		                            <td></td>
+		                        </tr>
+		                        {% for error in field.errors %}
+		                        <tr>
+		                            <td colspan="2">/td>
+		                            <td>
+		                                <p style="color:Red;">{{ error }}</p>
+		                            </td>
+		                        </tr>
+		                        {% endfor %}                            
+		                    {% endfor %}
+		                </table>
+		            </div>
+		            <div class="flexbox-item_1600_IB">
+		                <table id="id_formset_container" style="font-size:10pt;width:100%">
+		                    <colgroup>
+		                        <col span="1" style="width: 15%;">
+		                        <col span="1" style="width: 35%;">
+		                        <col span="1" style="width: 12%;">
+		                        <col span="1" style="width: 5%;">
+		                        <col span="1" style="width: 10%;">
+		                        <col span="1" style="width: 8%;">
+		                        <col span="1" style="width: 6%;">
+		                        <col span="1" style="width: 5%;">
+		                        <col span="1" style="width: 4%;">
+		                    </colgroup>
+		                {{ formset.management_form }}
+		                <tr>
+		                    {% for field in formset|first %}
+		                        {% if field.label != "Id" %}
+		                            <th>{{ field.label|title }}</th>
+		                        {% endif %}
+		                    {% endfor %}
+		                    <th>&nbsp&nbsp Action</th>
+		                </tr>
+		                {% for form in formset %}
+		                    <tr id=data-form-index_{{forloop.counter0}}>
+		                        {% for field in form %}
+		                            {% if field.label != "Id" %}
+		                            <td>{{ field }}</td>
+		                            {% endif %}
+		                        {% endfor %}
+		                        <td>
+		                        		<a onclick="deleteRow(this)" style="color:red;cursor:pointer; cursor:hand;">Remove</a>
+		                        </td>
+		                        <td>                    
+		                    {% if form.errors %}
+		                        <tr>
+		                        {% for field in form %}
+		                            <td>
+		                            {% for error in field.errors %}
+		                                <p style="color:Red;">{{ error }}</p>
+		                            {% endfor %}
+		                            </td>
+		                        </tr>    
+		                        {% endfor %}
+		                     </tr>
+		                    {% endif %}
+		                {% endfor %}                
+		                </table>  
+		                <div>
+		                		<a onclick="addRow()" style="color:blue;cursor:pointer;cursor:hand;">&nbsp&nbsp&#x2B Add new uncertainty</a>
+		                		<p></p>
+		                		<hr style="border-bottom: 1px solid #e0e0e1;">
+		                		<p></p>
+		                </div>             
+		            </div>
+		            <div class="flexbox-item_1600_IB flexbox-item-button_IB">
+		                <a href= "{%url return %}" class="submit-button bg-red-500 hover:bg-green-400" style="text-align: center"> Cancel</a>
+		                <button id="id_formset_submit_button" class="submit-button bg-green-500 hover:bg-green-400" type="submit">Save</button>
+		            </div>                 
+		       </form>
+      	</div>    
+    </div>
+</article>
+
+<script>
+
+const containerFormSet = document.getElementById("id_formset_container").tBodies[0];
+const templateForm = document.getElementById("id_formset_empty_form");
+
+function deleteRow(r) {
+    const inputTotalForms = document.querySelector('input[id$="-TOTAL_FORMS"]');
+    var TotalForms = Number(inputTotalForms.value);
+    const inputInitialForms = document.querySelector('input[id$="-INITIAL_FORMS"]');
+    var InitialForms = Number(inputInitialForms.value);
+    
+    var idx = r.parentNode.parentNode.rowIndex;
+    pk_id = document.getElementById("id_form-"+(idx-1)+"-id");
+    if (pk_id != null) {
+        if (Number(pk_id.value) != 0) {
+            inputInitialForms.value = InitialForms -1;
+        }
+    }
+    
+    containerFormSet.deleteRow(idx);
+    inputTotalForms.value = TotalForms -1;
+
+    // make sure the name indices are consecutive and smaller than
+    // TOTAL_FORMS (the name attributes end up as dict keys on the server)
+    // note we do not need to update the indices in the id attributes etc.
+    for (i = idx-1; i < (inputTotalForms.value); i++) {
+        let formRow = document.getElementById("data-form-index_"+(i+1).toString());
+        formRow.id = "data-form-index_"+(i).toString();
+        for (let formElement of getFormElements(i)){
+            for (let element of formElement.querySelectorAll('input, select')) {
+                if ('name' in element) {
+                    element.name = element.name.replace(
+                        /(?<=\w+-)(__prefix__|\d+)(?=-\w+)/g,
+                        (i).toString());
+                }
+            }
+        }
+    }
+
+    function getFormElements(index) {
+        return containerFormSet.querySelectorAll("#data-form-index_"+(index).toString());
+    }
+}
+
+function addRow() {
+    const inputTotalForms = document.querySelector('input[id$="-TOTAL_FORMS"]');
+    var TotalForms = Number(inputTotalForms.value);
+    
+    inputTotalForms.value = TotalForms +1;
+    
+    const formFragment = templateForm.content.cloneNode(true);
+    
+    for (let element of formFragment.children) {
+        element.innerHTML = element.innerHTML.replace(
+            /(?<=\w+-)(__prefix__|\d+)(?=-\w+)/g,
+            TotalForms.toString());
+        element.id = "data-form-index_"+TotalForms.toString();
+    }
+    
+    containerFormSet.appendChild(formFragment);
+    
+}
+
+
+</script>
+
+{% endblock %}

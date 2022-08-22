@@ -1,0 +1,199 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+
+
+{% block content %} 
+
+<article class="post">
+    <div class="post-header mt-12 text-center mb-3">
+        <h1>Welcome to Landgate's Survey Instrument Calibration website.</h1>
+        <p> This form allows to register (or modify) a new (or an existing) calibration site - both Barcode Calibration Range or an EDM Baseline.</p>
+    </div>
+    <hr>
+    <br>
+    <div class="post-content">
+        <div class="grid-2"> 
+            <div class="text-center text-base">
+                Site Name: <strong>{{ site_id.site_name }} ({{ site_id.state }})</strong>
+            </div>
+            <div class="text-left text-base">
+                Number of Pins: <strong id="number_of_pins">{{ site_id.number_of_pins|floatformat:0 }}</strong> (<span style="color:red"> {{existingPinInfo.number_of_existing_pins}} found </span>)
+                <p>Probable missing pins: <span style="color:red"> {{existingPinInfo.missingPins}} </span></p>
+            </div>
+          </div>
+          <br>
+          {% if messages %}
+            <ul class="message-list text-center py-3 text-lg">
+                {% for message in messages %}
+                    <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+            <!-- <br> -->
+            
+        {% endif %}
+
+          <!-- <div class="alert text-center py-3 bg-red-400 text-gray-100 text-white text-lg" id = "my-alert">
+            
+          </div> -->
+          
+          <form method="post" class="site-form" id="pin-form-container">
+            {% csrf_token %}
+            {{ formset.management_form }}
+            {% for form in formset %}
+            
+            <colgroup>
+                <col span="1" width="15%">
+                <col span="1" width="35%">
+                <col span="1" width="10%">
+                <col span="1" width="35%">
+                <col span="1" width="5%">
+            </colgroup>
+
+            <table id="form-container">
+                <tr class="pin-form">
+                    <td style="display:none">{{ form.site_id.label_tag }}</td>
+                    <td style="display:none"> {{ form.site_id }} 
+                        {% if form.site_id.errors %}
+                            {% for error in form.site_id.errors %}
+                                    <p class="error error-danger">{{ error }}</p>
+                            {% endfor %}
+                        {% else %}
+                            {% if not form.site_id.field.widget.attrs.placeholder and form.site_id.help_text %}
+                                <p class="helptext">{{ form.site_id.help_text }}</p>
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                    <td>{{ form.pin_number.label_tag }}</td>
+                    <td>{{ form.pin_number }}
+                        {% if form.pin_number.errors %}
+                            {% for error in form.pin_number.errors %}
+                                    <p class="error error-danger">{{ error }}</p>
+                            {% endfor %}
+                        {% else %}
+                            {% if not form.pin_number.field.widget.attrs.placeholder and form.pin_number.help_text %}
+                                <p class="helptext">{{ form.pin_number.help_text }}</p>
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                    <td>{{ form.height.label_tag }}</td>
+                    <td>{{ form.height }}
+                        {% if form.height.errors %}
+                            {% for error in form.height.errors %}
+                                    <p class="error error-danger">{{ error }}</p>
+                            {% endfor %}
+                        {% else %}
+                            {% if not form.height.field.widget.attrs.placeholder and form.height.help_text %}
+                                <p class="helptext">{{ form.height.help_text }}</p>
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                    <td class="text-red-400 hover:text-red-500"> <span id="id_form-0-pin-count"></span> of {{ site_id.number_of_pins|floatformat:0 }}</td> 
+                </tr>
+                <!-- {{existingPinInfo.number_of_existing_pins|add:1}} -->
+            </table> 
+            {% endfor %}
+
+            <div class="button-container">
+                {% if existingPinInfo.required_num_of_pins > 1 %}
+                    <button id="add-form" type="button" class="mr-5 addmore-button secondary">Add more</button>
+                {% endif %}
+                <button id="submit-form" class="ml-5 addmore-button primary" type="submit">Submit</button>
+            </div>
+        </form>
+
+        
+    </div>
+</article>
+  
+<script>
+    
+    const siteID = "{{ site_id.id }}"
+    
+    let siteInput = document.querySelectorAll("[id$='-site_id']")
+    siteInput.forEach(site => {
+        site.options.selectedIndex = siteID;
+    })
+    // Number of pins
+    const numberOfPins = document.getElementById('number_of_pins').textContent
+    
+    let currentCount = document.getElementById('id_form-0-pin-count')
+    
+    // console.log(numberOfPins)
+    
+    let pinForm = document.querySelectorAll(".pin-form")
+    let container = document.querySelector("#form-container")
+    let addButton = document.querySelector("#add-form")
+    let totalForms = document.querySelector("#id_form-TOTAL_FORMS")
+    let maxForms = document.querySelector('#id_form-MAX_NUM_FORMS')
+
+    // Numbers
+    const maxFormValue = parseInt(maxForms.value)
+    let totalFormValue = parseInt(totalForms.value)
+    let currentCountValue = parseInt("{{existingPinInfo.number_of_existing_pins}}") + 1
+    // console.log(currentCountValue)
+    // Insert last column
+    currentCount.textContent = currentCountValue
+
+
+    let formNum = pinForm.length-1
+
+    if (addButton) {
+        addButton.addEventListener('click', addForm)
+    }
+    
+    function addForm(e){
+        e.preventDefault()
+        if (totalFormValue < maxFormValue) {
+            
+            let newForm = pinForm[0].cloneNode(true)
+            // console.log(newForm)
+            let formRegex = RegExp(`form-(\\d){1}-`,'g')
+            // console.log(formRegex)
+            formNum++                                       //Increate form number
+
+            // console.log(formNum)
+            totalFormValue++
+            currentCountValue++
+            // update count
+            // currentCount.textContent = currentCountValue;
+
+            newForm.innerHTML = newForm.innerHTML.replace(formRegex, `form-${formNum}-`)
+
+            container.append(newForm)
+            currentCount = document.getElementById(`id_form-${formNum}-pin-count`)
+            currentCount.textContent = currentCountValue
+            // window.sessionStorage.setItem(`id_form-${formNum}-count`,  currentCount.textContent);
+            // container.insertBefore(newForm, addButton)
+            // SITE ID
+            let siteInput = document.getElementById(`id_form-${formNum}-site_id`)
+            siteInput.options.selectedIndex = siteID;
+
+            totalForms.setAttribute('value', `${formNum+1}`)
+            
+        } else {
+            alert('You have reached the maximum number of pins for the site.')
+        }
+    }
+    
+    countColumns = document.querySelector(`[id$='-pin-count'`)
+    pinFormContainer = document.getElementById('pin-form-container')
+
+    
+    function formValidate() {
+        let totalFormValue = document.querySelector("#id_form-TOTAL_FORMS").value
+        totalFormValue = parseInt(totalFormValue)
+        console.log(totalFormValue)
+        additionalPins = maxFormValue - totalFormValue
+        if (additionalPins > 0) {
+            let alertBox = document.getElementById('my-alert')
+            alertBox.innerHTML = "Please add " + additionalPins + " more pin(s)"
+            alertBox.style.display = 'block'
+            // alert("Please add " + additionalPins + " more pin(s)")
+            return false;
+        } 
+        return true;
+    }
+     
+</script>
+
+{% endblock %}

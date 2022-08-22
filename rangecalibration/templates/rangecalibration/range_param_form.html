@@ -1,0 +1,72 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+
+
+{% block content %} 
+
+<article class="post">
+    <div class="post-header mt-12 text-center mb-3">
+        <h1>Welcome to Landgate's Survey Instrument Calibration website.</h1>
+        <p>You can now easily calibrate your Digital Levelling Staves and Electronic Distance Measurements online.</p>
+    </div>
+
+    <div class="post-content">
+
+        <form action="#" class="site-form" method="post">
+
+                {% csrf_token %}
+                <table>
+                    <tr class="form_as_table">
+                        <td width="20%" class="form_label"> <label for="id_site_id">{{ form.site_id.label }}:</label> </td>
+                        <td width="40%" class="form_field"> {{ form.site_id }} </td>
+                        <td width="10%"> <button class="alternative-button primary" type=submit action="pin-create" id="btn-show-calibration">Enter</button></td>
+                    </tr>
+    
+                    </table>
+        </form>
+        
+    </div>
+</article>
+
+<script>
+    // Site Information
+    const siteInput = document.getElementById('id_site_id')
+    const defaultSiteText = document.querySelector('#id_site_id option[value=""')
+
+    if (defaultSiteText) {
+        defaultSiteText.setAttribute('class', 'default');
+        defaultSiteText.setAttribute('value', '');
+    }
+
+    // siteInput.addEventListener('change', e => {
+    //     const selected_site = e.target;
+    //     var site_id = selected_site.value;
+    //     var site_name = selected_site.selectedOptions[0].txt;
+    // })
+    
+    document.getElementById('btn-show-calibration').addEventListener('click', function() {
+        var e = document.getElementById('id_site_id')
+        var site_id = e.options[e.selectedIndex].value;
+        var site_name = e.options[e.selectedIndex].text;
+        alert(text)
+        if (siteId) {
+            // Ajax request
+            $.ajax({                       // initialize an AJAX request
+                type: 'GET',                 // request type
+                url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+                data: {
+                    'site': siteId       // add the country id to the GET parameters
+                },
+                success: function (response) {   // `respose` is the return of the `load_cities` view function
+                    // console.log(response.data)
+                    // const siteData = response.data;
+                    const no_of_pins = response.data.no_of_pins
+                    noOfPinInput.value = no_of_pins
+                }
+            })
+        }
+    })
+
+</script>
+
+{% endblock %}
