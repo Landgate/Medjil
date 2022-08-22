@@ -1,0 +1,255 @@
+/*--FLEXBOX*/
+.flexbox-container_IB {
+    display: flex;
+    justify-content: center;
+}
+
+.flexbox-item_400_IB {
+    width: 400px;
+    /*border: 1px solid black;*/
+    align-items: center;
+}
+
+.flexbox-item_800_IB {
+    width: 800px;
+    /*border: 1px solid red;*/
+    align-items: center;
+}
+
+.flexbox-item_1024_IB {
+    width: 1024px;
+    /*border: 1px solid black;*/
+    align-items: center;
+}
+
+.flexbox-item_1200_IB {
+    width: 1200px;
+    /*border: 1px solid black;*/
+    align-items: center;
+}
+
+.flexbox-item_1600_IB {
+    width: 1600px;
+    /*border: 1px solid black;*/
+    align-items: center;
+}
+
+.flexbox-item-left_IB {
+    text-align: left;
+}
+
+.flexbox-item-right_IB {
+    text-align: right;
+}
+
+.flexbox-item-center_IB {
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+}
+
+.flexbox-item-bottom_IB {
+    vertical-align: bottom;
+}
+
+.flexbox-item-button_IB {
+    display: flex;
+    gap: 1rem;
+    justify-content: space-around;
+    align-items: center;
+}
+
+/*form*/
+.site-form_IB {
+    -webkit-transition: 0.3s box-shadow ease;
+    transition: 0.3s box-shadow ease;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+    width: 85%;
+    list-style: none;
+    margin: 40px auto;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    border: 1px solid green;
+    padding: 1rem;
+    border-radius: 0.25rem;;
+  }
+
+.site-form_IB:hover {
+  /* box-shadow: 0 12px 23px rgba(0, 0, 0, 0.23), 0 10px 10px rgba(0, 0, 0, 0.19); */
+}
+
+/* Full-width input fields */
+.site-form_IB input[type=email],
+.site-form_IB input[type=password],
+.site-form_IB input[type=text], 
+.site-form_IB input[type=number], 
+.site-form_IB input[type=date],
+.site-form_IB input[type=file],
+.site-form_IB select {
+  padding: 8px 8px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+}
+
+.site-form_IB input[type=email],
+.site-form_IB input[type=password],
+.site-form_IB input[type=text], 
+.site-form_IB input[type=number], 
+.site-form_IB input[type=date],
+.site-form_IB input[type=file] {
+  width: 100%;
+}
+
+.site-form_IB select {
+  width: 100%;
+} 
+
+.site-form_IB label {
+  display: block; /*inline-block */
+  width: 95%;
+  padding: 5px;
+  /* margin-bottom: -10px; */
+  margin-top: 5px;
+  font-weight: 400;
+}
+
+.site-form_IB input[type=checkbox] {
+  vertical-align: middle;
+  display: inline-block;
+  height: 2vh;
+  width: 2vh;
+}
+
+.site-form_IB input[type=radio] {
+  /* vertical-align: middle; */
+  display: inline-block;
+}
+  
+/* Set a style for all buttons */
+.site-form_IB button[name=login],
+.site-form_IB button[name=signup]
+.site-form_IB button[name=update] {
+  background-color: #04AA6D;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+}
+
+select {
+  background: #34495E;
+  color: #fff;
+}
+
+select .default {
+  color: #bbb;
+}
+
+.site-form_IB button:hover {
+  opacity: 0.8;
+}
+
+/* Extra styles for the cancel button */
+.site-form_IB .cancelbtn,
+.site-form_IB .next-button,
+.site-form_IB .save-button {
+  width: auto;
+  padding: 7.5px 28px;
+  border: transparent;
+  border-radius: 0.25rem;
+  color: #fff; 
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.site-form_IB .form-container {
+  width: 100%;
+  padding: 16px;
+}
+
+.site-form_IB span.password {
+  float: right;
+  padding-top: 16px;
+}
+
+.errorlist li {
+  list-style-type: none;
+  color: red;
+  font-size: 0.75rem;
+  padding: 5px;
+}
+
+.site-form_IB .helptext {
+  font-size: 0.875rem;
+  color:  #1034a6;
+  opacity: 0.7;
+  font-weight: 400;
+  margin: 0.10rem;
+}
+
+.site-form_IB .button-container {
+  background-color: #f1f1f1;
+  width: 100%;
+  display: flex;
+  padding: 16px;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.site-form_IB .registerbtn-container {
+  width: 100%;
+  display: flex;
+  gap: 0.5rem;
+  padding: 0 0.25rem;
+  justify-content: end;
+  align-items: center;
+}
+
+.site-form_IB .wizard-button-container {
+  background-color: #f1f1f1;
+  width: 100%;
+  display: flex;
+  padding: 16px 40px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.form_as_table {
+  display: flex;
+  width: 100%;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.form_as_table td.form_label {
+  clear: both;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.form_as_table td.form_label {
+  width: auto;
+  margin:0;
+  padding: 0;
+  vertical-align: text-top;
+}
+
+ .form_as_table td.form_field {
+  width: 60%;
+  margin:0;
+  padding: 0;
+  vertical-align: text-top;
+}
+
+td .submit-button { 
+  width:auto;
+  font:inherit; 
+  padding: 0.5rem 1rem !important; 
+  font-weight: 400;
+}

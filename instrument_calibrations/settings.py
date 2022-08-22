@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
+import django_heroku
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 # BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -21,12 +22,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'd%t^naj(!0x3-te!aq@gt=2wze9^oqs=3)k3$_(ng7c4d8bk_%'
-
+# SECRET_KEY = 'd%t^naj(!0x3-te!aq@gt=2wze9^oqs=3)k3$_(ng7c4d8bk_%'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['https://medjil.herokuapp.com/', '127.0.0.1']
 
 # Add Custom user model
 AUTH_USER_MODEL = 'accounts.CustomUser'
@@ -88,12 +89,16 @@ WSGI_APPLICATION = 'instrument_calibrations.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+if 'DATABASE_URL' in os.environ:
+    import dj_database_url
+    DATABASES = {'default': dj_database_url.config()}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR , 'db.sqlite3'),
+        }
     }
-}
 
 #DJANG MESSAGE
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
@@ -143,6 +148,32 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+#SECURITY SETTINGS
+#CSRF Protections
+#CSRF_COOKIE_SECURE = True
+#CSRF_USE_SESSIONS = False
+
+# Delete Sessions
+#SESSION_COOKIE_SECURE=True
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_AGE = 24*3600
+
+# Cross Site Scripting
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# Re-direct non HTTPS requests to HTTPS
+#SECURE_SSL_REDIRECT = True
+
+# CSP Settings
+CSP_SCRIPT_SRC = [
+    "https://cdnjs.cloudflare.com",
+    "https://cdn.jsdelivr.net",
+    "https://code.jquery.com"
+]
+
+CSP_STYLE_SRC = ["https://code.cdn.mozilla.net"]
+
 # Simplified static file serving.
 # https://warehouse.python.org/project/whitenoise/
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
@@ -160,7 +191,10 @@ EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
 
 
 #This is just for testing
-UPLOAD_ROOT = 'C:\\Data\Development\\Instrument Calibration - Testing\\uploads'
+# UPLOAD_ROOT = 'C:\\Data\Development\\Instrument Calibration - Testing\\uploads'
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# settings
+django_heroku.settings(locals())
