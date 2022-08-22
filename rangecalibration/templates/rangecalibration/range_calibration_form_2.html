@@ -1,0 +1,99 @@
+{% extends "base_generic.html" %}
+{% load i18n %}
+
+{% block content %}
+
+<article class="post">
+	
+    <div class="post-content">
+      {% if messages %}
+      <ul class="message-list">
+          {% for message in messages %}
+              <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+          {% endfor %}
+      </ul>
+      <br>
+      {% endif %}
+    </div>
+	<!-- <header class="post-header">
+    	<h2>Range calibration</h2>
+		<p>
+			Step {{ wizard.steps.step1 }} of  {{ wizard.steps.count }}
+		</p>
+    </header>
+     -->
+
+	<div class="post-content">
+		<form class="site-form" action="." method="post" enctype="multipart/form-data">
+			<div class="mb-5 site-form-header bg-indigo-300 rounded px-2">
+                <h2 class="text-center">Range Calibration</h2>
+            </div>
+            <div class="mb-3 px-2 site-form-header">
+                <p class="text-center text-lg"><u>Step {{ wizard.steps.step1 }} of  {{ wizard.steps.count }}</u></p>
+            </div>
+			{% csrf_token %}
+			<table>
+				{{ wizard.management_form }}
+				{% if wizard.form.forms %}
+			        {{ wizard.form.management_form }}
+			        {% for form in wizard.form.forms %}
+			            <tr>{{ form }}</tr>
+			        {% endfor %}
+			    {% else %}
+					<colgroup>
+						<col span="1" width="30%">
+						<col span="2" width="65%">
+						<col span="1" width="5%">
+					</colgroup>
+					{% for field in form %}
+					<tr>
+                        <td>{{ field.label_tag }}</td>
+                        <td> 
+                            {{ field }} 
+                            <!-- Errors -->
+                            {% for error in field.errors %}
+                                <p class="error error-danger">{{ error }}</p>
+                            {% endfor %}
+                            <!-- Help text -->
+                            {% if not field.field.widget.attrs.placeholder and field.help_text %}
+                                <p class="helptext">{{ field.help_text }}</p>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if '_temp_' in field.name %}
+								<strong>&deg;C</strong>
+							{% endif %}       
+                        </td>
+                    </tr>
+					{% endfor %}
+				{% endif %}
+			</table>
+			Important note: Accepts only ASCII files from Leica DNA03 and LS15.
+			<br>
+			<br>
+				
+            <div class="wizard-button-container">
+				{% if wizard.steps.prev %}
+					<button class="next-button bg-indigo-400 hover:bg-indigo-300 text-base" name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}" formnovalidate> {% trans "<span>&#171;</span> Previous" %}</button>
+                    <!-- <button class="next-button bg-green-500 hover:bg-green-300" name="wizard_goto_step" type="submit" value="{{ wizard.steps.first }}" formnovalidate>{% trans "First" %}</button> -->
+                {% endif %}
+
+				{% if wizard.steps.next %}
+					<button class="next-button bg-green-400 hover:bg-green-300 text-base" type="submit">Next <span>&#187;</span></button>
+					<a href="{% url 'rangecalibration:home' %}" class="cancelbtn bg-red-500 hover:bg-red-300 text-center">Cancel</a>
+				{% else %}
+					<button class="next-button bg-green-400 hover:bg-green-300 text-base" type="submit">Submit <span>&#187;</span></button>
+					<a href="{% url 'rangecalibration:home' %}" class="cancelbtn bg-red-500 hover:bg-red-300 text-center">Cancel</a>
+				{% endif %}
+			</div>
+		</form>
+	</div>
+</article>
+
+<script>
+	window.onbeforeunload = function(e) {
+    	return "Are you sure you want to leave?";
+	};
+</script>
+
+{% endblock %}

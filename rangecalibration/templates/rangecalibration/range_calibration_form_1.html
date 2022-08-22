@@ -1,0 +1,200 @@
+{% extends "base_generic.html" %}
+{% load i18n %}
+
+{% block content %}
+
+
+<article class="post">
+
+    <div class="post-content">
+      {% if messages %}
+      <ul class="message-list">
+    		{% for message in messages %}
+              <li 
+			  	{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+				{% if 'safe' in message.tags %}
+				  	{{ message|safe }}
+				{% else %}
+					{{ message }}
+				{% endif %}
+			</li>
+          {% endfor %}
+      </ul>
+      <br>
+      {% endif %}
+    </div>
+
+	<!-- <header class="post-header">
+    	<h2>Range calibration</h2>
+		<p>
+			Step {{ wizard.steps.step1 }} of  {{ wizard.steps.count }}
+		</p>
+    </header> -->
+	
+	<div class="post-content">
+		<form class="site-form" action="." method="post">
+			<div class="mb-5 site-form-header bg-indigo-300 rounded px-2">
+                <h2 class="text-center">Range Calibration</h2>
+            </div>
+            <div class="mb-3 px-2 site-form-header">
+                <p class="text-center text-lg"><u>Step {{ wizard.steps.step1 }} of  {{ wizard.steps.count }}</u></p>
+            </div>
+			{% csrf_token %}
+			<table>
+				{{ wizard.management_form }}
+				{% if wizard.form.forms %}
+			        {{ wizard.form.management_form }}
+			        {% for form in wizard.form.forms %}
+			            <tr>{{ form }}</tr>
+			        {% endfor %}
+			    {% else %}
+
+					<!-- {{ wizard.form }} -->
+					{% for field in wizard.form %}
+						<tr>
+							<td width="30%">{{ field.label_tag }}</td>
+							<td width="60%"> 
+								{{ field }} 
+								<!-- Errors -->
+								{% for error in field.errors %}
+									<p class="error error-danger">{{ error }}</p>
+								{% endfor %}
+								<!-- Help text -->
+								{% if not field.field.widget.attrs.placeholder and field.help_text %}
+									<p class="helptext">{{ field.help_text }}</p>
+								{% endif %}
+							</td>
+							<td width="5%">
+								{% if field.name == 'inst_staff' %}
+									<a href="/instruments/inst_staff_create" target="_blank" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" onclick="return showAddPopup(this);" id="add_country">&#43;</a>
+									<!-- <a href="{% url 'instruments:inst_staff_create' %}?next={{request.path}}" class="px-2 py-1 add-button bg-blue-300 hover:bg-blue-200 "><span class="icon-plus">&#43;</span>Add</a> -->
+								{% elif field.name == 'inst_level' %}
+									<a href="/instruments/inst_level_create_popup" target="_blank" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" onclick="return showAddPopup(this);" id="add_country">&#43;</a>
+									<!-- <a href="{% url 'instruments:inst_level_create' %}?next={{request.path}}" class="px-2 py-1 add-button bg-blue-300 hover:bg-blue-200"><span class="icon-plus">&#43;</span>Add</a> -->
+								{% endif %}    
+							</td>
+						</tr>
+					{% endfor %}
+			    {% endif %} 
+			</table>
+
+			<div class="wizard-button-container">
+				{% if wizard.steps.prev %}
+					<button class="next-button bg-indigo-400 hover:bg-indigo-300 text-base" name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}" formnovalidate> {% trans "<span>&#171;</span> Previous" %}</button>
+                    <!-- <button class="next-button bg-green-500 hover:bg-green-300" name="wizard_goto_step" type="submit" value="{{ wizard.steps.first }}" formnovalidate>{% trans "First" %}</button> -->
+                {% endif %}
+
+				{% if wizard.steps.next %}
+					<button class="next-button bg-green-400 hover:bg-green-300 text-base" type="submit">Next <span>&#187;</span></button>
+					<a href="{% url 'rangecalibration:home' %}" class="cancelbtn bg-red-500 hover:bg-red-300 text-center">Cancel</a>
+				{% else %}
+					<button class="next-button bg-green-400 hover:bg-green-300 text-base" type="submit">Submit <span>&#187;</span></button>
+					<a href="{% url 'rangecalibration:home' %}" class="cancelbtn bg-red-500 hover:bg-red-300 text-center">Cancel</a>
+				{% endif %}
+			</div>
+		</form>
+	</div>
+</article>
+
+<script>
+	// Open Pop up
+	function showAddPopup(triggeringLink) {
+            var name = triggeringLink.id.replace(/^add_/, '');
+            href = triggeringLink.href;
+            var win = window.open(href, name, "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=850,width=850,height=850");
+            win.focus();
+            return false;
+	}
+	
+	// Close Pop up
+	function closePopup(win, newID, newRepr) {
+		window.sessionStorage.setItem('id_value',  newID);
+		win.close();
+	}
+
+	// Site Name
+	var site = document.getElementById('id_prefill_form-site_id')
+    site.addEventListener('change', function() {   
+        if (site.value) {
+            var site_number = site.value;
+            var site_number_text = site.options[site.selectedIndex].text
+            // console.log(site_number, site_number_text);
+            window.sessionStorage.setItem('id_prefill_form-site_id', site_number);
+        }  
+    })
+	// Get Site value
+	const inputSite = window.sessionStorage.getItem('id_prefill_form-site_id')
+    if (inputSite) {
+        var this_site = document.getElementById('id_prefill_form-site_id')
+        this_site.value = inputSite
+    }
+
+	// Instrument Model - Staff
+    var staff = document.getElementById('id_prefill_form-inst_staff')
+    staff.addEventListener('change', function() {   
+        if (staff.value) {
+            var level_number = staff.value;
+            var level_number_text = staff.options[staff.selectedIndex].text
+            // console.log(level_number, level_number_text);
+            window.sessionStorage.setItem('id_prefill_form-inst_staff', level_number);
+        }  
+    })
+	// Get Model
+    const inputStaff = window.sessionStorage.getItem('id_prefill_form-inst_staff')
+    if (inputStaff) {
+        var this_staff = document.getElementById('id_prefill_form-inst_staff')
+        this_staff.value = inputStaff
+    }
+
+	// Instrument Model - Digital Level
+    var level = document.getElementById('id_prefill_form-inst_level')
+    level.addEventListener('change', function() {   
+        if (level.value) {
+            var level_number = level.value;
+            var level_number_text = level.options[level.selectedIndex].text
+            // console.log(level_number, level_number_text);
+            window.sessionStorage.setItem('id_prefill_form-inst_level', level_number);
+        }  
+    })
+	// Get Model
+    const inputLevel = window.sessionStorage.getItem('id_prefill_form-inst_level')
+    if (inputLevel) {
+        var this_level = document.getElementById('id_prefill_form-inst_level')
+        this_level.value = inputLevel
+    }
+
+	// Get the observer
+	var isObserver = document.getElementById('id_prefill_form-observer_isme')
+	observerInput = document.getElementById('id_prefill_form-observer') 
+	observerLabel = document.querySelector("label[for='id_prefill_form-observer']")
+
+	if (isObserver.checked) {
+			observerInput.removeAttribute('required')
+			observerInput.parentNode.parentNode.style.display = "none"
+			// observerLabel.parentNode.style.display = "none"
+	}
+	
+	isObserver.addEventListener('change', () => {
+		if (isObserver.checked) {
+			observerInput.removeAttribute('required')
+			observerInput.parentNode.parentNode.style.display = "none"
+			// observerLabel.parentNode.style.display = "none"
+		} else {
+			observerInput.parentNode.parentNode.style.display = "table-row";
+			// observerLabel.parentNode.style.display = "block"
+		}
+	})
+
+	if (isObserver.checked === false && !observerInput.value) {
+		observerInput.setAttribute('required','required')
+	} else {
+		observerInput.removeAttribute('required')
+	}
+
+	// window.onbeforeunload = function(e) {
+    // 	return "Are you sure you want to leave?";
+	// };
+
+	
+</script>
+{% endblock %}

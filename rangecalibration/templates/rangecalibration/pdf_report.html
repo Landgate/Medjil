@@ -1,0 +1,290 @@
+{% load static %}
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<style>
+		*, html {
+	        	/*font-size:9pt;*/
+	        }
+		table { -pdf-keep-with-next: true; 
+			font-size:9pt;
+			text-align: left;}
+		table, td {
+	        border-spacing: 0px;
+	        padding-top: 1px;
+	    }
+	    hr {
+	  		clear: both; /* takes care of you floated elements */
+	  		margin:0;
+	  		margin-top:5px;
+	  		margin-bottom:5px;
+	  	}
+	    p { margin: 0; -pdf-keep-with-next: true; }
+
+	    @page {
+	        size: a4 portrait;
+	        @frame header_frame {           /* Static Frame */
+	            -pdf-frame-content: header_content;
+	            left: 50pt; width: 512pt; top: 20pt; height: 70pt;
+	        }
+	        @frame content_frame {          /* Content Frame */
+	            left: 50pt; width: 512pt; top: 90pt; height: 620pt;
+	        }
+	        @frame footer_frame {           /* Another static Frame */
+	            -pdf-frame-content: footer_content;
+	            left: 50pt; width: 512pt; top: 772pt; height: 32pt;
+	        }
+
+	        
+	    }
+	    td.td-bottom {
+	    	border-bottom:1px solid #a9a9a9;
+	    }
+	    tr.tr-bottom {
+	    	border-bottom:1px solid #a9a9a9;
+	    	
+	    }
+	    tr.tr-top {
+	    	border-top:1px solid #a9a9a9;
+	    	/*margin-bottom:10px;*/
+	    }
+	</style>
+</head>
+
+<body>
+
+    <!-- Content for Static Frame 'header_frame' -->
+    <div id="header_content">
+    	<table>
+    		<tr>
+    			<td style="width:20%"> <img src="{% static 'logo.png' %}" style="width:30%; max-width:100px;"> <td>
+    			<td style="width:60%; font-size:18pt; text-align:center"><strong> Barcode Range Calibration </strong></td>
+    			<td style="width:20%"> 
+    				Page 
+    				<pdf:pagenumber> 
+    				of 
+    				<pdf:pagecount>
+    			</td>
+    		</tr>
+    	</table>
+    </div>
+    <!-- Content for Static Frame 'footer_frame' -->
+    <div id="footer_content">
+    	<table>
+    		<tr class="tr-top">
+    			<td style="text-align:center">© Western Australia Land Information Authority 2007</td>
+    		</tr>
+    		<tr>
+    			<td style="text-align:center"> {{ today }}</td>
+    		</tr>
+    	</table>
+    </div>
+
+    <div id="content1">
+    	<hr>
+	    <table>
+	        <tr>
+	          <td> Laboratory Name: <strong> {{ site_id }} </strong> </td>
+	          <td> Authority: <strong> {{ site_id.operator }} </strong> </td>
+	        </tr>	
+	        <tr>
+	          <td> Description: {{ site_id.get_site_type_display }} </td>
+	          <td> Location: <u>{{ site_id.site_address }}, {{ site_id.locality }} </u></td>
+	        </tr>
+	    </table>	
+	    <hr>
+	    <table>
+	        <tr>
+	          <th><u>This test information</u></th>
+	          <th><u>Level &amp; staff details</u> </th>
+	        </tr>
+	        <tr>
+	          <td> Job Number: <strong>{{ job_number }} </strong> </td>
+	          <td> Staff Number: <strong> {{ staff_number }} </strong> </td>
+	        </tr>	
+	        <tr>
+	        	<td>Calibration Date: {{calibration_date }}</td>
+	        	<td>Level Number: <strong> {{ level_number}} </strong></td>
+	        </tr>
+	    	<tr></tr>
+	    	<tr>
+	    		<td>Average Temperature: <strong> {{ average_temperature|floatformat:1 }}°C</strong></td>
+	    		<td>Observer: <strong> {{ observer }} </strong></td>
+	    	</tr>
+	    <table>
+	    <hr>
+	    <table>
+	    	<tr style="text-align:center;">
+	    		<td width="8%"></td>
+	    		<td width="8%"></td>
+	    		<td width="14%"></td>
+	    		<td width="14%"></td>
+	    		<td width="14%"></td>
+	    		<td width="14%">Observed</td>
+	    		<td width="14%">Corrected</td>
+				<td width="14%"></td>
+	    	</tr>
+	    	<tr style="text-align:center;">
+	    		<td></td>
+	    		<td></td>
+	    		<td colspan="3" class="td-bottom">Staff Readings</td>
+	    		<td>Height</td>
+	    		<td>Height</td>
+				<td></td>
+	    	</tr>
+	    	<tr style="text-align:center;">
+	    		<td colspan="2"></td>
+	    		<td>Temperature</td>
+	    		<td>From</td>
+	    		<td>To</td>
+	    		<td>Difference</td>
+	    		<td>Difference</td>
+				<td>Std Dev</td>
+	    	</tr>
+	    	<tr class="tr-bottom" style="text-align:center;">
+	    		<td>Set</td>
+	    		<td>Pillars</td>
+	    		<td>(°C)</td>
+	    		<td>(metres)</td>
+	    		<td>(metres)</td>
+	    		<td>(metres)</td>
+	    		<td>(metres)</td>
+	    		<td>(metres)</td>
+	    	</tr>
+	    	{% for a,b,c,d,e,f,g,h in output_raw.data %}
+	        <tr style="text-align:center;">   
+	          <td> {{a}}</td>
+	          <td> {{b}}</td>
+	          <td> {{c}}</td>
+	          <td> {{d|floatformat:5}}</td>
+	          <td> {{e|floatformat:5}}</td>
+	          <td> {{f|floatformat:5}}</td>
+	          <td> {{g|floatformat:5}}</td>
+	          <td> {{h|floatformat:6}}</td>
+	        </tr>
+	        {% endfor %}
+
+	    </table>
+	    <hr>
+	</div>
+	<pdf:nextpage />
+
+	 <div id="content2">
+	    <hr>
+	    <table>
+	        <tr>
+	          <th><u>This test information</u></th>
+	          <th><u>Level &amp; staff details</u> </th>
+	        </tr>
+	        <tr>
+			<td> Job Number: <strong>{{ job_number }} </strong> </td>
+	          <td> Staff Number: <strong> {{ staff_number }} </strong> </td>
+	        </tr>	
+	        <tr>
+	        	<td>Calibration Date: {{calibration_date }}</td>
+	        	<td>Level Number: <strong> {{ level_number}} </strong></td>
+	        </tr>
+	    	<tr></tr>
+	    	<tr>
+	    		<td>Average Temperature: <strong> {{ average_temperature|floatformat:1 }}°C</strong></td>
+	    		<td>Observer: <strong> {{ observer }} </strong></td>
+	    	</tr>
+	    <table>
+	    <hr>
+	    <table width=75%>
+	    	<tr style="text-align:center;">
+	    		<td></td>
+	    		<td>Height Diff</td>
+	    		<td>Uncertainty</td>
+	    		<td>Observation</td>
+	    	</tr>
+	    	<tr class="tr-bottom" style="text-align:center;">
+	    		<td>Inverval</td>
+	    		<td>(metres)</td>
+	    		<td>(mm)</td>
+	    		<td>Count</td>
+	    	</tr>
+	    	{% for a,b,c,d in output_hdiff.data %}
+	        <tr style="text-align:center;">   
+	          <td> {{a}}</td>
+	          <td> {{b|floatformat:5}}</td>
+	          <td> {{c|floatformat:2}}</td>
+	          <td> {{d|floatformat:0}}</td>
+	        </tr>
+	        {% endfor %}
+
+	    </table>
+	    <hr>
+	 </div>
+	 <pdf:nextpage />
+
+	 <div id="content3">
+	     <hr>
+	    <table>
+	        <tr>
+	          <th><u>This test information</u></th>
+	          <th><u>Level &amp; staff details</u> </th>
+	        </tr>
+	        <tr>
+			<td> Job Number: <strong>{{ job_number }} </strong> </td>
+	          <td> Staff Number: <strong> {{ staff_number }} </strong> </td>
+	        </tr>	
+	        <tr>
+	        	<td>Calibration Date: {{calibration_date }}</td>
+	        	<td>Level Number: <strong> {{ level_number}} </strong></td>
+	        </tr>
+	    	<tr></tr>
+	    	<tr>
+	    		<td>Average Temperature: <strong> {{ average_temperature|floatformat:1 }}°C</strong></td>
+	    		<td>Observer: <strong> {{ observer }} </strong></td>
+	    	</tr>
+	    <table>
+	    <hr>
+	    <table>
+	    	<tr style="text-align:center;">
+	    		<td></td>
+	    		<td>Adjusted</td>
+	    		<td>Observed</td>
+	    		<td></td>
+	    		<td colspan="2">Standard Deviation</td>
+	    		<td></td>
+	    	</tr>
+	    	<tr style="text-align:center;">
+	    		<td></td>
+	    		<td>Height Diff</td>
+	    		<td>Height Diff</td>
+	    		<td>Residual</td>
+	    		<td>Observation</td>
+	    		<td>Residual</td>
+	    		<td>Standard</td>
+	    	</tr>
+	    	<tr class="tr-bottom" style="text-align:center;">
+	    		<td>Interval</td>
+	    		<td>(metres)</td>
+	    		<td>(metres)</td>
+	    		<td>(metres)</td>
+	    		<td>(mm)</td>
+	    		<td>(mm)</td>
+	    		<td>Residual</td>
+	    	</tr>
+	    	{% for a,b,c,d,e,f,g in output_adj.data %}
+	        <tr style="text-align:center;">   
+	          <td> {{a}}</td>
+	          <td> {{b|floatformat:5}}</td>
+	          <td> {{c|floatformat:5}}</td>
+	          <td> {{d|floatformat:5}}</td>
+	          <td> {{e|floatformat:2}}</td>
+	          <td> {{f|floatformat:2}}</td>
+	          <td> {{g|floatformat:2}}</td>
+	        </tr>
+	        {% endfor %}
+	    </table>
+	    <hr>
+	</div>
+	 <!-- <pdf:nextpage /> -->
+	<script type="text/javascript">
+    	var today = new Date();
+      	document.getElementById('current_time').innerHTML=today.toLocaleString('en-AU');
+    </script>
+</body>
+</html>

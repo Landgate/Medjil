@@ -1,0 +1,131 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+
+{% block content %}
+
+	<article class="post">
+    
+    <div class="post-content">
+      {% if messages %}
+      <ul class="message-list">
+          {% for message in messages %}
+              <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+          {% endfor %}
+      </ul>
+      <br>
+      {% endif %}
+    </div>
+    <br>
+
+    <header class="post-header">
+      <h1 class="post-title text-center">Ready to start the Barcode Range Calibration? </h1>
+    </header>
+
+    <div class="post-content">
+      <div class="mt-10 flex justify-center">
+        <a href="{% url 'rangecalibration:calibrate' %}">
+          <button class="px-3 py-2 border border-transparent text-lg leading-4 rounded text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+            Get started now
+          </button>
+        </a>  
+      </div>
+      <br><br>
+
+      {% if user.is_authenticated %}
+      <hr>
+      <div>
+        <h2> Click on the link below to view individual reports </h2>
+      	<table style="table-layout: fixed; width: 100%">
+      		<tr>
+      			<th class="text-center font-semibold text-base text-gray-900"> Job Number </th>    	
+  	    		<th class="text-center font-semibold text-base text-gray-900"> Calibration Date </th>
+  	    		<th class="text-center font-semibold text-base text-gray-900"> Staff Number </th>
+  	    		<th class="text-center font-semibold text-base text-gray-900"> Level Number </th>
+  	    		<th class="text-center font-semibold text-base text-gray-900"> Observer </th>
+  	    		<th class="text-center font-semibold text-base text-gray-900"> Report </th>
+            <!-- <th class="text-center font-semibold text-base text-gray-900">Update/Delete</th> -->
+      		</tr>
+          {% if object_list %}
+        		{% for item in object_list %}
+          		<tr>
+          			<td class="font-regular text-center"> {{ item.job_number }}</td>    	
+      	    		<td class="font-regular text-left"> {{ item.calibration_date|date:"d/m/Y" }} </td>
+      	    		<td class="font-regular text-left"> {{ item.inst_staff }} </td>
+      	    		<td class="font-regular text-center"> {{ item.inst_level }} </td>
+      	    		<td class="font-regular text-center"> {{ item.observer }} </td>
+      	    		<td class="font-regular text-center"> 
+                  <a class="px-1 rounded" href="{% url 'rangecalibration:print_record' item.id %}" target="_blank">View </a>
+                    |  
+                  <a class="px-1 hover:bg-red-400 rounded" href="{% url 'rangecalibration:delete_record' item.id %}" onclick="return confirmation()">Delete</a>
+                </td>
+              </tr>
+            {% endfor %}
+          {% else %}
+          <tr>
+            <td colspan="6">There is currently no range measurements listed. You can start to calibrate the range by clicking the get started now button above.</td>
+          </tr>
+          {% endif %}
+      	</table>
+        {% if is_paginated %}
+          <div class="grid-3">
+            <!-- <ul class="pagination pg-blue"> -->
+            <div>
+            {% if page_obj.has_previous %}
+              <!-- <li class="page-item"> -->
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                  <span aria-hidden="true">Previous &laquo;</span>
+                  <span class="sr-only">Previous</span>
+                </a>
+            {% endif %}
+            </div>
+
+            <div>
+              <a class="page-link" href="?page={{ page_obj.number }}">Page {{ page_obj.number }}
+                  <span class="sr-only">(current)</span>
+                </a>
+            </div>
+
+            <div>
+              {% if page_obj.has_next %}
+              <!-- <li class="page-item"> -->
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                <span aria-hidden="true">Next &raquo;</span>
+                <span class="sr-only">Next</span>
+                </a>
+              <!-- </li> -->
+              {% endif %}
+            </div>
+            <!-- </ul> -->
+          </div>
+        {% endif %}
+      </div>
+      {% else %}
+        <div class="flex flex-col justify-around items-center"></div>
+          <p class="text-center">Please <a href="{% url 'accounts:login' %}">login</a> or <a href="{% url 'accounts:signup' %}">signup</a> to view or calibrate the Boya Staff Range.</p>
+          
+            <!-- <button class="mr-4 px-2 py-1 border border-transparent text-sm font-small rounded text-white bg-blue-500 hover:bg-gray-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out" onclick="location.href='/accounts/login/'">Log in</button>
+            or 
+            <button class="ml-4 px-2 py-1 border border-transparent text-sm font-small rounded text-white bg-blue-500 hover:bg-gray-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out" onclick="location.href='/accounts/signup/'">Sign up</button> -->
+          </div>
+      {% endif %}
+      <!--Pagination-->
+      <br>
+      
+  </article>
+
+<script type="text/javascript">
+  const lis = [...document.querySelectorAll('.messages li')];
+
+  for (const li of lis) {
+    li.addEventListener('click', function() {
+      this.parentNode.removeChild(this);
+    })
+  }
+
+  function confirmation() {
+      return confirm('Are you sure you want to do this? You will not be able to retreive the record later.');
+    }
+</script>
+
+
+{% endblock content %}

@@ -1,0 +1,77 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+
+{% block content %}
+<article class="post">
+		<div class="flexbox-container_IB">
+				<div class="flexbox-item_800_IB">
+				    <div class="mt-10">
+				    {% if not user.is_authenticated %}
+				    <p class="text-lg">Please 
+				    		<a href="{% url 'accounts:login' %}" class="hover:a">
+				        login
+				        </a> or 
+				        <a href="{% url 'accounts:signup' %}" class="hover:a">
+				        signup
+				        </a> to manage and calibrate your surveying instruments.
+				    </p>
+				    {% endif %}
+				    <h2 class="text-center">List of Uncertainty Budgets</h2>
+				    <div style="text-align:center;font-size:10pt">
+				    		<a href="{% url 'baseline_calibration:uc_budget_create' %}?next={{request.path}%}" >
+                <button class="px-3 py-2 border border-transparent text-lg leading-4 rounded text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+                &#x2B Add new uncertainty budget</button>
+            </a> 
+            </div>
+				    <br><i style="ifont-size:10pt">Predefined uncertainty budgets for selection during Baseline or EDMI Calibration procedure</i></br>
+				    <hr>
+				    {% if messages %}
+				    <ul class="alert messages">
+				    		{% for message in messages %}
+				        <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+				        {% endfor %}
+				    </ul>
+				    {% endif %}	
+				    <div class="flexbox-item_800_IB">
+				        <div class="post-content">
+				            <div id="uncertainty-budget-list">
+										{% if uc_budget_list %}
+												<table style="font-size:10pt;width:100%"> 
+							              <col span="1" width="28%">
+							              <col span="1" width="28%">
+							              <col span="1" width="32%">
+							              <col span="1" width="12%">
+														<tr>
+																<th>Name</th>
+																<th>Created by</th>
+																<th>Std Dev used when statistically zero</th>
+																<th>&nbsp&nbsp Action</th>
+														</tr>			
+														{% for budget in uc_budget_list %}
+														<tr>
+																<td>{{ budget.name }}</td>
+																<td>{{ budget.company }}</td>
+																<td>{{ budget.std_dev_of_zero_adjustment }}</td>
+																{% if budget.name == "Default" and budget.company.company_name == "Landgate" %}
+									    					<td></td>
+																{% else %}
+									    					<td>
+									    							<a href="{% url 'baseline_calibration:uc_budget_edit' id=budget.pk %}" style="color:green;cursor:pointer;cursor:hand">Edit</a> |
+									    							<a href="{% url 'baseline_calibration:uc_budget_delete' id=budget.pk %}" style="color:red;cursor:pointer;cursor:hand;">Delete</a>
+									    					</td>
+																{% endif %}
+														</tr>
+														{% endfor %}
+											  </table>									
+										{% else %}
+				            <p>There are currently no uncertainy budgets!</p>
+										{% endif %}
+										</div>
+				        </div>
+				    </div>
+			  </div>    
+	  </div>
+</article>
+<script>
+</script>
+{% endblock content %}

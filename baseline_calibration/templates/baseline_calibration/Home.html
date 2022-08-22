@@ -1,0 +1,88 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+
+
+{% block content %}
+
+<article class="post">
+    <div class="mt-10">
+        {% if not user.is_authenticated %}
+            <p class="text-lg">Please 
+                <a href="{% url 'accounts:login' %}" class="hover:a">
+                    login
+                </a> or 
+                <a href="{% url 'accounts:signup' %}" class="hover:a">
+                    signup
+                </a> to manage and calibrate your surveying instruments.</p>
+        {% endif %}
+    </div>
+    {% if messages %}
+        <ul class="alert messages">
+            {% for message in messages %}
+            <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        <br>
+    {% endif %}	
+    <div class="container_IB">
+        <div class="post-content">
+						<h2 class="text-center">List of Company Pillar Calibration Surveys</h2>
+        				<div class="mt-2 flex justify-center">
+                		<a href="{% url 'baseline_calibration:calibrate1' id=None %}">
+                    <button class="px-3 py-2 border border-transparent text-lg leading-4 rounded text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+                    &#x2B Add new calibration
+                    </button>
+                  	</a>  
+                </div>
+        <br>
+        <hr>
+				{% if pillar_surveys %}
+					<table style="font-size:10pt;width: 100%"> 
+          		<col span="1" style="width: 15%">
+              <col span="1" style="width: 15%">
+              <col span="1" style="width: 15%">
+              <col span="1" style="width: 15%">
+              <col span="1" style="width: 10%">
+              <col span="1" style="width: 20%">
+              <col span="1" style="width: 10%">
+							<tr>
+									<th>Baseline</th>
+									<th>Job Number</th>
+									<th>Survey Date</th>
+									<th>Company</th>
+									<th>Observed By</th>
+									<th>Certified Distances Modified</th>
+									<th>&nbsp Action</th>
+							</tr>			
+						{% for pillar_survey in pillar_surveys %}
+							<tr>
+									<td>{{ pillar_survey.baseline }} </td>
+									<td>{{ pillar_survey.job_number }} </td>
+									<td>{{ pillar_survey.survey_date }} </td>
+									<td>{{ pillar_survey.accreditation.accredited_company }}</td>
+									<td>{{ pillar_survey.observer }} </td>
+									{% if not pillar_survey.modified_on is null %}
+	        						<td>{{ pillar_survey.modified_on }}</td>
+	        				{% else %}  
+	        						<td>In progress ..</td>
+	        				{% endif %}
+									<td><a href= "{% url 'baseline_calibration:calibrate1' id=pillar_survey.pk %}" style="color:green;cursor:pointer;cursor:hand">Edit</a> | 
+									<a href= "{% url 'baseline_calibration:pillar_survey_del' id=pillar_survey.pk %}" style="color:red;cursor:pointer;cursor:hand">Delete</a></td>
+							</tr>
+						{% endfor %}
+						</tr>
+					</table>
+					
+				{% else %}
+        <p> There are currently no baselines with calibration pillar surveys.</p>
+				{% endif %}
+
+        </div>
+    </div>
+</article>
+
+<script>
+
+</script>
+
+ {% endblock content %}

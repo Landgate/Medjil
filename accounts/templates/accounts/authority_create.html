@@ -1,0 +1,75 @@
+
+{% extends 'base_generic.html' %}
+
+{% block content %}
+
+<article class="post">
+  	<header class="post-header">
+    	<h1 class="post-title text-center">Add a new company </h1>
+  	</header>
+	<hr>
+	<br>
+	{% if form.errors %}
+		<div class="post-content alert error">
+	    {% for field in form %}
+	        {% for error in field.errors %}
+	            <p> {{ error }} </p>
+	        {% endfor %}
+	    {% endfor %}
+	    </div>
+	{% endif %}
+	<br>
+	<div class="post-content">
+		<form class="site-form" method="post">
+		    {% csrf_token %}
+		    <table>
+		    {% for field in form %}
+		    	<tr>
+		    		<td>
+		    			{{ field.label_tag}}
+		    		</td>
+		    		<td> {{ field }}</td>
+		    		{% if "type" in field.label_tag %} 
+		    			<td>
+		    				{% if user.is_staff %}
+				    			Add new 
+				    			<a  class="a-icon" href="{% url 'staffs:stafftype-create' %}?next={{request.path}}">
+						        	<svg width="16" height="16" viewBox="0 0 16 16" class="bi bi-plus-circle" rowspan="1", fill="green" xmlns="http://www.w3.org/2000/svg">
+										 <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
+										<path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"></path>
+									</svg>
+								</a>
+							{% else %}
+								<span>Contact 
+									<a href="mailto:geodesy@landgate.wa.gov.au">
+										Landgate
+									</a> if your staff type is not listed
+								</span>
+							{% endif %}
+						</td>
+					{% else %}
+					<td></td>
+					{% endif %}
+		    	</tr>
+		    
+		    <!-- {{ form.as_p }} -->
+		    {% endfor %}
+			</table>
+		    {% if request.GET.next %}
+		    	<input type="hidden" name="next" value="{{ request.GET.next }}">
+		    {% endif %}
+		    <br>
+		    <div class="grid-2">
+		    	<div class="single-item-container">
+		    		<button class="px-2 py-1 border border-transparent text-sm leading-1 font-small rounded-md text-white bg-gray-600 hover:bg-gray-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out" type="submit"> Next &raquo; </button>
+		    	</div>
+
+		    	<div class="single-item-container">
+					<a class="px-2 py-2 border border-transparent text-sm leading-3 rounded text-white bg-red-600 hover:bg-red-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out" href="{% url 'range_calibration:range-home' %}">Cancel</a>
+				</div>
+			</div>
+		</form>
+	</div>
+</article>
+
+ {% endblock %}

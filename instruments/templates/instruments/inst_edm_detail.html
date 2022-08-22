@@ -1,0 +1,80 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+
+
+{% block content %} 
+
+<article class="post">
+    <div class="post-content">
+        <div class="card-form">
+            <div class="card-form-header bg-red-50">
+                <h1 class="text-center">EDM Number: <strong> {{ this_inst.edm_number }}</strong></h1>
+            </div>
+
+            <!-- <div class="card-form-body"> -->
+            <div class="mt-3 px-3 py-2">
+                <table>
+                    <tbody>
+                        <tr>
+                            <th>EDM Number: </th>
+                            <td>{{ this_inst.edm_number }}</td>
+                        </tr>
+                        <tr>
+                            <th>EDM Owner: </th>
+                            <td>{{ this_inst.edm_custodian.company }}</td>
+                        </tr>
+                        <tr>
+                            <th>EDM Custodian: </th>
+                            <td>{{ this_inst.edm_custodian }}</td>
+                        </tr>
+                        <tr>
+                            <th>Image Link: </th>
+                            <td>
+                                {% if this_inst.photo %} 
+                                    <a href="{{ this_inst.photo.url|default_if_none:'#' }}" target="__blank">Click here</a> 
+                                {% else %}
+                                    No image found!
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Description: </th>
+                            <td>
+                               <p> <em>{{ this_inst.comment }}</em> </p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div>
+                    <p>{{ this_inst.comment }}</p>
+                </div>
+            </div>       
+
+            {{ this_inst.edm_specs.edm_type }}
+            {{ this_inst.edm_specs.manu_ref_refrac_index }}
+        </div>
+        
+        <!-- <table>
+            {% for key, value in this_inst.items %}
+                <tr>
+                    <td> {{ key|title }}: </td>
+                    {% if 'temperature' in key %}
+                        <td>{{ value }} &#x2103;</td>
+                    {% elif 'length' in key %}
+                        <td>{{ value }} m</td>
+                    {% elif 'coefficient' in key %}
+                        <td>{{ value }} ppm</td>
+                    {% elif '_factor' in key %}
+                        <td>{{ value|stringformat:"1.6f" }} </td>
+                    {% elif '_record' in key %}
+                        <td> <a href="{{ value.url }}"> {{ value }} </a></td>
+                    {% else %}
+                        <td>{{ value }}</td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </table>   -->
+    </div>
+</article>
+
+{% endblock %}

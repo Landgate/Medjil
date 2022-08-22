@@ -1,0 +1,274 @@
+{% load static %}
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<style>
+		*, html {
+	        	font-family:Arial
+	        }
+		table { -pdf-keep-with-next: true; 
+			font-size:9pt;
+			text-align: left;}
+		
+
+		table, tr {
+	        padding-top : 1.3px; 
+	    }
+
+		table, td {
+	        border-spacing: 0px;
+	        
+	    }
+	    hr {
+	  		clear: both; /* takes care of you floated elements */
+	  		margin:0;
+	  		margin-top:5px;
+	  		margin-bottom:5px;
+	  	}
+	    p { margin: 0; font-size:9pt; -pdf-keep-with-next: true; }
+		
+
+	    @page {
+	        size: a4 portrait;
+	        @frame header_frame {           /* Static Frame */
+	            -pdf-frame-content: header_content;
+	            left: 50pt; width: 512pt; top: 20pt; height: 70pt;
+	        }
+	        @frame content_frame {          /* Content Frame */
+	            left: 50pt; width: 512pt; top: 90pt; height: 610pt;
+	        }
+	        @frame footer_frame {           /* Another static Frame */
+	            -pdf-frame-content: footer_content;
+	            left: 50pt; width: 512pt; top: 772pt; height: 42pt;
+	        }
+
+	        
+	    }
+	    td.td-bottom {
+	    	border-bottom:1px solid #a9a9a9;
+	    }
+	    tr.tr-bottom {
+	    	border-bottom:1px solid #a9a9a9;
+	    	
+	    }
+	    tr.tr-top {
+	    	border-top:1px solid #a9a9a9;
+	    	/*margin-bottom:10px;*/
+	    }
+		.warning {
+			background-color: #FFAA2C;
+			padding: 0.5rem 0;
+			margin-bottom: 0;
+		}
+		.success {
+			background-color: #6BBD6E;
+		}
+		.text-red {
+			color:red;
+		}
+
+	</style>
+</head>
+
+<body>
+
+    <!-- Content for Static Frame 'header_frame' -->
+    <div id="header_content">
+    	<table>
+    		<tr>
+    			<td style="width:20%"> <img src="{% static 'logo.png' %}" style="width:30%; max-width:100px;"> <td>
+    			<td style="width:60%;">
+    				<table style="font-size:16pt; text-align:center">
+    					<tr>
+    						<td><strong> Levelling Staff Calibration </strong></td>
+    					</tr>
+    					<tr>
+    						<td style="font-size:9pt">Version: 2022.0.1 (February 2022) </td>
+    					</tr>
+    				</table>
+    				
+    			</td>
+    			<td style="width:20%"> 
+    				Page 
+    				<pdf:pagenumber> 
+    				of 
+    				<pdf:pagecount>
+    			</td>
+    		</tr>
+    	</table>
+    </div>
+    <!-- Content for Static Frame 'footer_frame' -->
+    <div id="footer_content">
+    	<table>
+    		<tr class="tr-top">
+    			<td style="font-size:8pt;font-weight:bold;text-align:center">© Western Australia Land Information Authority 2007</td>
+    		</tr>
+    		<tr>
+    			<td style="font-size:8pt;font-weight:bold;text-align:center"> {{ today }}</td>
+    		</tr>
+    		<tr>
+    			<td style="font-size:7pt;text-align:center"> This calibration is only valid at the time of testing. Damage or wear can affect the staff length and regular re-testing is recommended.</td>
+    		</tr>
+    	</table>
+    </div>
+
+    <div id="content1">
+    	<hr>
+	    <table>
+	        <tr>
+	          <td> Laboratory Name: <strong> {{ site_id }} </strong> </td>
+	          <td> Authority: <strong> {{ site_id.operator }} </strong> </td>
+	        </tr>	
+	        <tr>
+	          <td> Description: {{ site_type }} </td>
+	          <td> Location: {{ site_id.site_address }}, {{ site_id.state.statecode }} {{ site_id.locality.postcode }} </td>
+	        </tr>
+	    </table>	
+	    <hr>
+	    <table>
+	        <tr>
+	          <th><u>This test information</u></th>
+	          <th><u>Level &amp; staff details</u> </th>
+	        </tr>
+	        <tr>
+	          <td> Job Number : <strong>{{ job_number }} </strong> </td>
+	          <td> Staff Number: <strong> {{ staff_number }} </strong> ({{ staff_number.staff_type|title }}, {{ staff_number.staff_length }} m)</td>
+	        </tr>
+			<tr>
+	        	<td>Observation Date: {{ calibration_date }}</td>
+	        	<td>Staff Owner: <strong> {{ staff_number.staff_owner }} </strong></td>
+	        </tr>	
+	        <tr>
+	        	<td> </td>
+	        	<td>Level Number: <strong> {{ level_number }} </strong></td>
+	        </tr>
+	    	<tr></tr>
+	    	<tr>
+	    		<td>Average Temperature: <strong> {{ average_temperature|floatformat:1 }}°C</strong></td>
+	    		<td>Observer: <strong> {{ observer }} </strong></td>
+	    	</tr>
+	    <table>
+	    <hr>
+	    <p>Correction Factor: <strong>{{scale_factor|floatformat:6}} </strong>at 25.0°C. Note that Correction Factor is temperature dependent.</p>
+		<p>Apply the correction factor to your observed height difference (&Delta;H<sub>obs</sub>) as &rarr; &Delta;H<sub>corrected</sub> = ((((T<sub>ave</sub> - 25.0) * {{ thermal_coefficient|floatformat:7 }})+1) * {{ scale_factor|floatformat:6}}) * &Delta;H<sub>obs</sub>, where T<sub>ave</sub> is the observed temperature during the measurement.
+		</p>
+		<p>Graduation Uncertainty: <strong>{{ grad_uncertainty|floatformat:5 }} </strong> metres at 95% confidence interval</p>
+		<p class="text-red">**Check for possible warnings on the next page.**</p>
+		<hr>
+	    <table>
+	    	<tr style="text-align:center;">
+	    		<td width="8%"></td>
+	    		<td width="8%"></td>
+	    		<td width="14%"></td>
+	    		<td width="14%"></td>
+	    		<td width="14%">Observed</td>
+	    		<td width="14%">Corrected</td>
+	    		<td width="14%"></td>
+	    	</tr>
+	    	<tr style="text-align:center;">
+	    		<td></td>
+	    		<td></td>
+	    		<td colspan="2" class="td-bottom">Staff Readings</td>
+	    		<td>Height</td>
+	    		<td>Height</td>
+	    		<td>Corrected</td>
+	    	</tr>
+	    	<tr style="text-align:center;">
+	    		<td></td>
+	    		<td></td>
+	    		<td>From</td>
+	    		<td>To</td>
+	    		<td>Difference</td>
+	    		<td>Difference</td>
+	    		<td>Difference</td>
+	    	</tr>
+	    	<tr class="tr-bottom" style="text-align:center;">
+	    		<td>Set</td>
+	    		<td>Pins</td>
+	    		<td>(metres)</td>
+	    		<td>(metres)</td>
+	    		<td>(metres)</td>
+	    		<td>(metres)</td>
+	    		<td>(metres)</td>
+	    	</tr>
+	    	{% for a, b,c,d,e,f in adj_correction.data %}
+	        <tr style="text-align:center;">   
+	          <td> 1 </td>
+	          <td> {{a}}</td>
+	          <td> {{b|floatformat:5}}</td>
+	          <td> {{c|floatformat:5}}</td>
+	          <td> {{d|floatformat:5}}</td>
+	          <td> {{e|floatformat:5}}</td>
+	          <td> {{f|floatformat:5}}</td>
+	        </tr>
+	        {% endfor %}
+	    </table>
+	    <hr>
+	</div>
+	<pdf:nextpage />
+
+	 <div id="content2">
+	    <hr>
+	    <table>
+	        <tr>
+	          <th><u>This test information</u></th>
+	          <th><u>Level &amp; staff details</u> </th>
+	        </tr>
+	        <tr>
+				<td> Job Number : <strong>{{ job_number }} </strong> </td>
+	          <td> Staff Number: <strong> {{ staff_number }} </strong> ({{ staff_number.staff_type|title }}, {{ staff_number.staff_length }} m)</td>
+	        </tr>	
+	        <tr>
+	        	<td>Observation Date: {{ calibration_date }}</td>
+	        	<td>Staff Owner: <strong> {{ staff_number.staff_owner }} </strong></td>
+	        </tr>	
+	        <tr>
+	        	<td> </td>
+	        	<td>Level Number: <strong> {{ level_number }} </strong></td>
+	        </tr>
+	    	<tr></tr>
+	    	<tr>
+	    		<td>Average Temperature: <strong> {{ average_temperature|floatformat:1 }}°C</strong></td>
+	    		<td>Observer: <strong> {{ observer }} </strong></td>
+	    	</tr>
+	    <table>
+	    <hr>
+		<p>Correction Factor = <strong> 1.00000 </strong> when the temperature is <strong>{{ temp_at_sf1|floatformat:1 }}°C</strong>. 
+		{% if temp_at_sf1 > 55.0 or temp_at_sf1 < -10.0%} 
+			<p class="warning"> 
+				Warning! The correction factor appears to exceed the expected temperature range between -10°C and 55°C. Please check for any possible errors in metadata information and staff readings.
+				
+			</p> 
+		{% endif %}
+		<hr>
+	    <table width=75%>
+	    	<tr style="text-align:center;">
+	    		<td></td>
+	    		<td>Correction</td>
+	    		<td>Correction/metre</td>
+	    	</tr>
+	    	<tr class="tr-bottom" style="text-align:center;">
+	    		<td>Temperature</td>
+	    		<td>Factor</td>
+	    		<td>(mm)</td>
+	    	</tr>
+	    	{% for a,b,c in temp_correction_factors.data %}
+	        <tr style="text-align:center;">   
+	          <td> {{a}}</td>
+	          <td> {{b|floatformat:7}}</td>
+	          <td> {{c|floatformat:2}}</td>
+	        </tr>
+	        {% endfor %}
+
+	    </table>
+	    <hr>
+	 </div>
+	 <!-- <pdf:nextpage /> -->
+
+	 <!-- <pdf:nextpage /> -->
+	<script type="text/javascript">
+    	var today = new Date();
+      	document.getElementById('current_time').innerHTML=today.toLocaleString('en-AU');
+    </script>
+</body>
+</html>

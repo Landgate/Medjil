@@ -1,0 +1,67 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+
+
+{% block content %}
+
+<article class="post mt-10 mb-5">
+    <header class="post-header">
+        <h1 class="post-title">
+            Geodetic News
+            <h1>{{ news_page_obj.content }}</h1>
+        </h1>
+    </header>
+
+    <div class="post-content mt-5">
+        <!-- <p>Launch recognizable, enjoyable Firefox products and features faster.</p>
+        <div style="background-image: url('images/global/hero-welcome-background.svg')">
+            <div>
+              <img src="https://d33wubrfki0l68.cloudfront.net/c6a83f550bf71399e29f1ee15df375358f41fb62/6ab99/images/global/hero-welcome-foreground.png" alt="Firefox Products on Android, on iPad and on Desktop.">
+            </div>
+          </div> -->
+
+            {% if news_page_obj %}
+                {% for news in news_page_obj %}
+                <a href="{{ news.get_absolute_url }} ">
+                    <div class="mt-4 px-3 py-3 bg-gray-200">
+                        <div class="flex mb-3">
+                            <img style="width:120px; height:120px" src="{{ news.img.url }}" alt="">
+                            <div class="flex flex-col pxl-3">
+                                <h2><span style="background:rgb(221 20 102)" class="px-2">{{ news.get_category_display }}</span></h2>
+                                <h1>{{ news.headline|title }}</h1> 
+                            </div>
+                        </div>
+                        <p>{{ news.content|truncatechars:100|safe }}...</p>
+                    </div>
+                </a>
+
+                
+                {% endfor %}
+            {% else %}
+                <p> There are currently no users in our system </p>
+            {% endif %}
+            {% if news_page_obj.has_other_pages  %}
+                <div class="pagination">
+                    <span class="step-links">
+                        {% if news_page_obj.has_previous %}
+                            <a href="?page=1">« first</a>
+                            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                        {% endif %}
+                
+                        <span class="current">
+                            Page {{ news_page_obj.number }} of {{ news_page_obj.paginator.num_pages }}.
+                        </span>
+                
+                        {% if news_page_obj.has_next %}
+                            <a href="?page={{ news_page_obj.next_page_number }}">next</a>
+                            <a href="?page={{ news_page_obj.paginator.num_pages }}">last »</a>
+                        {% endif %}
+                    </span>
+                </div>
+            {% endif %}
+    </div>
+</article>
+
+
+
+ {% endblock content %}

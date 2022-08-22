@@ -1,0 +1,113 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+
+
+{% block content %} 
+
+<article class="post">
+    <div class="post-header mt-12 text-center mb-3">
+        <h1>Welcome to Landgate's Survey Instrument Calibration website.</h1>
+        <p> This form allows to register (or modify) a new (or an existing) calibration site - both Barcode Calibration Range or an EDM Baseline.</p>
+    </div>
+
+    <div class="post-content">
+        <form method="post" class="site-form" id="form-container" >
+            {% csrf_token %}
+            {{ formset.management_form }}
+            {% for form in formset %}
+
+            <div class="bird-form">
+                {{form.as_p}}
+            </div>
+                <!-- <table class="bird-form"> 
+                    {% for field in form %}
+                        <tr class="form_as_table">
+                            <td class="form_label">{{ field.label_tag }}</td> 
+                            <td class="form_field">
+                                {{ field }} 
+                                
+                                {% for error in field.errors %}
+                                    <p class="error error-danger">{{ error }}</p>
+                                {% endfor %}
+                                
+                                {% if not field.field.widget.attrs.placeholder and field.help_text %}
+                                    <p class="helptext">{{ field.help_text }}</p>
+                                {% endif %}
+                            </td>
+                          
+                        </tr>        
+            
+                     {% endfor %}
+                </table> -->
+            {% endfor %}
+            <button id="add-form" type="button">Add Another Bird</button>
+            <button type="submit">Create Birds</button>
+        </form>
+        
+        <!-- <form action="" class="site-form" method="post" enctype="multipart/form-data">
+            {% csrf_token %} -->
+        <!-- <table>
+            <colgroup>
+                <col span="1" width="20%">
+                <col span="1" width="70%">
+                <col span="1" width="10%">
+            </colgroup>
+            </tr> -->
+            <!-- {% for form in formset %}
+
+            {{ form }} -->
+                <!-- <tr>
+                    <td>{{ field.label_tag }}</td> 
+                    <td> 
+                        {{ field }} 
+                        
+                        {% for error in field.errors %}
+                            <p class="error error-danger">{{ error }}</p>
+                        {% endfor %}
+                        
+                        {% if not field.field.widget.attrs.placeholder and field.help_text %}
+                            <p class="helptext">{{ field.help_text }}</p>
+                        {% endif %}
+                    </td>
+                    <td></td>
+                </tr>         -->
+                
+            <!-- {% endfor %} -->
+    
+          <!-- </table> -->
+    
+            <!-- <div class="button-container">
+              <button class="save-button bg-green-500 hover:bg-green-400" type="submit" >Submit</button>
+              <span> <a href="{% url 'calibrationsites:site_home' %}" class="text-blue-500">Cancel</a></span>
+          </div>
+    
+        </form>
+        
+    </div> -->
+</article>
+
+<script>
+    let birdForm = document.querySelectorAll(".bird-form")
+    let container = document.querySelector("#form-container")
+    let addButton = document.querySelector("#add-form")
+    let totalForms = document.querySelector("#id_form-TOTAL_FORMS")
+
+    let formNum = birdForm.length-1
+    addButton.addEventListener('click', addForm)
+
+    function addForm(e){
+        e.preventDefault()
+
+        let newForm = birdForm[0].cloneNode(true)
+        console.log(newForm)
+        let formRegex = RegExp(`form-(\\d){1}-`,'g')
+        console.log(formRegex)
+        formNum++
+        newForm.innerHTML = newForm.innerHTML.replace(formRegex, `form-${formNum}-`)
+        container.insertBefore(newForm, addButton)
+        console.log(newForm)
+        totalForms.setAttribute('value', `${formNum+1}`)
+    }
+</script>
+
+{% endblock %}
