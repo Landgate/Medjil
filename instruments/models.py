@@ -185,7 +185,7 @@ class EDM_Specification(models.Model):
 def get_upload_to_edm_photos(instance, filename):
     modified_date = instance.modified_on.strftime('%Y%m%d')
     filename = filename.split('\\')[-1]
-    return 'Instruments/Photos/%s/%s/%s/%s' % (instance.edm_specs.edm_owner.company_abbrev, instance.edm_number, modified_date, filename)
+    return 'InstrumentPhotos/%s/%s/%s/%s' % (instance.edm_specs.edm_owner.company_abbrev, instance.edm_number, modified_date, filename)
 
 class EDM_Inst (models.Model):
     edm_number = models.CharField(max_length=15, 
@@ -197,7 +197,6 @@ class EDM_Inst (models.Model):
                                       on_delete = models.SET_NULL,
                                       help_text="Name of instrument custodian",
                                       verbose_name = "EDM Custodian")
-    # photo = models.FileField(upload_to='media/instrument_photos/edm/',
     photo = models.FileField(upload_to=get_upload_to_edm_photos,
                          null=True,
                          blank=True, 
@@ -216,6 +215,10 @@ class EDM_Inst (models.Model):
 
     def __str__(self):
         return f'{self.edm_specs} - {self.edm_number}'
+
+    def delete(self, *args, **kwargs):
+        super(EDM_Inst, self).delete(*args, **kwargs)
+        self.photo.storage.delete(self.photo.path)
 
 
 class Prism_Specification(models.Model):
@@ -248,7 +251,7 @@ class Prism_Specification(models.Model):
 def get_upload_to_prism_photos(instance, filename):
     modified_date = instance.modified_on.strftime('%Y%m%d')
     filename = filename.split('\\')[-1]
-    return 'Instruments/Photos/%s/%s/%s/%s' % (instance.prism_specs.prism_owner.company_abbrev, instance.prism_number, modified_date, filename)
+    return 'InstrumentPhotos/%s/%s/%s/%s' % (instance.prism_specs.prism_owner.company_abbrev, instance.prism_number, modified_date, filename)
 class Prism_Inst (models.Model):
     prism_number = models.CharField(max_length=15, 
                                     help_text="Enter the instrument serial number / unique ID",
@@ -259,7 +262,6 @@ class Prism_Inst (models.Model):
                                         on_delete = models.PROTECT,
                                         help_text="Name of instrument custodian",
                                         verbose_name = 'Prism Custodian')
-    # photo = models.FileField(upload_to='media/instrument_photos/prism/',
     photo = models.FileField(upload_to=get_upload_to_prism_photos,
                          null=True,
                          blank=True, 
@@ -278,6 +280,11 @@ class Prism_Inst (models.Model):
 
     def __str__(self):
         return f'{self.prism_specs} - {self.prism_number}'
+    
+    def delete(self, *args, **kwargs):
+        super(Prism_Inst, self).delete(*args, **kwargs)
+        self.photo.storage.delete(self.photo.path)
+
 
 ################################
 ## METEOROLOGICAL INSTRUMENTS ##
@@ -320,7 +327,7 @@ class Mets_Specification(models.Model):
 def get_upload_to_mets_photos(instance, filename):
     modified_date = instance.modified_on.strftime('%Y%m%d')
     filename = filename.split('\\')[-1]
-    return 'Instruments/Photos/%s/%s/%s/%s' % (instance.mets_specs.mets_owner.company_abbrev, instance.mets_number, modified_date, filename)
+    return 'InstrumentPhotos/%s/%s/%s/%s' % (instance.mets_specs.mets_owner.company_abbrev, instance.mets_number, modified_date, filename)
 class Mets_Inst (models.Model):
     mets_specs = models.ForeignKey(Mets_Specification, on_delete = models.PROTECT,
                       verbose_name= 'instrument specifications')
@@ -350,6 +357,11 @@ class Mets_Inst (models.Model):
 
     def __str__(self):
         return f'{self.mets_specs} - {self.mets_number}'
+    
+    def delete(self, *args, **kwargs):
+        super(Mets_Inst, self).delete(*args, **kwargs)
+        self.photo.storage.delete(self.photo.path)
+
 
 ##############################
 ## CALIBRATION CERTIFICATES ##
@@ -402,7 +414,7 @@ class EDMI_certificate (models.Model):
         validators = [MinValueValidator(0), MaxValueValidator(500)],
         help_text="Degrees of freedom of calibration")
 
-    certificate_upload = models.FileField(upload_to='media/calibration_certificates/',
+    certificate_upload = models.FileField(upload_to='media/CalibrationCertificates/',
                          null=True,
                          blank=True, 
                          verbose_name= 'Calibration Record')

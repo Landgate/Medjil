@@ -15,7 +15,7 @@ def add_landgate_instruments(apps, schema_editor):
 	StaffCalibrationRecord = apps.get_model('staffcalibration', 'StaffCalibrationRecord')
 
 	# Add digital levels
-	with open("media/Landgate Instruments/Digital Levels/digital_levels.csv", "r") as f:
+	with open("data_preload/Landgate Instruments/Digital Levels/digital_levels.csv", "r") as f:
 		reader = csv.reader(f); header = next(reader)
 		k = 0
 		inst_type = 'level'
@@ -31,7 +31,7 @@ def add_landgate_instruments(apps, schema_editor):
 						level_number = level_number,
 						)
 	# Add bar-coded staves
-	with open("media/Landgate Instruments/Staves/staves.csv", "r") as f:
+	with open("data_preload/Landgate Instruments/Staves/staves.csv", "r") as f:
 		reader = csv.reader(f); header = next(reader)
 		k = 0
 		inst_type = 'staff'

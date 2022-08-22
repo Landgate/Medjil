@@ -15,6 +15,7 @@ inst_makes = [
 	{'name': 'NEEDO', 'make_abbrev': 'NEE'},
 	{'name': 'GEOMAX', 'make_abbrev': 'GEO'},
 	{'name': 'TOPCON', 'make_abbrev': 'TOP'},
+	{'name': 'OTHERS', 'make_abbrev': 'OTHERS'},
 ]
 
 def add_default_instruments(apps, schema_editor):
@@ -29,7 +30,7 @@ def add_default_instruments(apps, schema_editor):
 		obj.save()
 
 	# try:
-	with open("media/default instruments/Default Instrument Models.csv", "r") as f:
+	with open("data_preload/default instruments/Default Instrument Models.csv", "r") as f:
 		reader = csv.reader(f); header = next(reader)
 		k = 0
 		for row in reader:

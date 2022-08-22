@@ -52,11 +52,6 @@ class InstrumentModelCreateByInstTypeForm(forms.Form):
         self.initial['inst_type'] = inst_type
     
     inst_type = forms.ChoiceField(widget = forms.Select(), choices = inst_types)
-    try:
-        obj, created = InstrumentMake.objects.get_or_create(make='OTHERS',
-                                            make_abbrev= 'OTHERS')
-    except OperationalError as e:
-        pass
     make = forms.ModelChoiceField(empty_label='Select one of the following',
                                 required=True,
                                 queryset=InstrumentMake.objects.all(),

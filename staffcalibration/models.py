@@ -112,6 +112,7 @@ class StaffCalibrationRecord(models.Model):
             return getattr(self.field_book, 'url', None)
         return None
 
+    
 # Adjustment
 class AdjustedDataModel(models.Model):
     calibration_id = models.ForeignKey(StaffCalibrationRecord, 
