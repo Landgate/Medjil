@@ -204,6 +204,7 @@ def upload_range_data(apps, schema_editor):
             next(csv_reader)
             calibration_record = []
             for row in csv_reader:
+                print (row)
                 observation_date = datetime.strptime(row[0], '%d/%m/%Y').date()
                 site_name = row[1].strip()
                 staff_number = row[2].strip()
