@@ -15,7 +15,7 @@ inst_makes = [
 	{'name': 'NEEDO', 'make_abbrev': 'NEE'},
 	{'name': 'GEOMAX', 'make_abbrev': 'GEO'},
 	{'name': 'TOPCON', 'make_abbrev': 'TOP'},
-	{'name': 'OTHERS', 'make_abbrev': 'OTHERS'},
+	{'name': 'OTHERS', 'make_abbrev': 'OTH'},
 ]
 
 def add_default_instruments(apps, schema_editor):
