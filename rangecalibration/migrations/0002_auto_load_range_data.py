@@ -238,7 +238,7 @@ def upload_range_data(apps, schema_editor):
         for filename in files:
             if filename.endswith(('.ASC', '.asc')):
                 file_path = os.path.join(root, filename).replace('\\','/')
-                print(file_path)
+                # print(file_path)
                 fieldfile = os.path.join(root, filename)
                 fieldbooks = [f for f in os.listdir(root) if f.endswith(('pdf', 'PDF'))]
                 if fieldbooks:
