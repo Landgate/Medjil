@@ -204,7 +204,7 @@ def upload_range_data(apps, schema_editor):
             next(csv_reader)
             calibration_record = []
             for row in csv_reader:
-                print (row)
+                # print (row)
                 observation_date = datetime.strptime(row[0], '%d/%m/%Y').date()
                 site_name = row[1].strip()
                 staff_number = row[2].strip()
@@ -240,6 +240,8 @@ def upload_range_data(apps, schema_editor):
         else:
             tmp = root.split('\\')[-1].split('-')
             unique_index = tmp[0]+'-'+tmp[1]
+
+        print(unique_index)
         
         if unique_index:
             fieldfile = os.path.normpath(os.path.join(root, [f for f in os.listdir(root) if f.endswith(('.asc', 'ASC'))][0]))
