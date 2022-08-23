@@ -197,6 +197,7 @@ def upload_range_data(apps, schema_editor):
 	# Starting to read the files
     range_dir = "data_preload/Staff Range/Australia/WA/Boya/Range Calibration"
     FileDir = os.path.join(range_dir, '20172297')
+    print(os.listdir(FileDir))
     # Reading the temperature record
     if os.path.exists(os.path.join(range_dir, 'calibration_record.csv')):
         with open(os.path.join(range_dir, 'calibration_record.csv'), 'r', newline='') as f:
@@ -241,8 +242,6 @@ def upload_range_data(apps, schema_editor):
             tmp = root.split('\\')[-1].split('-')
             unique_index = tmp[0]+'-'+tmp[1]
 
-        print(unique_index)
-        
         if unique_index:
             fieldfile = os.path.normpath(os.path.join(root, [f for f in os.listdir(root) if f.endswith(('.asc', 'ASC'))][0]))
             fieldbook = [f for f in os.listdir(root) if f.endswith(('pdf', 'PDF'))]
