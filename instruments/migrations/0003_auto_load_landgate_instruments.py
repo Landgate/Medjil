@@ -31,7 +31,7 @@ def add_landgate_instruments(apps, schema_editor):
 						level_number = level_number,
 						)
 	# Add bar-coded staves
-	with open("data_preload/Landgate Instruments/Staves/staves.csv", "r") as f:
+	with open("data_preload/Landgate Instruments/Staves/staves.csv", "r", encoding="utf-8") as f:
 		reader = csv.reader(f); header = next(reader)
 		k = 0
 		inst_type = 'staff'

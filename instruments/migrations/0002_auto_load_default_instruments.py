@@ -30,7 +30,7 @@ def add_default_instruments(apps, schema_editor):
 		obj.save()
 
 	# try:
-	with open("data_preload/default instruments/Default Instrument Models.csv", "r") as f:
+	with open("data_preload/default instruments/Default Instrument Models.csv", "r", encoding="utf-8") as f:
 		reader = csv.reader(f); header = next(reader)
 		k = 0
 		for row in reader:
