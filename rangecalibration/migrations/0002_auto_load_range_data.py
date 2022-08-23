@@ -197,7 +197,8 @@ def upload_range_data(apps, schema_editor):
 	# Starting to read the files
     range_dir = "data_preload/Staff Range/Australia/WA/Boya/Range Calibration"
     FileDir = os.path.join(range_dir, '20172297')
-    print(os.listdir(FileDir))
+    FileDir = "data_preload/Staff Range/Australia/WA/Boya/Range Calibration/20172297"
+
     # Reading the temperature record
     if os.path.exists(os.path.join(range_dir, 'calibration_record.csv')):
         with open(os.path.join(range_dir, 'calibration_record.csv'), 'r', newline='') as f:
@@ -234,149 +235,164 @@ def upload_range_data(apps, schema_editor):
     # Read the  range data and process it   
     k = 0
     for root, dirs, files in os.walk(FileDir):
-        k+=1
-        unique_index = None
-        if files == []:
-            pass
-        else:
-            tmp = root.split('\\')[-1].split('-')
-            unique_index = tmp[0]+'-'+tmp[1]
+        for filename in files:
+            if filename.endswith(('.ASC', '.asc')):
+                file_path = os.path.join(root, filename).replace('\\','/')
+                print(file_path)
+                fieldfile = os.path.join(root, filename)
+                fieldbooks = [f for f in os.listdir(root) if f.endswith(('pdf', 'PDF'))]
+                if fieldbooks:
+                    fieldbook = os.path.join(root, fieldbooks[0])
+                else:
+                    fieldbook=None
+                observation_date = datetime.strptime(file_path.split('/')[-2].split('-')[0], '%Y%m%d').date()
+                # observation_date = datetime.strptime(file_path.split('/')[3].split('-')[0], '%Y%m%d').date()
+                staff_number = Staff.objects.get(staff_number = file_path.split('/')[-2].split('-')[1])
+                unique_index = observation_date.strftime('%Y%m%d')+'-'+staff_number.staff_number
 
-        if unique_index:
-            fieldfile = os.path.normpath(os.path.join(root, [f for f in os.listdir(root) if f.endswith(('.asc', 'ASC'))][0]))
-            fieldbook = [f for f in os.listdir(root) if f.endswith(('pdf', 'PDF'))]
-            
-            if fieldbook:
-                fieldbook = os.path.normpath(os.path.join(root, fieldbook[0]))
-            else:
-                fieldbook = None
-            [instance] = calibration_record[calibration_record[:,0]==unique_index]
-            # Get the Variables
-            observation_date = instance[1]
-            siteid = CalibrationSite.objects.get(site_name__exact = instance[2])
-            staffid = Staff.objects.get(staff_number__exact = instance[3])
-            levelid = DigitalLevel.objects.get(level_number__exact = instance[4])
-            Set_1_AvgT = (instance[5]+instance[6])/2
-            Set_2_AvgT = (instance[7]+instance[8])/2
-            job_number = instance[9]
+        # k+=1
+        # unique_index = None
+        # if files == []:
+        #     pass
+        # else:
+        #     tmp = root.split('\\')[-1].split('-')
+        #     unique_index = tmp[0]+'-'+tmp[1]
 
-            # Process File
+        # if unique_index:
+        #     fieldfile = os.path.normpath(os.path.join(root, [f for f in os.listdir(root) if f.endswith(('.asc', 'ASC'))][0]))
+        #     fieldbook = [f for f in os.listdir(root) if f.endswith(('pdf', 'PDF'))]
             
-            reading = check_filetype(fieldfile)
-            thisCalibRecord = StaffCalibrationRecord.objects.filter(inst_staff=staffid).order_by('-calibration_date')[0]
-            
-            thisStaff_Attributes = {
-                'dStaffLength': thisCalibRecord.inst_staff.staff_length,
-                'dThermalCoefficient': thisCalibRecord.inst_staff.thermal_coefficient*10**-6,
-                'dCorrectionFactor': thisCalibRecord.scale_factor, 
-                'dStdTemperature': thisCalibRecord.standard_temperature,
-            }
-            
-            # Get the Pin information & Tabulate the staff readings
-            newPillarList, thisMeasurement = rawdata_to_table(reading, 
-                                                    Set_1_AvgT, 
-                                                    Set_2_AvgT, 
-                                                    thisStaff_Attributes) # get all the elements together
-            # Match pillars/pins
-            eTotalPillars = siteid.no_of_pillars
-            ePillars = Pillar.objects.filter(site_id = siteid).values_list('name')
-            ePillars = [x[0] for x in ePillars]
-            ePillarList = sorted(ePillars, key=int)
-            
-            # Check pins with database
-            if (newPillarList == ePillarList):
-                try:
-                    calibid = RangeCalibrationRecord.objects.get( job_number = job_number,
-                                    site_id = siteid,
-                                    inst_staff = staffid,
-                                    calibration_date = observation_date, 
-                                )
-                except ObjectDoesNotExist:
-                    calibid = RangeCalibrationRecord.objects.create( job_number = job_number,
-                                            site_id = siteid,
-                                            inst_staff = staffid,
-                                            inst_level = levelid,
-                                            ave_temperature1 = Set_1_AvgT,
-                                            ave_temperature2 = Set_2_AvgT,
-                                            calibration_date = observation_date, 
-                                            observer = observer,
-                                            field_file = File(open(fieldfile, 'rb'), name = fieldfile.split('/')[-1]),
-                                        )
-                # print(calibid)
-                if fieldbook and (calibid.field_book == '' or not calibid.field_book):
-                    calibid.field_book = File(open(fieldbook, 'rb'), name = fieldbook.split('/')[-1])
-                    calibid.save()
-                # Create or Get the RawDataModel
-                RawDataModel.objects.get_or_create(
-                                        calibration_id = calibid,
-                                        observation = thisMeasurement) 
+        #     if fieldbook:
+        #         fieldbook = os.path.normpath(os.path.join(root, fieldbook[0]))
+        #     else:
+        #         fieldbook = None
+                [instance] = calibration_record[calibration_record[:,0]==unique_index]
+                # Get the Variables
+                observation_date = instance[1]
+                siteid = CalibrationSite.objects.get(site_name__exact = instance[2])
+                staffid = Staff.objects.get(staff_number__exact = instance[3])
+                levelid = DigitalLevel.objects.get(level_number__exact = instance[4])
+                Set_1_AvgT = (instance[5]+instance[6])/2
+                Set_2_AvgT = (instance[7]+instance[8])/2
+                job_number = instance[9]
 
-                # Perform the adjust 
-                rawDataSet = []; uniquePillarList = []
-                for key, value in thisMeasurement.items():
-                    if key == 'data':
-                        for items in value:
-                            rawDataSet.append(items)
-                            if not items[1] in uniquePillarList:
-                                uniquePillarList.append(items[1])
+                # Process File
                 
-                # to Array
-                rawDataSet = np.array(rawDataSet, dtype=object)
-                # print(rawDataSet)
-                output_adj = []; output_hdiff = []
-                for i in range(len(uniquePillarList)):
-                    x = uniquePillarList[i]
-
-                    dato = rawDataSet[rawDataSet[:,1]== x]
-                    if len(dato) == 1:
-                        interval = dato[0][1]
-                        obs_hdiff = '{:.5f}'.format(float(dato[0][-1]));
-                        adj_hdiff = '{:.5f}'.format(float(dato[0][-1]));
-                        resid = '{:.5f}'.format(0.0)
-                        std_dev = '{:.2f}'.format(float(dato[0][-3])*1000)
-                        stdev_resid = '{:.2f}'.format(0.0)
-                        std_resid = '{:.2f}'.format(0.0)
-                        unc = '{:.2f}'.format(float(dato[0][-3])*1000*1.96)
-                        # Construct list
-                        output_adj.append([
-                            interval, adj_hdiff, obs_hdiff, resid, std_dev, std_resid, unc
-                        ])
-                        output_hdiff.append([
-                            interval, adj_hdiff, unc, len(dato)
-                        ])
-                    elif len(dato) == 2:
-                        interval = dato[0][1]
-                        # Prepare the required arrays
-                        W = dato[:,-1].astype(np.float); P = np.diag(1/(dato[:,-3].astype(np.float))**2); A = np.ones(len(W))
-                        
-                        # Perform Least squares - Refer to J.Klinge & B. Hugessen document on Calibration of Barcode staffs
-                        adj_hdiff = (np.matmul(np.transpose(A), np.matmul(P, W)))/(np.matmul(np.transpose(A), np.matmul(P, A))) # (A_T*P*A)^(-1)*A_T*P*W
-                        resid = np.array(adj_hdiff - W, dtype=float)
-                        std_dev = np.sqrt(1./np.sqrt(np.diag(P).astype(float))**2)
-                        stdev_resid = np.sqrt(1./np.sqrt(np.diag(P).astype(float))**2 - 1./sqrt(np.matmul(np.transpose(A), np.matmul(P, A)))**2)
-                        unc = (sqrt(1/np.matmul(np.transpose(A), np.matmul(P, A)))*1000*1.96)
-                        std_resid = np.round_(resid/stdev_resid,1)
-
-                        # Prepare the outputs - 
-                        for j in range(len(W)):
-                            output_adj.append([interval, '{:.5f}'.format(adj_hdiff), '{:.5f}'.format(W[j]), '{:.5f}'.format(resid[j]),
-                                            '{:.2f}'.format(std_dev[j]*1000), '{:.2f}'.format(stdev_resid[j]*1000), 
-                                            '{:.1f}'.format(std_resid[j])])
-                        output_hdiff.append([interval, '{:.5f}'.format(adj_hdiff), '{:.2f}'.format(unc), len(dato)])
-                    # print(dato)
+                reading = check_filetype(fieldfile)
+                thisCalibRecord = StaffCalibrationRecord.objects.filter(inst_staff=staffid).order_by('-calibration_date')[0]
                 
-                # Update the database
-                output_hdiff = {'headers': ['PILLAR','HEIGHT DIFF','UNCERTAINTY(mm)','OBSERVATION COUNT'], 'data': [list(x) for x in output_hdiff]}
-                output_adj = {'headers': ['PILLAR','ADJ HEIGHT DIFF','OBS HEIGHT DIFF','RESIDUAL','STANDARD DEVIATION','STDEV RESIDUAL','STANDARD_RESIDUAL'], 'data':  [list(x) for x in output_adj]} 
+                thisStaff_Attributes = {
+                    'dStaffLength': thisCalibRecord.inst_staff.staff_length,
+                    'dThermalCoefficient': thisCalibRecord.inst_staff.thermal_coefficient*10**-6,
+                    'dCorrectionFactor': thisCalibRecord.scale_factor, 
+                    'dStdTemperature': thisCalibRecord.standard_temperature,
+                }
                 
-                if not AdjustedDataModel.objects.filter(calibration_id=calibid): 
-                    AdjustedDataModel.objects.create(
-                                                calibration_id = calibid,
-                                                adustment = output_adj) 
-                if not HeightDifferenceModel.objects.filter(calibration_id=calibid): 
-                    HeightDifferenceModel.objects.create(
-                                                calibration_id = calibid,
-                                                height_difference = output_hdiff) 
+                # Get the Pin information & Tabulate the staff readings
+                newPillarList, thisMeasurement = rawdata_to_table(reading, 
+                                                        Set_1_AvgT, 
+                                                        Set_2_AvgT, 
+                                                        thisStaff_Attributes) # get all the elements together
+                # Match pillars/pins
+                eTotalPillars = siteid.no_of_pillars
+                ePillars = Pillar.objects.filter(site_id = siteid).values_list('name')
+                ePillars = [x[0] for x in ePillars]
+                ePillarList = sorted(ePillars, key=int)
+                
+                # Check pins with database
+                if (newPillarList == ePillarList):
+                    try:
+                        calibid = RangeCalibrationRecord.objects.get( job_number = job_number,
+                                        site_id = siteid,
+                                        inst_staff = staffid,
+                                        calibration_date = observation_date, 
+                                    )
+                    except ObjectDoesNotExist:
+                        calibid = RangeCalibrationRecord.objects.create( job_number = job_number,
+                                                site_id = siteid,
+                                                inst_staff = staffid,
+                                                inst_level = levelid,
+                                                ave_temperature1 = Set_1_AvgT,
+                                                ave_temperature2 = Set_2_AvgT,
+                                                calibration_date = observation_date, 
+                                                observer = observer,
+                                                field_file = File(open(fieldfile, 'rb'), name = fieldfile.split('/')[-1]),
+                                            )
+                    # print(calibid)
+                    if fieldbook and (calibid.field_book == '' or not calibid.field_book):
+                        calibid.field_book = File(open(fieldbook, 'rb'), name = fieldbook.split('/')[-1])
+                        calibid.save()
+                    # Create or Get the RawDataModel
+                    RawDataModel.objects.get_or_create(
+                                            calibration_id = calibid,
+                                            observation = thisMeasurement) 
+
+                    # Perform the adjust 
+                    rawDataSet = []; uniquePillarList = []
+                    for key, value in thisMeasurement.items():
+                        if key == 'data':
+                            for items in value:
+                                rawDataSet.append(items)
+                                if not items[1] in uniquePillarList:
+                                    uniquePillarList.append(items[1])
+                    
+                    # to Array
+                    rawDataSet = np.array(rawDataSet, dtype=object)
+                    # print(rawDataSet)
+                    output_adj = []; output_hdiff = []
+                    for i in range(len(uniquePillarList)):
+                        x = uniquePillarList[i]
+
+                        dato = rawDataSet[rawDataSet[:,1]== x]
+                        if len(dato) == 1:
+                            interval = dato[0][1]
+                            obs_hdiff = '{:.5f}'.format(float(dato[0][-1]));
+                            adj_hdiff = '{:.5f}'.format(float(dato[0][-1]));
+                            resid = '{:.5f}'.format(0.0)
+                            std_dev = '{:.2f}'.format(float(dato[0][-3])*1000)
+                            stdev_resid = '{:.2f}'.format(0.0)
+                            std_resid = '{:.2f}'.format(0.0)
+                            unc = '{:.2f}'.format(float(dato[0][-3])*1000*1.96)
+                            # Construct list
+                            output_adj.append([
+                                interval, adj_hdiff, obs_hdiff, resid, std_dev, std_resid, unc
+                            ])
+                            output_hdiff.append([
+                                interval, adj_hdiff, unc, len(dato)
+                            ])
+                        elif len(dato) == 2:
+                            interval = dato[0][1]
+                            # Prepare the required arrays
+                            W = dato[:,-1].astype(np.float); P = np.diag(1/(dato[:,-3].astype(np.float))**2); A = np.ones(len(W))
+                            
+                            # Perform Least squares - Refer to J.Klinge & B. Hugessen document on Calibration of Barcode staffs
+                            adj_hdiff = (np.matmul(np.transpose(A), np.matmul(P, W)))/(np.matmul(np.transpose(A), np.matmul(P, A))) # (A_T*P*A)^(-1)*A_T*P*W
+                            resid = np.array(adj_hdiff - W, dtype=float)
+                            std_dev = np.sqrt(1./np.sqrt(np.diag(P).astype(float))**2)
+                            stdev_resid = np.sqrt(1./np.sqrt(np.diag(P).astype(float))**2 - 1./sqrt(np.matmul(np.transpose(A), np.matmul(P, A)))**2)
+                            unc = (sqrt(1/np.matmul(np.transpose(A), np.matmul(P, A)))*1000*1.96)
+                            std_resid = np.round_(resid/stdev_resid,1)
+
+                            # Prepare the outputs - 
+                            for j in range(len(W)):
+                                output_adj.append([interval, '{:.5f}'.format(adj_hdiff), '{:.5f}'.format(W[j]), '{:.5f}'.format(resid[j]),
+                                                '{:.2f}'.format(std_dev[j]*1000), '{:.2f}'.format(stdev_resid[j]*1000), 
+                                                '{:.1f}'.format(std_resid[j])])
+                            output_hdiff.append([interval, '{:.5f}'.format(adj_hdiff), '{:.2f}'.format(unc), len(dato)])
+                        # print(dato)
+                    
+                    # Update the database
+                    output_hdiff = {'headers': ['PILLAR','HEIGHT DIFF','UNCERTAINTY(mm)','OBSERVATION COUNT'], 'data': [list(x) for x in output_hdiff]}
+                    output_adj = {'headers': ['PILLAR','ADJ HEIGHT DIFF','OBS HEIGHT DIFF','RESIDUAL','STANDARD DEVIATION','STDEV RESIDUAL','STANDARD_RESIDUAL'], 'data':  [list(x) for x in output_adj]} 
+                    
+                    if not AdjustedDataModel.objects.filter(calibration_id=calibid): 
+                        AdjustedDataModel.objects.create(
+                                                    calibration_id = calibid,
+                                                    adustment = output_adj) 
+                    if not HeightDifferenceModel.objects.filter(calibration_id=calibid): 
+                        HeightDifferenceModel.objects.create(
+                                                    calibration_id = calibid,
+                                                    height_difference = output_hdiff) 
 
 def reverse_func(apps, schema_editor):
     Calibration_Update = apps.get_model("range_calibration", "Calibration_Update")
