@@ -1,0 +1,3 @@
+SECRET_KEY=d%t^naj(!0x3-te!aq@gt=2wze9^oqs=3)k3$_(ng7c4d8bk_%
+EMAIL_HOST_USER=geodetic.landgate@gmail.com
+EMAIL_HOST_PASSWORD=geodetic1

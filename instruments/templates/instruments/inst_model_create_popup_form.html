@@ -1,0 +1,126 @@
+{% extends 'base_popup.html' %}
+
+{% load static %}
+
+{% block content %}
+<article class="post">
+    <div class="post-header mt-10 text-center mb-3">
+        <h1>Instrument Model Form</h1>
+    </div>
+    <div class="post-content">
+
+    
+    <form method = 'POST' action= '' enctype = "multipart/form-data" class="site-form" name="model_form">
+        {% csrf_token %}
+        <table>
+            {% for field in form %}
+                {% if field.name == 'inst_make' %}
+                    <tr id="id_make_name">
+                        <td width="30%" class="pxl-5 text-sm text-blue-500">{{ field.label_tag }}</td>
+                        <td width="70%" class="text-sm text-blue-500"> {{ field }}
+                            {% for error in field.errors %}
+                                <p class="error error-danger">{{ error }}</p>
+                            {% endfor %}
+                            {% for error in form.non_field_errors %}
+                                <p class="error error-danger">*** {{ error }} ***</p>
+                            {% endfor %}
+                            {% if not field.field.widget.attrs.placeholder and field.help_text %}
+                                <p class="helptext">{{ field.help_text }}</p>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% elif field.name == 'inst_abbrev' %}
+                    <tr id="id_make_abbrev">
+                        <td width="30%" class="pxl-5 text-sm text-blue-500">{{ field.label_tag }}</td>
+                        <td width="70%" class="text-sm text-blue-500"> {{ field }}
+                            {% for error in field.errors %}
+                                <p class="error error-danger">{{ error }}</p>
+                            {% endfor %}
+                            {% for error in form.non_field_errors %}
+                                <p class="error error-danger">*** {{ error }} ***</p>
+                            {% endfor %}
+                            {% if not field.field.widget.attrs.placeholder and field.help_text %}
+                                <p class="helptext">{{ field.help_text }}</p>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td width="30%">{{ field.label_tag }}</td>
+                        <td width="70%"> {{ field }} 
+                            {% for error in field.errors %}
+                                <p class="error error-danger">{{ error }}</p>
+                            {% endfor %}
+                            {% for error in form.non_field_errors %}
+                                <p class="error error-danger">*** {{ error }} ***</p>
+                            {% endfor %}
+                            {% if not field.field.widget.attrs.placeholder and field.help_text %}
+                                <p class="helptext">{{ field.help_text }}</p>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </table>
+        <!-- {{form.as_table}} -->
+
+        {% if request.GET.next %}
+            <input type="hidden" name="next" value="{{ request.GET.next }}">
+        {% endif %}
+        <div class="button-container">
+            <button class="submit-button bg-green-400 hover:bg-green-300 text-base" type="submit" >Save</button>
+        </div>
+    </form>
+    </div>
+</article>
+
+<script>
+     // Make Option 
+     defaultMakeOptions = document.getElementById("id_make")
+
+    // New Make and Abbrev Container
+    const newMakeName = document.getElementById("id_make_name")
+    const newAbbrName = document.getElementById("id_make_abbrev")
+
+    // Dont display the make/abbrev container 
+    newMakeName.style.display = "none"
+    newAbbrName.style.display = "none"
+
+    // On dropdown change - if others - extend table row to Make Form
+    defaultMakeOptions.addEventListener(`change`, (e) => {
+        // log(`e.target`, e.target);
+        const select = e.target;
+        const value = select.value;
+        const desc = select.options[select.selectedIndex].text;
+
+        if (desc.includes("OTHERS")) {
+            newMakeName.style.display = "table-row"; 
+            document.getElementById('id_inst_make').required = true;
+            newAbbrName.style.display = "table-row"; 
+            document.getElementById('id_inst_abbrev').required = true;
+        } else {
+            newMakeName.style.display = "none"; 
+            document.getElementById('id_inst_make').required = false;
+            newAbbrName.style.display = "none"; 
+            document.getElementById('id_inst_abbrev').required = false;
+        }
+    });
+        
+    const newModelName = document.getElementById("id_inst_model")
+    newModelName.value = newModelName.value ? newModelName.value.trim() : ''
+
+    // newModelName.addEventListener('input', () => {
+    //     newModelName.value = newModelName.value ? newModelName.value.trim() : '' 
+    // })
+    
+    
+    //  Refresh Parent Function
+    function refreshParent() 
+    {
+        window.opener.location.reload(true);
+    }
+</script>
+
+<body onunload="javascript:refreshParent()">
+
+{% endblock %}

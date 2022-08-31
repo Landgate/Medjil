@@ -1,0 +1,68 @@
+{% extends 'base_popup.html' %}
+{% load static %}
+
+
+{% block content %} 
+
+<article class="post">
+    <!-- <div class="post-header mt-12 text-center mb-3">
+        <h1>Welcome to Landgate's Survey Instrument Calibration website.</h1>
+        <p> This form allows to register (or modify) a new (or an existing) calibration site - both Barcode Calibration Range or an EDM Baseline.</p>
+    </div> -->
+
+    <div class="post-content">
+        
+        <form action="" class="site-form" method="post" enctype="multipart/form-data">
+            <div class="mb-5 site-form-header bg-red-200 rounded px-2">
+                <h2 class="text-center">Create a Country</h2>
+            </div>
+            {% csrf_token %}
+            <table>
+                {% for field in form %}
+                <tr>
+                    <td width="30%">{{ field.label_tag }}</td> 
+                    <td width="70%"> 
+                        {{ field }} 
+                        <!-- Errors -->
+                        {% for error in field.errors %}
+                            <p class="error error-danger">{{ error }}</p>
+                        {% endfor %}
+                        <!-- Help text -->
+                        {% if not field.field.widget.attrs.placeholder and field.help_text %}
+                            <p class="helptext">{{ field.help_text }}</p>
+                        {% endif %}
+                    </td>
+                </tr>        
+        
+                {% endfor %}
+            </table>
+            {% if request.GET.next %}
+                <input type="hidden" name="next" value="{{ request.GET.next }}">
+            {% endif %}
+            <div class="button-container">
+                <button class="submit-button bg-green-500 hover:bg-green-400" type="submit" >Submit</button>
+            </div>
+        </form>
+        
+    </div>
+</article>
+
+<script>
+    var site = document.getElementById('id_site_name')
+    var address = document.getElementById('id_site_address')
+
+    window.onload = function() {
+        document.getElementById('id_site_type').value = '';
+        document.getElementById('id_site_name').value = '';
+        document.getElementById('id_site_address').value = '';
+    }
+
+    function refreshParent() 
+        {
+            window.opener.location.reload(true);
+        }
+</script>
+
+<body onunload="javascript:refreshParent()">
+
+{% endblock %}

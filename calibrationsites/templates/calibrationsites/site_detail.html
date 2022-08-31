@@ -1,0 +1,118 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+
+
+{% block content %} 
+
+<article class="post">
+    <div class="post-header mt-12 text-center mb-3">
+        <!-- <h1>Welcome to Landgate's Survey Instrument Calibration website.</h1> -->
+        <!-- <p> This form allows to register (or modify) a new (or an existing) calibration site - both Barcode Calibration Range or an EDM Baseline.</p> -->
+    </div>
+
+    <div class="post-content">
+        <div class="mt-5">
+            <h1 class="text-center" style="margin-bottom:1.5rem !important">Site Name - <u>{{ site.site_name }} Staff Calibration Range</u></h1>
+            <div class="grid-2">
+                <div>
+                    <p><strong>Site Address - </strong>{{ site.site_address }}, {{ site.locality }}, {{ site.country }} </p>
+                    <p><strong>Operated by - </strong> {{ site.operator }}</p>
+                    <p><strong>Number of Pillars/Pins - </strong> {{ site.no_of_pillars|floatformat:0 }}</p>
+                </div>
+                <div>
+                    <p><strong>Site Access Plan - </strong> <a href="{{ site.site_access.url }}" target="__blank">View here</a></p>
+                    <p><strong>Site Configuration Plan - </strong> <a href="{{ site.site_config.url }}" target="__blank">View here</a></p>
+                    <p><strong>Plan Last Modified - </strong>{{ site.modified_on|date:"M d, Y" }}</p>
+                </div>
+            </div>
+            <hr>
+            <div class="mt-4">
+                <p><strong>Current Status - </strong>Ok</p>
+            </div>
+            <hr>
+            {% if site.description %}
+                <div class="mt-4">
+                    <p><strong>Site Description - </strong> {{ site.description|safe }}</p>
+                </div>
+                    
+            {% endif %}
+        </div>
+        <!-- Pillars -->
+        <div class="mt-5">
+            {% if site.no_of_pillars %}
+                <table>
+                    {% if site.site_type == 'staff_range' %}
+                        <tr>
+                            <th>Pillar Number</th>
+                            <th>Pillar Height</th>
+                            <th>Current Status</th>
+                            <th></th>
+                        </tr>
+                        {% for pillar in pillars %}
+                            <tr>
+                                <td class="text-center">{{ pillar.name }}</td>
+                                <td>{{ pillar.height }}</td>
+                                <td>{{ site.status }}</td>
+                                <td>
+                                    <a href="/calibrationsites/each_pillar_update/{{site.id}}/{{pillar.name}}" target="_blank" class="ml-3 border-transparent hover:border-gray-900 rounded text-lg text-red cursor-pointer" onclick="return showAddPopup(this);" id="update_pillar">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16" color="red">
+                                            <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+                                          </svg>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% elif site.site_type == 'baseline' %}
+                        <tr>
+                            <th>Pillar Number</th>
+                            <th>Easting</th>
+                            <th>Northing</th>
+                            <th>Zone</th>
+                            <th>Current Status</th>
+                            <th></th>
+                        </tr>
+                        {% for pillar in pillars %}
+                            <tr>
+                                <td class="text-center">{{ pillar.name }}</td>
+                                <td>{{ pillar.easting }}</td>
+                                <td>{{ pillar.northing }}</td>
+                                <td>{{ pillar.zone }}</td>
+                                <td>{{ site.status }}</td>
+                                <td>
+                                    <a href="/calibrationsites/each_pillar_update/{{site.id}}/{{pillar.name}}" target="_blank" class="ml-3 border-transparent hover:border-gray-900 rounded text-lg text-red cursor-pointer" onclick="return showAddPopup(this);" id="update_pillar">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16" color="red">
+                                            <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+                                          </svg>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}   
+                    {% endif %}
+                </table>
+            {% else %}
+                <p>There are no pillars recorded for this Site. Click <a href="{% url 'calibrationsites:pillar-create' site.id %}">here</a> to register the pillars</p>
+            {% endif %}
+        </div> 
+    </div>
+</article>
+
+<script>
+    function showAddPopup(triggeringLink) {
+        var name = triggeringLink.id.replace(/^update_/, '');
+        href = triggeringLink.href;
+        console.log(href)
+        // var win = window.open("{% url 'instruments:inst_model_createby_inst_type' 'level' %}", "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=850,width=500,height=400");
+        var win = window.open(href, name, "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=850,width=500,height=400");
+        win.focus();
+        return false;
+    }
+
+    function closePopup(win, newID, newRepr) {
+        // $(id).append('<option value=' + newID + ' selected >' + newRepr + '</option>')
+        // console.log(id, newID, newRepr)
+        // window.sessionStorage.setItem('new_model',  newID);
+        win.close();
+    }
+    
+</script>
+{% endblock %}

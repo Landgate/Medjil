@@ -1,0 +1,62 @@
+{% extends 'base_popup.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block content %} 
+
+<article class="post">
+    <div class="post-content">
+        
+        <form action="" class="site-form" method="post">
+            {% csrf_token %}
+            <div class="mb-5 site-form-header bg-indigo-300 rounded px-2">
+                <h2 class="text-center">Update the Pillar/Pin details</h2>
+            </div>
+            <table>
+                {% for field in form %}
+                <tr>
+                    <td width="25%"><strong>{{ field.label_tag }}</strong></td>
+                    <td width="70%"> {{ field }} 
+                        <!-- Errors -->
+                        {% for error in field.errors %}
+                            <p class="error error-danger">{{ error }}</p>
+                        {% endfor %}
+                        <!-- Help text -->
+                        {% if not field.field.widget.attrs.placeholder and field.help_text %}
+                            <p class="helptext">{{ field.help_text }}</p>
+                        {% endif %}
+                    </td>
+                    <td width="5%"></td>
+                </tr>
+                {% endfor %}               
+            </table>
+
+            {% if request.GET.next %}
+                <input type="hidden" name="next" value="{{ request.GET.next }}">
+            {% endif %}
+            <div class="button-container">
+                <button class="submit-button bg-green-400 hover:bg-green-300 text-base" type="submit">Save</button>
+            </div>
+
+        </form>
+    </div>
+</article>
+
+<script>
+    document.getElementById('cancelbutton').addEventListener('click', () => {
+        // win.close()
+    })
+
+    // function closeButton() {
+    //     win.close()
+    // }
+    //  Refresh Parent Function
+    function refreshParent() 
+        {
+            window.opener.location.reload(true);
+        }
+</script>
+
+<body onunload="javascript:refreshParent()">
+
+{% endblock %}

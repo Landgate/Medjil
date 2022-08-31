@@ -1,0 +1,138 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+{% block content %}
+
+
+<article class="post mt-10">
+	<header class="post-header">
+	    <h1 class="post-title"> Step by step guide to Staff Range Calibration</h1>
+	    <p> Last updated November 2020 </p>
+	</header>
+
+	<div class="post-content introduction">
+		<h2>Introduction</h2>
+		<p>
+		 	Digital levelling systems have long been used by the surveying and engineering industry to determine height differences between any two or multiple locations for various applications. In Western Australia, Landgate is responsible for the national standard of measure for length, in this case, defined by the height difference or length measured in the vertical plane. In an effort to provide an accurate and a uniform system of levelling across the State, Landgate established a staff calibration range at Boya in 2002. The range comprises 2 observing pillars and 21 pins set in a granite outcrop.
+		 </p>
+		<p> 
+			Regular measurements done by Landgate (every two years from 2002 and on a monthly basis from 2018 to 2020) show fluctuations in height differences between the pins and appear to form a dominant seasonal cycle. This has lead us to modify the staff calibration software to store and apply the range values for calibrating barcode staves. Additionally, it has also allowed Landgate to develop this user-friendly web application for the surveyors to manage and calibrate their staves.  
+		</p>
+
+		<h2>About the Boya staff calibration range</h2>
+		<p> The Landgate barcode staff calibration range is located at the Land Surveyors Licensing Board's examination site at Boya and consists of 2 observing pillars and a series of 21 stainless steel pins set in a solid granite outcrop in a semi-arc rounding the two observing pillars.
+		</p>
+
+		<p> The two observing pillars were first constructed beside a large piece of sloping granite which had the required 4 metres of height difference between top and bottom. The highest pillar is set at a comfortable observing height and the lowest a metre lower and closer to the rock and range. 
+		</p>
+
+		<p>The pins were glued into drilled holes in the granite while the observing pillars were concreted deep into the ground to ensure their stability. With the 3 metre invar staff, it was possible to observe from Pin 1 to 15 from the high pillar and from Pin 7 to Pin 21 from the lower pillar
+		</p>
+
+		<div class="grid-2">
+			<div>
+				<p>
+					<img src="{% static 'images/observing-pillar.png' %}" alt="Observing Pillars" />
+				</p>
+			    <h4>Digital level set on Pillar MV 83 (high pillar)</h4>
+			    <p>
+			    	The low pillar or Pillar B can be seen just below the high pillar..
+			    </p>
+			</div>
+			<div>
+	    		<p>
+	    			<img src="{% static 'images/invar-staff.png' %}" alt="Invar staff" />
+	    		</p>
+	    		<h4>Invar staff set on Pin 2</h4>
+	    		<p>
+	    			Invar staves set up on the pins are levelled and is held firmly by a bipole to main stability during the course of reading. 
+	    		</p>
+  			</div>
+  			<div>
+	    		<p>
+	    			<img src="{% static 'images/pin-config.png' %}" alt="Pin configuration" />
+	    		</p>
+	    		<h4>Stainless steel pins glued in granite rock</h4>
+	    		<p>
+	    			The pins were glued into drilled holes in the granite outcrop in an arc shape with a distance of about 10 metres from the high pillar and 8.8 metres from the low one.
+	    		</p>
+  			</div>
+  			<div>
+	    		<p>
+	    			<img src="{% static 'images/observing.png' %}" alt="Obsering from Pillar A" />
+	    		</p>
+	    		<h4>Observing from Pillar MV 83(high pillar).</h4>
+    			<p>
+    				With a 3 metre staff, readings can be done only for the first 15 pins using the high pillar.
+    			</p>
+  			</div>
+		</div>
+
+
+		<div class="cf nr3 nl3">
+        	<div class="fl w-50-ns ph3">
+	            <h2 class="mt0">Boya access details and field notes</h2>
+	            <p>
+					The Boya Barcode Staff Calibration Range is monitored on a regular basis. Landgate provides this staff calibration data processing service to ensure staves are calibrated based on more than two years of monitoring data, which is also updated time-to-time. Please download the following documents before you go to Boya: 
+					<!-- <ul>
+						<li><a href="{% static 'boya/2017_Access-sketch-Boya-barcode-staff-calibration.pdf' %}" target="_blank">Access details</a> of the Boya barcode staff calibration range</li>
+						<li><a href="{% static 'boya/Boya Pin Configuration.pdf' %}" target="_blank">Diagram of the pin configuration</a></li>
+						<li><a href="{% static 'boya/Barcoded_booking_sheet.pdf' %}" target="_blank">Barcode Staff Booking Sheet</a></li>
+						<li><a href="{% static 'sample_data/LS15_20200917.ASC' %}" target="_blank">Sample ASCII file</a></li>
+					</ul> -->
+				  </p>
+          	</div>
+          	<div class="fl w-50-ns ph3">
+	            <h2 class="mt0">Field measurements and calibration procedures</h2>
+				For the purpose of calibrating the range, Landgate uses a <u>three</u> metre invar staff (with a most recent ), which a good history of calibration and a Leica LS15 digital level. 
+	            <ol class="py-2 pxl-5">
+	            	<li>Use the barcode staff booking sheet to record the collimation details and range observations details in the field.</li>
+					<li>Check the bubble of the digital level and the staff. Re-adjust them if necessary. The staff needs to be truly vertical for the best results.</li>
+					<li>Perform a collimation test on the digital level and use its software to compute and store the constants calculated. For this purpose, four co-linear spikes in concrete 20 m apart have been established adjacent to the range 
+						<!-- (see the <a href="{% static 'boya/2017_Access-sketch-Boya-barcode-staff-calibration.pdf' %}" target="_blank">Access Sketch</a>) --></li>
+					<li>Configure the settings in the digital level to record mean and standard deviation of measurement from multiple readings (at least five), if possible. Otherwise, if the instrument does not allow means from multiple observations, a minimum of three complete sets of observations (see 8 – 10 below) is required for redundancy</li>
+					<li>Set the digital level on the high observing pillar (MV 83) and shade it from the sun.</li>
+					<li>Position staff on the highest pin (Pin No 1) and allow at least 5 minutes to settle and adjust to the ambient air temperature. Record the air temperature in the booking sheet with a shaded thermometer. </li>
+					<li>A set of observations for a standard <u>four</u> metre staff consist of:
+						<ul class="pxl-4"> 
+							<li> <strong>Set up on Pillar MV 83</strong>
+								<ul class="pxl-4">
+									<li>backsight to the staff at Pin Number 1 </li>
+									<li>intermediate sights to the staff at Pin Numbers 2 to 20 </li>
+									<li>foresight to the staff at Pin Number 21 </li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+					<li>A set of observations for a standard <u>three</u> metre staff consist of:
+						<ul class="pxl-4">
+							<li> <strong>Setup on Pillar MV83</strong>
+								<ul class="pxl-4">						
+									<li>backsight to the staff at Pin Number 1</li>
+									<li>intermediate sights to the staff at Pin Numbers 2 to 14</li>
+									<li>foresight to the staff at Pin Number 15</li>
+								</ul>
+							</li>
+							<li><strong>Setup on Pillar B</strong>
+								<ul class="pxl-4"> 
+									<li>backsight to the staff at Pin Number 7</li> 
+									<li>intermediate sights to the staff at Pin Numbers 8 to 20</li> 
+									<li>foresight to the staff at Pin Number 21</li> 
+								</ul>
+							</li>
+						</ul>
+					</li>
+					<li>Record the air temperature in the booking sheet at the end of each survey.</li>
+					<li>Download the level data on your computer and follow the steps provided on the Range Calibration <a class="text-blue-500 hover:a-underline" href="{% url 'rangecalibration:calibrate' %}">portal</a>.</li>
+					<!-- <li>Landgate recommends that staves be re-calibrated at least every 5 years or more often if joints exhibit noticeable wear or any other repairs are made to the staff.</li> -->
+				</ol>
+          	</div>
+
+          	<div class="fl w-50-ns ph3">
+          		<h2>Conclusion</h2>
+	        	The barcode calibration range and software developed by the then Department of Land Information (DLI) has enabled surveyors who use digital levels and barcode staves to calibrate their staves in a simple and cost effective manner for use in geodetic and other high order levelling. Both the calibration of the Range and Staves are based on the methods of least squares estimation, which is considered mathematically more rigorous. This processing system will update the estimated monthly average of the range values when a new range measurement is done by Landgate. These monthly range values are then used as a reference to calibrate other staves.
+	        </div>
+	    </div>
+    </div>
+</article>
+
+{% endblock %}

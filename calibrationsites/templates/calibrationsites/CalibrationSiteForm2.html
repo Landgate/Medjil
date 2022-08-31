@@ -1,0 +1,218 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block content %} 
+
+<article class="post">
+    <!-- <div class="post-header mt-12 text-center mb-3">
+        <h1>Welcome to Landgate's Survey Instrument Calibration website.</h1>
+        <p> This form allows to register (or modify) a new (or an existing) calibration site - both Barcode Calibration Range or an EDM Baseline.</p>
+    </div>
+    <hr>
+    <br> -->
+    <div class="post-content">
+        <div class="grid-2 mt-5"> 
+            <div class="pxl-5 text-left text-base">
+                <p>Site Name: <strong>{{ sitename }} ({{ sitestate }})</strong></p>
+                {% if sitetype == 'staff_range' %}
+                    <p> Site Type: <u> <span id="site-type">Staff Calibration Range</span></u> </p>
+                {% elif sitetype == 'baseline' %}
+                    <p> Site Type: <u> <span id="site-type">EDM Calibration Range </span></u> </p>
+                {% endif %}
+                
+            </div>
+            <div class="text-left text-base">
+                {% if sitetype == 'staff_range' %}
+                    Number of Pins: <strong id="number_of_pins">{{ no_pillars|floatformat:0 }}</strong>
+                {% elif sitetype == 'baseline' %}
+                    Number of Pillars: <strong id="number_of_pins">{{ no_pillars|floatformat:0 }}</strong>
+                {% endif %}
+            </div>
+        </div>
+        <br>
+        {% if messages %}
+            <ul class="message-list text-center py-3 text-lg">
+                {% for message in messages %}
+                    <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>     
+        {% endif %}
+
+        <form  class="site-form" action="." method="post" enctype="multipart/form-data">
+            <div class="mb-5 site-form-header bg-indigo-300 rounded px-2">
+                <h2 class="text-center">Create the Pillars or Pins</h2>
+            </div>
+            <div class="mb-3 px-2 site-form-header">
+                <p class="text-center text-lg"><u>Step {{ wizard.steps.step1 }} of  {{ wizard.steps.count }}</u></p>
+            </div>
+            {% csrf_token %}
+            <!-- <table> -->
+            <table>
+                {{ wizard.management_form }}
+                {% if wizard.form.forms %}
+                    {{ wizard.form.management_form }}
+                    {% for form in wizard.form.forms %}
+                        {% if forloop.counter == 1 %}
+                            <tr>
+                                <th width="7%">SL No.</th>
+                                <th width="20%">{{ form.name.label }} </th> 
+                                <th width="30%">{{ form.height.label }}</th>
+                                <th width="10%">Delete</th>
+                                <th width="10%"></th>
+                            </tr>
+                        {% endif %}
+                        <tr>
+                            <td>{{ forloop.counter }}. </td>
+                            <td>{{ form.name }}</td>
+                            <td>{{ form.height }}</td>
+                            <td>{{ form.DELETE }}</td>
+                            <td><button>Add more</button></td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>{{ wizard.form }}</tr>
+                {% endif %}
+            </table>
+            {% if request.GET.next %}
+                <input type="hidden" name="next" value="{{ request.GET.next }}">
+            {% endif %}
+            
+            <div class="wizard-button-container">
+				{% if wizard.steps.prev %}
+					<button class="next-button bg-indigo-400 hover:bg-indigo-300 text-base" name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}" formnovalidate> {% trans "<span>&#171;</span> Previous" %}</button>
+                    <!-- <button class="next-button bg-green-500 hover:bg-green-300" name="wizard_goto_step" type="submit" value="{{ wizard.steps.first }}" formnovalidate>{% trans "First" %}</button> -->
+                {% endif %}
+
+				{% if wizard.steps.next %}
+					<button class="next-button bg-green-400 hover:bg-green-300 text-base" type="submit">Next <span>&#187;</span></button>
+					<a href="{% url 'calibrationsites:home' %}" class="cancelbtn bg-red-500 hover:bg-red-300 text-center">Cancel</a>
+				{% else %}
+					<button class="next-button bg-green-400 hover:bg-green-300 text-base" type="submit">Submit <span>&#187;</span></button>
+					<a href="{% url 'calibrationsites:home' %}" class="cancelbtn bg-red-500 hover:bg-red-300 text-center">Cancel</a>
+				{% endif %}
+			</div>
+        </form> 
+    </div>
+</article>
+  
+<script>
+    
+    const siteID = "{{ site_id.id }}"
+    
+    let siteInput = document.querySelectorAll("[id$='-site_id']")
+    siteInput.forEach(site => {
+        site.options.selectedIndex = siteID;
+    })
+    // Number of pins
+    const siteType = document.getElementById("site-type") 
+    
+    if (siteType.textContent.includes('Staff')) {
+        var eastingInput = document.querySelectorAll("[id$=easting]");
+        var northingInput = document.querySelectorAll("[id$=northing]");
+        var zoneInput = document.querySelectorAll("[id$=zone]");
+
+        eastingInput.forEach(val => {
+            val.style.display = "none";
+        })
+
+        northingInput.forEach(val => {
+            val.style.display = "none";
+        })
+
+        zoneInput.forEach(val => {
+            val.style.display = "none";
+        })
+
+        var eastingLabel = document.querySelectorAll('label[for$="easting"]')
+        var northingLabel = document.querySelectorAll('label[for$="northing"]')
+        var zoneLabel = document.querySelectorAll('label[for$="zone"]')
+        eastingLabel.forEach(val => {
+            val.style.display = "none";
+        })
+        northingLabel.forEach(val => {
+            val.style.display = "none";
+        })
+        zoneLabel.forEach(val => {
+            val.style.display = "none";
+        })
+    }
+    // // console.log(numberOfPins)
+    
+    // let pinForm = document.querySelectorAll(".pin-form")
+    // let container = document.querySelector("#form-container")
+    // let addButton = document.querySelector("#add-form")
+    // let totalForms = document.querySelector("#id_form-TOTAL_FORMS")
+    // let maxForms = document.querySelector('#id_form-MAX_NUM_FORMS')
+
+    // // Numbers
+    // const maxFormValue = parseInt(maxForms.value)
+    // let totalFormValue = parseInt(totalForms.value)
+    // let currentCountValue = parseInt("{{existingPinInfo.number_of_existing_pins}}") + 1
+    // // console.log(currentCountValue)
+    // // Insert last column
+    // currentCount.textContent = currentCountValue
+
+
+    // let formNum = pinForm.length-1
+
+    // if (addButton) {
+    //     addButton.addEventListener('click', addForm)
+    // }
+    
+    // function addForm(e){
+    //     e.preventDefault()
+    //     if (totalFormValue < maxFormValue) {
+            
+    //         let newForm = pinForm[0].cloneNode(true)
+    //         // console.log(newForm)
+    //         let formRegex = RegExp(`form-(\\d){1}-`,'g')
+    //         // console.log(formRegex)
+    //         formNum++                                       //Increate form number
+
+    //         // console.log(formNum)
+    //         totalFormValue++
+    //         currentCountValue++
+    //         // update count
+    //         // currentCount.textContent = currentCountValue;
+
+    //         newForm.innerHTML = newForm.innerHTML.replace(formRegex, `form-${formNum}-`)
+
+    //         container.append(newForm)
+    //         currentCount = document.getElementById(`id_form-${formNum}-pin-count`)
+    //         currentCount.textContent = currentCountValue
+    //         // window.sessionStorage.setItem(`id_form-${formNum}-count`,  currentCount.textContent);
+    //         // container.insertBefore(newForm, addButton)
+    //         // SITE ID
+    //         let siteInput = document.getElementById(`id_form-${formNum}-site_id`)
+    //         siteInput.options.selectedIndex = siteID;
+
+    //         totalForms.setAttribute('value', `${formNum+1}`)
+            
+    //     } else {
+    //         alert('You have reached the maximum number of pins for the site.')
+    //     }
+    // }
+    
+    // countColumns = document.querySelector(`[id$='-pin-count'`)
+    // pinFormContainer = document.getElementById('pin-form-container')
+
+    
+    // function formValidate() {
+    //     let totalFormValue = document.querySelector("#id_form-TOTAL_FORMS").value
+    //     totalFormValue = parseInt(totalFormValue)
+    //     console.log(totalFormValue)
+    //     additionalPins = maxFormValue - totalFormValue
+    //     if (additionalPins > 0) {
+    //         let alertBox = document.getElementById('my-alert')
+    //         alertBox.innerHTML = "Please add " + additionalPins + " more pin(s)"
+    //         alertBox.style.display = 'block'
+    //         // alert("Please add " + additionalPins + " more pin(s)")
+    //         return false;
+    //     } 
+    //     return true;
+    // }
+     
+</script>
+
+{% endblock %}

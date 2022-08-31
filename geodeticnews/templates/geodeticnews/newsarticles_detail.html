@@ -1,0 +1,20 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+    <article class="post mt-10 mb-5">
+        <div class="post-content">
+            <img style="width:50%; height:50%" src="{{ object.img.url }}" alt=""> 
+        </div>
+
+    <h2>{{ object.headline|title }}</h2> 
+    <div class="flex flex-col py-3">
+        <span> <strong>{{ object.author }}</strong> </span> 
+        <span> {{ object.pub_date }}</span>
+    </div>
+    <hr>
+    <p class="py-2">{{ object.content|safe }}</p>
+
+    </article>
+{% endblock %}

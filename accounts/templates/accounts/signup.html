@@ -1,0 +1,107 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+
+{% block content %}
+	<article class="post">
+		<header class="post-header mt-12 text-center mb-3">
+            <h1>Welcome to Landgate's Survey Instrument Calibration website.</h1>
+            <p>You can now easily calibrate your Digital Levelling Staves and Electronic Distance Measurements using this web application.</p>
+        </header>
+
+        {% if messages %}
+        <ul class="message-list">
+            {% for message in messages %}
+                <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        <!-- <br> -->
+        {% endif %}
+
+        <div class="post-content">
+            
+            <form class="site-form" action="{% url 'accounts:signup' %}" method="post">     
+                <div class="mb-5 site-form-header bg-indigo-300 rounded px-2">
+                    <h2 class="text-center">Signup Form </h2>
+                </div>          
+                <div class="form-container">
+                    {% csrf_token %}
+                    <table>
+                        <colgroup>
+                            <col span="1" width="30%">
+                            <col span="2" width="70%">
+                        </colgroup>
+                        {% for field in form %}
+                            <tr>
+                                <td>{{ field.label_tag }}</td>
+                                <td> 
+                                    {{ field }}
+                                     <!-- Errors -->
+                                    {% for error in field.errors %}
+                                        <p class="error error-danger">{{ error }}</p>
+                                    {% endfor %}
+                                    <!-- Help text -->
+                                    {% if not field.field.widget.attrs.placeholder and field.help_text %}
+                                        <p class="helptext">{{ field.help_text }}</p>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% if field.name == "company" %}
+                                <tr id="id_company_name">
+                                    <td><label for="company_name" class="text-sm text-blue-500">Company Name:</label> </td>
+                                    <td> <input type="text" name="company_name" placeholder="Enter Company name" class="text-blue-500"> </td>
+                                </tr>
+                                <tr id="id_company_abbr">
+                                    <td><label for="company_abbrev" class="text-sm text-blue-500">Abbreviation:</label></td> 
+                                    <td><input type="text" name="company_abbrev" placeholder="Enter short name" class="text-blue-500"></td> 
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </table>
+                    
+                    <label for="remember">
+                        <input type="checkbox" name="remember" id="remember"> 
+                        By signing in, I agree to all the terms & conditions contained in this <a href="{% url 'terms' %}">user agreement</a>. 
+                    </label>
+                </div>
+
+                <div class="button-container">
+                    <button class="submit-button bg-green-500 hover:bg-green-400 text-base" type="submit" >Register</button>
+                    <a href="{% url 'home' %}" class="cancelbtn bg-red-500 hover:bg-red-300 text-center">Cancel</a>
+                </div>
+            </form>
+        </div>
+
+        <script type="text/javascript">
+            // const log = console.log;
+            const defaultCompanyText = document.querySelector('#id_company option[value=""')
+            if (defaultCompanyText) {
+                defaultCompanyText.setAttribute('class', 'default');
+                defaultCompanyText.setAttribute('value', '');
+            }
+
+            const companySelect = document.querySelector(`[id="id_company"]`);
+            const newCompanyName = document.getElementById("id_company_name")
+            const newCompanyAbbr = document.getElementById("id_company_abbr")
+            
+            // Display None
+            newCompanyName.style.display = "none"
+            newCompanyAbbr.style.display = "none"
+
+            companySelect.addEventListener(`change`, (e) => {
+              // log(`e.target`, e.target);
+              const select = e.target;
+              const value = select.value;
+              const desc = select.options[select.selectedIndex].text;
+              // log(`value desc`, value, desc);
+              if (desc=="Others") {
+                //   document.getElementById("companyDiv").style.display = "table-row";
+                newCompanyName.style.display = "table-row";
+                newCompanyAbbr.style.display = "table-row";
+              } else {
+                //   document.getElementById("companyDiv").style.display = "none";
+                newCompanyName.style.display = "none";
+                newCompanyAbbr.style.display = "none";
+              }
+            });
+        </script>
+{% endblock %}

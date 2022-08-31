@@ -1,0 +1,148 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+
+<article class="post">
+ 
+  <div class="post-content">
+    {% if messages %}
+    <ul class="message-list">
+        {% for message in messages %}
+            <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    <br>
+    {% endif %}
+  </div>
+
+  <header class="post-header">
+    <div class="grid-2">
+      <div class="title-grid">
+        <h1 class="post-title text-center">Staff Calibration Report </h1>
+      </div>
+      
+    </div>
+  </header>
+  <hr>
+  <div class="post-content">
+    <div class="grid-2">
+      <div>
+        <div>
+          Staff Number: <strong>{{ staff_number }} </strong>
+        </div>
+        <div>
+          Staff Owner: <strong> {{ request.user.company }} </strong>
+        </div>
+        <div>
+          Level Number: <strong> {{ level_number }} </strong>
+        </div>
+      </div>
+      <div>
+        <div>
+          Length: <strong> {{ staff_number.staff_length }} </strong> meters
+        </div>
+        <div>
+          Staff Type: <strong> {{ staff_number.staff_type|title }} </strong>
+        </div>
+        <div>
+          Thermal Coefficient: <strong> {{ thermal_coefficient|floatformat:2 }} ppm </strong>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="grid-2">
+      <div>
+        <h3>This test information</h3>
+        <div>
+          Job Number: <strong>{{ job_number }} </strong>
+        </div>
+        <div>
+          Calibration Date: <strong> {{ calibration_date }} </strong>
+        </div>
+        <br>
+        <div>
+          Observer: <strong> {{ observer }} </strong>
+        </div>
+      </div>
+      <div>
+        <h3> Site Information </h3>
+        <div>
+          Name: <strong> {{ site_id.site_name}} {{site_type}} </strong>
+        </div>
+        <div>
+          Location: {{ site_id.site_address}} {{site_id.state.statecode}} {{site_id.locality.postcode }} </strong>
+        </div>
+        <br>
+        <div>
+          Average Temperature: <strong> {{ average_temperature|floatformat:1 }}&#8451; </strong>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div>
+    <p>
+      Correction Factor: <strong>{{ scale_factor1|floatformat:6 }}</strong> at 25.0&#8451;. Note that Correction Factor is temperature dependent.
+    </p>
+    <p>
+      Graduation Uncertainty: <strong>{{ grad_uncertainty|floatformat:5 }}</strong> metres at 95% confidence interval
+    </p>
+  </div>
+
+  <hr>
+  <div class="post-content">
+    <h3>Staff readings/corrections </h3>
+    <table style="table-layout: fixed; width: 85%"> 
+      <tr>
+        {% for header in diff_correction.headers %}
+        <th class="text-center font-semibold text-base"> {{ header }} </th>
+        {% endfor %}
+      </tr>
+
+      {% for data in diff_correction.data %}
+        <tr class="text-center">    
+          {% for value in data %}
+            {% if not '-' in value %}
+              <td>{{ value|floatformat:5 }}</td>
+            {% else %}
+              <td>{{ value }}</td>
+            {% endif %}
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tr>
+    </table>
+  </div>
+  
+  <hr>
+  <br>
+  <div>
+    <!-- <p>
+      Correction Factor: <strong>{{ scale_factor0|floatformat:8 }} (1+({{ thermal_coefficient |floatformat:5 }}(Temperature-{{ average_temperature|floatformat:1 }})))</strong> -->
+    <p>
+      Correction Factor = 1.00000 when the temperature is <strong>{{ temp_at_sf1|floatformat:1 }}&#8451;</strong>
+    </p>
+  </div>
+  <hr class="style1">
+  <div class="post-content">
+    <h2>Staff corrections </h2>
+    <table style="table-layout: fixed; width: 75%"> 
+      <tr>
+        {% for header in temp_correction_factors.headers %}
+        <th class="text-center font-semibold text-base"> {{ header }} </th>
+        {% endfor %}
+      </tr>
+
+      {% for data in temp_correction_factors.data %}
+        <tr class="text-center">    
+          {% for value in data %}
+            <td>{{ value }}</td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tr>
+    </table>
+  </div>
+</article>
+
+{% endblock content %}

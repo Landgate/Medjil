@@ -1,0 +1,63 @@
+body {
+    padding-left: 1rem;
+}
+
+.page-header {
+    background-color: #c25100;
+    margin-top: 0;
+    margin-bottom: 40px;
+    padding: 20px 20px 20px 40px;
+}
+
+.page-header h1, 
+.page-header h1 a,
+.page-header h1 a:visited,
+.page-header h1 a.active {
+    color: #fff;
+    font-size: 36pt;
+    text-decoration: none;
+}
+
+.date {
+    color: #828282
+}
+
+.save {
+    float:right;
+}
+
+.post-form textarea,
+.post-form input {
+    width: 100%;
+}
+
+.top-menu,
+.top-menu:hover,
+.top-menu:visited {
+    color: #fff;
+    float: right;
+    font-size: 26pt;
+    margin-right: 20px;
+}
+
+.post h2 a,
+.post h2 a:visited {
+    color: #000
+}
+
+.post > .date,
+.post > .actions {
+    float: right;
+}
+
+.btn-default,
+.btn-default:visited {
+    color: #c25100;
+    background-color: #585858;
+    border-color: #c25100;
+}
+
+.btn-default:hover {
+    color: #fff;
+    background-color: #c25100;
+}

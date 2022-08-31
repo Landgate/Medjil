@@ -1,0 +1,68 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+{% block content %}
+	<article class="post">
+		<div class="post-header mt-12 text-center mb-3">
+			<h1>Welcome to Landgate's Survey Instrument Calibration website.</h1>
+		</div>
+
+		{% if messages %}
+        <ul class="message-list">
+            {% for message in messages %}
+                <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        <!-- <br> -->
+        {% endif %}
+		
+		<div class="post-content">
+            <h3>My most recent calibration records</h3>
+            <p>Here is a list of my calibrated barcoded Staves.</p>
+            <!-- <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur, exercitationem dolore explicabo alias odio quos enim, ullam reiciendis cum autem atque, optio natus quae nisi dolorum? Voluptates sunt iusto harum?</p> -->
+            {% if staff_list %}
+            <h2>Levelling Staves</h2>
+            <table>
+                <tr>
+                    <th>Sl No.</th>
+                    <th>Job Number</th>
+                    <th>Instrument No</th>
+                    <th>Model</th>
+                    <th>Type</th>
+                    <th>Scale Factor</th>
+                    <th>Field Book</th>
+                    <th>Calibrated on</th>
+                    <th>Certificate</th>
+                </tr>
+                {% for element in staff_list %}
+                <tr>
+                    <td class="text-center">{{ forloop.counter }}</td>
+                    <td>{{ element.job_number }}</td>
+                    <td> <a class="a_link" href="{{ element.inst_staff.get_absolute_url }}">{{ element.inst_staff.staff_number }}</a> </td>
+                    <td>{{ element.inst_staff.staff_model.model }} ({{ element.inst_staff.staff_model.make }})</td>
+                    <td>{{ element.inst_staff.staff_type|title }}</td>
+                    <td>{{ element.scale_factor|stringformat:"1.6f" }}</td>
+                    <td>
+                        {% if element.field_url %}
+                            <a href="{{ element.field_url|default_if_none:'#' }}" target="__blank">Click link</a></td>
+                        {% else %}
+                            <a href="#">None</a>
+                        {% endif %}
+                    <td>{{ element.calibration_date }}</td>
+                    
+                    <td>
+                        {% if element.report_url %}
+                            <a href="{{ element.report_url|default_if_none:'#' }}" target="__blank">Click here</a>
+                        {% elif element.field_book %}
+                            <a href="{% url 'staffcalibration:print-report' element.job_number %}" target="__blank">Click here</a>
+                        {% endif %}
+                    </td>
+                </tr>
+                
+                {% endfor %}
+            </table>
+            {% endif %}
+            <br>
+		</div>
+	</article>
+	
+{% endblock %}

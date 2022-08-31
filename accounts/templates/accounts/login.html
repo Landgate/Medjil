@@ -1,0 +1,63 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+
+{% block content %}
+
+<article class="post">
+    <header class="post-header mt-12 text-center mb-3">
+        <h1>Welcome to Landgate's Survey Instrument Calibration website.</h1>
+        <p>You can now easily calibrate your Digital Levelling Staves and Electronic Distance Measurements using this web application.</p>
+    </header>
+
+    <div class="post-content">
+
+        <form action="{% url 'accounts:login' %}" class="site-form" method="post">
+            <div class="mb-5 site-form-header bg-indigo-300 rounded px-2">
+                <h2 class="text-center">Login Form </h2>
+            </div>
+
+            <div class="form-container">
+                {% csrf_token %}
+                <table>
+                    {% for field in login_form %}
+                        <tr>
+                            <td width="20%">{{ field.label_tag }}</td>
+                            <td width="50"> 
+                                {{ field }}
+                                 <!-- Errors -->
+                                {% for error in field.errors %}
+                                    <p class="error error-danger">{{ error }}</p>
+                                {% endfor %}
+                                <!-- Help text -->
+                                {% if not field.field.widget.attrs.placeholder and field.help_text %}
+                                    <p class="helptext">{{ field.help_text }}</p>
+                                {% endif %}
+                            </td>
+                            <td width="20%"></td>
+                        </tr>
+                    {% endfor %}
+                </table>
+                
+                <!-- {{ login_form }} -->
+
+                <!--  redirect -->
+                {% if request.GET.next %}
+                    <input type="hidden" name="next" value="{{ request.GET.next }}">
+                {% endif %}
+              
+            </div>    
+            
+            <div class="button-container">
+                <button class="submit-button bg-green-400 hover:bg-green-300 text-base" type="submit" >Log in</button>
+                
+                <div class="registerbtn-container">
+                    <span> Forgot <a href="{% url 'accounts:password_reset' %}" class="text-blue-500">Password</a>?</span>
+                    <a href="{% url 'accounts:signup' %}" class="registerbtn bg-blue-400 hover:bg-blue-200">Register</a>
+                </div>
+                <a href="{% url 'home' %}" class="cancelbtn bg-red-500 hover:bg-red-300 text-center">Cancel</a>
+            </div>
+            
+        </form>
+    </div>
+</article>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'base_generic.html' %}
+<!-- {% load static %} -->
+
+{% block content %}
+
+    {% for post in posts %}
+        <article class="post">
+            <time class="date">published: {{ post.published_date }}</time>
+            <h2> <a href="{% url 'blog:post_detail' pk=post.pk %}"> {{ post.title }}</a> </h2>
+            <p> {{post.text }} </p>
+        </article>
+    {% endfor %}
+{% endblock %}

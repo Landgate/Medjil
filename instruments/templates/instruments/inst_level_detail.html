@@ -1,0 +1,36 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+
+
+{% block content %} 
+
+<article class="post">
+    <div class="post-header mt-12 text-center mb-3">
+        Level Number: <h2> {{ this_inst.level_number }}</h2>
+    </div>
+
+    <div class="post-content ">
+        <table>
+            {% for key, value in this_inst.items %}
+                <tr>
+                    <td> {{ key|title }}: </td>
+                    {% if 'temperature' in key %}
+                        <td>{{ value }} &#x2103;</td>
+                    {% elif 'length' in key %}
+                        <td>{{ value }} m</td>
+                    {% elif 'coefficient' in key %}
+                        <td>{{ value }} ppm</td>
+                    {% elif '_factor' in key %}
+                        <td>{{ value|stringformat:"1.6f" }} </td>
+                    {% elif '_record' in key %}
+                        <td> <a href="{{ value.url }}"> {{ value }} </a></td>
+                    {% else %}
+                        <td>{{ value }}</td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </table>  
+    </div>
+</article>
+
+{% endblock %}

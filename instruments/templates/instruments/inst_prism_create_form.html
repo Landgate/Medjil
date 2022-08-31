@@ -1,0 +1,119 @@
+{% extends 'base_generic.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block content %} 
+
+<article class="post">
+    <!-- <div class="post-header mt-10 text-center mb-3">
+        <h1>Welcome to Landgate's Survey Instrument Calibration website.</h1>
+        <p>You can now easily calibrate your Digital Levelling Staves and Electronic Distance Measurements using this web application.</p>
+        <p>
+			<u> Step {{ wizard.steps.step1 }} of  {{ wizard.steps.count }} </u>
+		</p>
+    </div> -->
+
+    <div class="post-content">
+        <div class="mt-5 mb-3">
+            {% if form.errors or form.non_field_errors %}
+                <!-- {{ form.errors }} -->
+                {% for error in form.non_field_errors %} 
+                    <p class="error error-danger">** {{ error }}</p>
+                {% endfor %}
+		    {% endif %}
+        </div>
+        
+        <form action="" class="site-form" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-5 site-form-header bg-indigo-300 rounded px-2">
+                <h2 class="text-center">Create a Prism</h2>
+            </div>
+            <table>
+                {% for field in form %}
+                <tr>
+                    <td width="25%"><strong>{{ field.label_tag }}</strong></td>
+                    <td width="65%"> {{ field }} 
+                        <!-- Errors -->
+                        {% for error in field.errors %}
+                            <p class="error error-danger">{{ error }}</p>
+                        {% endfor %}
+                        <!-- Help text -->
+                        {% if not field.field.widget.attrs.placeholder and field.help_text %}
+                            <p class="helptext">{{ field.help_text }}</p>
+                        {% endif %}
+                    </td>
+                    <td width="10%">
+                            {% if 'prism_specs' in field.name %}
+                                <a href="/instruments/inst_prism_spec_create" target="_blank" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" onclick="return showAddPopup(this);" id="add_spec">&#43;</a>
+                            {% elif 'coefficient' in field.name %}
+                                <span>ppm</span>
+                            {% elif 'length' in field.name %}
+                                <span>m</span>
+                            {% endif %}
+                            
+                    </td>
+                </tr>
+                {% endfor %}               
+            </table>
+
+            {% if request.GET.next %}
+                <input type="hidden" name="next" value="{{ request.GET.next }}">
+            {% endif %}
+            <div class="button-container">
+                <button class="submit-button bg-green-400 hover:bg-green-300 text-base" type="submit" >Submit</button>
+            </div>
+
+        </form>
+    </div>
+</article>
+
+<script>
+    function showAddPopup(triggeringLink) {
+        var name = triggeringLink.id.replace(/^add_/, '');
+        href = triggeringLink.href;
+        var win = window.open(href, name, "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=850,width=750,height=500");
+        win.focus();
+        return false;
+    }
+
+    const specOptions = document.querySelector("#id_edm_specs")
+    function closePopup(win, newID, newRepr) {
+        // $(id).append('<option value=' + newID + ' selected >' + newRepr + '</option>')
+        // console.log(id, newID, newRepr)
+        window.sessionStorage.setItem('new_instance',  newID);
+        win.close();
+    }
+    
+    var edmNumber = document.getElementById('id_edm_number');
+    edmNumber.addEventListener('input', () => {
+        edmNumber.value = edmNumber.value ? edmNumber.value.trim() : '' ;
+        window.sessionStorage.setItem('edmNumber', edmNumber.value);
+    })
+
+    var edmComment = document.getElementById('id_comment');
+    edmComment.addEventListener('input', () => {
+        edmComment.value = edmComment.value ? edmComment.value.trim() : '' ;
+        window.sessionStorage.setItem('edmComment', edmComment.value);
+    })
+
+    var edmCustodian = document.getElementById('id_edm_custodian');
+    edmCustodian.addEventListener('change', () => {
+        edmCustodian_value = edmCustodian.selectedIndex;
+        window.sessionStorage.setItem('edmCustodian_value', edmCustodian_value);
+    })
+
+    let newInstanceValue = sessionStorage.getItem('new_instance');
+    if (newInstanceValue) {
+        for(var i = 0;i < specOptions.options.length;i++){
+                if(specOptions.options[i].value == newInstanceValue ){
+                    specOptions.options[i].selected = true;
+                }
+            }
+        edmNumber.value = sessionStorage.getItem('edmNumber');
+        edmComment.value = sessionStorage.getItem('edmComment');
+        edmCustodian.options[sessionStorage.getItem('edmCustodian_value')].selected = true;
+        window.sessionStorage.clear()
+    }
+</script>
+
+{% endblock %}

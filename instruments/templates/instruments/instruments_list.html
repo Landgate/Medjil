@@ -1,0 +1,427 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+
+
+{% block content %}
+
+<article class="post">
+    <div class="mt-10">
+        {% if not user.is_authenticated %}
+            <p class="text-lg">Please 
+                <a href="{% url 'accounts:login' %}" class="hover:a">
+                    login
+                </a> or 
+                <a href="{% url 'accounts:signup' %}" class="hover:a">
+                    signup
+                </a> to manage and calibrate your surveying instruments.</p>
+        {% endif %}
+        <h2>MY SURVEYING INSTRUMENTS</h2>
+        <p>Click on the instrument types on the left menu to display your available instruments: </p>
+    </div>
+    {% if messages %}
+        <ul class="alert messages">
+            {% for message in messages %}
+            <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        <br>
+    {% endif %}	
+    <hr>
+    <div class="flex-with-sidebar">
+        <div class="left-sidebar">
+            {% for inst in inst_types %}
+                {% if inst.abbr == 'edm' %}
+                    <button class="tablinks" onclick="openTab(event, '{{inst.abbr}}')" id="defaultOpen">{{ inst.name }}</button>
+                {% else %}
+                    <button class="tablinks" onclick="openTab(event, '{{inst.abbr}}')">{{ inst.name }}</button>
+                {% endif %}
+            {% endfor %}
+            <!-- <button class="tablinks" onclick="openTab(event, 'edm')" id="defaultOpen">Electronic Distance Measurements (EDM)</button>
+            <button class="tablinks" onclick="openTab(event, 'prism')">Prisms</button>
+            <button class="tablinks" onclick="openTab(event, 'level')">Digital Levels</button>
+            <button class="tablinks" onclick="openTab(event, 'staff')">Barcoded Staves</button>
+            <button class="tablinks" onclick="openTab(event, 'met')">Meteorological Instruments</button> -->
+        </div>
+        <div class="post-content pxl-2">
+            <!-- {% for inst in inst_types %}
+                <div id="{{inst.abbr}}" class="tab-content">
+                    <h3 class="pxr-5">Register a New {{ inst.name }} 
+                        <span class="pxl-5">
+                            {% if inst.abbr == 'edm' %}
+                                <a href="/instruments/inst_staff_create/?reset">
+                            {% elif inst.abbr == 'prism' %}
+                                <a href="/instruments/inst_staff_create/?reset">
+                            {% elif inst.abbr == 'level' %}
+                                <a href="/instruments/inst_level_create/?reset">
+                            {% elif inst.abbr == 'staff' %}
+                                <a href="/instruments/inst_staff_create/?reset">
+                            {% endif %}
+                                <button class="px-3 py-1 border border-transparent text-base leading-4 rounded text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+                                    Register
+                                </button>
+                            </a>
+                        </span>
+                    </h3>
+                </div>
+            {% endfor %} -->
+            <div id="edm" class="tab-content">
+                <h3 class="pxr-5">Register a New EDM 
+                    <span class="pxl-5">
+                        <a href="/instruments/inst_edm_create/?reset">
+                            <button class="px-3 py-1 border border-transparent text-base leading-4 rounded text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+                                Register
+                            </button>
+                        </a>
+                    </span>
+                </h3>
+                <hr>
+				<h2 class="text-center">Available EDMs</h2>
+				{% if edm_page_obj %}
+					<table style="table-layout: fixed; width: 95%"> 
+						<tr>
+							<th width="15%">EDM Number</th>
+							<th width="30%">EDM Spec</th>
+							<th width="35%">Currently used by</th>
+							<!-- <th>Description</th> -->
+							<th width="20%">Image link</th>
+						</tr>			
+						{% for edm in edm_page_obj %}
+							<tr>
+								<td><a href="{{ edm.get_absolute_url }}" target="__blank">{{ edm.edm_number }}</a> </td>
+								<td>{{ edm.edm_specs }}</td>
+								<td>{{ edm.edm_custodian }} </td>
+								<td> 
+									{% if edm.photo %} 
+										<a href="{{ edm.photo.url|default_if_none:'#' }}" target="__blank">Click here</a> 
+									{% endif %}
+								</td>
+							</tr>
+						{% endfor %}
+					</table>
+				{% else %}
+                    <p> There are currently no edms lists. Register by clicking here.</p>
+				{% endif %}
+
+				{% if edm_page_obj.has_other_pages  %}
+					<div class="pagination">
+						<span class="step-links">
+							{% if edm_page_obj.has_previous %}
+								<!-- <a href="?page=1">« First</a> -->
+								<a href="?page={{ page_obj.previous_page_number }}">&#60;Previous</a>
+							{% endif %}
+					
+							<span class="current">
+								Page {{ edm_page_obj.number }} of {{ edm_page_obj.paginator.num_pages }} 
+							</span>
+					
+							{% if edm_page_obj.has_next %}
+								<a href="?page={{ edm_page_obj.next_page_number }}">Next&#62;</a>
+								<a href="?page={{ edm_page_obj.paginator.num_pages }}">Last&#62;&#62;</a>
+							{% endif %}
+						</span>
+					</div>
+				{% endif %}
+                <br>
+                <!-- <p>Cannot find your EDM model?
+                    <span class="pxl-5"> 
+                        <a href="{% url 'instruments:inst_model_createby_inst_type' 'edm' %}?reset">
+                            <button class="px-2 py-1 border border-transparent text-base leading-4 rounded text-white bg-gray-500 hover:bg-gray-400 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+                                Create
+                            </button>
+                        </a>
+                    </span>
+                </p> -->
+			</div>
+            
+            <div id="prism" class="tab-content">
+                <h3 class="pxr-5">Register a New Prism 
+                    <span class="pxl-5">
+                        <a href="/instruments/inst_prism_create/?reset">
+                            <button class="px-3 py-1 border border-transparent text-base leading-4 rounded text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+                                Register
+                            </button>
+                        </a>
+                    </span>
+                </h3>
+                <hr>
+				<h2 class="text-center">Available Prisms</h2>
+				{% if prism_page_obj %}
+					<table style="table-layout: fixed; width: 95%"> 
+						<tr>
+							<th width="15%">Prism Number</th>
+							<th width="30%">Prism Spec</th>
+							<th width="35%">Currently used by</th>
+							<th width="20%">Image Link</th>
+						</tr>			
+						{% for prism in prism_page_obj %}
+							<tr>
+								<td>{{ prism.prism_number }} </td>
+								<td>{{ prism.prism_specs }} </td>
+								<td>{{ prism.prism_custodian }} </td>
+								<td> 
+									{% if prism.photo %} 
+										<a href="{{ prism.photo.url|default_if_none:'#' }}" target="__blank">Click here</a> 
+									{% endif %}
+								</td>
+							</tr>
+						{% endfor %}
+					</table>
+				{% else %}
+                    <p> There are currently no prism lists. Register by clicking here.</p>
+				{% endif %}
+
+				{% if prism_page_obj.has_other_pages  %}
+					<div class="pagination">
+						<span class="step-links">
+							{% if prism_page_obj.has_previous %}
+								<!-- <a href="?page=1">« First</a> -->
+								<a href="?page={{ page_obj.previous_page_number }}">&#60;Previous</a>
+							{% endif %}
+					
+							<span class="current">
+								Page {{ prism_page_obj.number }} of {{ prism_page_obj.paginator.num_pages }} 
+							</span>
+					
+							{% if prism_page_obj.has_next %}
+								<a href="?page={{ prism_page_obj.next_page_number }}">Next&#62;</a>
+								<a href="?page={{ prism_page_obj.paginator.num_pages }}">Last&#62;&#62;</a>
+							{% endif %}
+						</span>
+					</div>
+				{% endif %}
+                <br>
+                <p>Cannot find your Prism model?
+                    <span class="pxl-5"> 
+                        <a href="{% url 'instruments:inst_model_createby_inst_type' 'prism' %}?reset">
+                            <button class="px-2 py-1 border border-transparent text-base leading-4 rounded text-white bg-gray-500 hover:bg-gray-400 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+                                Create
+                            </button>
+                        </a>
+                    </span>
+                </p>
+            </div>
+            
+            <div id="level" class="tab-content">
+                <h3 class="pxr-5">Register a New Digital Level 
+                    <span class="pxl-5">
+                        <a href="/instruments/inst_level_create/?reset">
+                            <button class="px-3 py-1 border border-transparent text-base leading-4 rounded text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+                                Register
+                            </button>
+                        </a>
+                    </span>
+                </h3>
+                <hr>
+				<h2 class="text-center">Available Digital Levels</h2>
+				{% if level_page_obj %}
+					<table style="table-layout: fixed; width: 95%"> 
+						<tr>
+							<th class="text-center" width="7.5%">Sl No.</th>
+							<th>Level Number</th>
+							<th>Level Model</th>
+							<th>Level Owner</th>
+						</tr>			
+						{% for level in level_page_obj %}
+							<tr>
+								<td class="text-center"> {{ forloop.counter }}</td>
+								<td><a href="{{ level.get_absolute_url }}" target="__blank">{{ level.level_number  }}</a></td>
+								<!-- <td>{{ level.level_number }} </td> -->
+								<td>{{ level.level_model }} </td>
+								<td>{{ level.level_owner }} </td>
+								
+							</tr>
+						{% endfor %}
+					</table>
+				{% else %}
+					<p> There are currently no digital levels in our system </p>
+				{% endif %}
+				{% if level_page_obj.has_other_pages  %}
+					<div class="pagination">
+						<span class="step-links">
+							{% if level_page_obj.has_previous %}
+								<!-- <a href="?page=1">« First</a> -->
+								<a href="?page={{ page_obj.previous_page_number }}">&#60;Previous</a>
+							{% endif %}
+					
+							<span class="current">
+								Page {{ level_page_obj.number }} of {{ level_page_obj.paginator.num_pages }} 
+							</span>
+					
+							{% if level_page_obj.has_next %}
+								<a href="?page={{ level_page_obj.next_page_number }}">Next&#62;</a>
+								<a href="?page={{ level_page_obj.paginator.num_pages }}">Last&#62;&#62;</a>
+							{% endif %}
+						</span>
+					</div>
+				{% endif %}
+                <br>
+                <!-- <p>Cannot find your digital level model?
+                    <span class="pxl-5"> 
+                        <a href="{% url 'instruments:inst_model_createby_inst_type' 'level' %}?reset">
+                            <button class="px-2 py-1 border border-transparent text-base leading-4 rounded text-white bg-gray-500 hover:bg-gray-400 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+                                Create
+                            </button>
+                        </a>
+                    </span>
+                </p> -->
+            </div>
+            <div id="staff" class="tab-content">
+                <h3 class="pxr-5">Register a New Barcoded Staff 
+                    <span class="pxl-5">
+                        <a href="/instruments/inst_staff_create/?reset">
+                            <button class="px-3 py-1 border border-transparent text-base leading-4 rounded text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+                                Register
+                            </button>
+                        </a>
+                    </span>
+                </h3>
+                <hr>
+				<h2 class="text-center">Available Bar-Code staves</h2>
+				{% if staff_page_obj %}
+					<table style="table-layout: fixed; width: 95%"> 
+						<tr>
+							<th class="text-center" width="7.5%">Sl No.</td>
+							<th>Staff Number</th>
+							<th>Staff Model</th>
+							<th>Staff Type</th>
+							<th>Staff Length</th>
+							<th>Coefficient (in ppm)</th>
+						</tr>			
+						{% for staff in staff_page_obj %}
+							<tr>
+								<td class="text-center"> {{ forloop.counter }}</td>
+								<td><a href="{{ staff.get_absolute_url }}" target="__blank">{{ staff.staff_number }}</a></td>
+								<td>{{ staff.staff_model }} </td>
+								<td>{{ staff.staff_type }} </td>
+								<td>{{ staff.staff_length }} </td>
+								<td>{{ staff.thermal_coefficient }} </td>
+		
+							</tr>
+						{% endfor %}
+					</table>
+				{% else %}
+					<p> There are currently no barcoded staves in our system </p>
+				{% endif %}
+
+				{% if staff_page_obj.has_other_pages  %}
+					<div class="pagination">
+						<span class="step-links">
+							{% if staff_page_obj.has_previous %}
+								<!-- <a href="?page=1">« First</a> -->
+								<a href="?page={{ page_obj.previous_page_number }}">&#60;Previous</a>
+							{% endif %}
+					
+							<span class="current">
+								Page {{ staff_page_obj.number }} of {{ staff_page_obj.paginator.num_pages }} 
+							</span>
+					
+							{% if staff_page_obj.has_next %}
+								<a href="?page={{ staff_page_obj.next_page_number }}">Next&#62;</a>
+								<a href="?page={{ staff_page_obj.paginator.num_pages }}">Last&#62;&#62;</a>
+							{% endif %}
+						</span>
+					</div>
+				{% endif %}
+                <br>
+                <!-- <p>Cannot find your staff model?
+                    <span class="pxl-5"> 
+                        <a href="{% url 'instruments:inst_model_createby_inst_type' 'staff' %}?reset">
+                            <button class="px-2 py-1 border border-transparent text-base leading-4 rounded text-white bg-gray-500 hover:bg-gray-400 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+                                Create
+                            </button>
+                        </a>
+                    </span>
+                </p> -->
+			</div>
+
+            <div id="met" class="tab-content">
+                <h3 class="pxr-5">Register a New Meteorological Instrument: 
+                    <span class="pxl-5">
+                        <a href="/instruments/inst_mets_create/?reset">
+                            <button class="px-3 py-1 border border-transparent text-base leading-4 rounded text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+                                Register
+                            </button>
+                        </a>
+                    </span>
+                </h3>
+                <hr>
+				<h2 class="text-center">Available Meterological Instruments</h2>
+				{% if mets_page_obj %}
+					<table style="table-layout: fixed; width: 95%"> 
+						<tr>
+							<th width="15%">Instrument Number</th>
+							<th width="30%">Instrument Spec</th>
+							<th width="35%">Currently used by</th>
+							<th width="20%">Image link</th>
+						</tr>			
+						{% for mets in mets_page_obj %}
+							<tr>
+								<td>{{ mets.mets_number }} </td>
+								<td>{{ mets.mets_specs }} </td>
+								<td>{{ mets.mets_custodian }} </td>
+								<td> 
+									{% if mets.photo %} 
+										<a href="{{ mets.photo.url|default_if_none:'#' }}" target="__blank">Click here</a> 
+									{% endif %}
+								</td>
+							</tr>
+						{% endfor %}
+					</table>
+				{% else %}
+                    <p> There are currently no met instruments available. Register by clicking here.</p>
+				{% endif %}
+
+				{% if mets_page_obj.has_other_pages  %}
+					<div class="pagination">
+						<span class="step-links">
+							{% if mets_page_obj.has_previous %}
+								<!-- <a href="?page=1">« First</a> -->
+								<a href="?page={{ page_obj.previous_page_number }}">&#60;Previous</a>
+							{% endif %}
+					
+							<span class="current">
+								Page {{ mets_page_obj.number }} of {{ mets_page_obj.paginator.num_pages }} 
+							</span>
+					
+							{% if mets_page_obj.has_next %}
+								<a href="?page={{ mets_page_obj.next_page_number }}">Next&#62;</a>
+								<a href="?page={{ mets_page_obj.paginator.num_pages }}">Last&#62;&#62;</a>
+							{% endif %}
+						</span>
+					</div>
+				{% endif %}
+                <br>
+                <!-- <p>Cannot find your staff model?
+                    <span class="pxl-5"> 
+                        <a href="{% url 'instruments:inst_model_createby_inst_type' 'staff' %}?reset">
+                            <button class="px-2 py-1 border border-transparent text-base leading-4 rounded text-white bg-gray-500 hover:bg-gray-400 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+                                Create
+                            </button>
+                        </a>
+                    </span>
+                </p> -->
+			</div>
+        </div>
+    </div>
+</article>
+
+<script>
+    function openTab(evt, tabName) {
+      var i, tabcontent, tablinks;
+      tabcontent = document.getElementsByClassName("tab-content");
+      for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+      }
+      tablinks = document.getElementsByClassName("tablinks");
+      for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+      }
+      document.getElementById(tabName).style.display = "block";
+      evt.currentTarget.className += " active";
+    }
+    
+    // Get the element with id="defaultOpen" and click on it
+    document.getElementById("defaultOpen").click();
+    </script>
+
+ {% endblock content %}

@@ -1,0 +1,119 @@
+{% extends 'base_generic.html' %}
+{% load i18n %}
+{% load static %}
+
+
+{% block content %} 
+
+<article class="post">
+    <div class="post-header mt-12 text-center mb-3">
+        <h1>Welcome to Landgate's Survey Instrument Calibration website.</h1>
+        <p>You can now easily calibrate your Digital Levelling Staves and Electronic Distance Measurements online.</p>
+    </div>
+
+    <div class="post-content">
+        {% if messages %}
+        <ul class="message-list">
+            {% for message in messages %}
+                <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        <!-- <br> -->
+        {% endif %}
+        
+        <form action="" class="site-form" method="post" enctype="multipart/form-data">
+            <div class="mb-5 site-form-header bg-indigo-300 rounded px-2">
+                <h2 class="text-center">Barcode Staff Calibration</h2>
+            </div>
+
+            {% csrf_token %}
+        
+            <table>
+                {% for field in form %}
+                    <tr>
+                        <td width="30%">{{ field.label_tag }}</td>
+                        <td width="65%"> 
+                            {{ field }} 
+                            <!-- Errors -->
+                            {% for error in field.errors %}
+                                <p class="error error-danger">{{ error }}</p>
+                            {% endfor %}
+                            <!-- Help text -->
+                            {% if not field.field.widget.attrs.placeholder and field.help_text %}
+                                <p class="helptext">{{ field.help_text }}</p>
+                            {% endif %}
+                        </td>
+                        <td width="5%">
+                            {% if field.name == 'inst_staff' %}
+									<a href="/instruments/inst_staff_create" target="_blank" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" onclick="return showAddPopup(this);" id="add_country">&#43;</a>
+									<!-- <a href="{% url 'instruments:inst_staff_create' %}?next={{request.path}}" class="px-2 py-1 add-button bg-blue-300 hover:bg-blue-200 "><span class="icon-plus">&#43;</span>Add</a> -->
+								{% elif field.name == 'inst_level' %}
+									<a href="/instruments/inst_level_create_popup" target="_blank" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" onclick="return showAddPopup(this);" id="add_country">&#43;</a>
+									<!-- <a href="{% url 'instruments:inst_level_create' %}?next={{request.path}}" class="px-2 py-1 add-button bg-blue-300 hover:bg-blue-200"><span class="icon-plus">&#43;</span>Add</a> -->
+								{% endif %} 
+
+                            <!-- {% if field.name == 'inst_staff' %}
+                                <a href="{% url 'instruments:inst_staff_create' %}?next={{request.path}}" class="px-2 py-1 add-button bg-blue-300 hover:bg-blue-200"><span class="icon-plus">&#43;</span>Add</a>
+                            {% elif field.name == 'inst_level' %}
+                                <a href="{% url 'instruments:inst_level_create' %}?next={{request.path}}" class="px-2 py-1 add-button bg-blue-300 hover:bg-blue-200"><span class="icon-plus">&#43;</span>Add</a>
+                            {% endif %}     -->
+                        </td>
+                    </tr>
+                {% endfor %}
+        
+            </table>
+             
+            <div class="button-container">
+				<button class="submit-button bg-green-400 hover:bg-green-300" type="submit" >Submit</button>
+			</div>
+        </form>
+    </div>
+
+</article>
+
+<script>
+    // Open Pop up
+	function showAddPopup(triggeringLink) {
+            var name = triggeringLink.id.replace(/^add_/, '');
+            href = triggeringLink.href;
+            var win = window.open(href, name, "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=850,width=850,height=850");
+            win.focus();
+            return false;
+	}
+	
+	// Close Pop up
+	function closePopup(win, newID, newRepr) {
+		window.sessionStorage.setItem('id_value',  newID);
+		win.close();
+	}
+    
+    // Get the observer
+	var isObserver = document.getElementById('id_observer_isme')
+	const observerInput = document.getElementById('id_observer') 
+	const observerLabel = document.querySelector("label[for='id_observer']")
+
+	if (isObserver.checked) {
+			observerInput.removeAttribute('required')
+			observerInput.parentNode.parentNode.style.display = "none"
+			// observerLabel.parentNode.style.display = "none"
+	}
+	
+	isObserver.addEventListener('change', () => {
+		if (isObserver.checked) {
+			observerInput.removeAttribute('required')
+			observerInput.parentNode.parentNode.style.display = "none"
+			// observerLabel.parentNode.style.display = "none"
+		} else {
+			observerInput.parentNode.parentNode.style.display = "table-row";
+			// observerLabel.parentNode.style.display = "block"
+		}
+	})
+
+	if (isObserver.checked === false && !observerInput.value) {
+		observerInput.setAttribute('required','required')
+	} else {
+		observerInput.removeAttribute('required')
+	}
+</script>
+{% endblock %}
+
