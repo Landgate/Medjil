@@ -114,7 +114,8 @@ class EDM_InstForm(forms.ModelForm):
         fields = '__all__'
         exclude = ('created_on', 'modified_on')
         widgets = {
-            'photo' : forms.FileInput(attrs={'accept' : '.pdf, .jpg, .jpeg, .png, .tif','required': 'true'}),            
+            'photo' : forms.FileInput(attrs={'accept' : '.pdf, .jpg, .jpeg, .png, .tif',
+                                             'required': False}),
         }
         
 class EDM_SpecificationForm(forms.ModelForm):
@@ -127,7 +128,7 @@ class EDM_SpecificationForm(forms.ModelForm):
         self.base_fields['unit_freq'].initial = 'mHz'
         self.base_fields['unit_unit_length'].initial = 'm'
         self.base_fields['unit_carrier_wave'].initial = 'nm'
-        self.base_fields['unit_measurement_inc'].initial = 'mm'
+        self.base_fields['unit_measurement_inc'].initial = 'm'
         if not user.is_staff:
             self.fields['edm_owner'].disabled = True
         self.fields['edm_model'].empty_label = '--- Select one ---'
@@ -178,7 +179,8 @@ class Prism_InstForm(forms.ModelForm):
         fields = '__all__'
         exclude = ('created_on', 'modified_on')
         widgets = {
-            'photo' : forms.FileInput(attrs={'accept' : '.pdf, .jpg, .jpeg, .png, .tif','required': 'true'}),            
+            'photo' : forms.FileInput(attrs={'accept' : '.pdf, .jpg, .jpeg, .png, .tif',
+                                             'required': False}),
         }
 
 class Prism_SpecificationForm(forms.ModelForm):
@@ -187,7 +189,6 @@ class Prism_SpecificationForm(forms.ModelForm):
         super(Prism_SpecificationForm, self).__init__(*args, **kwargs) 
         self.initial['prism_owner'] = user.company
         self.base_fields['unit_manu_unc_const'].initial = 'mm'
-        self.base_fields['unit_manu_unc_ppm'].initial = 'ppm'
         if not user.is_staff:
             self.fields['prism_owner'].disabled = True
         self.fields['prism_model'].empty_label = '--- Select one ---'
@@ -201,14 +202,9 @@ class Prism_SpecificationForm(forms.ModelForm):
             ('nm','nm'),
             ('mm','mm'),
             ('m','m'),)
-    scalar_units = (
-            ('1:x','1:x'),
-            ('ppm','ppm'),)
         
     unit_manu_unc_const = forms.CharField(
                                     widget=forms.Select(choices=length_units))
-
-    unit_manu_unc_ppm = forms.CharField(widget=forms.Select(choices=scalar_units))
 ##########################################################################
 class Mets_InstForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -224,7 +220,8 @@ class Mets_InstForm(forms.ModelForm):
         fields = '__all__'
         exclude = ('created_on', 'modified_on')
         widgets = {
-            'photo' : forms.FileInput(attrs={'accept' : '.pdf, .jpg, .jpeg, .png, .tif','required': 'true'}),            
+            'photo' : forms.FileInput(attrs={'accept' : '.pdf, .jpg, .jpeg, .png, .tif',
+                                             'required': False}),
         }
 
 class Mets_SpecificationForm(forms.ModelForm):
@@ -233,7 +230,6 @@ class Mets_SpecificationForm(forms.ModelForm):
         super(Mets_SpecificationForm, self).__init__(*args, **kwargs) 
         self.initial['mets_owner'] = user.company
         self.base_fields['unit_manu_unc_const'].initial = 'mm'
-        self.base_fields['unit_manu_unc_ppm'].initial = 'ppm'
         if not user.is_staff:
             self.fields['mets_owner'].disabled = True
         self.fields['mets_model'].empty_label = '--- Select one ---'
@@ -243,16 +239,11 @@ class Mets_SpecificationForm(forms.ModelForm):
         fields = '__all__'
         exclude = ('created_on', 'modified_on')
     
-    length_units = (
-            ('nm','nm'),
-            ('mm','mm'),
-            ('m','m'),)
-    scalar_units = (
-            ('1:x','1:x'),
-            ('ppm','ppm'),)
-        
+    ini_units = (('',''),)
+    
     unit_manu_unc_const = forms.CharField(
-                                    widget=forms.Select(choices=length_units))
-
-    unit_manu_unc_ppm = forms.CharField(widget=forms.Select(choices=scalar_units))
+                                    widget=forms.Select(choices=ini_units))
+        
+    unit_measurement_inc = forms.CharField(
+                                    widget=forms.Select(choices=ini_units))
 ##########################################################################

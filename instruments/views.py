@@ -407,9 +407,33 @@ def inst_edm_spec_create(request):
     if request.method=="POST":
         form = EDM_SpecificationForm(request.POST, user= request.user)
         if form.is_valid():
+            frm = form.cleaned_data
             instance = form.save(commit=False)
+            # Convert input to database standard units
+            if frm['unit_manu_unc_const'] == 'nm': 
+                instance.manu_unc_const = frm.manu_unc_const / 1e6
+            if frm['unit_manu_unc_const'] == 'm':
+                instance.manu_unc_const = frm.manu_unc_const * 1000
+            if frm['unit_manu_unc_ppm'] == '1:x': 
+                instance.manu_unc_ppm = frm.manu_unc_ppm * 1e6
+            if frm['unit_freq'] == 'Hz': 
+                instance.freq = frm.freq / 1e6
+            if frm['unit_unit_length'] == 'nm': 
+                instance.unit_length = frm.unit_length / 1e9
+            if frm['unit_unit_length'] == 'mm':
+                instance.unit_length = frm.unit_length / 1000
+            if frm['unit_carrier_wave'] == 'm': 
+                instance.carrier_wave = frm.carrier_wave * 1e9
+            if frm['unit_carrier_wave'] == 'mm':
+                instance.carrier_wave = frm.carrier_wave * 1e6
+            if frm['unit_measurement_inc'] == 'nm': 
+                instance.measurement_inc = frm.measurement_inc / 1e9
+            if frm['unit_measurement_inc'] == 'mm':
+                instance.measurement_inc = frm.measurement_inc / 1000
+                
             if request.user.company:
-                instance.edm_owner = request.user.company
+                instance.edm_owner = request.user.company                
+            
             instance.save()
             
             if 'next' in request.POST:
@@ -421,7 +445,7 @@ def inst_edm_spec_create(request):
         form = EDM_SpecificationForm(user= request.user)
     return render(request, 'instruments/inst_spec_edm_create_popup_form.html', {'form':form})
 #######################################################################
-########################## EDM CREATE #################################
+######################### PRISM CREATE ################################
 #######################################################################
 class PrismCreateView(LoginRequiredMixin, generic.CreateView):
     def get_form_kwargs(self, *args, **kwargs):
@@ -437,6 +461,7 @@ class PrismCreateView(LoginRequiredMixin, generic.CreateView):
         form = Prism_InstForm(request.POST, user=self.request.user)
         if form.is_valid():
             instance = form.save()
+            
             instance.save()
             return redirect(reverse("instruments:home"))
             #return HttpResponseRedirect(reverse_lazy('books:detail', args=[book.id]))
@@ -447,7 +472,14 @@ def inst_prism_spec_create(request):
     if request.method=="POST":
         form = Prism_SpecificationForm(request.POST, user= request.user)
         if form.is_valid():
+            frm = form.cleaned_data
             instance = form.save(commit=False)
+            # Convert input to database standard units
+            if frm['unit_manu_unc_const'] == 'nm': 
+                instance.manu_unc_const = frm.manu_unc_const / 1e6
+            if frm['unit_manu_unc_const'] == 'm':
+                instance.manu_unc_const = frm.manu_unc_const * 1000
+                
             if request.user.company:
                 instance.edm_owner = request.user.company
             instance.save()
