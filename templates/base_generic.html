@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Landgate Survey Instrumentation</title>
+    <title>Midjil the Survey Instrumentation Calibration Portal</title>
     <link rel="icon" type="ico" href="{% static 'favicon.ico' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- <link rel="stylesheet" href="https://code.cdn.mozilla.net/fonts/fira.css"> -->
@@ -21,10 +21,10 @@
         <div class="wrapper">
             <div class="header-wrapper">
                 <a class="header-logo" href="{% url 'home' %}">
-                    <img src="{% static 'logo.png' %}" alt="Landgate">
+                    <img src="{% static 'logo.png' %}" alt="Midjil">
                     <p>
-                        <span>Landgate</span>
-                        <span>Survey Instrument Calibration</span>
+                        <span>Midjil</span>
+                        <span>Survey Instrument Calibration Portal</span>
                     </p>
                 </a>
                 
@@ -57,7 +57,7 @@
         </ul>
         <div class="wrapper">
             <ul class="nav-links">
-                <li class="nav-item has-subnav"><a tabindex="0">My Dashboard</a>
+                <li class="nav-item has-subnav"><a tabindex="0">Company Dashboard</a>
                      <ul class="sub-links">
                         <li class="sub-items">
                             <a href="{% url 'accounts:user_account' %}">
@@ -68,13 +68,13 @@
                         <li class="sub-items">
                             <a href="{% url 'instruments:home' %}">
                                 <div class="sub-item-header">Instrument Register</div>
-                                <div class="sub-item-description">See all your instruments here</div>
+                                <div class="sub-item-description">See all company instruments here</div>
                             </a>
                         </li>
                         <li class="sub-items">
                             <a href="{% url 'baseline_calibration:uc_budgets' %}">
                                 <div class="sub-item-header">Error Budgets</div>
-                                <div class="sub-item-description">Click here to see your uncertainty estimates.</div>
+                                <div class="sub-item-description"See all company uncertainty estimates.</div>
                             </a>
                         </li>
                         <li class="sub-items">
@@ -97,7 +97,7 @@
                         <li class="sub-items">
                             <a href="{% url 'staffcalibration:staff_registry' %}">
                                 <div class="sub-item-header">Staff Registry</div>
-                                <div class="sub-item-description">All the calibration records are displayed here</div>
+                                <div class="sub-item-description">See all company staff calibration records</div>
                             </a>
                         </li>
                         {% if user.is_staff %}
