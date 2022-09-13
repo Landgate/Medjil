@@ -89,14 +89,16 @@ class Uncertainty_Budget_Source(models.Model):
     description = models.CharField(max_length=256,
                  unique=False,)
     units_list = (
-                 ('ppm','Parts per million (ppm)'),
-                 ('%','percent (%)'),
+                 ('ppm','ppm'),
+                 ('%','%'),
                  ('1:x','Ratio (1:x)'),
-                 ('mm','millimetres (mm)'),
-                 ('m','metres (m)'),
-                 ('°C','Degrees Celcius (°C)'),
-                 ('hPa','hectopascals (hPa)'),
-                 ('mmHg','Millimetre of mercury (mmHg)'))
+                 ('mm','mm'),
+                 ('m','m'),
+                 ('°C','°C'),
+                 ('°F','°F'),
+                 ('mBar','mBar'),
+                 ('hPa','hPa'),
+                 ('mmHg','mmHg'))
     units = models.CharField(
                  max_length=4,
                  choices=units_list,
@@ -168,8 +170,13 @@ class Uncertainty_Budget_Source(models.Model):
             self.units = 'm'
             if self.std_dev: self.std_dev = self.std_dev / 1000
             if self.uc95: self.uc95 = self.uc95 / 1000
+        
+        if self.units == '°F':
+            self.units = '°C'
+            if self.std_dev: self.std_dev = (self.std_dev - 32) * 5/9
+            if self.uc95: self.uc95 = (self.uc95 - 32) * 5/9
 
-        #convert UC >> Std dev or Std >> UC
+        #convert UC -> Std dev or Std -> UC
         if self.k and self.uc95:
             if not self.std_dev:
                 self.std_dev = self.uc95 / self.k
