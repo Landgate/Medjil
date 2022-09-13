@@ -3,7 +3,7 @@ from django.db.models import Q
 from django.db.utils import OperationalError
 # from django.core.exceptions import NON_FIELD_ERRORS
 from .models import (
-					InstrumentMake, 
+                    InstrumentMake, 
                     InstrumentModel, 
                     Staff, 
                     DigitalLevel,
@@ -13,6 +13,8 @@ from .models import (
                     Prism_Specification,
                     Mets_Inst,
                     Mets_Specification,
+                    EDMI_certificate,
+                    Mets_certificate
                     )
 
 from accounts.models import Company, CustomUser
@@ -183,6 +185,7 @@ class Prism_InstForm(forms.ModelForm):
                                              'required': False}),
         }
 
+
 class Prism_SpecificationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
@@ -206,12 +209,15 @@ class Prism_SpecificationForm(forms.ModelForm):
     unit_manu_unc_const = forms.CharField(
                                     widget=forms.Select(choices=length_units))
 ##########################################################################
+
+
 class Mets_InstForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
         super(Mets_InstForm, self).__init__(*args, **kwargs)
         if not user.is_staff:
-            self.fields['mets_custodian'].queryset = CustomUser.objects.filter(company__company_name = user.company.company_name) 
+            self.fields['mets_custodian'].queryset = CustomUser.objects.filter(
+                company__company_name = user.company.company_name) 
         self.fields['mets_custodian'].empty_label = '--- Select one ---'
         self.fields['mets_specs'].empty_label = '--- Select one ---'
 
@@ -224,12 +230,12 @@ class Mets_InstForm(forms.ModelForm):
                                              'required': False}),
         }
 
+
 class Mets_SpecificationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
         super(Mets_SpecificationForm, self).__init__(*args, **kwargs) 
         self.initial['mets_owner'] = user.company
-        self.base_fields['unit_manu_unc_const'].initial = 'mm'
         if not user.is_staff:
             self.fields['mets_owner'].disabled = True
         self.fields['mets_model'].empty_label = '--- Select one ---'
@@ -247,3 +253,57 @@ class Mets_SpecificationForm(forms.ModelForm):
     unit_measurement_inc = forms.CharField(
                                     widget=forms.Select(choices=ini_units))
 ##########################################################################
+
+class EDMI_certificateForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super(EDMI_certificateForm, self).__init__(*args, **kwargs)
+        if not user.is_staff:
+            self.fields['edm'].queryset = EDM_Inst.objects.filter(
+                edm_specs__edm_owner = user.company)
+            self.fields['prism'].queryset = Prism_Inst.objects.filter(
+                prism_specs__prism_owner = user.company)
+        else:
+            self.fields['edm'].queryset = EDM_Inst.objects.all()
+            self.fields['prism'].queryset = Prism_Inst.objects.all()
+            
+        self.fields['edm'].empty_label = '--- Select one ---'
+        self.fields['prism'].empty_label = '--- Select one ---'
+
+    class Meta:
+        model = EDMI_certificate
+        fields = '__all__'
+        exclude = ('created_on', 'modified_on',
+                   'scf_std_dev', 'zpc_std_dev')
+
+        widgets = {
+            'calibration_date': forms.DateInput(format=('%d-%m-%Y'),
+                attrs={'type':'date'}),
+            'certificate_upload': forms.FileInput(
+                attrs={'accept' : '.pdf, .jpg, jpeg, .png, .tif'})
+           }
+
+
+class Mets_certificateForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super(Mets_certificateForm, self).__init__(*args, **kwargs)
+        if not user.is_staff:
+            self.fields['instrument'].queryset = Mets_Inst.objects.filter(
+                mets_specs__mets_owner = user.company)
+        else:
+            self.fields['instrument'].queryset = Mets_Inst.objects.all()
+            
+        self.fields['instrument'].empty_label = '--- Select one ---'
+
+    class Meta:
+        model = Mets_certificate
+        fields = '__all__'
+        exclude = ('created_on', 'modified_on', 'zpc_std_dev')
+
+        widgets = {
+            'calibration_date': forms.DateInput(format=('%d-%m-%Y'),
+                attrs={'type':'date'}),
+            'certificate_upload': forms.FileInput(
+                attrs={'accept' : '.pdf, .jpg, jpeg, .png, .tif'})
+           }

@@ -19,7 +19,6 @@ staff_creation_wizard = views.StaffCreationWizard.as_view(STAFFFORM,
 
 urlpatterns = [
     path('', views.instruments_home, name = 'home'),
-    # path('', views.instruments_levelling, name = 'home'),
     # Make & Models
     path('inst_make_create/', views.inst_make_create, name = 'inst_make_create'),
     path('inst_model_create/', views.inst_model_create, name = 'inst_model_create'),
@@ -33,8 +32,6 @@ urlpatterns = [
     # Prisms
     path('inst_prism_create/', views.PrismCreateView.as_view(), name = 'prism_inst_create'),
     path('inst_prism_spec_create/', views.inst_prism_spec_create, name = 'inst_prism_spec_create'),
-    # path('inst_spec_create/', views.inst_spec_create, name = 'inst_spec_create'),
-    # path('inst_edm/<id>', views.inst_edm_detail, name = 'inst_edm_detail'),
 
     #Mets
     path('inst_mets_create/', views.MetsCreateView.as_view(), name = 'mets_inst_create'),
@@ -57,4 +54,11 @@ urlpatterns = [
 
     path('<id>/inst_model_update/', views.inst_model_update, name = 'inst_model_update'),
     path('<id>/inst_make_update/', views.inst_make_update, name = 'inst_make_update'),
+    
+    # Calibration Certificates
+    path('certificates/', views.certificates_home, name = 'certificates_home'),
+    path('certificate/<slug:inst_type>/<slug:id>/edit/',
+         views.certificate_edit, name = 'certificate_edit'),
+    path('certificate/<slug:inst_type>/<id>/delete/', 
+         views.certificate_delete, name = 'certificate_delete'),
 ]

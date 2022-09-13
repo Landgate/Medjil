@@ -25,7 +25,9 @@ from .forms import (InstrumentMakeCreateForm,
                     Prism_InstForm,
                     Prism_SpecificationForm,
                     Mets_InstForm,
-                    Mets_SpecificationForm
+                    Mets_SpecificationForm,
+                    EDMI_certificateForm,
+                    Mets_certificateForm
                     )
 
 from .models import (InstrumentMake, 
@@ -35,7 +37,9 @@ from .models import (InstrumentMake,
                     EDM_Inst,
                     EDM_Specification,
                     Prism_Inst,
-                    Mets_Inst)
+                    Mets_Inst,
+                    EDMI_certificate,
+                    Mets_certificate)
 
 from staffcalibration.models import StaffCalibrationRecord
 # Create your views here.
@@ -519,7 +523,14 @@ def inst_mets_spec_create(request):
     if request.method=="POST":
         form = Mets_SpecificationForm(request.POST, user= request.user)
         if form.is_valid():
+            frm = form.cleaned_data
             instance = form.save(commit=False)
+            # Convert input to database standard units
+            if frm['unit_manu_unc_const'] == 'mmHg':
+                instance.manu_unc_const = frm.manu_unc_const * 1.33322
+            if frm['unit_manu_unc_const'] == '°F':
+                instance.manu_unc_const = (frm.manu_unc_const -32)*(5/9)
+                
             if request.user.company:
                 instance.mets_owner = request.user.company
             instance.save()
@@ -533,3 +544,84 @@ def inst_mets_spec_create(request):
         form = Mets_SpecificationForm(user= request.user)
     return render(request, 'instruments/inst_spec_met_create_popup_form.html', {'form':form})
 #########################################################################
+
+
+@login_required(login_url="/accounts/login") 
+def certificates_home(request):
+    inst_types = [instrument_types[0]]+ instrument_types[3:]
+    # EDM List
+    edm_list = (EDMI_certificate.objects
+                .filter(edm__edm_specs__edm_owner=request.user.company)
+                .order_by('edm', 'calibration_date'))
+    # Page Setting
+    edm_page = Paginator(edm_list, 25) # Show 25 list per page.
+    edm_page_number = request.GET.get('page')
+    edm_page_obj = edm_page.get_page(edm_page_number)
+
+    # Staff List
+    staff_list = Staff.objects.filter(staff_owner = request.user.company)
+    # Page Setting
+    staff_page = Paginator(staff_list, 25) # Show 10 list per page.
+    staff_page_number = request.GET.get('page')
+    staff_page_obj = staff_page.get_page(staff_page_number)
+
+    # Mets List
+    mets_list = Mets_certificate.objects.filter(
+        instrument__mets_specs__mets_owner = request.user.company)
+    # Page Setting
+    mets_page = Paginator(mets_list, 25) # Show 10 list per page.
+    mets_page_number = request.GET.get('page')
+    mets_page_obj = mets_page.get_page(mets_page_number)
+
+    context = {
+        'inst_types': inst_types, 
+        'edm_page_obj': edm_page_obj,
+        'staff_page_obj': staff_page_obj,
+        'mets_page_obj': mets_page_obj
+    }
+    return render(request, 'instruments/inst_certificates_list.html', context)
+
+
+@login_required(login_url="/accounts/login") 
+def certificate_edit(request, inst_type, id=None):
+    context={}
+    if id == 'None':
+        if inst_type == 'edmi':
+            certificate = EDMI_certificateForm(request.POST or None,
+                                               user=request.user)
+        if inst_type == 'mets':
+            certificate = Mets_certificateForm(request.POST or None,
+                                               user=request.user)
+        context['Header'] = 'Input Certificate Details'
+    else:
+        if inst_type == 'edmi':
+            obj = EDMI_certificate.objects.get(id=id)
+            obj.calibration_date = obj.calibration_date.isoformat()
+            certificate = Mets_certificateForm(request.POST or None,
+                                               user=request.user,
+                                               instance=obj)
+        if inst_type == 'mets':
+            obj = Mets_certificate.objects.get(id=id)
+            obj.calibration_date = obj.calibration_date.isoformat()
+            certificate = Mets_certificateForm(request.POST or None,
+                                               user=request.user,
+                                               instance=obj)
+        context['Header'] = 'Edit Certificate Details'
+    
+    if certificate.is_valid():
+        certificate.save()
+        return redirect('instruments:certificates_home')
+        
+    context['form'] = certificate
+    context['return'] = 'instruments:certificates_home'
+    
+    return render(request, 'instruments/inst_certificates_edit.html', context)
+        
+
+@login_required(login_url="/accounts/login") 
+def certificate_delete(request, inst_type, id):
+    if inst_type == 'edmi': certificate = EDMI_certificate.objects.get(id=id)
+    if inst_type == 'mets': certificate = Mets_certificate.objects.get(id=id)
+    certificate.delete()
+    
+    return redirect('instruments:certificates_home')
