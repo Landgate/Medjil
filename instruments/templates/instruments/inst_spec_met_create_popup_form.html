@@ -57,7 +57,7 @@
                             <p class="helptext">{{ form.manu_unc_k.help_text }}</p>
                         {% endif %}
                     </td>
-                    <td width="15%">{{ form.unit_manu_unc_ppm }}</td>
+                    <td width="15%"></td>
                 </tr>
 
                 <tr>
@@ -108,7 +108,66 @@
 </article>
 
 <script>
-        function showAddPopup(triggeringLink) {
+
+    const units = [{typ:"temp", u:"°C"},
+                   {typ:"temp", u:"°F"},
+                   {typ:"pres", u:"hPa"},
+                   {typ:"pres", u:"mBar"},
+                   {typ:"pres", u:"mmHg"},
+                   {typ:"humi", u:"%"}];
+
+    mets_model_slt = document.getElementById("id_mets_model")
+    const  uc_units_slt = document.getElementById("id_unit_manu_unc_const")
+    const  inc_unit_slt = document.getElementById("id_unit_measurement_inc")
+
+    // On dropdown change, Change unit options
+    mets_model_slt.addEventListener(`change`, (e) => {
+        const select = e.target;
+        const value = select.value;
+        const desc = select.options[select.selectedIndex].text;
+        
+        while (uc_units_slt.options.length > 0) {
+            uc_units_slt.remove(0);
+            inc_unit_slt.remove(0);
+        }
+        if (desc.includes("(thermo)")||desc.includes("(psy)")) {
+            let uLen = units.length;
+            for (let i = 0; i < uLen; i++) {
+              if (units[i].typ.includes("temp")) {
+                  let newOption = new Option(units[i].u, units[i].u);
+                  uc_units_slt.add(newOption, undefined);
+                  let nextOption = new Option(units[i].u, units[i].u);
+                  inc_unit_slt.add(nextOption, undefined);
+                  }        
+            }
+        }
+        if (desc.includes("(baro)")) {
+            let uLen = units.length;
+            for (let i = 0; i < uLen; i++) {
+              if (units[i].typ.includes("pres")) {
+                  let newOption = new Option(units[i].u, units[i].u);
+                  uc_units_slt.add(newOption, undefined);
+                  let nextOption = new Option(units[i].u, units[i].u);
+                  inc_unit_slt.add(nextOption, undefined);
+                  }        
+            }
+        }
+        if (desc.includes("(hygro)")) {
+            let uLen = units.length;
+            for (let i = 0; i < uLen; i++) {
+              if (units[i].typ.includes("humi")) {
+                  let newOption = new Option(units[i].u, units[i].u);
+                  uc_units_slt.add(newOption, undefined);
+                  let nextOption = new Option(units[i].u, units[i].u);
+                  inc_unit_slt.add(nextOption, undefined);
+                  }        
+            }
+        }
+    })
+
+
+
+    function showAddPopup(triggeringLink) {
         var name = triggeringLink.id.replace(/^add_/, '');
         href = triggeringLink.href;
         // var win = window.open("{% url 'instruments:inst_model_createby_inst_type' 'level' %}", "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=850,width=500,height=400");
@@ -117,7 +176,7 @@
         return false;
     }
 
-    modelOptions = document.querySelector("#id_level_model")
+    modelOptions = document.querySelector("#id_mets_model")
     function closePopup(win, newID, newRepr) {
         // $(id).append('<option value=' + newID + ' selected >' + newRepr + '</option>')
         // console.log(id, newID, newRepr)
@@ -133,7 +192,7 @@
                     modelOptions.options[i].selected = true;
                 }
             }
-        
+        modelOptions.dispatchEvent(new Event('change'));
         window.sessionStorage.clear()
     }
     //  Refresh Parent Function

@@ -192,4 +192,26 @@ class Uncertainty_Budget_SourceForm(forms.ModelForm):
         model = Uncertainty_Budget_Source
         fields = '__all__'
         exclude = ('std_dev', 'uncertainty_budget')
+
+
+class AccreditationForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super(AccreditationForm, self).__init__(*args, **kwargs)
+        if user:
+            if not user.is_staff:
+                self.fields['accredited_company'].disabled = True
+                
+    class Meta:
+        model = Accreditation
+        fields = '__all__'
+
+        widgets = {
+            'valid_from_date': forms.DateInput(format=('%d-%m-%Y'),
+                attrs={'type':'date'}),
+            'valid_to_date': forms.DateInput(format=('%d-%m-%Y'),
+                attrs={'type':'date'}),
+            'certificate_upload': forms.FileInput(
+                attrs={'accept' : '.pdf, .jpg, jpeg, .png, .tif'})
+           }
         

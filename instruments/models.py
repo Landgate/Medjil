@@ -442,7 +442,7 @@ class Mets_certificate (models.Model):
 
     zero_point_correction = models.FloatField(
         validators = [MinValueValidator(-10.00), MaxValueValidator(10.00)],
-        help_text="If: Correction to readins = Reading + 0.12°C, Zero point correction = 0.12")
+        help_text="If: Correction to readings = Reading + 0.12°C, Zero point correction = 0.12")
     zpc_uncertainty = models.FloatField(
         validators = [MinValueValidator(0.00), MaxValueValidator(10.00)],
         help_text="Uncertainty of the zero point correction (m) at 95% Confidence Level",

@@ -17,7 +17,8 @@ from .forms import (PillarSurveyForm,
                     Std_Deviation_MatrixForm,
                     PillarSurveyUpdateForm,
                     Uncertainty_BudgetForm,
-                    Uncertainty_Budget_SourceForm)
+                    Uncertainty_Budget_SourceForm,
+                    AccreditationForm)
 from instruments.models import (EDM_Inst,
                     Prism_Inst,
                     DigitalLevel,
@@ -700,7 +701,7 @@ def uc_budget_edit(request, id=None):
     context['form'] = uc_budget
     context['formset'] = formset
     
-    return render(request, 'baseline_calibration/double_forms.html', context)
+    return render(request, 'baseline_calibration/uncertainty_budget_form.html', context)
 
 @login_required(login_url="/accounts/login") 
 def uc_budget_create(request):
@@ -744,7 +745,7 @@ def uc_budget_create(request):
     context['form'] = uc_budget
     context['formset'] = uc_sources
     
-    return render(request, 'baseline_calibration/double_forms.html', context)
+    return render(request, 'baseline_calibration/uncertainty_budget_form.html', context)
 
 
 @login_required(login_url="/accounts/login") 
@@ -754,3 +755,57 @@ def uc_budget_delete(request, id):
     
 
     return redirect('baseline_calibration:uc_budgets')
+
+
+@login_required(login_url="/accounts/login") 
+def accreditations(request):
+    accreditation_list = Accreditation.objects.filter(
+                        accredited_company = request.user.company)
+    
+    context = {
+        'accreditation_list': accreditation_list}
+    
+    return render(request, 'baseline_calibration/Accreditation_list.html', context)
+
+
+@login_required(login_url="/accounts/login") 
+def accreditation_edit(request, id=None):
+    context = {}
+    rtn = request.POST.get('next')
+    if rtn:
+        context['return'] = rtn
+    else:
+        context['return'] ='baseline_calibration:accreditations'
+        rtn = '/baseline_calibration/accreditations'
+    
+    # if id==None this is a new pillar survey.
+    if id == 'None':
+        ini ={'accredited_company': request.user.company}
+        accreditation = AccreditationForm(request.POST or None, 
+                                           user=request.user,
+                                           initial = ini)
+        context['Header'] = 'Input Accreditation Details'
+    else:
+        obj = get_object_or_404(Accreditation, id=id)
+        obj.valid_from_date = obj.valid_from_date.isoformat()
+        obj.valid_to_date = obj.valid_to_date.isoformat()
+        accreditation = AccreditationForm(request.POST or None, 
+                                           instance=obj)
+
+        context['Header'] = 'Edit Accreditation Details'
+    
+    if accreditation.is_valid():
+        accreditation.save()
+        return HttpResponseRedirect(rtn)
+        
+    context['form'] = accreditation
+    
+    return render(request, 'baseline_calibration/Accreditation_form.html', context)
+
+
+@login_required(login_url="/accounts/login") 
+def accreditation_delete(request, id):
+    accreditation = Accreditation.objects.get(id=id)
+    accreditation.delete()
+    
+    return redirect('baseline_calibration:accreditations')
