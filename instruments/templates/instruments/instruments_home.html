@@ -1,0 +1,123 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+
+
+{% block content %}
+
+<article class="post mt-10">
+    {% if messages %}
+		<ul class="alert messages">
+		    {% for message in messages %}
+		    <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+		    {% endfor %}
+		</ul>
+		<br>
+	{% endif %}	
+	
+	<header class="post-header">
+		<h1 class="post-title text-center">Welcome to Landgate's Survey Instrument Calibration website.</h1>
+		<br>
+        <p>You can now easily calibrate your Digital Levelling Staves and Electronic Distance Measurements using this web application.</p>
+		<p>Add/view your digital levels and bar-coded staves here.</p>
+	</header>
+
+	<div class="post-content mt-10">
+		<div class="grid-2l items-center">
+			<div class="px-2 flex flex flex-col space-around items-center">
+				<h3>Create a New Instrument Model</h3>
+				<a href="{% url 'instruments:inst_model_create' %}?reset">
+					<button class="px-3 py-1 border border-transparent text-base leading-4 rounded text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+						Create
+					</button>
+				</a>
+			</div>
+			<div class="px-2">
+				<h3 class="text-center">Avaliable Instrument Models</h3>
+				<table style="table-layout: fixed; width: 95%"> 
+						<tr>
+							<th>Instrument Type</th>
+							<th>Model Name</th>
+							<th>Make</th>
+						</tr>			
+						{% for model in model_list %}
+						<tr>
+							<td>{{ model.get_inst_type_display }} </td>
+							<td>{{ model.model }} </td>
+							<td>{{ model.make }} </td>
+						</tr>
+						{% endfor %}
+					</table>
+			</div>
+			
+			
+		</div>  
+		<br><br>
+		<hr>
+		<div class="grid-2l items-center">
+			<div class="px-2 flex flex flex-col space-around items-center border-gray-300">
+				<h3 class="pxr-5">Create a New Barcoded Staff</h3>
+				<a href="/instruments/inst_staff_create/?reset">
+					<button class="px-3 py-1 border border-transparent text-base leading-4 rounded text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+						Register
+					</button>
+				</a>
+			</div>
+			<div>
+				<h3 class="text-center">Available Bar-Code staves</h3>
+				<table style="table-layout: fixed; width: 95%"> 
+						<tr>
+							<th>Staff Number</th>
+							<th>Staff Model</th>
+							<th>Staff Type</th>
+							<th>Staff Length</th>
+							<th>Coefficient (in ppm)</th>
+						</tr>			
+						{% for staff in staff_list %}
+						<tr>
+							<td>{{ staff.staff_number }} </td>
+							<td>{{ staff.staff_model }} </td>
+							<td>{{ staff.staff_type }} </td>
+							<td>{{ staff.staff_length }} </td>
+							<td>{{ staff.thermal_coefficient }} </td>
+	
+						</tr>
+						
+						{% endfor %}
+					</table>
+			</div>
+		</div>
+		<br><br>
+		<hr>
+		<div class="grid-2l items-center">
+			<div class="px-2 flex flex flex-col space-around items-center border-gray-300">
+				<h3 class="pxr-5">Create a New Digital Level</h3>
+				<a href="{% url 'instruments:inst_level_create' %}?reset">
+					<button class="px-3 py-1 border border-transparent text-base leading-4 rounded text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+						Register
+					</button>
+				</a>
+			</div>
+			<div>
+				<h3 class="text-center">Available Digital levels</h3>
+				<table style="table-layout: fixed; width: 95%"> 
+						<tr>
+							<th>Level Number</th>
+							<th>Level Model</th>
+							<th>Level Owner</th>
+						</tr>			
+						{% for level in level_list %}
+						<tr>
+							<td>{{ level.level_number }} </td>
+							<td>{{ level.level_model }} </td>
+							<td>{{ level.level_owner }} </td>
+							
+						</tr>
+						
+						{% endfor %}
+					</table>
+			</div>
+		</div>  
+	</div>
+</article>
+{% endblock content %}
+

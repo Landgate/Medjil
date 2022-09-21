@@ -1,0 +1,95 @@
+{% extends 'base_generic.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block content %} 
+
+<article class="post">
+    <!-- <div class="post-header mt-10 text-center mb-3">
+        <h1>Welcome to Landgate's Survey Instrument Calibration website.</h1>
+        <p>You can now easily calibrate your Digital Levelling Staves and Electronic Distance Measurements using this web application.</p>
+        <p>
+			<u> Step {{ wizard.steps.step1 }} of  {{ wizard.steps.count }} </u>
+		</p>
+    </div> -->
+
+    <div class="post-content">
+        
+        <form action="" class="site-form" method="post">
+            {% csrf_token %}
+            <div class="mb-5 site-form-header bg-indigo-300 rounded px-2">
+                <h2 class="text-center">Create a Digital Level</h2>
+            </div>
+            <table>
+                {% for field in form %}
+                <tr>
+                    <td width="25%"><strong>{{ field.label_tag }}</strong></td>
+                    <td width="70%"> {{ field }} 
+                        <!-- Errors -->
+                        {% for error in field.errors %}
+                            <p class="error error-danger">{{ error }}</p>
+                        {% endfor %}
+                        <!-- Help text -->
+                        {% if not field.field.widget.attrs.placeholder and field.help_text %}
+                            <p class="helptext">{{ field.help_text }}</p>
+                        {% endif %}
+                    </td>
+                    <td width="5%">
+                            {% if 'model' in field.name %}
+                                <button class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" onclick="return showAddPopup(this);">&#43;</button>
+                            {% elif 'coefficient' in field.name %}
+                                <span>ppm</span>
+                            {% elif 'length' in field.name %}
+                                <span>m</span>
+                            {% endif %}
+                            
+                    </td>
+                </tr>
+                {% endfor %}               
+            </table>
+
+            {% if request.GET.next %}
+                <input type="hidden" name="next" value="{{ request.GET.next }}">
+            {% endif %}
+            <div class="button-container">
+                <button class="submit-button bg-green-400 hover:bg-green-300 text-base" type="submit" >Submit</button>
+            </div>
+
+        </form>
+    </div>
+</article>
+
+<script>
+        function showAddPopup(triggeringLink) {
+        // var name = triggeringLink.id.replace(/^add_/, '');
+        // console.log(name)
+        // href = triggeringLink.href;
+        // console.log(href)
+        var win = window.open("{% url 'instruments:inst_model_createby_inst_type' 'level' %}", "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=850,width=500,height=400");
+        // var win = window.open(href, name, 'height=500,width=800, resizable=yes,scrollbars=yes');
+        win.focus();
+        return false;
+    }
+
+    modelOptions = document.querySelector("#id_level_model")
+    function closePopup(win, newID, newRepr) {
+        // $(id).append('<option value=' + newID + ' selected >' + newRepr + '</option>')
+        // console.log(id, newID, newRepr)
+        window.sessionStorage.setItem('new_model',  newID);
+        win.close();
+    }
+    
+
+    let newModelValue = sessionStorage.getItem('new_model');
+    if (newModelValue) {
+        for(var i = 0;i < modelOptions.options.length;i++){
+                if(modelOptions.options[i].value == newModelValue ){
+                    modelOptions.options[i].selected = true;
+                }
+            }
+        
+        window.sessionStorage.clear()
+    }
+</script>
+
+{% endblock %}

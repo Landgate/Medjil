@@ -1,0 +1,59 @@
+{% extends 'base_generic.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block content %} 
+
+<article class="post">
+    <!-- <div class="post-header mt-10 text-center mb-3">
+        <h1>Welcome to Landgate's Survey Instrument Calibration website.</h1>
+        <p>You can now easily calibrate your Digital Levelling Staves and Electronic Distance Measurements using this web application.</p>
+    </div> -->
+
+    <div class="post-content">
+        <form action="" class="site-form" method="post" name="staff_form">
+            
+            <div class="mb-5 site-form-header bg-indigo-300 rounded px-2">
+                <h2 class="text-center">Edit an instrument</h2>
+            </div>
+            {% csrf_token %}
+            {% for error in form.non_field_errors %}
+                <p class="error error-danger">*** {{ error }} ***</p>
+            {% endfor %}
+            <table>
+                {% for field in form %}
+                    <tr>
+                        <td width="25%"><strong>{{ field.label_tag }}</strong></td>
+                        <td width="70%"> {{ field }} 
+                            <!-- Errors -->
+                            {% for error in field.errors %}
+                                <p class="error error-danger">{{ error }}</p>
+                            {% endfor %}
+                            <!-- Help text -->
+                            {% if not field.field.widget.attrs.placeholder and field.help_text %}
+                                <p class="helptext">{{ field.help_text }}</p>
+                            {% endif %}
+                        </td>
+                        <td width="5%">
+                                {% if 'coefficient' in field.name %}
+                                    <span>ppm</span>
+                                {% elif 'length' in field.name %}
+                                    <span>m</span>
+                                {% endif %}
+                                
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+            {% if request.GET.next %}
+                <input type="hidden" name="next" value="{{ request.GET.next }}">
+            {% endif %}
+            <div class="button-container">
+				<button class="submit-button bg-green-400 hover:bg-green-300 text-base" type="submit" >Update</button>
+			</div>
+        </form>
+    </div>
+
+</article>
+
+{% endblock %}

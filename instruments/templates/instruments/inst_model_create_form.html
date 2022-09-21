@@ -1,0 +1,135 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+
+
+{% block content %} 
+
+<article class="post">
+    <div class="post-header mt-10 text-center mb-3">
+        <h1>Welcome to Landgate's Survey Instrument Calibration website.</h1>
+        <p>You can now easily calibrate your Digital Levelling Staves and Electronic Distance Measurements using this web application.</p>
+    </div>
+
+    {% if form.errors %}
+       {% for field in form %}
+           {% for error in field.errors %} 
+              <div class="alert alert-danger">
+                   <strong>{{ error|escape }}</strong>
+              </div>
+           {% endfor %}
+       {% endfor %}
+    {% endif %}
+
+    <div class="post-content">
+        
+        <form action="" class="site-form" method="post">
+            {% csrf_token %}
+            <p>
+                <u>Fill out the following to add an instrument model. Click the "add" button to register a new instrument make, if not found in the dropdown menu.</u>
+            </p>
+            {% for error in form.non_field_errors %}
+                <p class="error error-danger">*** {{ error }} ***</p>
+                <br>
+                <br>
+            {% endfor %}
+            <table>
+                {% for field in form %}
+                    {% if field.name == 'inst_make' %}
+                        <tr id="id_make_name">
+                            <td width="30%" class="pxl-5 text-sm text-blue-500">{{ field.label_tag }}</td>
+                            <td width="70%" class="text-sm text-blue-500"> {{ field }}
+                                {% for error in field.errors %}
+                                    <p class="error error-danger">{{ error }}</p>
+                                {% endfor %}
+                                {% for error in form.non_field_errors %}
+                                    <p class="error error-danger">*** {{ error }} ***</p>
+                                {% endfor %}
+                                {% if not field.field.widget.attrs.placeholder and field.help_text %}
+                                    <p class="helptext">{{ field.help_text }}</p>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% elif field.name == 'inst_abbrev' %}
+                        <tr id="id_make_abbrev">
+                            <td width="30%" class="pxl-5 text-sm text-blue-500">{{ field.label_tag }}</td>
+                            <td width="70%" class="text-sm text-blue-500"> {{ field }}
+                                {% for error in field.errors %}
+                                    <p class="error error-danger">{{ error }}</p>
+                                {% endfor %}
+                                {% for error in form.non_field_errors %}
+                                    <p class="error error-danger">*** {{ error }} ***</p>
+                                {% endfor %}
+                                {% if not field.field.widget.attrs.placeholder and field.help_text %}
+                                    <p class="helptext">{{ field.help_text }}</p>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td width="30%">{{ field.label_tag }}</td>
+                            <td width="70%"> {{ field }} 
+                                {% for error in field.errors %}
+                                    <p class="error error-danger">{{ error }}</p>
+                                {% endfor %}
+                                {% for error in form.non_field_errors %}
+                                    <p class="error error-danger">*** {{ error }} ***</p>
+                                {% endfor %}
+                                {% if not field.field.widget.attrs.placeholder and field.help_text %}
+                                    <p class="helptext">{{ field.help_text }}</p>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </table>
+
+            {% if request.GET.next %}
+                <input type="hidden" name="next" value="{{ request.GET.next }}">
+            {% endif %}
+
+            <div class="button-container">
+                <button class="submit-button bg-green-500 hover:bg-green-400" type="submit" >Submit</button>
+            </div>
+
+        </form>
+    </div>
+</article>
+<script>
+    // Make Option 
+    defaultMakeOptions = document.getElementById("id_make")
+
+    // New Make and Abbrev Container
+    const newMakeName = document.getElementById("id_make_name")
+    const newAbbrName = document.getElementById("id_make_abbrev")
+
+    // Dont display the make/abbrev container 
+    newMakeName.style.display = "none"
+    newAbbrName.style.display = "none"
+
+        
+    defaultMakeOptions.addEventListener(`change`, (e) => {
+        // log(`e.target`, e.target);
+        const select = e.target;
+        const value = select.value;
+        const desc = select.options[select.selectedIndex].text;
+
+        if (desc.includes("OTHERS")) {
+            newMakeName.style.display = "table-row"; 
+            document.getElementById('id_inst_make').required = true;
+            newAbbrName.style.display = "table-row"; 
+            document.getElementById('id_inst_abbrev').required = true;
+        } else {
+            newMakeName.style.display = "none"; 
+            document.getElementById('id_inst_make').required = false;
+            newAbbrName.style.display = "none"; 
+            document.getElementById('id_inst_abbrev').required = false;
+        }
+    });
+            
+    const newModelName = document.getElementById("id_inst_model")
+    modelValue.addEventListener('input', () => {
+        modelValue.value = modelValue.value ? modelValue.value.trim() : '' 
+    })
+</script>
+
+{% endblock %}
