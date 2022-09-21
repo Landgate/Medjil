@@ -21,6 +21,10 @@
             <div class="mb-5 site-form-header bg-indigo-300 rounded px-2">
                 <h2 class="text-center">Create a prism specification</h2>
             </div>
+            {% if form.non_field_errors %}
+                    <b>{{ form.non_field_errors }}</b>
+                <br>
+            {% endif %}
             <table>
                 <tr>
                     <td width="35%">{{ form.prism_owner.label|title }}</td>
@@ -95,6 +99,13 @@
 </article>
 
 <script>
+    window.onload = function() {
+        if(!window.location.hash) {
+            window.location = window.location + '#loaded';
+            window.location.reload();
+        }
+    }
+    
         function showAddPopup(triggeringLink) {
         var name = triggeringLink.id.replace(/^add_/, '');
         href = triggeringLink.href;

@@ -68,6 +68,13 @@
 </article>
 
 <script>
+    window.onload = function() {
+        if(!window.location.hash) {
+            window.location = window.location + '#loaded';
+            window.location.reload();
+        }
+    }
+    
     function showAddPopup(triggeringLink) {
         var name = triggeringLink.id.replace(/^add_/, '');
         href = triggeringLink.href;
@@ -76,7 +83,7 @@
         return false;
     }
 
-    const specOptions = document.querySelector("#id_edm_specs")
+    const specOptions = document.querySelector("#id_prism_specs")
     function closePopup(win, newID, newRepr) {
         // $(id).append('<option value=' + newID + ' selected >' + newRepr + '</option>')
         // console.log(id, newID, newRepr)

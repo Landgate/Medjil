@@ -21,6 +21,10 @@
             <div class="mb-5 site-form-header bg-indigo-300 rounded px-2">
                 <h2 class="text-center">Create an EDM specification</h2>
             </div>
+            {% if form.non_field_errors %}
+                    <b>{{ form.non_field_errors }}</b>
+                <br>
+            {% endif %}
             <table>
                 <tr>
                     <td width="35%">{{ form.edm_owner.label|title }}</td>
@@ -33,6 +37,7 @@
                     <td width="15%"><a href="/instruments/inst_model_createby_inst_type/{{ form.edm_model.name|cut:'_model'}}/" target="_blank" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" onclick="return showAddPopup(this);" id="add_level">&#43;</a></td>
                 </tr>
 
+                <!-- Manufacturers Accuracy Statement -->
                 <tr>
                     <td width="35%">{{ form.manu_unc_const.label|title }}</td>
                     <td width="45%">{{ form.manu_unc_const }}
@@ -47,6 +52,19 @@
                     <td width="15%">{{ form.unit_manu_unc_const }}</td>
                 </tr>
                 <tr>
+                    <td width="35%">{{ form.manu_unc_ppm.label|title }}</td>
+                    <td width="45%">{{ form.manu_unc_ppm }}
+                        {% for error in form.manu_unc_ppm.errors %}
+                            <p class="error error-danger">{{ error }}</p>
+                        {% endfor %}
+                        <!-- Help text -->
+                        {% if not form.manu_unc_ppm.widget.attrs.placeholder and form.manu_unc_ppm.help_text %}
+                            <p class="helptext">{{ form.manu_unc_ppm.help_text }}</p>
+                        {% endif %}
+                    </td>
+                    <td width="15%">{{ form.unit_manu_unc_ppm }}</td>
+                </tr>
+                <tr>
                     <td width="35%">{{ form.manu_unc_k.label|title }}</td>
                     <td width="45%">{{ form.manu_unc_k }}
                         {% for error in form.manu_unc_k.errors %}
@@ -57,7 +75,21 @@
                             <p class="helptext">{{ form.manu_unc_k.help_text }}</p>
                         {% endif %}
                     </td>
-                    <td width="15%">{{ form.unit_manu_unc_ppm }}</td>
+                    <td width="15%"></td>
+                </tr>
+                <!-- Unit Length -->
+                <tr>
+                    <td width="35%">{{ form.edm_type.label|title }}</td>
+                    <td width="45%">{{ form.edm_type }}
+                        {% for error in form.edm_type.errors %}
+                            <p class="error error-danger">{{ error }}</p>
+                        {% endfor %}
+                        <!-- Help text -->
+                        <!-- {% if not form.unit_length.widget.attrs.placeholder and form.unit_length.help_text %}
+                            <p class="helptext">{{ form.unit_length.help_text }}</p>
+                        {% endif %} -->
+                    </td>
+                    <td width="15%"></td>
                 </tr>
                 <!-- Unit Length -->
                 <tr>
@@ -162,6 +194,13 @@
 </article>
 
 <script>
+    window.onload = function() {
+        if(!window.location.hash) {
+            window.location = window.location + '#loaded';
+            window.location.reload();
+        }
+    }
+    
         function showAddPopup(triggeringLink) {
         var name = triggeringLink.id.replace(/^add_/, '');
         href = triggeringLink.href;

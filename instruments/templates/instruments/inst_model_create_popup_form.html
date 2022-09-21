@@ -58,6 +58,11 @@
                                 <p class="helptext">{{ field.help_text }}</p>
                             {% endif %}
                         </td>
+                        {% if field.name == 'make' %}
+                            <td width="10%"> 
+                                <a onclick="NewMake()" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" >&#43;</a>
+                            </td>                        
+                        {% endif %}
                     </tr>
                 {% endif %}
             {% endfor %}
@@ -86,6 +91,21 @@
     newMakeName.style.display = "none"
     newAbbrName.style.display = "none"
 
+    function NewMake(){
+        newMakeName.style.display = "table-row"; 
+        document.getElementById('id_inst_make').required = true;
+        newAbbrName.style.display = "table-row"; 
+        document.getElementById('id_inst_abbrev').required = true;
+        
+        let oLen = defaultMakeOptions.length;
+        for (let i = 0; i < oLen; i++) {
+            if(defaultMakeOptions[i].text.includes("OTHERS")){
+                defaultMakeOptions.value = i;
+                }
+            }
+        }
+    
+    
     // On dropdown change - if others - extend table row to Make Form
     defaultMakeOptions.addEventListener(`change`, (e) => {
         // log(`e.target`, e.target);
