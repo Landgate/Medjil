@@ -42,6 +42,9 @@
                             <!-- Help text -->
                             {% if not field.field.widget.attrs.placeholder and field.help_text %}
                                 <p class="helptext">{{ field.help_text }}</p>
+                                {% if field.name == 'thermal_coefficient' %}
+                                    <p id="replace-warning" class="helptext">Replace the values, if not correct!</p>
+                                {% endif %}
                             {% endif %}
                         </td>
                         <td width="5%">
@@ -122,6 +125,9 @@
         'e_glass': 5.00,
         's2_glass': 2.90,
     }
+
+    replaceWarning = document.getElementById('replace-warning')
+    replaceWarning.style.display = 'none'
     staffCoefficient = document.getElementById('id_inst_staff_form-thermal_coefficient')
     staffTypeOptions = document.getElementById('id_inst_staff_form-staff_type')
     staffTypeOptions.addEventListener('change', (e) =>{
@@ -130,6 +136,9 @@
             var coeffValue = staffCoefficients[staffType].toFixed(2)
             staffCoefficient.value = coeffValue
             staffCoefficient.style.color = 'red'
+
+            replaceWarning.style.display = 'block'
+            replaceWarning.style.color = 'red'
         }
     })
 
