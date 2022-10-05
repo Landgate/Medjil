@@ -111,6 +111,29 @@
         
         window.sessionStorage.clear()
     }
+
+    var staffCoefficients = {
+        'invar': 0.81,
+        'fiberglass': 10.00,
+        'wood': 3.00,
+        'aluminium': 23.00,
+        'steel': 11.00,
+        'epoxy' : 2.11,
+        'e_glass': 5.00,
+        's2_glass': 2.90,
+    }
+    staffCoefficient = document.getElementById('id_inst_staff_form-thermal_coefficient')
+    staffTypeOptions = document.getElementById('id_inst_staff_form-staff_type')
+    staffTypeOptions.addEventListener('change', (e) =>{
+        const staffType = e.target.value;
+        if (staffType) {
+            var coeffValue = staffCoefficients[staffType].toFixed(2)
+            staffCoefficient.value = coeffValue
+            staffCoefficient.style.color = 'red'
+        }
+    })
+
+
     
     function refreshParent() 
         {
