@@ -85,10 +85,10 @@
                 {% endif %}
 
 				{% if wizard.steps.next %}
-					<button class="next-button bg-green-400 hover:bg-green-300 text-base" type="submit">Next <span>&#187;</span></button>
+					<button class="next-button bg-green-500 hover:bg-green-400 text-base" type="submit">Next <span>&#187;</span></button>
 					<a href="{% url 'calibrationsites:home' %}" class="cancelbtn bg-red-500 hover:bg-red-300 text-center">Cancel</a>
 				{% else %}
-					<button class="next-button bg-green-400 hover:bg-green-300 text-base" type="submit">Submit <span>&#187;</span></button>
+					<button class="next-button bg-green-500 hover:bg-green-400 text-base" type="submit">Submit <span>&#187;</span></button>
 					<a href="{% url 'calibrationsites:home' %}" class="cancelbtn bg-red-500 hover:bg-red-300 text-center">Cancel</a>
 				{% endif %}
 			</div>
