@@ -58,7 +58,7 @@ figure > img {
     /* max-width: 100%; */
     -webkit-overflow-scrolling: touch;
     overflow-x: auto;
-    vertical-align: top;
+    /* vertical-align: top; */
     }
     table th {
       background-color: #6BBD6E;
@@ -67,7 +67,8 @@ figure > img {
       font-weight: 500;
       text-align: left; }
       table th, table td {
-        vertical-align: text-top;
+        /* vertical-align: text-top; */
+        vertical-align: middle;
       }
     table tr:not(:last-child) {
       border-bottom: 1px solid #e0e0e1; }
@@ -545,18 +546,26 @@ input, textarea, select, button {
     cursor: pointer;
     transition: 0.3s;
     font-size: 17px;
+    border: 2px solid transparent;
   }
 
   /* Change background color of buttons on hover */
-  .left-sidebar button:hover {
+  .left-sidebar button:hover,
+  .left-sidebar button.active {
       background-color: #cddbfe;
+      border-top-color: transparent;
+      border-right-color: transparent;
+      border-left-color: #FFB03D;
+      border-bottom-color: transparent;
+      text-decoration: none;
+      /* background-color: azure; */
       /* border-bottom: 1px solid #0c0c0c; */
   }
 
   /* Create an active/current "tab button" class */
-  .left-sidebar button.active {
+  /* .left-sidebar button.active {
     background-color: #cddbfe;
-  }
+  } */
 
   .tab-content {
     margin-left: 1.125rem;
@@ -1286,6 +1295,7 @@ td .add-button {
   color: #0a84ff;
 }
 
+
 .tab-button {
   display: flex;
   gap: 1rem;
@@ -1301,6 +1311,36 @@ td .add-button {
 .pagination .step-links:not(:last-child) {
   padding-right: 0.5rem;
 }
+
+/* SVG ICONS */
+svg#edit-view:hover path {
+  fill: red;
+}
+
+svg#report-view:hover path {
+  fill: blue;
+}
+/* .icon-link {
+  display:  block;
+  z-index: 1;
+}
+
+object {
+  pointer-events: auto;
+  z-index: -1;
+}
+
+.svg-icon {
+  display: inline-block;
+  width: 24px;
+  height: auto;
+  background-size: cover
+}
+
+.svg-icon-edit:hover,
+.svg-icon-edit:focus {
+  filter: invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%);
+} */
 
 
 /* Chart */
