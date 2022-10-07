@@ -249,6 +249,20 @@ def inst_level_update(request, id):
         }
     return render(request, 'instruments/inst_update_form.html', context)
 #####################################################################################
+@login_required(login_url="/accounts/login") 
+def inst_level_delete(request, id):
+    this_inst = DigitalLevel.objects.get(level_owner=request.user.company, id=id)
+    if this_inst:
+        try:
+            this_inst.delete()
+            messages.success(request, "You have successfully deleted: " + this_inst)
+        except:
+            messages.error(request, "This action cannot be performed! This level has a calibration record.")
+        return redirect ('instruments:home')
+    else:
+        messages.error(request, "The instrument does not exists!")
+        return redirect ('instruments:home')
+#####################################################################################
 class DigitalLevelCreateView(LoginRequiredMixin, generic.CreateView):
     def get_form_kwargs(self, *args, **kwargs):
         kwargs = super(DigitalLevelCreateView, self).get_form_kwargs(*args, **kwargs)
@@ -288,6 +302,20 @@ def inst_staff_update(request, id):
         'form': form
         }
     return render(request, 'instruments/inst_update_form.html', context)
+#####################################################################################
+@login_required(login_url="/accounts/login") 
+def inst_staff_delete(request, id):
+    this_inst = Staff.objects.get(staff_owner=request.user.company, id=id)
+    if this_inst:
+        try:
+            this_inst.delete()
+            messages.success(request, "You have successfully deleted: " + this_inst)
+        except:
+            messages.error(request, "This action cannot be performed! This staff has a calibration record.")
+        return redirect ('instruments:home')
+    else:
+        messages.error(request, "The instrument does not exists!")
+        return redirect ('instruments:home')
 #######################################################################
 ######################## STAFF CREATE #################################
 #######################################################################
@@ -405,6 +433,32 @@ def inst_edm_detail(request, id):
         'this_inst': this_inst,
         }
     return render(request, 'instruments/inst_edm_detail.html', context)
+#####################################################################################
+@login_required(login_url="/accounts/login") 
+def inst_edm_update(request, id):
+    this_inst = get_object_or_404(EDM_Inst, id = id)
+    form = EDM_InstForm(request.POST or None, request.FILES or None, instance = this_inst, user = request.user)
+    if form.is_valid():
+        form.save()
+        return redirect ('instruments:home')
+    context = {
+        'form': form
+        }
+    return render(request, 'instruments/inst_update_form.html', context)
+#####################################################################################
+@login_required(login_url="/accounts/login") 
+def inst_edm_delete(request, id):
+    this_inst = EDM_Inst.objects.get(edm_custodian=request.user, id=id)
+    if this_inst:
+        try:
+            this_inst.delete()
+            messages.success(request, "You have successfully deleted: " + this_inst)
+        except:
+            messages.error(request, "This action cannot be performed! This EDM has a calibration record.")
+        return redirect ('instruments:home')
+    else:
+        messages.error(request, "The instrument does not exists!")
+        return redirect ('instruments:home')
 #########################################################################
 @login_required(login_url="/accounts/login") 
 def inst_edm_spec_create(request):
@@ -470,6 +524,33 @@ class PrismCreateView(LoginRequiredMixin, generic.CreateView):
             return redirect(reverse("instruments:home"))
             #return HttpResponseRedirect(reverse_lazy('books:detail', args=[book.id]))
         return render(request, 'instruments/inst_prism_create_form.html', {'form': form})
+#####################################################################################
+@login_required(login_url="/accounts/login") 
+def inst_prism_update(request, id):
+    this_inst = get_object_or_404(Prism_Inst, id = id)
+    print(this_inst.photo)
+    form = Prism_InstForm(request.POST or None, request.FILES or None, instance = this_inst, user = request.user)
+    if form.is_valid():
+        form.save()
+        return redirect ('instruments:home')
+    context = {
+        'form': form
+        }
+    return render(request, 'instruments/inst_update_form.html', context)
+#####################################################################################
+@login_required(login_url="/accounts/login") 
+def inst_prism_delete(request, id):
+    this_inst = Prism_Inst.objects.get(prism_custodian=request.user, id=id)
+    if this_inst:
+        try:
+            this_inst.delete()
+            messages.success(request, "You have successfully deleted: " + this_inst)
+        except:
+            messages.error(request, "This action cannot be performed! This prism has a calibration record.")
+        return redirect ('instruments:home')
+    else:
+        messages.error(request, "The instrument does not exists!")
+        return redirect ('instruments:home')
 #########################################################################
 @login_required(login_url="/accounts/login") 
 def inst_prism_spec_create(request):
@@ -543,9 +624,34 @@ def inst_mets_spec_create(request):
     else:
         form = Mets_SpecificationForm(user= request.user)
     return render(request, 'instruments/inst_spec_met_create_popup_form.html', {'form':form})
+#####################################################################################
+@login_required(login_url="/accounts/login") 
+def inst_mets_update(request, id):
+    this_inst = get_object_or_404(Mets_Inst, id = id)
+    print(this_inst.photo)
+    form = Mets_InstForm(request.POST or None, request.FILES or None, instance = this_inst, user = request.user)
+    if form.is_valid():
+        form.save()
+        return redirect ('instruments:home')
+    context = {
+        'form': form
+        }
+    return render(request, 'instruments/inst_update_form.html', context)
+#####################################################################################
+@login_required(login_url="/accounts/login") 
+def inst_mets_delete(request, id):
+    this_inst = Mets_Inst.objects.get(mets_custodian=request.user, id=id)
+    if this_inst:
+        try:
+            this_inst.delete()
+            messages.success(request, "You have successfully deleted: " + this_inst)
+        except:
+            messages.error(request, "This action cannot be performed! This met instrument has a calibration record.")
+        return redirect ('instruments:home')
+    else:
+        messages.error(request, "The instrument does not exists!")
+        return redirect ('instruments:home')
 #########################################################################
-
-
 @login_required(login_url="/accounts/login") 
 def certificates_home(request):
     inst_types = [instrument_types[0]]+ instrument_types[3:]
@@ -597,7 +703,7 @@ def certificate_edit(request, inst_type, id=None):
         if inst_type == 'edmi':
             obj = EDMI_certificate.objects.get(id=id)
             obj.calibration_date = obj.calibration_date.isoformat()
-            certificate = Mets_certificateForm(request.POST or None,
+            certificate = EDMI_certificateForm(request.POST or None,
                                                user=request.user,
                                                instance=obj)
         if inst_type == 'mets':

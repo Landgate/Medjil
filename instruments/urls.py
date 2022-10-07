@@ -28,29 +28,38 @@ urlpatterns = [
     path('inst_edm_create/', views.EDMCreateView.as_view(), name = 'edm_inst_create'),
     path('inst_edm_spec_create/', views.inst_edm_spec_create, name = 'inst_edm_spec_create'),
     path('inst_edm/<id>', views.inst_edm_detail, name = 'inst_edm_detail'),
+    path('inst_edm/<id>/update/', views.inst_edm_update, name = 'inst_edm_update'),
+    path('inst_edm/<id>/delete/', views.inst_edm_delete, name = 'inst_edm_delete' ),
 
     # Prisms
     path('inst_prism_create/', views.PrismCreateView.as_view(), name = 'prism_inst_create'),
     path('inst_prism_spec_create/', views.inst_prism_spec_create, name = 'inst_prism_spec_create'),
+    path('inst_prism/<id>/update/', views.inst_prism_update, name = 'inst_prism_update'),
+    path('inst_prism/<id>/delete/', views.inst_prism_delete, name = 'inst_prism_delete' ),
 
     #Mets
     path('inst_mets_create/', views.MetsCreateView.as_view(), name = 'mets_inst_create'),
     path('inst_mets_spec_create/', views.inst_mets_spec_create, name = 'inst_mets_spec_create'),
+    path('inst_mets/<id>/update/', views.inst_mets_update, name = 'inst_mets_update'),
+    path('inst_mets/<id>/delete/', views.inst_mets_delete, name = 'inst_mets_delete' ),
 
-    # Levelling staves
-    path('inst_staff/<id>', views.inst_staff_detail, name = 'inst_staff_detail'),
-    path('inst_staff_update/<id>/', views.inst_staff_update, name = 'inst_staff_update'),
+#     # Levelling staves
+#     path('inst_staff/<id>', views.inst_staff_detail, name = 'inst_staff_detail'),
+#     path('inst_staff/<id>/update', views.inst_staff_update, name = 'inst_staff_update'),
+#     path('inst_staff/<id>/delete/', views.inst_staff_delete, name = 'inst_staff_delete'),
 
     # Digital Level
     path('inst_level_create/', views.DigitalLevelCreateView.as_view(), name='inst_level_create'),
     path('inst_level_create_popup/', views.inst_level_create_popup, name = 'inst_level_create_popup'),
     path('inst_level/<id>', views.inst_level_detail, name = 'inst_level_detail'),
     path('inst_level_update/<id>/', views.inst_level_update, name = 'inst_level_update'),
+    path('inst_level/<id>/delete/', views.inst_level_delete, name = 'inst_level_delete' ),
 
     # Staves
     re_path(r'^inst_staff_create/(?P<step>.+)/$', staff_creation_wizard, name='sstep'),
     path('inst_staff_create/', staff_creation_wizard, name='inst_staff_create'),
-
+    path('inst_staff/<id>/update', views.inst_staff_update, name = 'inst_staff_update'),
+    path('inst_staff/<id>/delete/', views.inst_staff_delete, name = 'inst_staff_delete' ),
 
     path('<id>/inst_model_update/', views.inst_model_update, name = 'inst_model_update'),
     path('<id>/inst_make_update/', views.inst_make_update, name = 'inst_make_update'),

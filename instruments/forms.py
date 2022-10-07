@@ -116,8 +116,10 @@ class EDM_InstForm(forms.ModelForm):
         fields = '__all__'
         exclude = ('created_on', 'modified_on')
         widgets = {
-            'photo' : forms.FileInput(attrs={'accept' : '.pdf, .jpg, .jpeg, .png, .tif',
-                                             'required': False}),
+            'photo' :  forms.ClearableFileInput(attrs={'accept' : '.pdf, .jpg, .jpeg, .png, .tif',
+                                    'required': False}),
+            # 'photo' : forms.FileInput(attrs={'accept' : '.pdf, .jpg, .jpeg, .png, .tif',
+            #                                  'required': False}),
         }
         
 class EDM_SpecificationForm(forms.ModelForm):
@@ -181,8 +183,10 @@ class Prism_InstForm(forms.ModelForm):
         fields = '__all__'
         exclude = ('created_on', 'modified_on')
         widgets = {
-            'photo' : forms.FileInput(attrs={'accept' : '.pdf, .jpg, .jpeg, .png, .tif',
+            'photo' :  forms.ClearableFileInput(attrs={'accept' : '.pdf, .jpg, .jpeg, .png, .tif',
                                              'required': False}),
+            # 'photo' : forms.FileInput(attrs={'accept' : '.pdf, .jpg, .jpeg, .png, .tif',
+            #                                  'required': False}),
         }
 
 

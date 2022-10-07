@@ -176,8 +176,8 @@ class EDM_Specification(models.Model):
         ordering = ['edm_model']
         unique_together = ('edm_model','edm_owner')
 
-    def get_absolute_url(self):
-        return reverse('edm_model_calibrations:edm-detail', args=[str(self.id)])
+    # def get_absolute_url(self):
+    #     return reverse('edm_model_calibrations:edm-detail', args=[str(self.id)])
 
     def __str__(self):
         return f'{self.edm_model.make} {self.edm_model.model} ({self.edm_owner.company_abbrev})'
@@ -185,7 +185,7 @@ class EDM_Specification(models.Model):
 def get_upload_to_edm_photos(instance, filename):
     modified_date = instance.modified_on.strftime('%Y%m%d')
     filename = filename.split('\\')[-1]
-    return 'InstrumentPhotos/%s/%s/%s/%s' % (instance.edm_specs.edm_owner.company_abbrev, instance.edm_number, modified_date, filename)
+    return 'InstrumentPhotos/%s/EDM/%s/%s/%s' % (instance.edm_specs.edm_owner.company_abbrev, instance.edm_number, modified_date, filename)
 
 class EDM_Inst (models.Model):
     edm_number = models.CharField(max_length=15, 
@@ -211,7 +211,7 @@ class EDM_Inst (models.Model):
         unique_together = ('edm_specs','edm_number')
 
     def get_absolute_url(self):
-        return reverse('instruments:inst_edm_detail', args=[str(self.id)])
+        return reverse('instruments:inst_edm_update', args=[str(self.id)])
 
     def __str__(self):
         return f'{self.edm_specs} - {self.edm_number}'
@@ -242,8 +242,8 @@ class Prism_Specification(models.Model):
         ordering = ['prism_model']
         unique_together = ('prism_model','prism_owner')
 
-    def get_absolute_url(self):
-        return reverse('instrument_calibrations:prism-detail', args=[str(self.id)])
+    # def get_absolute_url(self):
+    #     return reverse('instruments:inst_prism_update', args=[str(self.id)])
 
     def __str__(self):
         return f'{self.prism_model.make} {self.prism_model.model} ({self.prism_owner.company_abbrev})'
@@ -251,7 +251,7 @@ class Prism_Specification(models.Model):
 def get_upload_to_prism_photos(instance, filename):
     modified_date = instance.modified_on.strftime('%Y%m%d')
     filename = filename.split('\\')[-1]
-    return 'InstrumentPhotos/%s/%s/%s/%s' % (instance.prism_specs.prism_owner.company_abbrev, instance.prism_number, modified_date, filename)
+    return 'InstrumentPhotos/%s/Prism/%s/%s/%s' % (instance.prism_specs.prism_owner.company_abbrev, instance.prism_number, modified_date, filename)
 class Prism_Inst (models.Model):
     prism_number = models.CharField(max_length=15, 
                                     help_text="Enter the instrument serial number / unique ID",
@@ -276,7 +276,9 @@ class Prism_Inst (models.Model):
         unique_together = ('prism_specs','prism_number')
 
     def get_absolute_url(self):
-        return reverse('instrument_calibrations:Prism-Inst-detail', args=[str(self.id)])
+        return reverse('instruments:inst_prism_update', args=[str(self.id)])
+    # def get_absolute_url(self):
+    #     return reverse('instrument_calibrations:Prism-Inst-detail', args=[str(self.id)])
 
     def __str__(self):
         return f'{self.prism_specs} - {self.prism_number}'
@@ -318,8 +320,8 @@ class Mets_Specification(models.Model):
         ordering = ['mets_model']
         unique_together = ('mets_model','mets_owner')
 
-    def get_absolute_url(self):
-        return reverse('instrument_calibrations:mets-detail', args=[str(self.id)])
+    # def get_absolute_url(self):
+    #     return reverse('instrument_calibrations:mets-detail', args=[str(self.id)])
 
     def __str__(self):
         return f'({self.mets_model.inst_type}) {self.mets_model.make} {self.mets_model.model} ({self.mets_owner.company_abbrev})'
@@ -353,7 +355,7 @@ class Mets_Inst (models.Model):
         unique_together = ('mets_specs','mets_number')
 
     def get_absolute_url(self):
-        return reverse('instrument_calibrations:Mets-Inst-detail', args=[str(self.id)])
+        return reverse('instruments:inst_mets_update', args=[str(self.id)])
 
     def __str__(self):
         return f'{self.mets_specs} - {self.mets_number}'
