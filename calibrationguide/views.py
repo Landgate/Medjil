@@ -29,7 +29,7 @@ def guide_create(request):
                     image = form['photos']
                     InstructionImage.objects.create(photos=image, instruction=inst_obj)
             messages.success(request, "New recorded added")
-            return redirect('home')
+            return redirect('calibrationguide:home')
 
     else:
         inst_form = CalibrationInstructionForm()
@@ -62,7 +62,7 @@ def guide_update(request, id):
             inst_form.save()
             for form in formset:             
                 form.save()
-            return redirect('home')
+            return redirect('calibrationguide:home')
         # else:
         #     print(formset.errors)
         #     print("Cannot save formset")
