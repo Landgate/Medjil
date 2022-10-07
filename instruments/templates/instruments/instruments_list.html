@@ -17,15 +17,16 @@
         {% endif %}
         <h2>COMPANY SURVEYING INSTRUMENTS</h2>
         <p>Click on the instrument types on the left menu to display your available instruments: </p>
-    </div>
-    {% if messages %}
-        <ul class="alert messages">
-            {% for message in messages %}
-            <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-            {% endfor %}
-        </ul>
-        <br>
-    {% endif %}	
+    
+		{% if messages %}
+			<ul class="message-list">
+				{% for message in messages %}
+				<li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+				{% endfor %}
+			</ul>
+			<br>
+		{% endif %}	
+	</div>
     <hr>
     <div class="flex-with-sidebar">
         <div class="left-sidebar">
@@ -36,34 +37,8 @@
                     <button class="tablinks" onclick="openTab(event, '{{inst.abbr}}')">{{ inst.name }}</button>
                 {% endif %}
             {% endfor %}
-            <!-- <button class="tablinks" onclick="openTab(event, 'edm')" id="defaultOpen">Electronic Distance Measurements (EDM)</button>
-            <button class="tablinks" onclick="openTab(event, 'prism')">Prisms</button>
-            <button class="tablinks" onclick="openTab(event, 'level')">Digital Levels</button>
-            <button class="tablinks" onclick="openTab(event, 'staff')">Barcoded Staves</button>
-            <button class="tablinks" onclick="openTab(event, 'met')">Meteorological Instruments</button> -->
         </div>
         <div class="post-content pxl-2">
-            <!-- {% for inst in inst_types %}
-                <div id="{{inst.abbr}}" class="tab-content">
-                    <h3 class="pxr-5">Register a New {{ inst.name }} 
-                        <span class="pxl-5">
-                            {% if inst.abbr == 'edm' %}
-                                <a href="/instruments/inst_staff_create/?reset">
-                            {% elif inst.abbr == 'prism' %}
-                                <a href="/instruments/inst_staff_create/?reset">
-                            {% elif inst.abbr == 'level' %}
-                                <a href="/instruments/inst_level_create/?reset">
-                            {% elif inst.abbr == 'staff' %}
-                                <a href="/instruments/inst_staff_create/?reset">
-                            {% endif %}
-                                <button class="px-3 py-1 border border-transparent text-base leading-4 rounded text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
-                                    Register
-                                </button>
-                            </a>
-                        </span>
-                    </h3>
-                </div>
-            {% endfor %} -->
             <div id="edm" class="tab-content">
                 <h3 class="pxr-5">Register a New EDM 
                     <span class="pxl-5">
@@ -79,21 +54,37 @@
 				{% if edm_page_obj %}
 					<table style="table-layout: fixed; width: 95%"> 
 						<tr>
-							<th width="15%">EDM Number</th>
-							<th width="30%">EDM Spec</th>
-							<th width="35%">Currently used by</th>
+							<th>EDM Number</th>
+							<th>EDM Spec</th>
+							<th>EDM Owner</th>
 							<!-- <th>Description</th> -->
-							<th width="20%">Image link</th>
+							<th>Image link</th>
+							<th>Action</th>
 						</tr>			
 						{% for edm in edm_page_obj %}
 							<tr>
-								<td><a href="{{ edm.get_absolute_url }}" target="__blank">{{ edm.edm_number }}</a> </td>
+								<td>{{ edm.edm_number }} </td>
 								<td>{{ edm.edm_specs }}</td>
-								<td>{{ edm.edm_custodian }} </td>
+								<td>{{ edm.edm_custodian.company }} </td>
 								<td> 
 									{% if edm.photo %} 
 										<a href="{{ edm.photo.url|default_if_none:'#' }}" target="__blank">Click here</a> 
 									{% endif %}
+								</td>
+								<td>
+									<span class="flex justify-around items-center text-center">
+										<a href="{{ edm.get_absolute_url }}" target="__blank" class="px-3">
+											<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000" class="bi bi-pencil-fill" id = "edit-view" viewBox="0 0 16 16">
+												<path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"></path>
+											</svg>
+										</a>  
+										<a href="{% url 'instruments:inst_edm_delete' edm.id %}" class="px-2" onclick="return confirmation()">
+											<svg width="16" height="16" viewBox="0 0 16 16" fill="red" class="bi bi-trash">
+												<path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"></path>
+													<path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"></path>
+											</svg>
+										</a>
+									</span>
 								</td>
 							</tr>
 						{% endfor %}
@@ -148,20 +139,36 @@
 				{% if prism_page_obj %}
 					<table style="table-layout: fixed; width: 95%"> 
 						<tr>
-							<th width="15%">Prism Number</th>
-							<th width="30%">Prism Spec</th>
-							<th width="35%">Currently used by</th>
-							<th width="20%">Image Link</th>
+							<th>Prism Number</th>
+							<th>Prism Spec</th>
+							<th>Prism Owner</th>
+							<th>Image Link</th>
+							<th>Action</th>
 						</tr>			
 						{% for prism in prism_page_obj %}
 							<tr>
 								<td>{{ prism.prism_number }} </td>
 								<td>{{ prism.prism_specs }} </td>
-								<td>{{ prism.prism_custodian }} </td>
+								<td>{{ prism.prism_custodian.company }} </td>
 								<td> 
 									{% if prism.photo %} 
 										<a href="{{ prism.photo.url|default_if_none:'#' }}" target="__blank">Click here</a> 
 									{% endif %}
+								</td>
+								<td>
+									<span class="flex justify-around items-center text-center">
+										<a href="{{ prism.get_absolute_url }}" target="__blank" class="px-3">
+											<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000" class="bi bi-pencil-fill" id = "edit-view" viewBox="0 0 16 16">
+												<path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"></path>
+											</svg>
+										</a>  
+										<a href="{% url 'instruments:inst_prism_delete' prism.id %}" class="px-2" onclick="return confirmation()">
+											<svg width="16" height="16" viewBox="0 0 16 16" fill="red" class="bi bi-trash">
+												<path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"></path>
+													<path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"></path>
+											</svg>
+										</a>
+									</span>
 								</td>
 							</tr>
 						{% endfor %}
@@ -220,15 +227,30 @@
 							<th>Level Number</th>
 							<th>Level Model</th>
 							<th>Level Owner</th>
+							<th>Action </th>
 						</tr>			
 						{% for level in level_page_obj %}
 							<tr>
 								<td class="text-center"> {{ forloop.counter }}</td>
-								<td><a href="{{ level.get_absolute_url }}" target="__blank">{{ level.level_number  }}</a></td>
+								<td>{{ level.level_number  }}</td>
 								<!-- <td>{{ level.level_number }} </td> -->
 								<td>{{ level.level_model }} </td>
 								<td>{{ level.level_owner }} </td>
-								
+								<td>
+									<span class="flex justify-around items-center text-center">
+										<a href="{{ level.get_absolute_url }}" target="__blank" class="px-3">
+											<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000" class="bi bi-pencil-fill" id = "edit-view" viewBox="0 0 16 16">
+												<path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"></path>
+											</svg>
+										</a>  
+										<a href="{% url 'instruments:inst_level_delete' level.id %}" class="px-2" onclick="return confirmation()">
+											<svg width="16" height="16" viewBox="0 0 16 16" fill="red" class="bi bi-trash">
+												<path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"></path>
+													<path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"></path>
+											</svg>
+										</a>
+									</span>
+								</td>
 							</tr>
 						{% endfor %}
 					</table>
@@ -286,15 +308,31 @@
 							<th>Staff Type</th>
 							<th>Staff Length</th>
 							<th>Coefficient (in ppm)</th>
+							<th>Action</th>
 						</tr>			
 						{% for staff in staff_page_obj %}
 							<tr>
 								<td class="text-center"> {{ forloop.counter }}</td>
-								<td><a href="{{ staff.get_absolute_url }}" target="__blank">{{ staff.staff_number }}</a></td>
+								<td>{{ staff.staff_number }}</td>
 								<td>{{ staff.staff_model }} </td>
 								<td>{{ staff.staff_type }} </td>
 								<td>{{ staff.staff_length }} </td>
 								<td>{{ staff.thermal_coefficient }} </td>
+								<td>
+									<span class="flex justify-around items-center text-center">
+										<a href="{{ staff.get_absolute_url }}" target="__blank" class="px-3">
+											<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000" class="bi bi-pencil-fill" id = "edit-view" viewBox="0 0 16 16">
+												<path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"></path>
+											</svg>
+										</a>  
+										<a href="{% url 'instruments:inst_staff_delete' staff.id %}" class="px-2" onclick="return confirmation()">
+											<svg width="16" height="16" viewBox="0 0 16 16" fill="red" class="bi bi-trash">
+												<path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"></path>
+													<path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"></path>
+											</svg>
+										</a>
+									</span>
+								</td>
 		
 							</tr>
 						{% endfor %}
@@ -349,20 +387,35 @@
 				{% if mets_page_obj %}
 					<table style="table-layout: fixed; width: 95%"> 
 						<tr>
-							<th width="15%">Instrument Number</th>
-							<th width="30%">Instrument Spec</th>
-							<th width="35%">Currently used by</th>
-							<th width="20%">Image link</th>
+							<th>Instrument Number</th>
+							<th>Instrument Spec</th>
+							<th>Currently used by</th>
+							<th>Image link</th>
+							<th>Action </th>
 						</tr>			
 						{% for mets in mets_page_obj %}
 							<tr>
 								<td>{{ mets.mets_number }} </td>
 								<td>{{ mets.mets_specs }} </td>
-								<td>{{ mets.mets_custodian }} </td>
+								<td>{{ mets.mets_custodian.company }} </td>
 								<td> 
 									{% if mets.photo %} 
 										<a href="{{ mets.photo.url|default_if_none:'#' }}" target="__blank">Click here</a> 
 									{% endif %}
+								</td>
+								<td>
+									<span class="flex justify-around items-center text-center">
+										<a href="{{ mets.get_absolute_url }}" target="__blank" class="px-3">
+											<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000" class="bi bi-pencil-fill" id = "edit-view" viewBox="0 0 16 16">
+												<path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"></path>
+											</svg>										</a>  
+										<a href="{% url 'instruments:inst_mets_delete' mets.id %}" class="px-2" onclick="return confirmation()">
+											<svg width="16" height="16" viewBox="0 0 16 16" fill="red" class="bi bi-trash">
+												<path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"></path>
+													<path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"></path>
+											</svg>										
+										</a>
+									</span>
 								</td>
 							</tr>
 						{% endfor %}
@@ -422,6 +475,12 @@
     
     // Get the element with id="defaultOpen" and click on it
     document.getElementById("defaultOpen").click();
+
+
+	function confirmation() {
+		return confirm('Are you sure you want to delete this record? You will not be able to retreive the record later.');
+	}
+
     </script>
 
  {% endblock content %}

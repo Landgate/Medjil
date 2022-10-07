@@ -11,7 +11,7 @@
     </div> -->
 
     <div class="post-content">
-        <form action="" class="site-form" method="post" name="staff_form">
+        <form class="site-form" action="" method="post" enctype="multipart/form-data" name="staff_form">
             
             <div class="mb-5 site-form-header bg-indigo-300 rounded px-2">
                 <h2 class="text-center">Edit an instrument</h2>
@@ -49,7 +49,7 @@
                 <input type="hidden" name="next" value="{{ request.GET.next }}">
             {% endif %}
             <div class="button-container">
-				<button class="submit-button bg-green-400 hover:bg-green-300 text-base" type="submit" >Update</button>
+				<button class="submit-button bg-green-500 hover:bg-green-400 text-base" type="submit" >Update</button>
 			</div>
         </form>
     </div>
