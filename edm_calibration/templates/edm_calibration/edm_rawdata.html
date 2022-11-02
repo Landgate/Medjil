@@ -11,8 +11,8 @@
         </div>
     <form action="" style="font-size:10.0pt;width:4500px;" class="site-form" method="post" enctype="multipart/form-data">               
         <div class="flexbox-container_IB flexbox-item-left_IB">
-        		<p>The pillar survey observations are used to calculate the EDMI calibration '<a href= "#"> &#x1F6C8</a>
-               <br>Please select/deselect the observations in the following table to use for the calibration calculations.</p>                 
+        		<p>The pillar survey observations are used to calculate the EDMI calibration <a href= "#"> &#x1F6C8</a>
+            <br>Please select/deselect the observations in the following table to use for the calibration calculations.</p>                 
         </div>  
         <div class="flexbox-container_IB" style="width: 100%;">
         		<div class="flexbox-item_400_IB"><i>* Click the table headers to sort table</i></div>
@@ -56,11 +56,11 @@
       	</div>
         <div class="button-container">
             <a href= "{% url 'edm_calibration:calibrate1' id=id %}" class="submit-button bg-green-500 hover:bg-green-400" style="text-align: center"> &#8678; Back</button>
-            <a href= "{% url 'edm_calibration:pillar_survey_del' id=id %}" class="submit-button bg-red-500 hover:bg-green-400" style="text-align: center"> Cancel</a>
+            <a href= "{% url 'edm_calibration:edm_calibration_home' %}" class="submit-button bg-red-500 hover:bg-green-400" style="text-align: center"> Cancel</a>
             <button type="submit" class="submit-button bg-green-500 hover:bg-green-400" >Next &#8680;</button>
         </div>     	
         </form>      
-		<div id="bottom" style="margin-left:auto;margin-right:0;text-align:center;">
+		<div id="bottom" style="text-align:center;">
     		<h4>{{ Page }}</h4>
     </div>   	
 	</div>

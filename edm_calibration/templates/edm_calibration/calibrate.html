@@ -44,11 +44,11 @@
                             {% endif %}                     
                             <td>
                                 {% if field.name == "edm" %}
-                                    <a href="{% url 'instruments:inst_level_create' %}?next={{request.path}}" class="px-2 py-1 add-button bg-blue-300 hover:bg-blue-200">
+                                    <a href="{% url 'instruments:edm_inst_create' %}?next={{request.path}}" class="px-2 py-1 add-button bg-blue-300 hover:bg-blue-200">
                                         <span class="icon-plus">&#43;</span>Add</a>
                                 {% endif %}
                                 {% if field.name == "prism" %}
-                                    <a href="{% url 'instruments:inst_level_create' %}?next={{request.path}}" class="px-2 py-1 add-button bg-blue-300 hover:bg-blue-200">
+                                    <a href="{% url 'instruments:prism_inst_create' %}?next={{request.path}}" class="px-2 py-1 add-button bg-blue-300 hover:bg-blue-200">
                                         <span class="icon-plus">&#43;</span>Add</a>
                                 {% endif %}
                                 {% if field.name == "level" %}
@@ -60,15 +60,15 @@
                                         <span class="icon-plus">&#43;</span>Add</a>
                                 {% endif %}
                                 {% if field.name == "thermometer" %}
-                                    <a href="{% url 'instruments:inst_level_create' %}?next={{request.path}}" class="px-2 py-1 add-button bg-blue-300 hover:bg-blue-200">
+                                    <a href="{% url 'instruments:mets_inst_create' %}?next={{request.path}}" class="px-2 py-1 add-button bg-blue-300 hover:bg-blue-200">
                                         <span class="icon-plus">&#43;</span>Add</a>
                                 {% endif %}
                                 {% if field.name == "barometer" %}
-                                    <a href="{% url 'instruments:inst_level_create' %}?next={{request.path}}" class="px-2 py-1 add-button bg-blue-300 hover:bg-blue-200">
+                                    <a href="{% url 'instruments:mets_inst_create' %}?next={{request.path}}" class="px-2 py-1 add-button bg-blue-300 hover:bg-blue-200">
                                         <span class="icon-plus">&#43;</span>Add</a>
                                 {% endif %}
                                 {% if field.name == "hygrometer" %}
-                                    <a href="{% url 'instruments:inst_level_create' %}?next={{request.path}}" class="px-2 py-1 add-button bg-blue-300 hover:bg-blue-200">
+                                    <a href="{% url 'instruments:mets_inst_create' %}?next={{request.path}}" class="px-2 py-1 add-button bg-blue-300 hover:bg-blue-200">
                                         <span class="icon-plus">&#43;</span>Add</a>
                                 {% endif %}
                                 {% if field.name == "uncertainty_budget" %}
@@ -104,7 +104,7 @@
                 <button type="button" id="nextBtn" onclick="nextPrev(1)" class="submit-button bg-green-500 hover:bg-green-400" >Next &#8680;</button>
             </div>
         </form>
-        <div style="margin-left: auto;margin-right: 0;">
+        <div style="text-align:center;">
             <h4 id=pgOfpgs>1</h4>
         </div>
     </div>
