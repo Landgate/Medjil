@@ -184,7 +184,7 @@ class Uncertainty_BudgetForm(forms.ModelForm):
     class Meta:
         model = Uncertainty_Budget
         fields = '__all__'        
-        labels = {'std_dev_of_zero_adjustment': 'Std Dev used when statisticly zero',}
+        labels = {'std_dev_of_zero_adjustment': 'Std Dev used when statistically zero',}
 
 
 class Uncertainty_Budget_SourceForm(forms.ModelForm):

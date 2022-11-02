@@ -753,7 +753,6 @@ def uc_budget_delete(request, id):
     delete_budget = Uncertainty_Budget.objects.get(id=id)
     delete_budget.delete()
     
-
     return redirect('baseline_calibration:uc_budgets')
 
 
