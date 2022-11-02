@@ -14,8 +14,8 @@ from calibrationsites.models import (CalibrationSite,
 def get_upload_to_location(instance, filename):
     creation_date = date.today().strftime('%Y-%m-%d')
     return '%s/%s/%s/%s/%s' % ('edmi_calibration', 
-                            instance.baseline.state.statecode.capitalize(),
-                            instance.baseline.site_name, 
+                            instance.site.state.statecode.capitalize(),
+                            instance.site.site_name, 
                             instance.edm.edm_specs.edm_owner.company_abbrev, 
                             creation_date+'-'+ filename)
 
@@ -83,16 +83,27 @@ class uPillar_Survey(models.Model):
 
    uncertainty_budget = models.ForeignKey(Uncertainty_Budget, on_delete = models.PROTECT, null = False,
              help_text="Preset uncertainty budget")
+   scalar = models.DecimalField(max_digits=6, decimal_places=2, default=1.00,
+             verbose_name= 'a-priori scalar',
+             help_text="a-priori standard uncertainties are multiplied by the a-priori scalar")
    outlier_criterion = models.DecimalField(max_digits=2, decimal_places=1, default=2,
              validators=[MinValueValidator(0), MaxValueValidator(5)],
              help_text="Number of standard deviations for outlier detection threashold.")
-   test_cyclic = models.BooleanField(default=True,
+   test_cyclic = models.BooleanField(default=False,
              verbose_name= 'Test for cyclic errors',
              help_text="Test Instrument For Cyclic Errors (Nb. Instrument Parameters Require 'Unit Lenght'")
    fieldnotes_upload = models.FileField(upload_to=get_upload_to_location,
              null=True,
              blank=True, 
              verbose_name= 'Scanned fieldnotes')
+   variance = models.FloatField(blank = True, null=True,
+             help_text="Variance of least squares adjustment of the calibration")
+   degrees_of_freedom = models.IntegerField(blank = True, null=True,
+             validators = [MinValueValidator(0), MaxValueValidator(500)],
+             help_text="Degrees of freedom of calibration")
+   k = models.FloatField(blank = True, null=True,
+             verbose_name= 'coverage factor')
+    
    uploaded_on = models.DateTimeField(auto_now_add=True, null=True)
    modified_on = models.DateTimeField(auto_now=True, null=True)
 
@@ -141,4 +152,28 @@ class uEDM_Observation(models.Model):
     def __str__(self):
        return f'({self.pillar_survey}): {self.from_pillar} → {self.to_pillar})'
 
-   
+
+class uCalibration_Parameter(models.Model):
+    pillar_survey = models.ForeignKey(uPillar_Survey, on_delete = models.CASCADE, null = False)
+    terms = (
+             ('zpc','zero point correction'),
+             ('scf','scale correction factor'),
+             ('1C', '1 - Cyclic'),
+             ('2C', '2 - Cyclic'),
+             ('3C','3 - Cyclic'),
+             ('4C','4 - Cyclic'),
+              )
+    term = models.CharField(max_length=3,
+              choices=terms
+              )
+    value = models.FloatField(
+                  verbose_name= 'parameter Value')
+    standard_deviation = models.FloatField(
+                  verbose_name= 'standard deviation of this parameter')
+    
+    class Meta:
+       ordering = ['pillar_survey','term']
+       unique_together = ('pillar_survey','term')
+    
+    def __str__(self):
+       return f'({self.pillar_survey}): {self.term}'

@@ -76,8 +76,8 @@ class Uncertainty_Budget_Source(models.Model):
                  ('04','Temperature'),
                  ('05','Pressure'),
                  ('06','Humidity'),
-                 ('07','LS fit unc fixed term'),
-                 ('08','LS fit unc proportional term'),
+                 ('07','Certified distances'),
+                 ('08','EDMI calibration'),
                  ('09','Centring'),
                  ('10','Heights'),
                  ('11','Offsets')
@@ -228,6 +228,7 @@ def get_upload_to_location(instance, filename):
 
 class Pillar_Survey(models.Model):
     baseline = models.ForeignKey(CalibrationSite, on_delete = models.CASCADE, null = False,
+                 verbose_name= 'Site',
                  help_text="Baseline under survey")
     survey_date = models.DateField(null=False, blank=False)
     computation_date = models.DateField(null=False, blank=False)

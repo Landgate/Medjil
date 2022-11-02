@@ -5,7 +5,8 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 # import Models
 from .models import (uPillar_Survey,
-                     uEDM_Observation)
+                     uEDM_Observation,
+                     uCalibration_Parameter)
 
 from baseline_calibration.models import Uncertainty_Budget
 from instruments.models import (EDM_Inst, 
@@ -26,6 +27,7 @@ class CalibrateEdmForm(forms.ModelForm):
         self.fields['uncertainty_budget'].queryset = Uncertainty_Budget.objects.filter(
             Q(company = user.company) | 
             Q(name = 'Default', company__company_name = 'Landgate'))
+        self.fields['auto_base_calibration'].required = False
         self.fields['calibrated_baseline'].required = False
         if user.is_staff:
             self.fields['auto_base_calibration'].widget.attrs['class'] = 'show'
@@ -55,7 +57,8 @@ class CalibrateEdmForm(forms.ModelForm):
     class Meta:
         model = uPillar_Survey
         fields = '__all__'
-        exclude = ('uploaded_on', 'modified_on')
+        exclude = ('degrees_of_freedom','variance','k',
+                   'uploaded_on', 'modified_on')
         widgets = {
            'site': forms.Select(attrs={'class': 'page0'}),
            'auto_base_calibration':forms.CheckboxInput(
@@ -82,6 +85,9 @@ class CalibrateEdmForm(forms.ModelForm):
            'hygro_calib_applied': forms.CheckboxInput(attrs={'class': 'page1'}),
             
            'uncertainty_budget': forms.Select(attrs={'class': 'page2'}),
+           'scalar': forms.NumberInput(
+               attrs={'placeholder':'observation standard uncertianties are multiplied by the a-priori scalar',
+                      'class': 'page2'}),
            'outlier_criterion': forms.NumberInput(
                attrs={'placeholder':'Enter number of standard deviations for outlier detection',
                       'class': 'page2'}),
@@ -133,9 +139,13 @@ class EDM_ObservationForm(forms.ModelForm):
         labels = {'id': 'Obs #',}
     
 
-class CalibratedEdmForm(forms.ModelForm):                
+class PillarSurveyUpdateForm(forms.ModelForm):
     class Meta:
         model = uPillar_Survey
-        fields = []      
+        fields = ['degrees_of_freedom','variance','k']
 
 
+class CalibrationParamForm(forms.ModelForm):
+    class Meta:
+        model = uCalibration_Parameter
+        fields = '__all__'

@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, QueryDict
-from django.forms import modelformset_factory
+from django.forms import modelformset_factory, formset_factory
 from django.forms.models import model_to_dict
 
 from collections import OrderedDict
@@ -12,10 +12,12 @@ from .forms import (CalibrateEdmForm,
                     UploadSurveyFiles,
                     ChangeSurveyFiles,
                     EDM_ObservationForm,
-                    CalibratedEdmForm
+                    PillarSurveyUpdateForm,
+                    CalibrationParamForm
                     )
 from .models import (uPillar_Survey,
-                     uEDM_Observation
+                     uEDM_Observation,
+                     uCalibration_Parameter
                      )
 from common_func.LeastSquares import (
                     LSA,
@@ -118,7 +120,11 @@ def calibrate1(request, id):
                 dct['to_pillar'] = o.to_pillar.name
                 raw_edm_obs[str(o.id)] = dct
             
-        ps_instance = pillar_survey.save()
+        ps_instance = pillar_survey.save(commit=False)
+        if frm['auto_base_calibration']:
+            ps_instance.calibrated_baseline = baseline['calibrated_baseline']
+        ps_instance.save()
+        
         id = ps_instance.pk
         if survey_files['edm_file']:
             # Commit all the edm raw observations
@@ -140,13 +146,12 @@ def calibrate1(request, id):
         return redirect('edm_calibration:calibrate2', id=id)
 
     else:
-        print(pillar_survey.is_valid())
         for e in pillar_survey.errors:
             print(e)
         for e in upload_survey_files.errors:
             print(e)
             
-    headers = {'page0':'Calibrate the Baseline',
+    headers = {'page0':'EDMI Calibration Details',
                 'page1': 'Instrumentation',
                 'page2': 'Corrections / Calibrations Applied to Instruments',
                 'page3': 'Error Budget and File Uploads',}
@@ -178,7 +183,8 @@ def calibrate2(request,id):
     pillar_survey.update({'pk':id})
     
     # Create form to hide on report and commit when submitted
-    pillar_survey_update = CalibratedEdmForm(request.POST or None)
+    pillar_survey_update = PillarSurveyUpdateForm(request.POST or None)
+    calib_params = formset_factory(CalibrationParamForm, extra=0)  
     
     # Get the raw_edm_obs in dict like cleaned form data
     formset = modelformset_factory(uEDM_Observation,
@@ -193,7 +199,7 @@ def calibrate2(request,id):
         raw_edm_obs[str(o.id)] = dct
 
     if request.method == 'GET':        
-        formset = zip(edm_obs_formset,raw_edm_obs.values())
+        formset = zip(edm_obs_formset, raw_edm_obs.values())
         
         return render(request, 'edm_calibration/edm_rawdata.html', {
                                                     'Page': 'Page 5 of 5',
@@ -273,7 +279,13 @@ def calibrate2(request,id):
                                           baseline['certified_dist'],
                                           baseline['certified_dist'],
                                           baseline['d_radius']))
-                  
+                
+                o['certified_slope_dist'] = (slope_certified_dist(o, 
+                                              baseline['certified_dist'],
+                                              baseline['d_radius']))
+                o['diff_to_certified_sd'] = (o['slope_dist']
+                                             - o['certified_slope_dist'])
+                
                 o['Reduced_distance'] = (o['slope_dist'] 
                                         + o['Offset_Correction']
                                         + o['Slope_Correction'])
@@ -285,7 +297,7 @@ def calibrate2(request,id):
                                                   baseline['calibrated_baseline'].degrees_of_freedom)
                 
                 o['uc_sources'] = add_surveyed_uc(o, edm_trend, 
-                                                  uc_budget['sources'],
+                                                  o['uc_sources'],
                                                   baseline['certified_dist'])
                       
                 o['uc_budget'] = refline_std_dev(o, 
@@ -295,43 +307,73 @@ def calibrate2(request,id):
                 o['uc_combined'] = sum_uc_budget(o['uc_budget'])
                 
                 #----------------- Least Squares -----------------#
-                #----------------- 6 Parameter least squares adjustment -----------------#
-                if pillar_survey['test_cyclic']:
-                    d_term = ((2*pi*o['Reduced_distance'])
-                              / pillar_survey['edm'].edm_specs.unit_length)
-                    a_row = [1,
-                             o['Reduced_distance'],
-                             sin(d_term),
-                             cos(d_term),
-                             sin(2*d_term),
-                             cos(2*d_term)]
-                    matrix_A.append(a_row)
-                  
+                #----------------- compile Design matrix, weight Matrix -----------------#
+                d_term = ((2*pi*o['Reduced_distance'])
+                          / pillar_survey['edm'].edm_specs.unit_length)
+                o['d_term'] = d_term
+                a_row = [1,
+                         o['Reduced_distance'],
+                         sin(d_term),
+                         cos(d_term),
+                         sin(2*d_term),
+                         cos(2*d_term)]
+                matrix_A.append(a_row)
+              
                 frm = baseline['certified_dist'][o['from_pillar']]['distance']
                 to = baseline['certified_dist'][o['to_pillar']]['distance']
                 matrix_x.append(abs(float(to) - float(frm))
-                                -o['Reduced_distance'])
+                                     -o['Reduced_distance'])
                   
                 P_row = [0]*len(edm_observations)
                 P_row[len(matrix_x)-1] = (1/
-                                     o['uc_combined']['std_dev']**2)
+                        (o['uc_combined']['std_dev']*float(pillar_survey['scalar']))**2)
                 matrix_P.append(P_row)
             
             if pillar_survey['test_cyclic']:
+                #----------------- 6 Parameter least squares adjustment -----------------#
                 matrix_y, vcv_matrix, chi_test, residuals = LSA(matrix_A, matrix_x, matrix_P)
                             
                 # Check t-student test results to determine if cyclic errors are significant
                 if False not in [t['t_test'] for t in matrix_y[2:]]:
+                    report_notes.append('The t-student test has been used to test and determine that cyclic errors are statistically insignificant in this calibration data.')
                     matrix_A=[[a[0], a[1]] for a in matrix_A]
                     matrix_y, vcv_matrix, chi_test, residuals = LSA(matrix_A, matrix_x, matrix_P)
+                else:
+                    report_notes.append('The t-student test has been used to test and determine that cyclic errors are statistically significant in this calibration data.')
             else:
+                report_notes.append('User input for this calibration requested that no test for cyclic errors be performed.')
                 matrix_A=[[a[0], a[1]] for a in matrix_A]
                 matrix_y, vcv_matrix, chi_test, residuals = LSA(matrix_A, matrix_x, matrix_P)
-        
+
+            #create update for pillar survey processing
+            ini_data = {'variance': chi_test['Variance'],
+                        'degrees_of_freedom':chi_test['dof'],
+                        'k':chi_test['k']}            
+            pillar_survey_update = PillarSurveyUpdateForm(initial=ini_data)
+            
+            terms = ['zpc',
+                     'scf',
+                     '1C',
+                     '2C',
+                     '3C',
+                     '4C']
+            for i, p in enumerate(matrix_y):
+                p['pillar_survey'] = id
+                p['term']=terms[i]
+                p['standard_deviation']=p['std_dev']
+            calib_params = calib_params(initial=matrix_y)
+                    
             for o in edm_observations.values():
                 o['residual'] = residuals[o['id']]['residual']
                 o['std_residual'] = residuals[o['id']]['std_residual']
+                o['uc_sources'] = add_typeA(o, matrix_y, chi_test['dof'])      
+                o['uc_budget'] = refline_std_dev(o, 
+                                                baseline['certified_dist'], 
+                                                pillar_survey['edm'])
+                  
+                o['uc_combined'] = sum_uc_budget(o['uc_budget'])
             
+            # Perform ISO statistical tests
             ISO_test=[]
             ISO_test.append(ISO_test_a(pillar_survey,
                                        chi_test,
@@ -341,16 +383,18 @@ def calibrate2(request,id):
                                         {'distance':400}, 
                                         {'distance':600}]))
             
-            if len(calib['edmi']) > 0:
+            if len(calib['edmi']) > 1:
                 ISO_test.append(ISO_test_b(
-                    {'variance':(calib['edmi'][0].standard_deviation)**2,
-                    'dof': calib['edmi'][0].degrees_of_freedom},
+                    {'Variance':(calib['edmi'][1]['variance']),
+                    'dof': calib['edmi'][1]['degrees_of_freedom']},
                     chi_test))
+                
             ISO_test.append(ISO_test_c(matrix_y[0]['value'],
                                        matrix_y[0]['std_dev'],
                                        chi_test))
 
             #Prepare the context for the template
+            
             back_colours = ['#FF0000', '#800000', '#FFFF00', '#808000', 
                             '#00FF00', '#008000', '#00FFFF', '#008080', 
                             '#0000FF', '#000080', '#FF00FF', '#800080']
@@ -368,307 +412,49 @@ def calibrate2(request,id):
                         uc['group_verbose'] = dict(Uncertainty_Budget_Source.group_types)[uc['group']]
                 o['uc_sources']=sorted(o['uc_sources'], key=lambda x: x['group_verbose'])
                 o['uc_budget'] = OrderedDict(sorted(o['uc_budget'].items()))
-            print(edm_observations[0])
+
+            residual_chart = [{'from_pillar': e['from_pillar'], 
+                               'to_pillar': e['to_pillar'],
+                               'Reduced_distance': e['Reduced_distance'],
+                               'residual': e['residual'],
+                               'std_residual': e['std_residual']} 
+                              for e in edm_observations]
+            #Add current pillar survey to history table
+            calib['edmi'][0]['variance'] = chi_test['Variance']
+            calib['edmi'][0]['degrees_of_freedom'] = chi_test['dof']
+            calib['edmi'][0]['k'] = chi_test['k']
+            calib['edmi'][0]['parameters'] = matrix_y
+            
             context = {'pillar_survey':pillar_survey,
                        'calib':calib,
                        'baseline': baseline,
+                       'chi_test': chi_test,
                        'ISO_test':ISO_test,
                        'edm_observations': edm_observations,
+                       'residual_chart':residual_chart,
                        'report_notes': report_notes,
                        'Check_Errors':Check_Errors,
-                       'hidden':[]}
+                       'hidden':[calib_params,
+                                 pillar_survey_update]}
             return render(request, 'edm_calibration/calibrate_report.html', context)
-    
-# def calibrate1(request, id):
-#     if 'calibrate_e' in request.session:
-#         ini_data = request.session['calibrate_e']
-#     else:
-#         ini_data = {'computation_date':date.today().isoformat()}
-    
-#     if request.method == 'POST':
-#         form = CalibrateEdmForm1(request.POST or None)
-#         if form.is_valid():
-#             frm=cache_format(form)
-#             ini_data.update(frm)
-#             request.session['calibrate_e'] = ini_data
-#             return HttpResponseRedirect('/edm_calibration/calibrate2')
-#     else:
-#         print('Form not Valid')
-#         form = CalibrateEdmForm1(initial=ini_data)
-#     return render(request, 'edm_calibration/calibrate.html', {
-#                 'Header':'Calibrate your Electronic Distance Instrumentation (EDMI)',
-#                 'Page': 'Page 1 of 5',
-#                 'BackBtn': False,
-#                 'form': form})
 
-# def calibrate2(request):
-#     if 'calibrate_e' in request.session:
-#         ini_data = request.session['calibrate_e']
-#     else:
-#         ini_data={}
+        #----------------------- code for commiting the calibration and returning to home page -----------------------------#        
+        calib_params = calib_params(request.POST)
+        #check to see if pillar_survey(id) has been saved before and delete these from the database
+        delete_cp = uCalibration_Parameter.objects.filter(pillar_survey__pk=id)
+        delete_cp.delete()
+        if calib_params.is_valid() and pillar_survey_update.is_valid():
+        #     # this is a POST command asking to commit the hidden calibration 
+        #     # data held on the report page
+            ps_update = pillar_survey_update.cleaned_data
+            pillar_survey = uPillar_Survey.objects.get(id=id)
+            pillar_survey.degrees_of_freedom = ps_update['degrees_of_freedom']
+            pillar_survey.variance = ps_update['variance']
+            pillar_survey.k = ps_update['k']
+            pillar_survey.save()
+            
+            for cp_form in calib_params:
+                cp_form.save()
+                
+            return redirect('edm_calibration:edm_calibration_home')
         
-#     if request.method == 'POST':
-#         form = CalibrateEdmForm2(request.POST or None)
-#         if form.is_valid():
-#             frm=cache_format(form)
-#             ini_data.update(frm)
-#             request.session['calibrate_e'] = ini_data
-#             return HttpResponseRedirect('/edm_calibration/calibrate3')
-#     else:
-#         print('Form not Valid')
-#         form = CalibrateEdmForm2(initial=ini_data)
-#     return render(request, 'edm_calibration/calibrate.html', {
-#                 'Header':'Instrumentation',
-#                 'Page': 'Page 2 of 5',
-#                 'BackBtn': 'calibrate1',
-#                 'form': form})
-
-
-# def calibrate3(request):
-#     if 'calibrate_e' in request.session:
-#         ini_data = request.session['calibrate_e']
-#     else:
-#         ini_data={}
-    
-#     if not 'outlier_criterion' in ini_data.keys():
-#         ini_data['outlier_criterion']=2.0
-    
-#     if request.method == 'POST':
-#         form = CalibrateEdmForm3(request.POST or None, request.FILES)
-#         if form.is_valid():
-#             calibrate_e = {}
-#             calib = {}
-#             baseline={}
-#             instruments={}
-#             uc_budget = {}
-#             frm=form.cleaned_data
-#             print(frm)
-            
-#             edm_clms=['from_pillar',
-#         		      'to_pillar',
-#         		      'inst_ht',
-#         		      'tgt_ht',
-#         		      'raw_slope_dist',
-#         		      'raw_temperature',
-#         		      'raw_pressure',
-#         		      'raw_humidity']
-#             raw_edm_obs = csv2dict(frm['edm_file'],edm_clms)
-
-#             frm=cache_format(form)
-#             ini_data.update(frm)
-#             request.session['calibrate_e'] = ini_data
-            
-#             #----------------- Query appropriate instruments and calibrations -----------------#
-#             instruments = Instruments_qry(ini_data)
-#             calib = Calibrations_qry(ini_data)
-            
-#             #----------------- Query Baseline data -----------------#  
-#             baseline = baseline_qry(ini_data)
-            
-#             #----------------- Query the default Uncertainty -----------------#
-#             uc_budget = uncertainty_qry(ini_data)
-#             uc_budget['sources'] = add_calib_uc(uc_budget['sources'], 
-#                                                        calib,
-#                                                        instruments,
-#                                                        ini_data['survey_date'])
-
-#             for o in raw_edm_obs.values():
-#                 #----------------- Instrument Corrections -----------------#
-#                 o['Temp'],c = apply_calib(o['raw_temperature'],
-#                                             ini_data['thermo_calib_applied'], 
-#                                             calib['them'])
-#                 o['Pres'],c = apply_calib(o['raw_pressure'],
-#                                             ini_data['baro_calib_applied'],
-#                                             calib['baro'])
-#                 o['Humid'],c = apply_calib(o['raw_humidity'],
-#                                             ini_data['hygro_calib_applied'],
-#                                             calib['hygro'])
-#                 o = (edm_mets_correction(o, 
-#                                            instruments['edm'],
-#                                            ini_data['mets_applied']))
-                
-#                 o['slope_dist'] = (float(o['raw_slope_dist'] )
-#                                              + o['Mets_Correction'])
-#                 o['Bay'] = o['from_pillar'] + ' - ' + o['to_pillar']
-            
-#             edm_observations = group_list(raw_edm_obs.values(),
-#                                             group_by='Bay',
-#                                             labels_list=['from_pillar',
-#                                                          'to_pillar'],
-#                                             avg_list=['inst_ht',
-#                                                       'tgt_ht',
-#                                                       'Temp',
-#                                                       'Pres',
-#                                                       'Humid',
-#                                                       'Mets_Correction',
-#                                                       'raw_slope_dist',
-#                                                       'slope_dist',],
-#                                             std_list=['slope_dist'])
-            
-#             edm_trend = edm_std_function(edm_observations, 
-#                                          uc_budget['stddev_0_adj'])           #y = Ax + B
-                           
-#             matrix_A = []
-#             matrix_x = []
-#             matrix_P = []
-#             for i, o in enumerate(edm_observations.values()):
-#                 o['id']=str(i+1)
-#                 o = (offset_slope_correction(o,
-#                                           baseline['certifed_dist'],
-#                                           baseline['certifed_dist'],
-#                                           baseline['d_radius']))
-                  
-#                 o['Reduced_distance'] = (o['slope_dist'] 
-#                                         + o['Offset_Correction']
-#                                         + o['Slope_Correction'])
-
-#                 #----------------- Calculate Uncertainties -----------------#
-#                 o['uc_sources'] = add_certified_dist_uc(o, 
-#                                                   uc_budget['sources'],
-#                                                   baseline['std_dev_matrix'],
-#                                                   baseline['calibrated_baseline'].degrees_of_freedom)
-                
-#                 o['uc_sources'] = add_surveyed_uc(o, edm_trend, 
-#                                                   uc_budget['sources'],
-#                                                   baseline['certifed_dist'])
-                      
-#                 o['uc_budget'] = refline_std_dev(o, 
-#                                                 baseline['certifed_dist'], 
-#                                                 instruments['edm'])
-                  
-#                 o['uc_combined'] = sum_uc_budget(o['uc_budget'])
-                
-#                 #----------------- Least Squares -----------------#
-#                 #----------------- 6 Parameter least squares adjustment -----------------#
-#                 d_term = ((2*pi*o['Reduced_distance'])
-#                           / instruments['edm'].edm_specs.unit_length)
-#                 a_row = [1,
-#                          o['Reduced_distance'],
-#                          sin(d_term),
-#                          cos(d_term),
-#                          sin(2*d_term),
-#                          cos(2*d_term)]
-#                 matrix_A.append(a_row)
-                  
-#                 frm = baseline['certifed_dist'][o['from_pillar']]['distance']
-#                 to = baseline['certifed_dist'][o['to_pillar']]['distance']
-#                 matrix_x.append(abs(float(to) - float(frm))
-#                                 -o['Reduced_distance'])
-                  
-#                 P_row = [0]*len(edm_observations)
-#                 P_row[len(matrix_x)-1] = (1/
-#                                      o['uc_combined']['std_dev']**2)
-#                 matrix_P.append(P_row)
-                  
-#             matrix_y, vcv_matrix, chi_test, residuals = LSA(matrix_A, matrix_x, matrix_P)
-#             # Check t-student test results to determine if cyclic errors are significant
-#             if False not in [t['t_test'] for t in matrix_y[2:]]:
-#                 matrix_A=[[a[0], a[1]] for a in matrix_A]
-#                 matrix_y, vcv_matrix, chi_test, residuals = LSA(matrix_A, matrix_x, matrix_P)
-            
-#             for o in edm_observations.values():
-#                 o['residual'] = residuals[o['id']]['residual']
-#                 o['std_residual'] = residuals[o['id']]['std_residual']
-            
-#             ISO_test=[]
-#             ISO_test.append(ISO_test_a(instruments,
-#                                        chi_test,
-#                                        [{'distance':50},
-#                                         {'distance':100},
-#                                         {'distance':200},
-#                                         {'distance':400}, 
-#                                         {'distance':600}]))
-#             ISO_test.append(ISO_test_c(matrix_y[0]['value'],
-#                                        matrix_y[0]['std_dev'],
-#                                        chi_test))
-
-#             #Prepare the context for the template
-#             edm_observations = list(edm_observations.values())
-#             context = {'frm':ini_data,
-#                        'instruments':instruments,
-#                        'calib':calib,
-#                        # 'residual_chart':residual_chart,
-#                        'baseline': baseline,
-#                        'ISO_test':ISO_test,
-#                        'edm_observations': edm_observations,
-#                        # 'Check_Errors':Check_Errors
-#                        }
-            
-#             return render(request, 'baseline_calibration/calibrate_report.html', context)
-#     else:
-#         print('Form not Valid')
-#         form = CalibrateEdmForm3(initial=ini_data)
-#     return render(request, 'edm_calibration/calibrate.html', {'Header':'File Uploads',
-#   	                                                             'Page': 'Page 3 of 5',
-#   	                                                             'BackBtn': 'calibrate2',
-#   	                                                             'form': form})
-    
-# @login_required(login_url="/accounts/login")
-# def calibrate(request):
-#     ini_data = {'computation_date':date.today().isoformat()}
-#     form = CalibrateEdmForm(request.POST or None,
-#                             user=request.user,
-#                             initial=ini_data)    
-    
-#     if request.method == 'POST':
-#         form = CalibrateEdmForm(request.POST, request.FILES, user=request.user)
-#         if form.is_valid():
-#             frm=form.cleaned_data
-#             calib = {}
-#             baseline={}
-#             instruments={}
-#             uc_budget = {}
-#             edm_clms=['from_pillar',
-#         		      'to_pillar',
-#         		      'inst_ht',
-#         		      'tgt_ht',
-#         		      'raw_slope_dist',
-#         		      'raw_temperature',
-#         		      'raw_pressure',
-#         		      'raw_humidity']
-#             raw_edm_obs = csv2dict(frm['edm_file'],edm_clms)
-                    
-#             #----------------- Query appropriate instruments and calibrations -----------------#
-#             instruments = Instruments_qry(frm)
-#             calib = Calibrations_qry(frm)
-            
-#             #----------------- Query Baseline data -----------------#  
-#             baseline = baseline_qry(frm)
-            
-#             #----------------- Query the default Uncertainty -----------------#
-#             uc_budget = uncertainty_qry(frm)
-#             uc_budget['sources'] = add_calib_uc(uc_budget['sources'], 
-#                                                        calib,
-#                                                        instruments,
-#                                                        frm['survey_date'])
-            
-#             Check_Errors = validate_survey(frm=frm, 
-#                                            baseline=baseline,
-#                                            instruments=instruments,
-#                                            calibrations=calib,
-#                                            raw_edm_obs=raw_edm_obs)
-            
-#             if len(Check_Errors['Errors']) > 0:
-#                msg="<h4>The following errors have been detected:</h4>"
-#                msg+="<p>"
-#                for e in Check_Errors['Errors']:
-#                   msg+="   "+ e +"<br>"
-#                msg+="</p>"
-#                msg+="<h4>The following warnings have been detected:</h4>"
-#                msg+="<p>"
-#                for w in Check_Errors['Warnings']:
-#                   msg+="   "+ w +"<br>"
-#                msg+="</p>"
-#                return HttpResponse(msg)
-#             else:
-#                form.save()
-#             return redirect('edm_calibration:view_edm_observations')
-        
-#     headers = {'page0':'Pillar Survey Information',
-#                'page1': 'Instrumentation',
-#                'page2': 'Error Budget and File Uploads',}
-#     return render(request, 'edm_calibration/calibrate.html', {
-#             'Headers': headers,
-#             'Cancelurl': 'edm_calibration_home',
-#             'form': form})
-

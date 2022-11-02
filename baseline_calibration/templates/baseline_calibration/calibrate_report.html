@@ -17,7 +17,7 @@
     </div>
         <div class="post-content">
             <div class="text-center">
-                <h1><B>EDM Baseline Calibration Report</B></h1>
+                <h1><B>Calibration of EDM Baseline Report</B></h1>
             </div>
             <div class="flexbox-container_IB">
                 <div class="flexbox-item_400_IB flexbox-item-left_IB">
@@ -267,7 +267,7 @@
 
                     {% for p in alignment_survey %}
                     <tr>
-                        <td>{{ p.Pillar }}</td>
+                        <td>{{ p.pillar }}</td>
                         <td>{{ p.reduced_level|floatformat:3 }}</td>
                         <td>{{ p.rl_uncertainty|floatformat:3 }}</td>
                     </tr>
@@ -289,7 +289,7 @@
                                 {{s.from_pillar}} <BR>
                             {% endfor %}
                             </td>
-                            <td> {{p.Pillar}} </td>
+                            <td style="vertical-align: top;"> {{p.pillar}} </td>
                             <td>
                             {% for s in p.sets %}
                                 {{s.observed_offset|floatformat:3}} <BR>
