@@ -28,7 +28,11 @@
                             <td>{{ field }}</td>                                        
                             <td> {{ field.label|title }} </td>
                         {% else %}
-                            <td>{{ field.label_tag|title }}</td>
+                            {% if field.name == "edm" %}
+                                <td>{{ field.label|upper }}</td>
+                            {% else %}
+                                <td>{{ field.label_tag|title }}</td>
+                            {% endif %}  
                             <td> {{ field }} 
                                 {% if field.name == "accreditation" and field.url %}
                                     <label for="id_accreditation"><a href="{{ field.url }}" target="_blank">Download Acreditation Certificate &#10515</a></label>
@@ -104,7 +108,7 @@
                 <button type="button" id="nextBtn" onclick="nextPrev(1)" class="submit-button bg-green-500 hover:bg-green-400" >Next &#8680;</button>
             </div>
         </form>
-        <div style="margin-left: auto;margin-right: 0;">
+        <div style="ext-align:center;">
             <h4 id=pgOfpgs>1</h4>
         </div>
     </div>
