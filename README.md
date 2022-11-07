@@ -13,7 +13,7 @@ Download the [```Medjil```](https://github.com/Landgate/Medjil/archive/refs/head
 Install ```Python 3``` or ```Anaconda 3```. Note that this application has been tested with ```Python 3.8.8```
 
 Install a python package called "virtualenv" from the command prompt
- ```
+```
 	pip install virtualenv 
 ```
 
