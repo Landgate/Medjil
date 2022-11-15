@@ -197,9 +197,9 @@ function addRow() {
 
 function FilterUnits(group_slct) {
 
-    const units = [{typ:"scal", u:"Ratio (1:x)"},
-                   {typ:"scal", u:"ppm"},
-                   {typ:"scal", u:"%"},
+    const units = [{typ:"scal", u:"1:x", d:"Ratio (1:x)"},
+                   {typ:"scal", u:"ppm", d:"ppm"},
+                   {typ:"scal", u:"%", d:"%"},
                    {typ:"lgth", u:"m"},
                    {typ:"lgth", u:"mm"},
                    {typ:"temp", u:"°C"},
@@ -245,7 +245,7 @@ function FilterUnits(group_slct) {
         let uLen = units.length;
         for (let i = 0; i < uLen; i++) {
           if (units[i].typ.includes("scal")) {
-              let newOption = new Option(units[i].u, units[i].u);
+              let newOption = new Option(units[i].d, units[i].u);
               units_slct.add(newOption, undefined);
               }        
         }
@@ -259,7 +259,8 @@ function FilterUnits(group_slct) {
        }
     }
 }
-   
+
+
 function RectCoverFctr(dist_slct) {
                    
     let k_input  = document.getElementById(dist_slct.id.replace("-distribution","-k"));
