@@ -192,9 +192,10 @@ class Uncertainty_Budget_SourceForm(forms.ModelForm):
         model = Uncertainty_Budget_Source
         fields = '__all__'
         exclude = ('std_dev', 'uncertainty_budget')
-        widgets = {'group': forms.Select(
-            attrs={'onchange':'FilterUnits(this)'})
-                    }   
+        widgets = {
+            'group': forms.Select(attrs={'onchange':'FilterUnits(this)'}),
+            'distribution': forms.Select(attrs={'onchange':'RectCoverFctr(this)'})
+            }     
 
 class AccreditationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
