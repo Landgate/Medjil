@@ -599,6 +599,7 @@ def calibrate2(request,id):
                        'residual_chart':residual_chart,
                        'baseline': baseline,
                        'certified_dists': certified_dists,
+                       'chi_test':chi_test,
                        'ISO_test':ISO_test,
                        'alignment_survey': alignment_survey,
                        'edm_observations': edm_observations,
@@ -702,6 +703,7 @@ def uc_budget_edit(request, id=None):
     context['formset'] = formset
     
     return render(request, 'baseline_calibration/uncertainty_budget_form.html', context)
+
 
 @login_required(login_url="/accounts/login") 
 def uc_budget_create(request):
