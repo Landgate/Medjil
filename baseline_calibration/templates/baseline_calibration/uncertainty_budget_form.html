@@ -259,6 +259,18 @@ function FilterUnits(group_slct) {
        }
     }
 }
+   
+function RectCoverFctr(dist_slct) {
+                   
+    let k_input  = document.getElementById(dist_slct.id.replace("-distribution","-k"));
+    let desc = dist_slct.options[dist_slct.selectedIndex].text;
+        
+    if (desc.includes("Rectangular")) {
+        k_input.value = Math.sqrt(3);
+    } else {
+        k_input.value = 2.0;
+    }
+}
 </script>
 
 {% endblock %}
