@@ -66,8 +66,8 @@ By activating the environment, your project packages will be installed in that l
 ## Migration
 
 ```
-	python manage.py makemigrations
-    python manage.py migrate
+python manage.py makemigrations
+python manage.py migrate
 ```
 
 ## Create superuser and login
@@ -78,6 +78,9 @@ and enter email and password. This is the root user and has all the privillages 
 
 ``` 
     python manage.py runserver
+```
+`#RRGGBB`
+```
     <span style="color: green">  Django version 4.0.6, using settings 'instrument_calibrations.settings'</span>
     <span style="color: green">![#00d1a0] > Starting development server at http://127.0.0.1:8000/</span>
 ```
