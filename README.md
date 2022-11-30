@@ -9,38 +9,10 @@ Git CLI
 
 ## Installation - Python
 
-Download the [```Medjil```](https://github.com/Landgate/Medjil/archive/refs/heads/main.zip) package and unzip to your working directory (e.g., "C:/Data/Development/django-projects/"). 
-
 Install ```Python 3``` or ```Anaconda 3```. Note that this application has been tested with ```Python 3.8.8```
 
 ### Check version in Command Prompt
-python --version 
-
-## Installation - Git CLI
-https://git-scm.com/download/win and install the right version 
-
-### Check the installation in Command Prompt
-git –version
-
-### Generate ssh key
-Go to user directory - e.g., C:\Users\likxx00
-Create a new directory called ".ssh"
-In the Command Prompt > 
-``` 
-cd .ssh
-sh-keygen -t ed25519 -C "your_email@example.com"
-start-ssh-agent.cmd
-cd .ssh 
-clip < id_ed25519.pub
-```
-
-### github security configuration
-Open github in browser and log in 
-```
-Go go Profiles > Settings > Developer Settings > Personal Token > Token (classic) 
-```
-Insert Name & Create a token
-Copy it and save it. 
+python --version  
 
 ## Create a virtual environemnt
 Install a python package called "virtualenv" from the command prompt and activate it. 
