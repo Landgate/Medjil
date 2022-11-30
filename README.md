@@ -56,12 +56,10 @@ python manage.py runserver
 Open a web browser and enter address http://127.0.0.1:8000/ into the address bar. 
 # ![Medjil](https://github.com/Landgate/Medjil/blob/main/assets/HomePage.PNG)
 
-Open the internet browser and copy the development server address to view the website. More information is provided under docs/_build/html
 
 ### Authors
 
-
-* **Khandu** - *Staff Calibration software, Testing, Integration and Deployment*, Landgate
+* **Khandu** - *Application development and deployment*, Landgate
 * **Irek Baran**, *Graphic design, Technical Manuals and Guidelines*, Landgate
 * **Kent Wheeler** - *Project Management, EDMI Calibration software, Testing*, Landgate
 
