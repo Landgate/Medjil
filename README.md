@@ -27,17 +27,17 @@ Go to user directory - e.g., C:\Users\likxx00
 Create a new directory called ".ssh"
 In the Command Prompt > 
 ``` 
-	cd .ssh
-	sh-keygen -t ed25519 -C "your_email@example.com"
-	start-ssh-agent.cmd
-	cd .ssh 
-	clip < id_ed25519.pub
+cd .ssh
+sh-keygen -t ed25519 -C "your_email@example.com"
+start-ssh-agent.cmd
+cd .ssh 
+clip < id_ed25519.pub
 ```
 
 ### github security configuration
 Open github in browser and log in 
 ```
-	Go go Profiles > Settings > Developer Settings > Personal Token > Token (classic) 
+Go go Profiles > Settings > Developer Settings > Personal Token > Token (classic) 
 ```
 Insert Name & Create a token
 Copy it and save it. 
@@ -47,40 +47,42 @@ Install a python package called "virtualenv" from the command prompt and activat
 By activating the environment, your project packages will be installed in that library. 
 
 ```
-	cd <Working directory> e.g., cd C:\Data\Development\django-projects
-	pip install virtualenv 
-	virtualenv .venv
-	.\.venv\Scripts\activate
+cd <Working directory> e.g., cd C:\Data\Development\django-projects
+pip install virtualenv 
+virtualenv .venv
+.\.venv\Scripts\activate
 ```
 ## Clone the Medjil repo 
 ### Clone and navigate to the directory
 ```
-	git clone https://github.com/Landgate/Medjil.git
-	cd Medjil
+git clone https://github.com/Landgate/Medjil.git
+cd Medjil
 ```
 ### Install the requirements.txt
 ```
-	pip install -r requirements.txt
+pip install -r requirements.txt
 ```
 
 ## Migration
 
 ```
-	python manage.py makemigrations
-	python manage.py migrate
+python manage.py makemigrations
+python manage.py migrate
 ```
 
 ## Create superuser and login
 ```
-	python manage.py createsuperuser
+python manage.py createsuperuser
 ```
 and enter email and password. This is the root user and has all the privillages and access. 
 
 ``` 
-	python manage.py runserver
-	> Django version 4.0.6, using settings 'instrument_calibrations.settings'
-	> Starting development server at http://127.0.0.1:8000/
+python manage.py runserver
+> Django version 4.0.6, using settings 'instrument_calibrations.settings'
+> Starting development server at http://127.0.0.1:8000/
+python manage.py runserver
 ```
+
 and open the browser and copy paste it in the address bar and press `ENTER`. 
 # ![Medjil](https://github.com/Landgate/Medjil/blob/main/assets/HomePage.PNG)
 
