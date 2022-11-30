@@ -74,15 +74,14 @@ python manage.py migrate
 ```
 python manage.py createsuperuser
 ```
-and enter email and password. This is the root user and has all the privillages and access. 
+Wait for the prompt and enter an email and password. 
+This is the root user and has all the privillages and access. 
 
 ``` 
 python manage.py runserver
->  Django version 4.0.6, using settings 'instrument_calibrations.settings'
-> Starting development server at http://127.0.0.1:8000/
 ```
 
-and open the browser and copy paste it in the address bar and press `ENTER`. 
+Open a web browser and enter address http://127.0.0.1:8000/ into the address bar. 
 # ![Medjil](https://github.com/Landgate/Medjil/blob/main/assets/HomePage.PNG)
 
 Open the internet browser and copy the development server address to view the website. More information is provided under docs/_build/html
