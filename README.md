@@ -48,9 +48,9 @@ By activating the environment, your project packages will be installed in that l
 
 ```
     cd <Working directory> e.g., cd C:\Data\Development\django-projects
-	pip install virtualenv 
-	virtualenv .venv
-	.\.venv\Scripts\activate
+    pip install virtualenv 
+    virtualenv .venv
+    .\.venv\Scripts\activate
 ```
 ## Clone the Medjil repo 
 ### Clone and navigate to the directory
@@ -63,11 +63,25 @@ By activating the environment, your project packages will be installed in that l
 	pip install -r requirements.txt
 ```
 
-Type the email address and password when prompted. If migration is successful, type:
+## Migration
 
 ```
-	python manage.py runserver
+	python manage.py makemigrations
+    python manage.py migrate
 ```
+
+## Create superuser and login
+```
+    python manage.py createsuperuser
+```
+and enter email and password. This is the root user and has all the privillages and access. 
+
+``` 
+    python manage.py runserver
+    ![#00d1a0] > Django version 4.0.6, using settings 'instrument_calibrations.settings'
+    ![#00d1a0] > Starting development server at http://127.0.0.1:8000/
+```
+and open 
 
 Open the internet browser and copy the development server address to view the website. More information is provided under docs/_build/html
 
