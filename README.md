@@ -78,10 +78,11 @@ and enter email and password. This is the root user and has all the privillages 
 
 ``` 
     python manage.py runserver
-    ![#00d1a0] > Django version 4.0.6, using settings 'instrument_calibrations.settings'
-    ![#00d1a0] > Starting development server at http://127.0.0.1:8000/
+    <span style="color: green">  Django version 4.0.6, using settings 'instrument_calibrations.settings'</span>
+    <span style="color: green">![#00d1a0] > Starting development server at http://127.0.0.1:8000/</span>
 ```
-and open 
+and open the browser and copy paste it in the address bar. 
+
 
 Open the internet browser and copy the development server address to view the website. More information is provided under docs/_build/html
 
