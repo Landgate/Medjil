@@ -2,19 +2,15 @@
 
 This is a django-based web application developed by Landgate for itself and other external users (e.g., surveyors and engineers) who are use require their measurement instruments to have calibration traceability back to a standard.
 
-# Requirements
-
+### Requirements
 Python 3.8 or higher plus see requirements.txt
 Git CLI
-
-## Installation - Python
-
+#### Installation - Python
 Install ```Python 3``` or ```Anaconda 3```. Note that this application has been tested with ```Python 3.8.8```
-
-### Check version in Command Prompt
+#### Check version in Command Prompt
 python --version  
 
-## Create a virtual environemnt
+### Create a virtual environemnt
 Install a python package called "virtualenv" from the command prompt and activate it. 
 By activating the environment, your project packages will be installed in that library. 
 
@@ -24,25 +20,21 @@ pip install virtualenv
 virtualenv .venv
 .\.venv\Scripts\activate
 ```
-## Clone the Medjil repo 
-### Clone and navigate to the directory
+
+### Clone the Medjil repo 
 ```
 git clone https://github.com/Landgate/Medjil.git
 cd Medjil
-```
-### Install the requirements.txt
-```
 pip install -r requirements.txt
 ```
 
-## Migration
-
+### Django Migration
 ```
 python manage.py makemigrations
 python manage.py migrate
 ```
 
-## Create superuser and login
+### Create superuser for admin
 ```
 python manage.py createsuperuser
 ```
@@ -65,7 +57,6 @@ Open a web browser and enter address http://127.0.0.1:8000/ into the address bar
 
 
 ### License
-
 Copyright 2020-2021 Landgate
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
