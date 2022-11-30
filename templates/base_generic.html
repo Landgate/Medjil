@@ -1,0 +1,304 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medjil The Survey Instrumentation Calibration Portal</title>
+    <link rel="icon" type="ico" href="{% static 'favicon.ico' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />    <!-- <link rel="stylesheet" href="https://code.cdn.mozilla.net/fonts/fira.css"> -->
+    <link rel="stylesheet" href="{% static 'main.css' %}">
+    <link rel="stylesheet" href="{% static 'fonts/stylesheet.css' %}">
+    <link rel="stylesheet" href="{% static 'style_ib.css' %}">
+    <!-- <link rel="stylesheet" type='text/css' href="{% static 'Untitled-1.css' %}"> -->
+</head>
+<body>
+    <div class="page-wrap">
+    <header class="page-header">
+        <div class="wrapper">
+            <div class="header-wrapper">
+                <a class="header-logo" href="{% url 'home' %}">
+                    <img src="{% static 'logo.png' %}" alt="Medjil">
+                    <p>
+                        <span>Medjil</span>
+                        <span>The Survey Instrumentation Calibration Portal</span>
+                    </p>
+                </a>                
+                <div class="header-userinfo">
+                        <div> 
+                        <!-- <div> -->
+                            <span>Welcome</span>
+                                {% if user.is_authenticated %}
+                                    {% if not user.first_name %}
+                                        <span><strong> {{ user.email }}</strong></span>
+                                    {% else %}
+                                        <span><strong>{{ user.first_name }}</strong></span>
+                                    {% endif %}
+                                {% endif %}
+                                <span>
+                                    <a href="#" id="header-toggle"><i class="fas fa-angle-down rotate" aria-hidden="true"></i></a>
+                                </span>
+                        </div>
+                        <ul class="header-sublinks">
+                            {% if user.is_authenticated %}
+                                <li class="sub-item">
+                                    <a href="{% url 'accounts:user_account'%}"> <i class="fa-solid fa-users-gear"></i> <span class="pxl-2">Profile</span></a>
+                                </li>
+                                <li class="sub-item">
+                                    <a href="{% url 'instruments:inst_settings' %}"> <i class="fa-solid fa-gear"></i> <span class="pxl-2">Settings</span></a>
+                                </li>
+                                <li class="sub-item">
+                                    <a href="{% url 'accounts:logout'%}"><i class="fa-solid fa-right-from-bracket"></i> <span class="pxl-2">Logout</span></a>
+                                </li>
+                            {% else %}
+                                <li class="sub-item"><a href="{% url 'accounts:login' %}">Login</a></li>
+                                <li class="sub-item"><a href="{% url 'accounts:signup' %}">Sign up</a></li>
+                            {% endif %}                            
+                        </ul>
+                    
+                    <!-- </div> -->
+                </div>
+            </div>
+        </div>
+    </header>
+    <nav class="page-nav">
+        <ul class="nav-header">
+            <li class="nav-header-item"><a href="#"><i class="fas fa-home"></i></a></li>
+            <li class="nav-header-item toggle"><a href="#"><i class="fas fa-bars"></i></a></li>
+        </ul>
+        <div class="wrapper">        	
+            <ul class="nav-links">
+            		<li>
+            				<ul>
+            						<button class="btn_home"><a href="{% url 'home' %}"><i class="fa fa-home"></i></a></button>
+            				</ul>
+            		</li>
+                <li class="nav-item has-subnav"><a tabindex="0">Dashboard</a>
+                     <ul class="sub-links">
+                        <li class="sub-items">
+                            <a href="{% url 'instruments:home' inst_disp="edm" %}">
+                                <div class="sub-item-header">Instrument Register</div>
+                                <div class="sub-item-description">List of all company instruments</div>
+                            </a>
+                        </li>
+                        <li class="sub-items">
+                            <a href="{% url 'baseline_calibration:accreditations' %}">
+                                <div class="sub-item-header">Accreditation Certifications</div>
+                                <div class="sub-item-description">List of all company accreditation certificates</div>
+                            </a>
+                        </li>
+                        
+                        <li class="sub-items">
+                            <a href="{% url 'calibrationsites:home' %}">
+                                <div class="sub-item-header">Calibration Sites</div>
+                                <div class="sub-item-description">List of available calibration baselines</div>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item has-subnav"><a tabindex="0">Staff Calibration</a>
+                    <ul class="sub-links">
+                        {% if user.is_staff %}
+                        <li class="sub-items">
+                            <a href="{% url 'rangecalibration:home' %}">
+                                <div class="sub-item-header">Range Calibration</div>
+                                <div class="sub-item-description">Calibrate levelling staff range</div>
+                            </a>
+                        </li>
+                        {% endif %}
+                        <li class="sub-items">
+                            <a href="{% url 'staffcalibration:home' %}">
+                                <div class="sub-item-header">Staff Calibration</div>
+                                <div class="sub-item-description">Calibrate barcoded levelling staff</div>
+                            </a>
+                        </li>                        
+                        <li class="sub-items">
+                            <a href="{% url 'rangecalibration:range_param' %}">
+                                <div class="sub-item-header">Calibration Range Parameters</div>
+                                <div class="sub-item-description">View calibration range parameters</div>
+                            </a>
+                        </li>
+                        <li class="sub-items">
+                            <a href="{% url 'staffcalibration:staff_registry' %}">
+                                <div class="sub-item-header">Levelling Staff Registry</div>
+                                <div class="sub-item-description">View all company staff calibration records</div>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <!-- <li class="nav-item has-subnav"><a tabindex="0">Baseline Calibration </a>
+                    <ul class="sub-links">
+                        <li class="sub-items">
+                            <a href="{% url 'baseline_calibration:calibration_home' %}">
+                                <div class="sub-item-header">Calibrate the Baseline</div>
+                                <div class="sub-item-description">Choose the Baseline and calibrate the certified distances</div>
+                            </a>
+                        </li>
+                        <li class="sub-items">
+                            <a href="#">
+                                <div class="sub-item-header">Registry of Calibrating the Baselines</div>
+                                <div class="sub-item-description">Edit or query the history of calibrating the baseline</div>
+                            </a>
+                        </li>
+                    </ul>
+                </li> -->
+                <li class="nav-item has-subnav"><a tabindex="0">EDM Calibration </a>
+                    <ul class="sub-links">
+                        {% if user.is_staff %}
+                        <li class="sub-items">
+                            <a href="{% url 'baseline_calibration:calibration_home' %}">
+                                <div class="sub-item-header">EDM Baseline Calibration</div>
+                                <div class="sub-item-description">Calibrate EDM Baseline</div>
+                            </a>  
+                        </li>    
+                        {% endif %}
+                        <li class="sub-items">
+                            <a href="{% url 'edm_calibration:edm_calibration_home' %}">
+                                <div class="sub-item-header">EDMI Calibration</div>
+                                <div class="sub-item-description">Calibrate EDM Instrumentation</div>
+                            </a>
+                        </li>  
+                        <!--                      
+                        <li class="sub-items">
+                            <a href="#">
+                                <div class="sub-item-header">EDM Baselines Registry</div>
+                                <div class="sub-item-description">Edit or query the history of calibrating the baseline</div>
+                            </a>
+                        </li> 
+                        <li class="sub-items">
+                            <a href="#">
+                                <div class="sub-item-header">EDM Intrumentation Registry</div>
+                                <div class="sub-item-description">Edit or query the history of calibrating EDM instrumentation</div>
+                            </a>
+                        </li> -->                        
+                        <li class="sub-items">
+                            <a href="{% url 'baseline_calibration:uc_budgets' %}">
+                                <div class="sub-item-header">Uncertainty Budgets</div>
+                                <div class="sub-item-description">Refine uncertainty budgents for EDM calibrations</div>
+                            </a>
+                        </li> 
+                    </ul>
+                </li>
+                <li class="nav-item has-subnav"><a tabindex="0">Resources</a>
+                    <ul class="sub-links">
+                        <li class="sub-items">
+                            <a href="{% url 'calibrationguide:guide_view' %}">
+                                <div class="sub-item-header">Calibration Guides</div>
+                                <div class="sub-item-description">Guides to calibrate EDM baseline or instrumentaion</div>
+                            </a>
+                        </li>
+                        <li class="sub-items">
+                            <a href="{% url 'calibrationguide:manual_view' %}">
+                                <div class="sub-item-header">Technical Manual</div>
+                                <div class="sub-item-description">All you need to know about how it works</div>
+                            </a>
+                        </li>                    
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <main class="page-content">
+    	<!--
+        {% block slideshow %}
+             <div class="slideshow-container">
+                <div class="homeSlides fade">
+                    <img src="{% static 'banners/Home Background2.png' %}" alt="Changes to WA's Transfer of Land Act" class="cropped1">
+                    <div style="position:absolute; top: 50%; left: 50%; transform: translate(-50%, -50%)">
+                        <span role="status" style="visibility: hidden">Slide: 1</span>
+                        <h2 class="px-2 bg-gray-200 rounded text-center text-2xl">Welcome to Landgate's Survey Instrument Calibration site.</h2>
+                        <p class="mt-3 mb-4 px-2 bg-gray-500 rounded text-gray-200">You can now easily process and generate calibration certificates for your Levelling Staves and EDMs online.</p>
+                    </div>
+                </div>
+                <div class="homeSlides fade">
+                    <img src="{% static 'banners/Home Background3.png' %}" alt="Changes to WA's Transfer of Land Act" class="cropped1">
+                    <div style="position:absolute; top: 50%; left: 50%; transform: translate(-50%, -50%)">
+                        <span role="status" style="visibility: hidden">Slide: 1</span>
+                        <h2 class="px-2 bg-gray-200 rounded text-center text-2xl">Welcome to Landgate's Survey Instrument Calibration site.</h2>
+                        <p class="mt-3 mb-4 px-2 bg-gray-500 rounded text-gray-200">You can now easily process and generate calibration certificates for your Levelling Staves and EDMs online.</p>
+                    </div>
+                </div>
+
+                <div class="homeSlides fade">
+                    <img src="{% static 'banners/Home Background4.png' %}" alt="Changes to WA's Transfer of Land Act" class="cropped1">
+                    <div style="position:absolute; top: 50%; left: 50%; transform: translate(-50%, -50%)">
+                        <span role="status" style="visibility: hidden">Slide: 1</span>
+                        <h2 class="px-2 bg-gray-200 rounded text-center text-2xl">Welcome to Landgate's Survey Instrument Calibration site.</h2>
+                        <p class="mt-3 mb-4 px-2 bg-gray-500 rounded text-gray-200">You can now easily process and generate calibration certificates for your Levelling Staves and EDMs online.</p>
+                    </div>
+                </div>
+                <a class="slideshow-prev" onclick="plusSlides(-1)">&#10094;</a>
+                <a class="slideshow-next" onclick="plusSlides(1)">&#10095;</a>
+            </div>
+            {% endblock slideshow %} 
+        -->        
+        <div class="wrapper">
+           
+            {% block content %}
+
+            {% endblock content %}
+
+        </div>
+    </main>
+    <hr>
+    <footer class="page-footer">
+     <!--   <div class="footer-row; text-center">
+            <div class="wrapper">
+                <div class="footer-row1">
+                    <div class="subscription">
+                        <div class="social-media;text-center">
+                            <a href="https://confirmsubscription.com/h/i/EFA065D8DEDDF0DF"><span>Subscribe to our geodetic newletter</span> <i class="fas fa-globe"></i></a>
+                            <a href="https://twitter.com/landgate"><span>Follow Landgate on twitter</span> <i class="fab fa-twitter-square"></i></a>
+                            <a href="https://au.linkedin.com/company/landgate-wa"><span>Follow Landgate on Linkedin</span> <i class="fab fa-linkedin"></i></a>
+                            <a href="https://www.youtube.com/channel/UC7Cur-7a1eaIS-YqDkLJGWg"><span>Follow us on Youtube</span> <i class="fab fa-youtube"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <hr>
+        </div> -->
+        <div class="wrapper">
+            <div class="footer-row3">
+                <div class="policy-col-1">
+                    <a href="{% url 'terms' %}">Privacy Policy</a>
+                    <a href="{% url 'terms' %}">Terms of Use</a>
+                    <a href="mailto:geodesy@landgate.wa.gov.au"><i class="fas fa-envelope"></i> <span>Contact us</span></a>
+                </div>
+                <div class="policy-col-2">
+                      <p>&#169; Western Australian Land Information Authority 2007</p>  
+                      <span id="current_time"></span>
+                </div>
+            </div>          
+        </div>
+    </footer>
+    
+    <!-- <div class="current_time"></div> -->   
+    <!-- <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/js/all.min.js" integrity="sha512-naukR7I+Nk6gp7p5TMA4ycgfxaZBJ7MO5iC3Fp6ySQyKFHOGfpkSZkYVWV5R7u7cfAicxanwYQ5D1e17EfJcMA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>    
+    <script src="{% static 'script.js' %}"></script>
+
+    
+    <script type="text/javascript">
+        var today = new Date();
+        document.getElementById('current_time').innerHTML=today.toLocaleString('en-AU');
+        
+        const headerMenu = document.querySelector(".header-sublinks")
+        const headToggleMenu = document.getElementById("header-toggle")
+
+        headToggleMenu.addEventListener('click', () => {
+            if (headerMenu.style.display == 'none' || headerMenu.style.display=="") {
+                headerMenu.style.display = 'block'
+                headToggleMenu.firstChild.classList.add('down')
+            } else {
+                headerMenu.style.display = 'none'
+                headToggleMenu.firstChild.classList.remove('down')
+            }   
+        })
+    </script>
+
+
+</body>
+</html>
+

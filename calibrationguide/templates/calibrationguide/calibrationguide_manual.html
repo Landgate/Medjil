@@ -1,0 +1,117 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+
+
+{% block content %}
+
+<article class="post mb-4">
+    <div class="mt-10">
+        {% if not user.is_authenticated %}
+            <p class="text-center">
+				<span class="text-lg">
+					Please 
+					<a href="{% url 'accounts:login' %}" class="hover:a a-link">
+						login
+					</a> or 
+					<a href="{% url 'accounts:signup' %}" class="hover:a a-link">
+						sign up
+					</a> to view the contents of this page.
+				</span>
+			</p>
+        {% endif %}
+        <h2 class="text-center">Technical Mannuals</h2>
+		{% if user.is_authenticated %}
+			{% if user.is_staff %}
+				<div class="mt-2 flex justify-center">
+					<a href="{% url 'calibrationguide:manual_create' %}" class="px-3 py-2 border border-transparent text-lg leading-4 rounded text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+						Create new manual
+					</a>
+				</div>
+
+			{% endif %}
+		{% endif %}
+    </div>
+    {% if messages %}
+        <ul class="alert messages">
+            {% for message in messages %}
+            <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        <br>
+    {% endif %}	
+		<br>    
+    <hr>
+	
+	{% if not inst_objs %}
+		<div class="mt-4 mb-4">
+			<p>
+				<span class="text-lg">
+					Nothing to display. Please contact <a href="mailto:geodesy@landgate.wa.gov.au?subject=Instrument calibration guide not listed">Landgate</a> for details.
+				</span>
+			</p>
+		</div>
+	{% else %}
+		<div class="flex-with-sidebar">
+			<div class="left-sidebar">
+				{% for obj in inst_objs %}
+					{% if forloop.first %}
+						<button class="tablinks" onclick="openTab(event, '{{obj.id}}')" id="defaultOpen">{{ obj.title }}</button>
+					{% else %}
+					<button class="tablinks" onclick="openTab(event, '{{obj.id}}')">{{ obj.title }}</button>
+					{% endif %}
+				{% endfor %}
+			</div>
+			<div class="post-content pxl-2">
+				{% for obj in inst_objs %}
+				<div id="{{ obj.id }}" class="tab-content">
+					<div class="mt-2 mb-3">
+						<div class="flex justify-between items-center px-3 py-1 bg-red-100">
+							<div class="flex items-center">
+								<img src="{{ obj.thumbnail.url }}" alt="" width="45" height="auto">
+								<h2 class="pxl-5 text-center"> <u>{{ obj.title }}</u> </h2>
+							</div>
+							<div>
+								<a href="{% url 'calibrationguide:manual_update' obj.id %}" target="_blank">
+									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#000" class="bi bi-pencil-fill" id = "edit-view" viewBox="0 0 16 16">
+										<path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"></path>
+									</svg>
+								</a>
+							</div>
+						</div>
+						
+						<p>{{ obj.content|safe }} </p>
+					</div>
+					<div>
+						{% for img in img_objs %}
+							{% if img.instruction == obj %}
+							<div><img src="{{ img.photos.url }}" alt="" width="450", height="auto"></div>
+							{% endif %}
+						{% endfor %}
+					</div>
+				</div>
+				{% endfor %}				
+			</div>
+		</div>
+	{% endif %}
+</article>
+
+<script>
+    function openTab(evt, tabName) {
+      var i, tabcontent, tablinks;
+      tabcontent = document.getElementsByClassName("tab-content");
+      for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+      }
+      tablinks = document.getElementsByClassName("tablinks");
+      for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+      }
+      document.getElementById(tabName).style.display = "block";
+      evt.currentTarget.className += " active";
+    }
+    
+    // Get the element with id="defaultOpen" and click on it
+    document.getElementById("defaultOpen").click();
+    </script>
+
+ {% endblock content %}

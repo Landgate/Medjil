@@ -1,0 +1,93 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+
+{% block slideshow %}
+    <div class="slideshow-container">
+        <div class="homeSlides fade">
+            <img src="{% static 'banners/Home Background2.png' %}" alt="Calibration Image 1" class="cropped1">
+        </div>
+        <div class="homeSlides fade">
+            <img src="{% static 'banners/Home Background3.png' %}" alt="Calibration Image 2" class="cropped1">
+        </div>
+
+        <div class="homeSlides fade">
+            <img src="{% static 'banners/Home Background4.png' %}" alt="Calibration Image 3" class="cropped1">
+        </div>
+        <a class="slideshow-prev" onclick="plusSlides(-1)">&#10094;</a>
+        <a class="slideshow-next" onclick="plusSlides(1)">&#10095;</a>
+    </div>
+{% endblock slideshow %}
+
+{% block content %}
+
+<article class="post mt-8 mb-5">
+    <header class="post-header">
+        <h1 class="post-title">
+            <span class="text-gray-900 text-4xl font-extrabold">
+                Welcome to Medjil the Survey Instrumentation Calibration Portal
+            </span>
+        </h1>
+    </header>
+    <div class="post-content mt-8">
+    		<div class="flex justify-center items-center">
+        	<img class="mt-2 mb-2 px-2 py-1"src="{% static 'images/WelcomeOnHmepage.jpg' %}" alt="Calibration Baseline">
+        </div>
+        <div>            
+            <div class="flex flex-col justify-start items-center">
+                <p>Medjil (<i>meaning accurate in Whadjuk Noongar language</i>) is your gateway to rigorous calibration of survey instrumentation. To proceed with instrument calibration select one of the top navigation options and brows the corresponding <a href="{% url 'calibrationguide:guide_view' %}" class="a-link">instrument calibration guides and technical manual</a>.
+                </p>
+                {% if not user.is_authenticated %}
+                <br>
+                <div>
+                    <a href="{% url 'accounts:signup' %}" class="px-8 py-2 border border-transparent text-base leading-4 rounded text-white bg-blue-400 hover:bg-blue-300 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+                        Sign up
+                    </a>
+                    <span class="mr-3"></span>
+                    <a href="{% url 'accounts:login' %}" class="px-8 py-2 border border-transparent text-base leading-2 rounded text-white bg-green-600 hover:bg-gray-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+                        Login
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+</article>
+
+<script>
+    let slideIndex = 1;
+    showSlides(slideIndex);
+
+    function plusSlides(n) {
+        showSlides(slideIndex += n);
+    }
+
+    function currentSlide(n) {
+        showSlides(slideIndex = n);
+    }
+
+    function showSlides(n) {
+        let i;
+        let slides = document.getElementsByClassName("homeSlides");
+        // let dots = document.getElementsByClassName("dot");
+        if (n > slides.length) {slideIndex = 1}
+        if (n < 1) {slideIndex = slides.length}
+        for (i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";
+        }
+        // for (i = 0; i < dots.length; i++) {
+        //     dots[i].className = dots[i].className.replace(" active", "");
+        // }
+        slides[slideIndex-1].style.display = "block";
+    // dots[slideIndex-1].className += " active";
+    }
+
+    const edmClick = document.getElementById('edm-click')
+
+    edmClick.addEventListener('click', () => {
+        edmClick.style.display = "block";
+    })
+</script>
+
+ {% endblock content %}
+

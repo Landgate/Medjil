@@ -1,0 +1,216 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+
+
+{% block content %}
+
+<article>
+	<br>
+  <h2 class="text-center">List of Available Instrument Calibration Sites</h2>
+  <p><i>Select location on the left menu to display available instrumentation calibration sites</i></p>
+  <hr>  
+    {% if messages %}
+		<ul class="alert messages">
+		    {% for message in messages %}
+		    <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+		    {% endfor %}
+		</ul>
+		<br>
+	{% endif %}	
+
+<div class="flex-with-sidebar">
+	<div class="left-sidebar px-3">
+		<div class="mt-5">
+			<span>Select location:</span>
+			<div>				
+				<span>
+					<select id = "id_select-state" style="width:160px; padding:0.1rem" name="site-name">
+						{% for site_id, site_name in state_list %}
+							{% if 'None' in site_id %}
+								<option value="" selected class="default">{{ site_name }}</option>
+							{% else %}
+								<option value="{{ site_id }}">{{ site_name }}</option>
+							{% endif %}
+						{% endfor %}
+					</select>
+				</span>				
+			</div>
+		</div>
+	</div>	
+	<div class="main-post">
+		<div class="post-header mt-5 mb-5 px-6">
+			{% if not user.is_authenticated %}
+				<p>Please 
+					<a href="{% url 'accounts:login' %}" class="hover:a a-link">
+						login
+					</a> or 
+					<a href="{% url 'accounts:signup' %}" class="hover:a a-link">
+						sign up
+					</a> to register a Calibrate site.</p>
+			{% endif %}
+		</div>
+	
+		<div class="post-content" >	
+			<div>
+				<div>
+					<div class="mt-2 flex justify-center">
+						<a class="px-3 py-2 border border-transparent text-lg leading-4 rounded text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out" href="{% url 'calibrationsites:create-site' %}?reset">
+							Add new callibration site
+						</a>
+					</div>
+				</div>  			 
+				<div>
+					<br>
+					{% if baselines %}
+					<h3 class="text-center">EDM Baselines</h3>
+					<table id="site-table" style="width:800px;margin-left:20px">
+						<thead>
+							<tr>
+								<th class="text-left">Name</th>
+								<th class="text-left">Pillars</th>
+								<th class="text-left">Address</th>
+								<th class="text-left">State</th>
+								<th class="text-left">Operator</th>
+								<th class="text-left">Access</th>
+								<th class="text-left">Plan</th>
+								<th class="text-left">Updated</th>
+								<th class="text-left">Action</th>
+							</tr>
+						</thead>
+						{% for element in baselines %}
+						<tbody>
+						<tr class="text-left" style="width:800px;margin-left:20px" >
+							<td class="text-left"> {{ element.site_name }}</td>
+							<td class="text-left"> {{ element.no_of_pillars|floatformat:0 }} </td>
+							<td class="text-left">{{ element.locality }}</td>
+							<td class="text-left">{{ element.state.statecode }}</td>
+							<td class="text-left">{{ element.operator }}</td>
+							<td class="text-left">
+								{% if element.access_url %}
+									<a href="{{ element.access_url|default_if_none:'#' }}" target="__blank">
+										<svg version="1.1" baseProfile="tiny" id="report-view" xmlns:x="&ns_extend;" xmlns:i="&ns_ai;" xmlns:graph="&ns_graphs;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/" x="0px" y="0px" width="16" height="16" viewBox="0 0 42 42" xml:space="preserve">
+											<path fill-rule="evenodd" d="M22.5,1.5h-14c-2.55,0-3,0.561-3,3v32c0,2.49,0.55,3,3,3h24c2.5,0,3-0.47,3-3v-22h-13V1.5z M35.5,11.5l-10-10v10H35.5z"/>
+										  </svg>
+									</a>
+								{% else %}
+									<a href="#">-</a>
+								{% endif %}
+							</td>
+							<td class="text-left">
+								{% if element.config_url %}
+									<a href="{{ element.config_url|default_if_none:'#' }}" target="__blank">
+										<svg version="1.1" baseProfile="tiny" id="report-view" xmlns:x="&ns_extend;" xmlns:i="&ns_ai;" xmlns:graph="&ns_graphs;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/" x="0px" y="0px" width="16" height="16" viewBox="0 0 42 42" xml:space="preserve">
+											<path fill-rule="evenodd" d="M22.5,1.5h-14c-2.55,0-3,0.561-3,3v32c0,2.49,0.55,3,3,3h24c2.5,0,3-0.47,3-3v-22h-13V1.5z M35.5,11.5l-10-10v10H35.5z"/>
+										  </svg>
+									</a>
+								{% else %}
+									<a href="#">-</a>
+								{% endif %}
+							</td>
+							<td class="text-left">{{ element.modified_on|date:"d/m/Y" }}</td>
+							<td class="text-left"><a class="a_link" href="{{ element.get_absolute_url }}">
+								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000" class="bi bi-pencil-fill" id = "edit-view" viewBox="0 0 16 16">
+									<path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"></path>
+								  </svg>
+							</a> </td>
+						</tr>
+							
+						</tbody>
+						{% endfor %}
+					</table>
+					{% endif %}
+				</div>
+				<br>
+				<div>
+					{% if staff_ranges %}
+					<h3 class="text-center">Staff Calibration Ranges</h3>
+					<table id="site-table" style="width:800px;margin-left:20px">
+						<thead>
+							<tr>
+								<th class="text-left">Name</th>
+								<th class="text-left">Pins</th>
+								<th class="text-left">Address</th>
+								<th class="text-left">State</th>
+								<th class="text-left">Operator</th>
+								<th class="text-left">Access</th>
+								<th class="text-left">Plan</th>
+								<th class="text-left">Updated</th>
+								<th class="text-left">Action</th>								
+							</tr>
+						</thead>
+						{% for element in staff_ranges %}
+						<tbody>
+						<tr class="text-left">
+							<td class="text-left">{{ element.site_name }} </td>
+							<td class="text-left">{{ element.no_of_pillars|floatformat:0 }} </td>
+							<td class="text-left">{{ element.locality }}</td>
+							<td class="text-left">{{ element.state.statecode }}</td>
+							<td class="text-left">{{ element.operator }}</td>
+							<td class="text-left">
+								{% if element.access_url %}
+									<a href="{{ element.access_url|default_if_none:'#' }}" target="__blank">
+										<svg version="1.1" baseProfile="tiny" id="report-view" xmlns:x="&ns_extend;" xmlns:i="&ns_ai;" xmlns:graph="&ns_graphs;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/" x="0px" y="0px" width="16" height="16" viewBox="0 0 42 42" xml:space="preserve">
+											<path fill-rule="evenodd" d="M22.5,1.5h-14c-2.55,0-3,0.561-3,3v32c0,2.49,0.55,3,3,3h24c2.5,0,3-0.47,3-3v-22h-13V1.5z M35.5,11.5l-10-10v10H35.5z"/>
+										  </svg>
+									</a>
+								{% else %}
+									<a href="#">-</a>
+								{% endif %}
+							</td>
+							<td class="text-left">
+								{% if element.config_url %}
+									<a href="{{ element.config_url|default_if_none:'#' }}" target="__blank">
+										<svg version="1.1" baseProfile="tiny" id="report-view" xmlns:x="&ns_extend;" xmlns:i="&ns_ai;" xmlns:graph="&ns_graphs;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/" x="0px" y="0px" width="16" height="16" viewBox="0 0 42 42" xml:space="preserve">
+											<path fill-rule="evenodd" d="M22.5,1.5h-14c-2.55,0-3,0.561-3,3v32c0,2.49,0.55,3,3,3h24c2.5,0,3-0.47,3-3v-22h-13V1.5z M35.5,11.5l-10-10v10H35.5z"/>
+										  </svg>
+									</a>
+								{% else %}
+									<a href="#">-</a>
+								{% endif %}
+							</td>
+							<td class="text-left">{{ element.modified_on|date:"d/m/Y" }}</td>
+							<td class="text-left">
+								<a class="a_link" href="{{ element.get_absolute_url }}">
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000" class="bi bi-pencil-fill" id = "edit-view" viewBox="0 0 16 16">
+                                        <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"></path>
+                                      </svg>
+								</a>
+							</td>							
+						</tr>
+						</tbody>
+						{% endfor %}
+					</table>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>        
+</article>
+
+<script>
+	var tableElem = document.querySelector("#site-table > tbody > tr:nth-child(1) > td:nth-child(2)").innerHTML
+
+	const stateInput = document.getElementById('id_select-state')
+	stateInput.addEventListener('change', e => {
+		select = e.target
+		stateid = select.value;    // get the selected country ID from the HTML 
+		
+		statetext = select.selectedOptions[0].text;
+		const tableRows = document.querySelectorAll("#site-table > tbody > tr")
+		
+		tableRows.forEach(row=>{
+			cell_value = row.querySelector("td:nth-child(4)").innerHTML
+			// console.log(cell_value)
+			if (!stateid) {
+				row.style.display = "table-row"
+			} else if (cell_value != statetext) {
+				row.style.display = "none"
+			} else {
+				row.style.display = "table-row"
+			}
+		})
+	})
+</script>
+
+ {% endblock content %}

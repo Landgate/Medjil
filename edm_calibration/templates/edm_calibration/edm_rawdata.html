@@ -1,0 +1,127 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+
+
+{% block content %} 
+
+<article class="post">
+	<div class="page-content">
+        <div class="text-center">
+            <h1>Imported EDM Observations</h1>
+        </div>
+    <form action="" style="font-size:10.0pt;width:4500px;" class="site-form" method="post" enctype="multipart/form-data">               
+        <div class="flexbox-container_IB flexbox-item-left_IB">
+        		<p>The pillar survey observations are used to calculate the EDMI calibration <a href= "#"> &#x1F6C8</a>
+            <br>Please select/deselect the observations in the following table to use for the calibration calculations.</p>                 
+        </div>  
+        <div class="flexbox-container_IB" style="width: 100%;">
+        		<div class="flexbox-item_400_IB"><i>* Click the table headers to sort table</i></div>
+	        	<div class="flexbox-item_IB" style="width: 100%;text-align:right"><a href="#bottom">Scroll to bottom &#128317</a></div>
+        </div>
+        <div class="flexbox-container_IB flexbox-item_IB" style="min-width: 600px;">
+		        {% csrf_token %}
+						<table id="obsTable">
+		                {{ edm_obs_formset.management_form }}
+		                {% for form, raw in formset %}
+		                    {% if forloop.first %}
+		                    <tr>
+                                <th onclick="sortTable(0)"> Obs # </th>
+                                <th onclick="sortTable(1)"> From Pillar </th>
+                                <th onclick="sortTable(2)"> To Pillar </th>
+                                <th onclick="sortTable(3)"> Instrument Height (m)</th>
+                                <th onclick="sortTable(4)"> Target Height (m)</th>
+                                <th onclick="sortTable(5)"> Slope Distance (m)</th>
+                                <th onclick="sortTable(6)"> Raw Temperature (°C) </th>
+                                <th onclick="sortTable(7)"> Raw Pressure (mBar) </th>
+                                <th onclick="sortTable(8)"> Raw Humidity (%) </th>
+                                <th onclick="sortTable(10)"> Select Observation</th>
+                                <td style="display: none;"></td>
+		                    </tr>
+		                    {% endif %}
+		                    <tr>
+		                        <td>{{ forloop.counter|stringformat:"03d" }}</td>
+		                        <td>{{ raw.from_pillar }}</td>
+		                        <td>{{ raw.to_pillar }}</td>
+		                        <td>{{ raw.inst_ht|floatformat:3 }}</td>
+		                        <td>{{ raw.tgt_ht|floatformat:3 }}</td>
+		                        <td>{{ raw.raw_slope_dist|floatformat:4 }}</td>
+		                        <td>{{ raw.raw_temperature|floatformat:1 }}</td>
+		                        <td>{{ raw.raw_pressure|floatformat:1 }}</td>
+		                        <td>{{ raw.raw_humidity|floatformat:1 }}</td>
+		                        <td style="text-align:center">{{ form.use_for_distance }}</td>
+		                        <td style="display: none;">{{ form.id }}</td>
+		                    </tr>
+		                    {% endfor %}
+		      	</table>
+      	</div>
+        <div class="button-container">
+            <a href= "{% url 'edm_calibration:calibrate1' id=id %}" class="submit-button bg-green-500 hover:bg-green-400" style="text-align: center">Back</button>
+            <a href= "{% url 'edm_calibration:edm_calibration_home' %}" class="submit-button bg-red-500 hover:bg-green-400" style="text-align: center">Cancel</a>
+            <button type="submit" class="submit-button bg-green-500 hover:bg-green-400" >Next</button>
+        </div>     	
+        </form>      
+		<div id="bottom" style="text-align:center;">
+    		<h4>{{ Page }}</h4>
+    </div>   	
+	</div>
+</article>
+
+<script>
+function sortTable(n) {
+  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+  table = document.getElementById("obsTable");
+  switching = true;
+  //Set the sorting direction to ascending:
+  dir = "asc"; 
+  /*Make a loop that will continue until
+  no switching has been done:*/
+  while (switching) {
+    //start by saying: no switching is done:
+    switching = false;
+    rows = table.rows;
+    /*Loop through all table rows (except the
+    first, which contains table headers):*/
+    for (i = 1; i 
+	< (rows.length - 1); i++) {
+      //start by saying there should be no switching:
+      shouldSwitch = false;
+      /*Get the two elements you want to compare,
+      one from current row and one from the next:*/
+      x = rows[i].getElementsByTagName("TD")[n];
+      y = rows[i + 1].getElementsByTagName("TD")[n];
+      /*check if the two rows should switch place,
+      based on the direction, asc or desc:*/
+      if (dir == "asc") {
+        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+          //if so, mark as a switch and break the loop:
+          shouldSwitch= true;
+          break;
+        }
+      } else if (dir == "desc") {
+        if (x.innerHTML.toLowerCase() 
+		< y.innerHTML.toLowerCase()) {
+          //if so, mark as a switch and break the loop:
+          shouldSwitch = true;
+          break;
+        }
+      }
+    }
+    if (shouldSwitch) {
+      /*If a switch has been marked, make the switch
+      and mark that a switch has been done:*/
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+      //Each time a switch is done, increase this count by 1:
+      switchcount ++;      
+    } else {
+      /*If no switching has been done AND the direction is "asc",
+      set the direction to "desc" and run the while loop again.*/
+      if (switchcount == 0 && dir == "asc") {
+        dir = "desc";
+        switching = true;
+      }
+    }
+  }
+}
+</script>
+{% endblock %}

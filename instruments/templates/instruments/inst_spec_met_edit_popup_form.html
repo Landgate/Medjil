@@ -1,0 +1,181 @@
+{% extends 'base_popup.html' %}
+{% load i18n %}
+{% load }
+{% load static %}
+
+{% block content %} 
+
+<article class="post">
+    <div class="post-content">
+        <form action="" class="site-form" method="post">
+            {% csrf_token %}
+            <div class="mb-5 site-form-header bg-indigo-300 rounded px-2">
+                <h2 class="text-center">{{ form.instance.mets_model.get_inst_type_display|title }} Model and Specifications</h2>
+            </div>
+            <div class="mt-5 mb-3">
+                {% if form.errors or form.non_field_errors %}
+                    <!-- {{ form.errors }} -->
+                    {% for error in form.non_field_errors %} 
+                        <p class="error error-danger">** {{ error }}</p>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <table>
+                <tr>
+                    <td width="35%">{{ form.mets_owner.label|title }}</td>
+                    <td width="45%">{{ form.mets_owner }}</td>
+                    <td width="15%"></td>
+                </tr>
+                <tr>
+                    <td width="35%">{{ form.mets_model.label|title }}</td>
+                    <td width="45%">{{ form.mets_model }}</td>
+                    <td width="15%">
+                        <a href="{% url 'instruments:inst_model_createby_inst_type' inst_type %}" target="_blank" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" onclick="return showAddPopup(this);" id="add_level">&#43;</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="35%">{{ form.manu_unc_const.label|title }}</td>
+                    <td width="45%">{{ form.manu_unc_const }}
+                        {% for error in form.manu_unc_const.errors %}
+                            <p class="error error-danger">{{ error }}</p>
+                        {% endfor %}
+                        <!-- Help text -->
+                        {% if not form.manu_unc_const.widget.attrs.placeholder and form.manu_unc_const.help_text %}
+                            <p class="helptext">{{ form.manu_unc_const.help_text }}</p>
+                        {% endif %}
+                    </td>
+                    <td width="15%">{{ form.unit_manu_unc_const }}</td>
+                </tr>
+                <tr>
+                    <td width="35%">{{ form.manu_unc_k.label|title }}</td>
+                    <td width="45%">{{ form.manu_unc_k }}
+                        {% for error in form.manu_unc_k.errors %}
+                            <p class="error error-danger">{{ error }}</p>
+                        {% endfor %}
+                        <!-- Help text -->
+                        {% if not form.manu_unc_k.widget.attrs.placeholder and form.manu_unc_k.help_text %}
+                            <p class="helptext">{{ form.manu_unc_k.help_text }}</p>
+                        {% endif %}
+                    </td>
+                    <td width="15%"></td>
+                </tr>
+                <tr>
+                    <td width="35%">{{ form.measurement_increments.label|title }}</td>
+                    <td width="45%">{{ form.measurement_increments }}
+                        {% for error in form.measurement_increments.errors %}
+                            <p class="error error-danger">{{ error }}</p>
+                        {% endfor %}
+                        <!-- Help text -->
+                        {% if not form.measurement_increments.widget.attrs.placeholder and form.measurement_increments.help_text %}
+                            <p class="helptext">{{ form.measurement_increments.help_text }}</p>
+                        {% endif %}
+                    </td>
+                    <td width="15%">{{ form.unit_measurement_inc }}</td>
+                </tr>
+            </table>
+
+            {% if request.GET.next %}
+            <input type="hidden" name="next" value="{{ request.GET.next }}">
+            {% endif %}
+                <div class="button-container">
+                    <button class="submit-button bg-green-500 hover:bg-green-400 text-base" type="submit" >Save</button>
+                </div>
+        </form>
+    </div>
+</article>
+<script>
+
+    const units = [{typ:"temp", u:"°C"},
+                   {typ:"temp", u:"°F"},
+                   {typ:"pres", u:"hPa"},
+                   {typ:"pres", u:"mBar"},
+                   {typ:"pres", u:"mmHg"},
+                   {typ:"humi", u:"%"}];
+
+    const  mets_model_slt = document.getElementById("id_mets_model")
+    const  uc_units_slt = document.getElementById("id_unit_manu_unc_const")
+    const  inc_unit_slt = document.getElementById("id_unit_measurement_inc")
+    ChgUnits();
+    
+    // On dropdown change, Change unit options
+    function ChgUnits() {
+        const value = mets_model_slt.value;
+        const desc = mets_model_slt.options[mets_model_slt.selectedIndex].text;
+        
+        while (uc_units_slt.options.length > 0) {
+            uc_units_slt.remove(0);
+            inc_unit_slt.remove(0);
+        }
+        if (desc.includes("(thermo)")||desc.includes("(psy)")) {
+            let uLen = units.length;
+            for (let i = 0; i < uLen; i++) {
+              if (units[i].typ.includes("temp")) {
+                  let newOption = new Option(units[i].u, units[i].u);
+                  uc_units_slt.add(newOption, undefined);
+                  let nextOption = new Option(units[i].u, units[i].u);
+                  inc_unit_slt.add(nextOption, undefined);
+                  }
+            }
+        }
+        if (desc.includes("(baro)")) {
+            let uLen = units.length;
+            for (let i = 0; i < uLen; i++) {
+              if (units[i].typ.includes("pres")) {
+                  let newOption = new Option(units[i].u, units[i].u);
+                  uc_units_slt.add(newOption, undefined);
+                  let nextOption = new Option(units[i].u, units[i].u);
+                  inc_unit_slt.add(nextOption, undefined);
+                  }
+            }
+        }
+        if (desc.includes("(hygro)")) {
+            let uLen = units.length;
+            for (let i = 0; i < uLen; i++) {
+              if (units[i].typ.includes("humi")) {
+                  let newOption = new Option(units[i].u, units[i].u);
+                  uc_units_slt.add(newOption, undefined);
+                  let nextOption = new Option(units[i].u, units[i].u);
+                  inc_unit_slt.add(nextOption, undefined);
+                  }
+            }
+        }
+    }
+
+
+
+    function showAddPopup(triggeringLink) {
+        var name = triggeringLink.id.replace(/^add_/, '');
+        href = triggeringLink.href;
+        var win = window.open(href, name, "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=850,width=600,height=500");
+        win.focus();
+        return false;
+    }
+
+    modelOptions = document.querySelector("#id_mets_model")
+    function closePopup(win, newID, newRepr) {
+        // $(id).append('<option value=' + newID + ' selected >' + newRepr + '</option>')
+        // console.log(id, newID, newRepr)
+        window.sessionStorage.setItem('new_model',  newID);
+        win.close();
+    }
+    
+
+    let newModelValue = sessionStorage.getItem('new_model');
+    if (newModelValue) {
+        for(var i = 0;i < modelOptions.options.length;i++){
+                if(modelOptions.options[i].value == newModelValue ){
+                    modelOptions.options[i].selected = true;
+                }
+            }
+        modelOptions.dispatchEvent(new Event('change'));
+        window.sessionStorage.clear()
+    }
+    //  Refresh Parent Function
+    function refreshParent() 
+        {
+            window.opener.location.reload(true);
+        }
+</script>
+        <body onunload="javascript:refreshParent()">
+
+{% endblock %}

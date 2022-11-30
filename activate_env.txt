@@ -1,0 +1,3 @@
+"C:\Kent\django-projects\venv\Scripts\activate.bat"
+"C:\Data\Development\Django_Env\venv\Scripts\activate.bat"
+python manage.py runserver

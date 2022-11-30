@@ -1,0 +1,818 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+{% load custom_filter_tags %}
+
+
+{% block content %}
+
+<article class="post">
+    <div class="post-content">
+      {% if messages %}
+        <ul class="message-list">
+          {% for message in messages %}
+            <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+          {% endfor %} </ul>
+        <br>
+      {% endif %}
+    </div>
+        <div class="post-content">
+            <div class="text-center">
+                <h1><B>Calibration of EDM Baseline Report</B></h1>
+            </div>
+            <div class="flexbox-container_IB">
+                <div class="flexbox-item_400_IB flexbox-item-left_IB">
+                    <br><B>Calibration Site: </B>{{ baseline.site }}
+                    <br><B>Location: </B>{{ baseline.site.site_address }}
+                    <br><B>Address: </B>{{ baseline.site.locality }}, {{ baseline.site.state }}, {{ baseline.site.country }}
+                    <br><B>Job Reference: </B>{{ pillar_survey.job_number }}
+                </div>
+                <div class="flexbox-item_400_IB flexbox-item-right_IB">
+                    <br><B>Instrument Operator: </B>{{ pillar_survey.observer }}
+                    <br><B>Observation Date: </B>{{ pillar_survey.survey_date }}
+                    <br><B>Computation date: </B>{{ pillar_survey.computation_date }}
+                    <br><B>Weather Conditions: </B>{{ pillar_survey.weather }}
+                </div>
+            </div>
+            <div class="flexbox-container_IB">
+                <div class="flexbox-item_800_IB  flexbox-item-left_IB">
+                    <hr>
+                </div>
+            </div>
+            <div class="flexbox-container_IB">
+                <div class="flexbox-item_400_IB flexbox-item-left_IB">
+                    <br><B>Accredited Agency: </B>{{ pillar_survey.accreditation.accredited_company }}
+                    <br><B>Date of Accreditation: </B>{{ pillar_survey.accreditation.valid_from_date }}
+                    <br><B>Accreditation Valid Until: </B>{{ pillar_survey.accreditation.valid_to_date }}
+                </div>
+                <div class="flexbox-item_400_IB  flexbox-item-right_IB">
+                    <br><B>Least Uncertainty of Measurement: </B>{{ pillar_survey.accreditation.LUM_constant }}mm &plusmn {{ pillar_survey.accreditation.LUM_ppm }}ppm
+                    {% if pillar_survey.accreditation.certificate_upload %}
+                        <br><a href="{{ pillar_survey.accreditation.certificate_upload.url }}" target="_blank">Download Acreditation Certificate &#10515</a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="flexbox-container_IB">
+                <div class="flexbox-item_800_IB flexbox-item-left_IB">
+                    <br><B>Accreditation Statement: </B>{{ pillar_survey.accreditation.statement }}
+                    <hr>
+                </div>
+            </div>
+            <div class="text-center">
+                    <h2>Instruments' Details</h2>
+               </div>
+            <div class="flexbox-container_IB">
+                <div class="flexbox-item_400_IB flexbox-item-left_IB">
+                    <B><u>Electronic Distance Measuring Instrument (EDMI)</u></B>
+                    <br><B>Make: </B>{{ pillar_survey.edm.edm_specs.edm_model.make.make }}
+                    <br><B>Model: </B>{{ pillar_survey.edm.edm_specs.edm_model.model }}
+                    <br><B>Serial Number: </B>{{ pillar_survey.edm.edm_number }}
+                    <br><B>Unit Length: </B>{{ pillar_survey.edm.edm_specs.unit_length }}m
+                </div>
+                <div class="flexbox-item_400_IB  flexbox-item-right_IB">
+                    <br><B>Manufacturers Uncertainty: </B>{{ pillar_survey.edm.edm_specs.manu_unc_const }}mm &plusmn {{ pillar_survey.edm.edm_specs.manu_unc_ppm }}ppm, k={{ pillar_survey.edm.edm_specs.manu_unc_k }}
+                    <br><B>Carrier Wavelength: </B>{{ pillar_survey.edm.edm_specs.carrier_wavelength }}nm
+                    <br><B>Calibration Date : </B>{{ calib.edmi.0.calibration_date }}
+                    <br><a href="{{ calib.edmi.0.calibration_date.certificate_upload.url }}" target="_blank">Download Calibration Certificate &#10515</a>
+                </div>
+            </div>
+            <div class="flexbox-container_IB">
+                <div class="flexbox-item_400_IB flexbox-item-left_IB">
+                    <br><B><u>Prism</u></B>
+                    <br><B>Make: </B>{{ pillar_survey.prism.prism_specs.prism_model.make.make }}
+                    <br><B>Model: </B>{{ pillar_survey.prism.prism_specs.prism_model.model }}
+                    <br><B>Serial Number: </B>{{ pillar_survey.prism.prism_number }}
+                </div>
+                <div class="flexbox-item_400_IB  flexbox-item-right_IB">
+                    <br><br><B>Manufacturers Uncertainty: </B>{{ pillar_survey.prism.prism_specs.manu_unc_const }}mm, k={{ pillar_survey.prism.prism_specs.manu_unc_k }}
+                </div>
+            </div>
+            <div class="flexbox-container_IB">
+                <div class="flexbox-item_400_IB flexbox-item-left_IB">
+                    <br><B><u>Leveling Staff</u></B>
+                    <br><B>Make: </B>{{ pillar_survey.staff.staff_model.make.make }}
+                    <br><B>Model: </B>{{ pillar_survey.staff.staff_model.model }}
+                    <br><B>Serial Number: </B>{{ pillar_survey.staff.staff_number }}
+                    <br><B>Type: </B>{{ pillar_survey.staff.staff_type }}
+                </div>
+                <div class="flexbox-item_400_IB  flexbox-item-right_IB">
+                    <br><br><B>Staff Length: </B>{{ pillar_survey.staff.staff_length }} m
+                    <br><B>Calibration Date: </B>{{ calib.staff.calibration_date }}
+                    <br><a href="{{ calib.staff.calibration_date.certificate_upload.url }}" target="_blank">Download Calibration Certificate &#10515</a>
+                </div>
+            </div>
+            <div class="flexbox-container_IB">
+                <div class="flexbox-item_400_IB flexbox-item-left_IB">
+                    <br><B><u>Thermometer</u></B>
+                    <br><B>Make: </B>{{ pillar_survey.thermometer.mets_specs.mets_model.make.make }}
+                    <br><B>Model: </B>{{ pillar_survey.thermometer.mets_specs.mets_model.model }}
+                    <br><B>Serial Number: </B>{{ pillar_survey.thermometer.mets_number }}
+                </div>
+                <div class="flexbox-item_400_IB  flexbox-item-right_IB">
+                    <br><br><B>Manufacturers Uncertainty: </B>{{ pillar_survey.thermometer.mets_specs.manu_unc_const }} &#186C, k={{ pillar_survey.thermometer.mets_specs.manu_unc_k }}
+                    <br><B>Calibration Date: </B>{{ calib.them.calibration_date }}
+                    <br><a href="{{ calib.them.calibration_date.certificate_upload.url }}" target="_blank">Download Calibration Certificate &#10515</a>
+                </div>
+            </div>
+            <div class="flexbox-container_IB">
+                <div class="flexbox-item_400_IB flexbox-item-left_IB">
+                    <br><B><u>Barometer</u></B>
+                    <br><B>Make: </B>{{ pillar_survey.barometer.mets_specs.mets_model.make.make }}
+                    <br><B>Model: </B>{{ pillar_survey.barometer.mets_specs.mets_model.model }}
+                    <br><B>Serial Number: </B>{{ pillar_survey.barometer.mets_number }}
+                </div>
+                <div class="flexbox-item_400_IB  flexbox-item-right_IB">
+                    <br><br><B>Manufacturers Uncertainty: </B>{{ pillar_survey.barometer.mets_specs.manu_unc_const }} hPa, k={{ pillar_survey.barometer.mets_specs.manu_unc_k }}
+                    <br><B>Calibration Date: </B>{{ calib.baro.calibration_date }}
+                    <br><a href="{{ calib.baro.calibration_date.certificate_upload.url }}" target="_blank">Download Calibration Certificate &#10515</a>
+                </div>
+            </div>
+            <div class="flexbox-container_IB">
+                <div class="flexbox-item_400_IB flexbox-item-left_IB">
+                    <br><B><u>Hygrometer</u></B>
+                    <br><B>Make: </B>{{ pillar_survey.hygrometer.mets_specs.mets_model.make.make }}
+                    <br><B>Model: </B>{{ pillar_survey.hygrometer.mets_specs.mets_model.model }}
+                    <br><B>Serial Number: </B>{{ pillar_survey.hygrometer.mets_number }}
+                </div>
+                <div class="flexbox-item_400_IB  flexbox-item-right_IB">
+                    <br><br><B>Manufacturers Uncertainty: </B>{{ pillar_survey.hygrometer.mets_specs.manu_unc_const }} &#37, k={{ pillar_survey.hygrometer.mets_specs.manu_unc_k }}
+                    <br><B>Calibration Date: </B>{{ calib.hygro.calibration_date }}
+                    <br><a href="{{ calib.hygro.calibration_date.certificate_upload.url }}" target="_blank">Download Calibration Certificate &#10515</a>
+                </div>
+            </div>
+            <div class="flexbox-container_IB">
+                <div class="flexbox-item_800_IB  flexbox-item-left_IB">
+                    <hr>
+                </div>
+            </div>
+            <div class="text-center">
+                <h2>Certified Baseline Distances</h2>
+                <table style="margin-left:auto;margin-right:auto;font-size:10.0pt;width:800px;">
+                    <tr>
+                        <th class="text-center">From Pilar</th>
+                        <th class="text-center">To Pilar</th>
+                        <th class="text-center">Reduced Distance</th>
+                        <th class="text-center">Uncertainty</th>
+                        <th class="text-center">k</th>
+                        <th class="text-center">Offset</th>
+                        <th class="text-center">Uncertainty</th>
+                    </tr>
+                   {% for c in certified_dists %}
+                        <tr>
+                            <td>{{c.from_pillar}}</td>
+                            <td>{{c.to_pillar}}</td>
+                            <td>{{c.Reduced_distance|floatformat:5}}</td>
+                            <td>{{c.uc_combined.uc95|floatformat:5}} {% if c.lum_adopted %} * {% endif %}</td>
+                            <td>{{c.uc_combined.k|floatformat:2}}</td>
+                            <td>{{c.delta_os|floatformat:3}}</td>
+                            <td>{{c.uc_budget.11.std_dev|multiply:c.uc_budget.11.k|sigfigs:2}}</td>
+                        </tr>
+                     {% endfor %}
+                </table>
+                {% if 'some_lum_adopted' in pillar_survey.keys %} 
+                <div class="flexbox-container_IB">
+                    <div class="flexbox-item_800_IB flexbox-item-right_IB"><i>* LUM has been adopted</i></div>
+                </div>
+                {% endif %}
+            </div>
+            <h2 class="text-center">Least Squares Adjustment Summary</h2>
+             <div>   
+                 <table style="margin-left:auto;margin-right:auto;font-size:10.0pt;width:800px;">
+                     <tr>
+                         <th>Description</th>
+                         <th>Value</th>
+                     </tr>
+                     <tr>
+                     		<td class="text-left">Confidence Level</td>
+                     		<td class="text-left">95%</td>
+                     </tr>
+                     <tr>
+                     		<td class="text-left">Estimated Variance Factor</td>
+                     		<td class="text-left"> {{ chi_test.Variance|floatformat:2 }} </td>
+                     </tr> 
+                     <tr>
+                     		<td class="text-left">Number of Degrees of Freedom</td>
+                     		<td class="text-left"> {{ chi_test.dof }}  </td>
+                     </tr>    
+                     <tr>
+                     		<td class="text-left">Coverage Factor</td>
+                     		<td class="text-left"> {{ chi_test.k|floatformat:2 }} </td>
+                     </tr>  
+                      <tr>
+                     		<td class="text-left">Chi-Square Test of the Variance Factor &nbsp;&nbsp;&nbsp;&nbsp;({{ chi_test.chi_lower|floatformat:3 }} &#60 {{ chi_test.Variance|floatformat:3 }} &#60 {{ chi_test.chi_upper|floatformat:3 }}) </td>
+                     		<td class="text-left"><B>{{ chi_test.test }}</B></td>
+                     </tr>                                                                                               
+                 </table>   
+             </div>
+            <div class="text-center">
+                <h2>Statistical Tests</h2>
+                <table style="margin-left:auto;margin-right:auto;font-size:10.0pt;width:800px;">
+                    <tr>
+                        <th class="text-center">Test</th>
+                        <th class="text-center">Null Hypothesis</th>
+                        <th class="text-center">Confidence Level</th>
+                        <th class="text-center">Accept</th>
+                    </tr>
+
+                    {% for t in ISO_test %}
+                    <tr>
+                        <td>{{ t.test }}</td>
+                        <td>{{ t.hypothesis }}</td>
+                        <td>95%</td>
+                        <td>{{ t.accept }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                <!--
+                Test A - Compare to LUM
+                Test B - Compare to Last Calibration
+                Test C - Zero point correction determined in LSA
+                -->
+            </div>
+            <div class="text-center">
+                <h2>Baseline Distance Observations</h2>
+                {% for o in edm_observations %}
+                    <table style="margin-left:auto;margin-right:auto;font-size:10.0pt;width:800px;">
+                        <tr style="border:0;font-weight:bold;">
+                            <td class="text-left">From Pillar</td>
+                            <td>{{o.from_pillar}}</td>
+                            <td></td>
+                            <td class="text-left">To Pillar</td>
+                            <td>{{o.to_pillar}}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-left">Height above pillar</td>
+                            <td>{{o.inst_ht|floatformat:3}} m</td>
+                            <td></td>
+                            <td class="text-left">Height above pillar</td>
+                            <td>{{o.tgt_ht|floatformat:3}} m</td>
+                        </tr>
+                        <tr></tr>
+                        <tr>
+                            <th></th>
+                            <th class="text-center">Slope Distance (m)</th>
+                            <th class="text-center">Temperature (°C)</th>
+                            <th class="text-center">Pressure (hPa)</th>
+                            <th class="text-center">Humidity (%)</th>
+                        </tr>
+                        {% for i in o.grp_Bay %}
+                            {% if not i.slope_dist is null %}
+                            <tr style="border:0;">
+                                <td>{{forloop.counter}}</td>
+                                <td>{{i.slope_dist|floatformat:4}}</td>
+                                <td>{{i.Temp|floatformat:1}}</td>
+                                <td>{{i.Pres|floatformat:1}}</td>
+                                <td>{{i.Humid|floatformat:1}}</td>
+                            </tr>
+                            {% endif %}
+                         {% endfor %}
+                        <tr style="border:1;"></tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="text-left">Average</td>
+                            <td>{{o.slope_dist|floatformat:4}}</td>
+                            <td>{{o.Temp|floatformat:1}}</td>
+                            <td>{{o.Pres|floatformat:1}}</td>
+                            <td>{{o.Humid|floatformat:1}}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-left">Standard Deviation</td>
+                            <td>{{o.std_slope_dist|floatformat:4}}</td>
+                        </tr>
+                    </table>
+                 {% endfor %}
+            </div>
+            <div class="text-center">
+                <h2>Height Observations</h2>
+                <table style="margin-left:auto;margin-right:auto;font-size:10.0pt;width:800px;">
+                    <tr>
+                        <th class="text-center">Pillar</th>
+                        <th class="text-center">Reduced Level (m)</th>
+                        <th class="text-center">Standard Deviation (m)</th>
+                    </tr>
+
+                    {% for p in alignment_survey %}
+                    <tr>
+                        <td>{{ p.pillar }}</td>
+                        <td>{{ p.reduced_level|floatformat:3 }}</td>
+                        <td>{{ p.rl_uncertainty|floatformat:3 }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                <h2>Alignment Survey of Pillar Offsets</h2>
+                <table style="margin-left:auto;margin-right:auto;font-size:10.0pt;width:800px;">
+                    <tr>
+                        <th class="text-center">Surveyed From Pillar</th>
+                        <th class="text-center">To Pillar</th>
+                        <th class="text-center">Offset (m)</th>
+                        <th class="text-center">Average (m)</th>
+                        <th class="text-center">Standard Deviation (m)</th>
+                    </tr>
+                    {% for p in alignment_survey %}
+                        <tr>
+                            <td>
+                            {% for s in p.sets %}
+                                {{s.from_pillar}} <BR>
+                            {% endfor %}
+                            </td>
+                            <td style="vertical-align: top;"> {{p.pillar}} </td>
+                            <td>
+                            {% for s in p.sets %}
+                                {{s.observed_offset|floatformat:3}} <BR>
+                            {% endfor %}
+                            </td>
+                            <td style="vertical-align: bottom;">{{p.offset|floatformat:3}} </td>
+                            <td style="vertical-align: bottom;">{{p.OS_std_dev|floatformat:3}} </td>
+                        </tr>
+                  {% endfor %}
+                </table>
+            </div>
+            <div class="text-center">
+                <h2>Uncertainty Budget - Uncertainty Sources</h2>
+                <div class="flexbox-container_IB">
+                    <div class="flexbox-item_800_IB flexbox-item-left_IB"><p>Quantity of some uncertainties are distance dependent. Thus, the following two tables relate to the uncertainty budget for the certified distance between the first and last pillar only.</p></div>
+                </div>
+                <table style="margin-left:auto;margin-right:auto;font-size:10.0pt;width:800px;">
+                    <tr>
+                        <th>Group</th>
+                        <th>Description</th>
+                        <th>Type</th>
+                        <th>Distrubution</th>
+                        <th>Uncertainty</th>
+                        <th>Units</th>
+                        <th>Coverage Factor</th>
+                        <th>Degrees of Freedom</th>
+                    </tr>
+                    {% with certified_dists|last as cd %}
+                        {% for s in cd.uc_sources %}
+                            <tr>
+                                <td class="text-left">{{ s.group_verbose }}</td>
+                                <td class="text-left">{{ s.description }}</td>
+                                <td>{{ s.ab_type }}</td>
+                                <td>{{ s.distribution }}</td>
+                                {% if not s.units == 'm' %}
+                                    <td>{{ s.std_dev|multiply:s.k|sigfigs:2 }}</td>
+                                    <td>{{ s.units }}</td>
+                                {% else %}
+                                    <td>{{ s.std_dev|multiply:s.k|multiply:1000|sigfigs:2 }}</td>
+                                    <td>mm</td>
+                                {% endif %}
+                                <td>{{ s.k|floatformat:2 }}</td>
+                                <td>{{ s.degrees_of_freedom }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endwith %}
+                </table>
+            </div>
+            <div class="text-center">
+                <h2>Combined Uncertainty Budget - Total Distance Uncertainty</h2>
+                <table style="margin-left:auto;margin-right:auto;font-size:10.0pt;width:800px;">
+                    <tr>
+                        <th>Group</th>
+                        <th>Uncertainty</th>
+                        <th>Units</th>
+                        <th>Coverage Factor</th>
+                        <th>Degrees of Freedom</th>
+                        <th>Contribution to CDU* (mm)</th>
+                    </tr>
+                    {% with certified_dists|last as cd %}
+                        {% for s in cd.uc_budget.values %}
+                            <tr>
+                                <td class="text-left">{{ s.group_verbose }}</td>
+                                {% if not s.units == 'm' %}
+                                    <td>{{ s.std_dev|multiply:s.k|sigfigs:2 }}</td>
+                                    <td>{{ s.units }}</td>
+                                {% else %}
+                                    <td>{{ s.std_dev|multiply:s.k|multiply:1000|sigfigs:2 }}</td>
+                                    <td>mm</td>
+                                {% endif %}
+                                <td>{{ s.k|floatformat:2 }}</td>
+                                <td>{{ s.degrees_of_freedom|floatformat:2 }}</td>
+                                <td>{{ s.ui95|multiply:1000|sigfigs:2 }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endwith %}
+                </table>
+                <div class="flexbox-container_IB">
+                    <div class="flexbox-item_800_IB flexbox-item-right_IB"><i>*CDU - Certified Distance Uncertainty</i></div>
+                </div>
+                <div class="text-center">
+                    <h2>Uncertainty Groups Contribution to Certified Distances</h2>
+                    <div id="charts" class="flex flex-col justify-end items-center">
+                        <canvas id="Uncertainty-Chart" style="max-width:800px;height:800px"></canvas>
+                    </div>
+                </div>
+                <div class="flexbox-container_IB">
+                    <div class="flexbox-item_800_IB flexbox-item-right_IB"><i>* Click on legend items to toggle display</i></div>
+                </div>
+            </div>
+            <div class="text-center">
+                <h2>Table of Observations, Corrections, Uncertainties and Residuals</h2>
+                <div class="flexbox-container_IB">
+                    <div class="flexbox-item_800_IB flexbox-item-right_IB"><i>* Click the table headers to sort table</i></div>
+                </div>
+                <div class="text-center" style="overflow: scroll">
+                    <table id="myTable" border="1" style=";margin-left:auto;margin-right:auto;font-size:10.0pt;">
+                        <thead>
+                            <tr>
+                                <th class="text-center" colspan = '2'>Pillars</th>
+                                <th class="text-center" colspan = {{ edm_observations.0.grp_Bay|length }}>Raw Distances (m)</th>
+                                <th class="text-center" colspan = '2'>Average Distance</th>
+                                <th class="text-center" colspan = '2'></th>
+                                <th class="text-center" colspan = '4'>Corrections (mm)</th>
+                                <th></th>
+                                <th class="text-center" colspan = '9'>Uncertainties (mm)</th>
+                                <th class="text-center" colspan = '2'>Residuals</th>
+                            </tr>
+                            <tr>
+                                <th onclick="sortTable(0)" class="text-center">From</th>
+                                <th onclick="sortTable(1)" class="text-center">To</th>
+                                {% for s in edm_observations.0.grp_Bay %}
+                                    <th onclick="sortTable({{ forloop.counter0 }}+2)" class="text-center">Slope Dist. {{ forloop.counter }}</th>
+                                {% endfor %}
+                                {% with edm_observations|first as o %}
+                                    <th onclick="sortTable({{ o.grp_Bay|length }}+2)" class="text-center">Slope Dist. (m)</th>
+                                    <th onclick="sortTable({{ o.grp_Bay|length }}+3)" class="text-center">Dist. Std (mm)</th>
+                                    <th onclick="sortTable({{ o.grp_Bay|length }}+4)" class="text-center">Offset</th>
+                                    <th onclick="sortTable({{ o.grp_Bay|length }}+5)" class="text-center">Delta Height</th>
+                                    <th onclick="sortTable({{ o.grp_Bay|length }}+6)" class="text-center">EDMI Calibration</th>
+                                    <th onclick="sortTable({{ o.grp_Bay|length }}+7)" class="text-center">Atmospheric</th>
+                                    <th onclick="sortTable({{ o.grp_Bay|length }}+8)" class="text-center">Offset</th>
+                                    <th onclick="sortTable({{ o.grp_Bay|length }}+9)" class="text-center">Slope</th>
+                                    <th onclick="sortTable({{ o.grp_Bay|length }}+10)" class="text-center">Reduced Distance</th>
+                                    <!-- Uncertainty -->
+                                    <th onclick="sortTable({{ o.grp_Bay|length }}+11)" class="text-center">EDM Scale Factor</th>
+                                    <th onclick="sortTable({{ o.grp_Bay|length }}+12)" class="text-center">EDM Measurement</th>
+                                    <th onclick="sortTable({{ o.grp_Bay|length }}+13)" class="text-center">Temperature</th>
+                                    <th onclick="sortTable({{ o.grp_Bay|length }}+14)" class="text-center">Pressure</th>
+                                    <th onclick="sortTable({{ o.grp_Bay|length }}+15)" class="text-center">Humidity</th>
+                                    <th onclick="sortTable({{ o.grp_Bay|length }}+16)" class="text-center">Centring</th>
+                                    <th onclick="sortTable({{ o.grp_Bay|length }}+17)" class="text-center">Heights</th>
+                                    <th onclick="sortTable({{ o.grp_Bay|length }}+18)" class="text-center">Offsets</th>
+                                    <th onclick="sortTable({{ o.grp_Bay|length }}+19)" class="text-center">Total</th>
+                                    <!--LSA residuals -->
+                                    <th onclick="sortTable({{ o.grp_Bay|length }}+20)" class="text-center">Residual (mm)</th>
+                                    <th onclick="sortTable({{ o.grp_Bay|length }}+21)" class="text-center">Standard Residual</th>
+                                {% endwith %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for o in edm_observations %}
+                            <tr>
+                                <td>{{o.from_pillar}}</td>
+                                <td>{{o.to_pillar}}</td>
+                                <!--Raw-->
+                                {% for s in o.grp_Bay %}
+                                    <td>{{s.raw_slope_dist|floatformat:4}}</td>
+                                {% endfor %}
+                                <!--Avg, Std-->
+                                <td>{{o.raw_slope_dist|floatformat:5}}</td>
+                                <td>{{o.std_slope_dist|multiply:1000|floatformat:2}}</td>
+                                <!--OS, Delta Ht-->
+                                <td>{{o.delta_os|floatformat:3}}</td>
+                                <td>{{o.delta_height|floatformat:5}}</td>
+                                <!--Corrections-->
+                                <td>{{o.Calibration_Correction|multiply:1000|floatformat:2}}</td>
+                                <td>{{o.Mets_Correction|multiply:1000|floatformat:2}}</td>
+                                <td>{{o.Offset_Correction|multiply:1000|floatformat:2}}</td>
+                                <td>{{o.Slope_Correction|multiply:1000|floatformat:2}}</td>
+                                <td>{{o.Reduced_distance|floatformat:5}}</td>
+                                <!--Uncertainty-->
+                                <td>{{o.uc_budget.01.ui95|multiply:1000|floatformat:2}}</td>
+                                <td>{{o.uc_budget.02.ui95|multiply:1000|floatformat:2}}</td>
+                                <td>{{o.uc_budget.04.ui95|multiply:1000|floatformat:2}}</td>
+                                <td>{{o.uc_budget.05.ui95|multiply:1000|floatformat:2}}</td>
+                                <td>{{o.uc_budget.06.ui95|multiply:1000|floatformat:2}}</td>
+                                <td>{{o.uc_budget.09.ui95|multiply:1000|floatformat:2}}</td>
+                                <td>{{o.uc_budget.10.ui95|multiply:1000|floatformat:2}}</td>
+                                <td>{{o.uc_budget.11.ui95|multiply:1000|floatformat:2}}</td>
+                                <td>{{o.uc_combined.uc95|multiply:1000|floatformat:2}}</td>
+                                <td>{{o.residual|multiply:1000|floatformat:2}}</td>
+                                <td>{{o.std_residual|floatformat:2}}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="text-center">
+                <h2>Residuals From Least Squares Fit of The Baseline Measurements</h2>
+                <div id="charts" class="flex flex-col justify-end items-center">
+                    <canvas id="Residual-Chart" style="width:100%;max-width:800px"></canvas>
+                </div>
+                <div class="flexbox-container_IB">
+                    <div class="flexbox-item_800_IB flexbox-item-right_IB"><i> Note potential outliers indicated in </i><i style="color:red">(*) red</i><i> if detected</i></div>
+                </div>
+            </div>
+            <div class="text-center">
+                <h2>Comparison of Baseline Calibration History</h2>
+                <!--
+                Table of history of certified distances
+                -->
+                <table style="margin-left:auto;margin-right:auto;font-size:10.0pt;width:800px;">
+                    <tr>
+                        <th colspan = 2></th>
+                        <th colspan = {{ certified_dists|length }}>Difference to Previously Certified Distances (mm)</th>
+                    </tr>
+                    <tr>
+                        <th>Date</th>
+                        {% for cd in certified_dists %}
+                            <th>{{ cd.from_pillar }} - {{ cd.to_pillar }}</th>
+                        {% endfor %}
+                    </tr>
+                    {% for survey in baseline.history.values %}
+                        <tr>
+                            <td class="text-left">{{ survey.date }}</td>
+                            {% for bay in survey.bays %}
+                                <td class="text-left">{{ bay.diff_to_initial|multiply:1000|floatformat:2 }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <div class="text-center">
+                <h2>Plot of Baseline Calibration History</h2>
+                <div id="charts" class="flex flex-col justify-end items-center">
+                    <canvas id="baseline-history-Chart" style="max-width:800px"></canvas>
+                </div>
+                <div class="flexbox-container_IB">
+                    <div class="flexbox-item_800_IB flexbox-item-right_IB"><i>* Click on legend items to toggle display</i></div>
+                </div>
+            </div>
+            <div class="text-center">
+                <h2>Calibration History - EDMI Scale Factor Drift Rate</h2>
+                <div id="charts" class="flex flex-col justify-end items-center">
+                    <canvas id="edm-drift-Chart" style="max-width:800px"></canvas>
+                </div>
+            </div>
+            <h2 style="text-align:center">Report Notes</h2>
+            <div class="flexbox-container_IB">
+                <div class="flexbox-item_800_IB flexbox-item-left_IB">
+                    {% for n in report_notes %}
+                        <p>{{forloop.counter}}. {{n}}</p>
+                    {% endfor %}
+                 </div>
+            </div>
+            <h2 style="text-align:center">Data Warnings</h2>
+            <div class="flexbox-container_IB">
+                <div class="flexbox-item_800_IB flexbox-item-left_IB">
+                    {% for w in Check_Errors.Warnings %}
+                        <p>{{forloop.counter}}. {{w}}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <form id="Hidden" action="" class="site-form" method="post" enctype="multipart/form-data">
+            <div class="flexbox-container_IB">
+                <div class="flexbox-item_800_IB flexbox-item-button_IB">
+                    <a href= "{% url 'baseline_calibration:calibrate2' id=pillar_survey.pk %}" class="submit-button bg-green-500 hover:bg-green-400" style="text-align: center">Back</a>
+                    <a href= "{% url 'baseline_calibration:pillar_survey_del' id=pillar_survey.pk %}" class="submit-button bg-red-500 hover:bg-green-400" style="text-align: center"> Cancel</a>
+                    <button type="submit" class="submit-button bg-green-500 hover:bg-green-400" >Save</button>
+                </div>
+            </div>
+            <div style="display:None;">
+                {% csrf_token %}
+                {% for form in hidden %}
+                    {{ form.management_form }}
+                    {% for field in form %}
+                        <p>{{ field }}</p>
+                            {% for error in field.errors %}
+                                <p style="color:Red;">{{ error }}</p>
+                            {% endfor %}
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        </form>
+</article>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@0.1.2"></script>
+<script>
+
+// "Script to generate the Residuals scatter plot"
+
+let Data0 = {{residual_chart|safe}}.map(v => ({ x: v.Reduced_distance.toFixed(5),
+                                                    y: (v.residual*1000).toFixed(2)}));
+let dColour = [];
+let lbls = [];
+for (let i = 0; i < {{residual_chart|safe}}.length; i++) {
+    if (Math.abs({{residual_chart|safe}}[i].std_residual) > {{pillar_survey.outlier_criterion}}) {
+        dColour.push("#FF0000");
+        lbls.push('Potential Outlier: (' + {{residual_chart|safe}}[i].from_pillar + ' - ' + {{residual_chart|safe}}[i].to_pillar + ') ' +
+        'Standarized Residual: ' + {{residual_chart|safe}}[i].std_residual.toFixed(2))
+    } else {
+        dColour.push("#0033CC");
+        lbls.push('(' + {{residual_chart|safe}}[i].from_pillar + ' - ' + {{residual_chart|safe}}[i].to_pillar + ') ' +
+        'Standarized Residual: ' + {{residual_chart|safe}}[i].std_residual.toFixed(2))
+    }
+}
+
+new Chart("Residual-Chart", {
+  type: "scatter",
+  data: {
+    labels: lbls,
+    datasets: [{
+      pointRadius: 2,
+      pointHoverRadius: 5,
+      pointBackgroundColor: dColour,
+      data: Data0,
+      fill: false,
+      tension: 0
+    }]
+  },
+  options: {
+    legend: {display: false},
+    tooltips: {
+           callbacks: {
+              label: function(tooltipItem, data) {
+                 var label = data.labels[tooltipItem.index];
+                 return label;
+              }
+           }
+        },
+    scales: {
+      xAxes: [{
+          scaleLabel: {display: true,
+            labelString: 'Distance (m)'}
+      }],
+      yAxes: [{
+          scaleLabel: {display: true,
+             labelString: 'Residuals (mm)'}
+      }],
+    }
+  }
+});
+
+</script>
+
+<script>
+// Script to produce the bar chart for Uncertainty
+
+new Chart(document.getElementById("Uncertainty-Chart"), {
+    type: 'horizontalBar',
+    data: {
+      labels: [{% for uc in certified_dists.0.uc_budget.values %}
+          '{{ uc.group_verbose|safe }}',{% endfor %}],
+      datasets: [{% for d in certified_dists %}
+                {
+                  label: "{{ d.from_pillar|safe }} - {{ d.to_pillar|safe }} ({{ d.Reduced_distance|floatformat:4 }}m)",
+                  barPercentage: 0.8,
+                  backgroundColor: [{% for uc in d.uc_budget.values %}'{{ uc.chart_colour }}', {% endfor %}],
+                  data: [{% for uc in d.uc_budget.values %}
+                      {{ uc.ui95|multiply:1000|sigfigs:2 }},{% endfor %}]
+                },{% endfor %}
+      ]
+    },
+    options: {
+      legend: { display: true },
+      scales: {
+        xAxes: [{
+               scaleLabel: {display: true,
+               labelString: 'Uncertainty (mm)'}
+        }]
+        }}
+});
+
+</script>
+<script>
+// Script to produce the Comparison of baseline history bar graph
+
+new Chart(document.getElementById("baseline-history-Chart"), {
+    type: 'bar',
+    data: {
+      labels: [{% for d in certified_dists %}
+          '{{ d.from_pillar|safe }} - {{ d.to_pillar|safe }} ({{ d.Reduced_distance|floatformat:4 }}m)',{% endfor %}],
+      datasets: [{% for survey in baseline.history.values %}
+                {
+                  label: "{{ survey.date|safe }}",
+                  barPercentage: 0.8,
+                  backgroundColor: [{% for p in survey.bays %}'{{ p.chart_colour }}', {% endfor %}],
+                  data: [{% for p in survey.bays %}
+                      {{ p.diff_to_initial|multiply:1000|floatformat:2 }},{% endfor %}]
+                },{% endfor %}
+      ]
+    },
+    options: {
+      legend: { display: true },
+      scales: {
+        xAxes: [{
+               scaleLabel: {display: true,
+               labelString: 'Distance (m)'}
+        }],
+        yAxes: [{
+          scaleLabel: {display: true,
+             labelString: 'Difference to Initial Certified Distance (mm)'}
+        }],
+      }
+    }
+});
+
+</script>
+<script>
+// Script to produce the EDMI history and scale factor drift over time line graph
+
+let Data1 = {{calib.edmi_drift.xyValues|safe}}.map(v => ({ x: v.x, y: v.y }));
+let Data2 = {{calib.edmi_drift.xyTrend|safe}}.map(v => ({ x: v.x, y: v.y }));
+
+new Chart("edm-drift-Chart", {
+  type: "line",
+  data: {
+    datasets: [{
+      pointRadius: 2,
+      pointBackgroundColor: "#0033CC",
+      data: Data1,
+      fill: false,
+      tension: 0
+    },{
+        pointRadius: 0,
+      borderColor: "#0000FF",
+      borderDash: [25, 5],
+      borderWidth: 1.5,
+      data: Data2,
+      fill: false,
+      tension: 0
+    }]
+  },
+  options: {
+    legend: {display: false},
+    scales: {
+      xAxes: [{
+          type: 'time',
+          time: {format:'YYYY-MM-DD',
+            unitStepSize: 1,
+            tooltipFormat: 'll'},
+          scaleLabel: {display: true,
+            labelString: 'Date'}
+      }],
+      yAxes: [{
+          scaleLabel: {display: true,
+             labelString: 'Scale Factor'}
+      }],
+    }
+  }
+});
+
+</script>
+<script>
+function sortTable(n) {
+  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+  table = document.getElementById("myTable");
+  switching = true;
+  //Set the sorting direction to ascending:
+  dir = "asc";
+  /*Make a loop that will continue until
+  no switching has been done:*/
+  while (switching) {
+    //start by saying: no switching is done:
+    switching = false;
+    rows = table.rows;
+    /*Loop through all table rows (except the
+    first, which contains table headers):*/
+    for (i = 2; i
+    < (rows.length - 1); i++) {
+      //start by saying there should be no switching:
+      shouldSwitch = false;
+      /*Get the two elements you want to compare,
+      one from current row and one from the next:*/
+      x = rows[i].getElementsByTagName("TD")[n];
+      y = rows[i + 1].getElementsByTagName("TD")[n];
+      /*check if the two rows should switch place,
+      based on the direction, asc or desc:*/
+      if (dir == "asc") {
+        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+          //if so, mark as a switch and break the loop:
+          shouldSwitch= true;
+          break;
+        }
+      } else if (dir == "desc") {
+        if (x.innerHTML.toLowerCase()
+        < y.innerHTML.toLowerCase()) {
+          //if so, mark as a switch and break the loop:
+          shouldSwitch = true;
+          break;
+        }
+      }
+    }
+    if (shouldSwitch) {
+      /*If a switch has been marked, make the switch
+      and mark that a switch has been done:*/
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+      //Each time a switch is done, increase this count by 1:
+      switchcount ++;
+    } else {
+      /*If no switching has been done AND the direction is "asc",
+      set the direction to "desc" and run the while loop again.*/
+      if (switchcount == 0 && dir == "asc") {
+        dir = "desc";
+        switching = true;
+      }
+    }
+  }
+}
+
+</script>
+
+{% endblock content %}
+

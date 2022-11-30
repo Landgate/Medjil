@@ -1,0 +1,4 @@
+{{ user.first_name }} has successfully calibrated a staff for {{ user.authority.authority }}. You can find the staff reports by logging in as geodesy@landgate.wa.gov.au 
+You have attempted to reset your password for email {{ email }}. Please follow the link below:
+{{ protocol }}://{{ domain }}{% url 'accounts:password_reset_confirm' uidb64=uid token=token %}
+to reset your password.
