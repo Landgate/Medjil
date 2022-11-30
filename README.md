@@ -1,4 +1,4 @@
-# ![Medjil](https://github.com/Landgate/Medjil/blob/main/assets/logo.png | width=40)
+# ![Medjil](https://github.com/Landgate/Medjil/blob/main/assets/logo.png|width=40)
 
 This is a django-based web application developed by Landgate for itself and other external users (e.g., surveyors and engineers) who are use require their measurement instruments to have calibration traceability back to a standard.
 
