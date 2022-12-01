@@ -1,0 +1,98 @@
+[
+    {
+      "model": "instruments.InstrumentMake",
+      "pk": 1,
+      "fields": {
+        "name": "LEICA",
+        "make_abbrev": "LEI"
+      }
+    },
+    {
+        "model": "instruments.InstrumentMake",
+        "pk": 2,
+        "fields": {
+          "name": "TRIMBLE",
+          "make_abbrev": "TRIM"
+        }
+    },
+    {
+        "model": "instruments.InstrumentMake",
+        "pk": 3,
+        "fields": {
+          "name": "TRIMBLE",
+          "make_abbrev": "TRIM"
+        }
+    },
+    {
+        "model": "instruments.InstrumentMake",
+        "pk": 4,
+        "fields": {
+          "name": "SOKKIA",
+          "make_abbrev": "SOKK"
+        }
+    },
+    {
+        "model": "instruments.InstrumentMake",
+        "pk": 5,
+        "fields": {
+          "name": "NIKON",
+          "make_abbrev": "NIK"
+        }
+    },
+    {
+        "model": "instruments.InstrumentMake",
+        "pk": 6,
+        "fields": {
+          "name": "PENTAX",
+          "make_abbrev": "PEN"
+        }
+    },
+    {
+        "model": "instruments.InstrumentMake",
+        "pk": 7,
+        "fields": {
+          "name": "WILD",
+          "make_abbrev": "WILD"
+        }
+    },
+    {
+        "model": "instruments.InstrumentMake",
+        "pk": 8,
+        "fields": {
+          "name": "ZEISS",
+          "make_abbrev": "ZEI"
+        }
+    },
+    {
+        "model": "instruments.InstrumentMake",
+        "pk": 9,
+        "fields": {
+          "name": "NEEDO",
+          "make_abbrev": "NEE"
+        }
+    },
+    {
+        "model": "instruments.InstrumentMake",
+        "pk": 10,
+        "fields": {
+          "name": "GEOMAX",
+          "make_abbrev": "GEO"
+        }
+    },
+    {
+        "model": "instruments.InstrumentMake",
+        "pk": 11,
+        "fields": {
+          "name": "TOPCON",
+          "make_abbrev": "TOP"
+        }
+    },
+    {
+        "model": "instruments.InstrumentMake",
+        "pk": 12,
+        "fields": {
+          "name": "OTHERS",
+          "make_abbrev": "OTH"
+        }
+    }
+  ]
