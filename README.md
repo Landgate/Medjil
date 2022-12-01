@@ -1,6 +1,10 @@
 # ![Medjil](https://github.com/Landgate/Medjil/blob/main/assets/logo-drawing.svg)
 
-This is a django-based web application developed by Landgate for itself and other external users (e.g., surveyors and engineers) who are use require their measurement instruments to have calibration traceability back to a standard.
+Individual states and territories have regulations that require the Surveyor-General (or an institution) to arrange for a standard or standards to be available to enable surveyors to comply with requirements to calibrate measuring equipment. Regular calibration of survey instrumentation is required to ensure the distances measured are legally traceable back to the national standard, currently provided by the National Measurement Act 1960.
+
+
+
+Medjil is a Django-based open-source web application developed by Landgate that allows for rigorous calibration of baselines (the standard) and survey equipment (e.g. EDM Instrumentation or levelling staff).
 
 ### Requirements
 Python 3.8 or higher plus see requirements.txt
