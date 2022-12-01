@@ -52,6 +52,8 @@ copy baseline_calibration\custom_migrations\*.py baseline_calibration\migrations
 copy calibrationsites\custom_migrations\*.py calibrationsites\migrations
 copy instruments\custom_migrations\*.py instruments\migrations
 copy rangecalibration\custom_migration\*.py rangecalibrations\migrations
+
+python manage.py migrate
 ```
 
 Open a web browser and enter address http://127.0.0.1:8000/ into the address bar. 
