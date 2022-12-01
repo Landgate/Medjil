@@ -51,7 +51,7 @@ copy accounts\custom_migrations\*.py accounts\migrations
 copy baseline_calibration\custom_migrations\*.py baseline_calibration\migrations
 copy calibrationsites\custom_migrations\*.py calibrationsites\migrations
 copy instruments\custom_migrations\*.py instruments\migrations
-copy rangecalibration\custom_migration\*.py rangecalibrations\migrations
+copy rangecalibration\custom_migration\*.py rangecalibration\migrations
 
 python manage.py migrate
 ```
