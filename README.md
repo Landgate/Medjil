@@ -45,6 +45,15 @@ This is the root user and has all the privillages and access.
 python manage.py runserver
 ```
 
+### Load initial data using custom migrations
+```
+copy accounts\custom_migrations\*.py accounts\migrations
+copy baseline_calibration\custom_migrations\*.py baseline_calibration\migrations
+copy calibrationsites\custom_migrations\*.py calibrationsites\migrations
+copy instruments\custom_migrations\*.py instruments\migrations
+copy rangecalibration\custom_migration\*.py rangecalibrations\migrations
+```
+
 Open a web browser and enter address http://127.0.0.1:8000/ into the address bar. 
 # ![Medjil](https://github.com/Landgate/Medjil/blob/main/assets/HomePage.PNG)
 
