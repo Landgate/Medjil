@@ -60,7 +60,7 @@ Open a web browser and enter address http://127.0.0.1:8000/ into the address bar
 # ![Medjil](https://github.com/Landgate/Medjil/blob/main/assets/HomePage.PNG)
 
 ### Test Data 
-Use the sample datasets in the folder .\Test Data\ do do some test calibrations. 
+Use the sample datasets in the folder .\Test Data\ to conduct some test calibrations. 
 
 
 ### Authors
