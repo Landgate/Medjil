@@ -611,7 +611,6 @@ def calibrate2(request,id):
                      'chart_colour':'#808080'}
                     )
             baseline['history'] = surveys
-            print(matrix_y)
             context = {'pillar_survey':pillar_survey,
                        'calib':calib,
                        'residual_chart':residual_chart,
