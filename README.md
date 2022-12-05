@@ -45,15 +45,6 @@ python manage.py makemigrations
 python manage.py migrate
 ```
 
-### Create superuser for admin
-```
-python manage.py createsuperuser
-```
-Wait for the prompt and enter the email and password.  
-&nbsp;&nbsp;&nbsp;&nbsp;**email**: ``admin@admin.com``  
-&nbsp;&nbsp;&nbsp;&nbsp;**password**: ``admin``  
-This is the root user and has all the privillages and access. 
-
 ### Load initial data using custom migrations
 ```
 copy accounts\custom_migrations\*.py accounts\migrations
@@ -70,8 +61,14 @@ python manage.py runserver
 ```
 
 Open a web browser and enter address http://127.0.0.1:8000/ into the address bar. 
+
+Login to Medjil using the email and password.  
+&nbsp;&nbsp;&nbsp;&nbsp;**email**: ``admin@admin.com``  
+&nbsp;&nbsp;&nbsp;&nbsp;**password**: ``admin``  
+
 # ![Medjil](https://github.com/Landgate/Medjil/blob/main/assets/HomePage.PNG)
 
+This is the root user and has all the privillages and access. 
 ### Test Data 
 Use the sample datasets in the folder .\Test Data\ to conduct some test calibrations. 
 
