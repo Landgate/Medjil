@@ -13,7 +13,7 @@ from django.core.files import File
 calibrationguides = [
     {'title' : 'EDM Baseline Calibration Instruction', 
      'thumbnail': 'CalibrationInstruction/Curtin/baseline/EDM Calibration Instruction/thumbnail_total_station.png',
-     'content':"""<h1>1. Introduction</h1>
+     'content':r"""<h1>1. Introduction</h1>
 
 <p>Under the Licensed Surveyors (General Surveying Practice) Regulations 1961, regulation 20, the Surveyor General is to arrange for a standard or standards to be available to enable surveyors to comply with sub regulation 20(1). This sub regulation requires a surveyor to calibrate measuring equipment at regular intervals, not exceeding 2 years, and in accordance with acceptable practices.
 
@@ -214,7 +214,7 @@ Baseline measurements must be performed in accordance with the ISO17123-4:2012 O
     },
     {'title' : 'EDMI Calibration Instruction', 
      'thumbnail': 'CalibrationInstruction/Curtin/edmi/EDMI Calibration Instruction/thumbnail_Picture2.124842.png',
-     'content':"""<h1>1. Introduction</h1>
+     'content':r"""<h1>1. Introduction</h1>
 
 <p>Electronic Distance Measurement (EDM) instruments (EDM and prism => EDMI)  are commonly used for measuring length. Regular calibration of these instruments is required to ensure the distances measured by these instruments are legally traceable back to the national and international standards. It is recommended  EDMI should be calibrated every 6 months or after service or repair.</p>
 
@@ -350,7 +350,7 @@ Baseline measurements must be performed in accordance with the ISO17123-4:2012 O
     },
     {'title' : 'Staff Calibration at Boya', 
      'thumbnail': 'CalibrationInstruction/Boya/range/Staff Calibration at Boya/thumbnail_Staff_icon_Vs87ZDG.PNG',
-     'content':"""<h1>1. Preamble</h1>
+     'content':r"""<h1>1. Preamble</h1>
 <p>The Landgate provides barcode staff calibration range (the Range) located at the Land Surveyors Licensing Board's examination site at Boya. The site consists of 2 observing pillars and a series of 21 stainless steel pins set in a solid granite outcrop.</p>
 
 <p>The pins have been placed at optimum distances from the observing pillars and allows for calibrating staff up to 4 metre height. 
@@ -451,7 +451,7 @@ Baseline measurements must be performed in accordance with the ISO17123-4:2012 O
 
 tech_manual = {'manual_type':'tbaseline',
                'title': 'EDM Calibration Technical Manual',
-               'content':"""<!DOCTYPE html>
+               'content':r"""<!DOCTYPE html>
 <html>
   <head>
   	<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
@@ -1715,6 +1715,7 @@ class Migration(migrations.Migration):
 
 	dependencies = [
 		('calibrationguide', '0001_initial'),
+		('calibrationsites', '0003_auto_Create_Default_Sites'),
 	]
 
 	operations = [

@@ -51,7 +51,7 @@ class Uncertainty_Budget(models.Model):
     name = models.CharField(max_length=30, unique= False)
     company = models.ForeignKey(Company, on_delete = models.PROTECT, null=False)
     std_dev_of_zero_adjustment = models.DecimalField(max_digits=5, decimal_places=4,
-                 validators=[MinValueValidator(0), MaxValueValidator(0.01)],
+                 validators = [MinValueValidator(0.00005)],
                  help_text="Standard deviation applied to set of observations when all"
                            " measured distances in set of observations are the same. (m)")
 
@@ -220,7 +220,7 @@ class Uncertainty_Budget_Source(models.Model):
 ################
 def get_upload_to_location(instance, filename):
     creation_date = date.today().strftime('%Y-%m-%d')
-    return '%s/%s/%s/%s/%s' % ('PillarSurvey', 
+    return '%s/%s/%s/%s/%s' % ('pillar_survey', 
                             instance.baseline.state.statecode.capitalize(),
                             instance.baseline.site_name, 
                             instance.accreditation.accredited_company.company_abbrev, 
