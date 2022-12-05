@@ -121,7 +121,7 @@ class StaffCalibrationRecord(models.Model):
 class AdjustedDataModel(models.Model):
     calibration_id = models.ForeignKey(StaffCalibrationRecord, 
                             null = True,
-                            on_delete = models.CASCADE,
+                            on_delete = models.RESTRICT,
                             verbose_name = 'Calibration Id')
     uscale_factor = models.FloatField(null=True, 
                                         validators = [MinValueValidator(0.99), MaxValueValidator(1.003)],

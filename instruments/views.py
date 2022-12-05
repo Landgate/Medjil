@@ -200,7 +200,7 @@ def register_edit(request, inst_disp, tab, id):
             if frm['unit_manu_unc_ppm'] == '1:x': 
                 instance.manu_unc_ppm = frm['manu_unc_ppm'] * 1e6
         if 'unit_freq' in frm.keys(): 
-            instance.freq = db_std_units(frm['freq'],frm['unit_freq'])
+            instance.freq = db_std_units(frm['frequency'],frm['unit_freq'])
         if 'unit_unit_length' in frm.keys():
             instance.unit_length = db_std_units(
                 frm['unit_length'],frm['unit_unit_length'])
@@ -521,6 +521,7 @@ STAFF_TEMPLATES  = {
                     "inst_staff_form": "instruments/inst_staff_create_form.html",
                     "inst_staff_record_form": "staffcalibration/staff_calibration_record_form.html",
                     }
+
 
 class StaffCreationWizard(LoginRequiredMixin, NamedUrlSessionWizardView):
     # get the template names and their steps

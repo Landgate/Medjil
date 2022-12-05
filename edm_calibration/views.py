@@ -37,7 +37,7 @@ def edm_calibration_home(request):
     context = {
         'pillar_surveys': pillar_surveys}
     
-    return render(request, 'edm_calibration/edm_calibration_home.html', context)
+    return render(request, 'edm_calibration/Home.html', context)
 
 
 def clear_cache(request):

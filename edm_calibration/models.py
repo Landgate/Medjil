@@ -13,7 +13,7 @@ from calibrationsites.models import (CalibrationSite,
 # Create your models here.
 def get_upload_to_location(instance, filename):
     creation_date = date.today().strftime('%Y-%m-%d')
-    return '%s/%s/%s/%s/%s' % ('EDMICalibration', 
+    return '%s/%s/%s/%s/%s' % ('edmi_calibration', 
                             instance.site.state.statecode.capitalize(),
                             instance.site.site_name, 
                             instance.edm.edm_specs.edm_owner.company_abbrev, 

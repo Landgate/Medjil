@@ -2,24 +2,22 @@
 {% load static %}
 {% block content %}
 <article class="post">
-	<!-- <div class="flexbox-container_IB"> -->
-        {% if messages %}
-            <ul class="message-list">
-                {% for message in messages %}
-                    <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-                {% endfor %}
-            </ul>
+	<div class="flexbox-container_IB">
+		{% if messages %}
+        <ul class="message-list">
+            {% for message in messages %}
+                <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
         <!-- <br> -->
-        {% endif %}	
-        <div class="post-header">
-            <h2 class="post-title">List of Levelling Staves and Certificates</h2>
-        </div>    
-        <div class="mt-2 mb-5 flex justify-center">
-            <a href="{% url 'staffcalibration:create_record' %}" class="px-3 py-2 border border-transparent text-lg leading-4 rounded text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
-                Add new calibration certificate
-            </a>  
-          </div> 
-        <div class="post-content">		      
+        {% endif %}		
+			<div class="post-content">		
+				<div class="text-center">
+				<br>
+				<h2>List of Levelling Staves and Certificates</h2>
+				<hr>
+				<br>
+				</div>           
             {% if staff_list %}
             <table style="table-layout: fixed; width: 100%">
                 <tr>
@@ -31,7 +29,6 @@
                     <th class="text-center">Field Book</th>
                     <th>Calibration Date</th>
                     <th class="text-center">Certificate</th>
-                    <th class="text-center">Action</th>
                 </tr>
                 {% for element in staff_list %}
                 <tr>
@@ -46,7 +43,7 @@
                             <a href="{{ element.field_url|default_if_none:'#' }}" target="__blank">
                                 <svg version="1.1" baseProfile="tiny" id="report-view" xmlns:x="&ns_extend;" xmlns:i="&ns_ai;" xmlns:graph="&ns_graphs;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/" x="0px" y="0px" width="16" height="16" viewBox="0 0 42 42" xml:space="preserve">
                                     <path fill-rule="evenodd" d="M22.5,1.5h-14c-2.55,0-3,0.561-3,3v32c0,2.49,0.55,3,3,3h24c2.5,0,3-0.47,3-3v-22h-13V1.5z M35.5,11.5l-10-10v10H35.5z"/>
-                                </svg>
+                                  </svg>
                             </a></td>
                         {% else %}
                             <a href="#">-</a>
@@ -58,37 +55,23 @@
                             <a href="{{ element.report_url|default_if_none:'#' }}" target="__blank">
                                 <svg version="1.1" baseProfile="tiny" id="report-view" xmlns:x="&ns_extend;" xmlns:i="&ns_ai;" xmlns:graph="&ns_graphs;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/" x="0px" y="0px" width="16" height="16" viewBox="0 0 42 42" xml:space="preserve">
                                     <path fill-rule="evenodd" d="M22.5,1.5h-14c-2.55,0-3,0.561-3,3v32c0,2.49,0.55,3,3,3h24c2.5,0,3-0.47,3-3v-22h-13V1.5z M35.5,11.5l-10-10v10H35.5z"/>
-                                </svg>
+                                  </svg>
                             </a>
                         {% elif element.field_book %}
-                            <a href="{% url 'staffcalibration:print_report' element.job_number %}" target="__blank">
+                            <a href="{% url 'staffcalibration:print-report' element.job_number %}" target="__blank">
                                 <svg version="1.1" baseProfile="tiny" id="report-view" xmlns:x="&ns_extend;" xmlns:i="&ns_ai;" xmlns:graph="&ns_graphs;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/" x="0px" y="0px" width="16" height="16" viewBox="0 0 42 42" xml:space="preserve">
                                     <path fill-rule="evenodd" d="M22.5,1.5h-14c-2.55,0-3,0.561-3,3v32c0,2.49,0.55,3,3,3h24c2.5,0,3-0.47,3-3v-22h-13V1.5z M35.5,11.5l-10-10v10H35.5z"/>
-                                </svg>
+                                  </svg>
                             </a>
                         {% endif %}
-                    </td>
-                    <td class="font-regular text-center">
-                        <a class="px-2" href="{% url 'staffcalibration:delete_record' element.id %}" onclick="return confirmation()">
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="red" class="bi bi-trash">
-                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"></path>
-                                <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"></path>
-                        </svg>
-                        </a>
                     </td>
                 </tr>               
                 {% endfor %}
             </table>
             {% endif %}
-        <div><i>* The most recent records only</i></div>
-    </div>
-	<!-- </div>	 -->
+            <div><i>* The most recent records only</i></div>
+			</div>
+	</div>	
 </article>
-
-<script>
-    function confirmation() {
-      return confirm('Do you want to delete the record? Please note that you will not be able to retreive this record later.');
-    }
-</script>
 	
 {% endblock %}
