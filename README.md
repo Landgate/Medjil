@@ -52,10 +52,6 @@ python manage.py createsuperuser
 Wait for the prompt and enter an email and password.  
 This is the root user and has all the privillages and access. 
 
-``` 
-python manage.py runserver
-```
-
 ### Load initial data using custom migrations
 ```
 copy accounts\custom_migrations\*.py accounts\migrations
@@ -66,6 +62,7 @@ copy rangecalibration\custom_migration\*.py rangecalibration\migrations
 copy calibrationguide\custom_migrations\*.py calibrationguide\migrations
 
 python manage.py migrate
+python manage.py runserver
 ```
 
 Open a web browser and enter address http://127.0.0.1:8000/ into the address bar. 
