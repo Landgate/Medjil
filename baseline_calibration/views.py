@@ -68,7 +68,7 @@ def calibration_home(request):
     context = {
         'pillar_surveys': pillar_surveys}
     
-    return render(request, 'baseline_calibration/baseline_calibration_home.html', context)
+    return render(request, 'baseline_calibration/Home.html', context)
 
 
 def clear_cache(request):
@@ -611,7 +611,7 @@ def calibrate2(request,id):
                      'chart_colour':'#808080'}
                     )
             baseline['history'] = surveys
-            print(pillar_survey)
+            print(matrix_y)
             context = {'pillar_survey':pillar_survey,
                        'calib':calib,
                        'residual_chart':residual_chart,
