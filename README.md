@@ -49,7 +49,9 @@ python manage.py migrate
 ```
 python manage.py createsuperuser
 ```
-Wait for the prompt and enter an email and password.  
+Wait for the prompt and enter the email and password.  
+&nbsp;&nbsp;&nbsp;&nbsp;**email**: ``admin@admin.com``  
+&nbsp;&nbsp;&nbsp;&nbsp;**password**: ``admin``  
 This is the root user and has all the privillages and access. 
 
 ### Load initial data using custom migrations
@@ -60,6 +62,8 @@ copy calibrationsites\custom_migrations\*.py calibrationsites\migrations
 copy instruments\custom_migrations\*.py instruments\migrations
 copy rangecalibration\custom_migration\*.py rangecalibration\migrations
 copy calibrationguide\custom_migrations\*.py calibrationguide\migrations
+set EMAIL_HOST_USER=admin@admin.com
+set EMAIL_HOST_PASSWORD=admin
 
 python manage.py migrate
 python manage.py runserver
