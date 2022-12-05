@@ -1715,6 +1715,7 @@ class Migration(migrations.Migration):
 
 	dependencies = [
 		('calibrationguide', '0001_initial'),
+		('calibrationsites', '0003_auto_Create_Default_Sites'),
 	]
 
 	operations = [
