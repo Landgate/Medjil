@@ -26,12 +26,19 @@ virtualenv .venv
 ```
 
 ### Clone the Medjil repo 
+The repository can be cloned with a git client or downloading the zip file.  
+Below are the commands for using Git commandline.
+  ```
+  git clone https://github.com/Landgate/Medjil.git
+  cd Medjil
+  pip install -r requirements.txt
+  ```
+If you are not familiar with a git client, download the zip file and extract the contents to your working directory.
+![image](https://user-images.githubusercontent.com/48744654/205527306-73fd1983-1669-429c-b7ff-bbe141248969.png)
 ```
-git clone https://github.com/Landgate/Medjil.git
-cd Medjil
+cd Medjil-main
 pip install -r requirements.txt
 ```
-
 ### Django Migration
 ```
 python manage.py makemigrations
@@ -42,7 +49,7 @@ python manage.py migrate
 ```
 python manage.py createsuperuser
 ```
-Wait for the prompt and enter an email and password. 
+Wait for the prompt and enter an email and password.  
 This is the root user and has all the privillages and access. 
 
 ``` 
