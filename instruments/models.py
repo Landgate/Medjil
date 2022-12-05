@@ -1,6 +1,5 @@
 #instruments
 import uuid
-from datetime import date
 from django.db import models
 from django.db.models import Q
 from django.urls import reverse
@@ -184,7 +183,7 @@ class EDM_Specification(models.Model):
         return f'{self.edm_model.make} {self.edm_model.model} ({self.edm_owner.company_abbrev})'
 ############################################################################################
 def get_upload_to_edm_photos(instance, filename):
-    modified_date = date.today().strftime('%Y%m%d')
+    modified_date = instance.modified_on.strftime('%Y%m%d')
     filename = filename.split('\\')[-1]
     return 'InstrumentPhotos/%s/EDM/%s/%s/%s' % (instance.edm_specs.edm_owner.company_abbrev, instance.edm_number, modified_date, filename)
 
@@ -252,7 +251,7 @@ class Prism_Specification(models.Model):
         return f'{self.prism_model.make} {self.prism_model.model} ({self.prism_owner.company_abbrev})'
 ############################################################################################
 def get_upload_to_prism_photos(instance, filename):
-    modified_date = date.today().strftime('%Y%m%d')
+    modified_date = instance.modified_on.strftime('%Y%m%d')
     filename = filename.split('\\')[-1]
     return 'InstrumentPhotos/%s/Prism/%s/%s/%s' % (instance.prism_specs.prism_owner.company_abbrev, instance.prism_number, modified_date, filename)
 class Prism_Inst (models.Model):
@@ -335,7 +334,7 @@ class Mets_Specification(models.Model):
 
 
 def get_upload_to_mets_photos(instance, filename):
-    modified_date = date.today().strftime('%Y%m%d')
+    modified_date = instance.modified_on.strftime('%Y%m%d')
     filename = filename.split('\\')[-1]
     return 'InstrumentPhotos/%s/%s/%s/%s' % (
         instance.mets_specs.mets_owner.company_abbrev, 
@@ -386,9 +385,9 @@ class Mets_Inst (models.Model):
 ## CALIBRATION CERTIFICATES ##
 ##############################
 def get_upload_to_edmi_certificate(instance, filename):
-    modified_date = date.today().strftime('%Y%m%d') #instance.modified_on.strftime('%Y%m%d')
+    modified_date = instance.modified_on.strftime('%Y%m%d')
     filename = filename.split('\\')[-1]
-    return 'CalibrationCertificates/%s/%s/%s/%s' % (
+    return 'calibration_certificates/%s/%s/%s/%s' % (
         instance.edm.edm_specs.edm_owner.company_abbrev, 
         instance.edm.edm_number, 
         modified_date, 
@@ -467,9 +466,9 @@ class EDMI_certificate (models.Model):
 
 
 def get_upload_to_mets_certificate(instance, filename):
-    modified_date = date.today().strftime('%Y%m%d')
+    modified_date = instance.modified_on.strftime('%Y%m%d')
     filename = filename.split('\\')[-1]
-    return 'CalibrationCertificates/%s/%s/%s/%s' % (
+    return 'calibration_certificates/%s/%s/%s/%s' % (
         instance.instrument.mets_specs.mets_owner.company_abbrev, 
         instance.instrument.mets_number, 
         modified_date, 
