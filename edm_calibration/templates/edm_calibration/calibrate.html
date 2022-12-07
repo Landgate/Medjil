@@ -23,7 +23,7 @@
                 </colgroup>
                 {% for field in form %}
                     {% if field.name != "auto_base_calibration" %}
-                        <tr class="tgl-{{ field.field.widget.attrs.class }}" style="display:none;">
+                        <tr id="tr-{{field.name}}" class="tgl-{{ field.field.widget.attrs.class }}" style="display:none;">
                             {% if field.field.is_checkbox %}
                                 <td></td>                                        
                                 <td>{{ field }}&emsp; &emsp; {{ field.label }} </td>
@@ -112,7 +112,6 @@ var currentTab = 0;
     {% endif %}
 {% endfor %}
 showTab(currentTab); // Display the current tab
-console.log(lastTab)
 
 function showTab(n) {
   // This function will display the specified tab of the form...
@@ -123,6 +122,7 @@ function showTab(n) {
   
   if (n == 0) {
     document.getElementById("prevBtn").style.display = "none";
+    tglCalibBase()    
   } else {
     document.getElementById("prevBtn").style.display = "inline";
   }
@@ -210,17 +210,21 @@ function ChgNoteFile() {
 function tglCalibBase() {
   // This function will hide/unhide the calibrated baseline select
   var chk = document.getElementById("id_auto_base_calibration");
-  var slct = document.getElementById("id_site");
-  var e = document.getElementsByClassName("tgl-bCalib_slct");
-  for (var i = 0; i < e.length; i++) {
-      if (chk.checked) {
-          e[i].style.display = 'none';
-          slct.disabled = false;
-      } else {
-          e[i].style.display = '';
-          slct.disabled = true;
-          slct.value = ''
-      }
+  var site = document.getElementById("id_site");
+  var tr_calib =  document.getElementById("tr-calibrated_baseline");
+  var slt_calib =  document.getElementById("id_calibrated_baseline");
+  
+  if (chk.checked) {
+      tr_calib.style.display = 'none';
+      site.disabled = false;
+      site.setAttribute("required", "");
+      slt_calib.removeAttribute("required");
+  } else {
+      tr_calib.style.display = '';
+      site.disabled = true;
+      site.value = ''
+      site.removeAttribute("required");
+      slt_calib.setAttribute("required", "");
   }
 }
 </script>

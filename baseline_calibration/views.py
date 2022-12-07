@@ -249,6 +249,7 @@ def calibrate2(request,id):
     pillar_survey_form.is_valid()
     pillar_survey = pillar_survey_form.cleaned_data
     pillar_survey.update({'pk':id})
+    pillar_survey.update({'variance':query_dict['variance']})
     
     # Create some forms to hide on report and commit when submitted
     cd_formset = formset_factory(Certified_DistanceForm, extra=0)    
@@ -320,11 +321,12 @@ def calibrate2(request,id):
         
         formset = zip(edm_obs_formset,raw_edm_obs.values())
         
-        return render(request, 'baseline_calibration/edm_rawdata.html', {
-                                                    'Page': 'Page 5 of 5',
-                                                    'id': id,
-                                                    'edm_obs_formset':edm_obs_formset,
-                                                    'formset': formset})
+        return render(request, 'baseline_calibration/edm_rawdata.html', 
+                      {'Page': 'Page 5 of 5',
+                       'id': id,
+                       'edm_obs_formset':edm_obs_formset,
+                       'pillar_survey': pillar_survey,
+                       'formset': formset})
     else:
         # This is a POST request
         # Apply a mask to the raw observations and recalulate averages and offsets
@@ -665,11 +667,12 @@ def calibrate2(request,id):
             
             return render(request, 'baseline_calibration/calibrate_report.html', context)
    
-    return render(request, 'baseline_calibration/edm_rawdata.html',  {
-                                                'Page': 'Page 5 of 5',
-                                                'id': id,
-                                                'edm_obs_formset':edm_obs_formset,
-                                                'formset': formset})
+    return render(request, 'baseline_calibration/edm_rawdata.html', 
+                  {'Page': 'Page 5 of 5',
+                   'id': id,
+                   'edm_obs_formset':edm_obs_formset,
+                   'pillar_survey': pillar_survey,
+                   'formset': formset})
 
 
 @login_required(login_url="/accounts/login") 

@@ -72,7 +72,9 @@
                     <br><B>Manufacturers Uncertainty: </B>{{ pillar_survey.edm.edm_specs.manu_unc_const }}mm &plusmn {{ pillar_survey.edm.edm_specs.manu_unc_ppm }}ppm, k={{ pillar_survey.edm.edm_specs.manu_unc_k }}
                     <br><B>Carrier Wavelength: </B>{{ pillar_survey.edm.edm_specs.carrier_wavelength }}nm
                     <br><B>Calibration Date : </B>{{ calib.edmi.0.calibration_date }}
-                    <br><a href="{{ calib.edmi.0.calibration_date.certificate_upload.url }}" target="_blank">Download Calibration Certificate &#10515</a>
+                    {% if calib.edmi.0.certificate_upload %}
+                        <br><a href="{{ calib.edmi.0.certificate_upload.url }}" target="_blank">Download Calibration Certificate &#10515</a>
+                    {% endif %}
                 </div>
             </div>
             <div class="flexbox-container_IB">
@@ -97,7 +99,9 @@
                 <div class="flexbox-item_400_IB  flexbox-item-right_IB">
                     <br><br><B>Staff Length: </B>{{ pillar_survey.staff.staff_length }} m
                     <br><B>Calibration Date: </B>{{ calib.staff.calibration_date }}
-                    <br><a href="{{ calib.staff.calibration_date.certificate_upload.url }}" target="_blank">Download Calibration Certificate &#10515</a>
+                    {% if calib.staff.calibration_date.certificate_upload %}
+                        <br><a href="{{ calib.staff.calibration_date.certificate_upload.url }}" target="_blank">Download Calibration Certificate &#10515</a>
+                    {% endif %}
                 </div>
             </div>
             <div class="flexbox-container_IB">
@@ -110,7 +114,9 @@
                 <div class="flexbox-item_400_IB  flexbox-item-right_IB">
                     <br><br><B>Manufacturers Uncertainty: </B>{{ pillar_survey.thermometer.mets_specs.manu_unc_const }} &#186C, k={{ pillar_survey.thermometer.mets_specs.manu_unc_k }}
                     <br><B>Calibration Date: </B>{{ calib.them.calibration_date }}
-                    <br><a href="{{ calib.them.calibration_date.certificate_upload.url }}" target="_blank">Download Calibration Certificate &#10515</a>
+                    {% if calib.them.calibration_date.certificate_upload %}
+                        <br><a href="{{ calib.them.calibration_date.certificate_upload.url }}" target="_blank">Download Calibration Certificate &#10515</a>
+                    {% endif %}
                 </div>
             </div>
             <div class="flexbox-container_IB">
@@ -123,7 +129,9 @@
                 <div class="flexbox-item_400_IB  flexbox-item-right_IB">
                     <br><br><B>Manufacturers Uncertainty: </B>{{ pillar_survey.barometer.mets_specs.manu_unc_const }} hPa, k={{ pillar_survey.barometer.mets_specs.manu_unc_k }}
                     <br><B>Calibration Date: </B>{{ calib.baro.calibration_date }}
-                    <br><a href="{{ calib.baro.calibration_date.certificate_upload.url }}" target="_blank">Download Calibration Certificate &#10515</a>
+                    {% if calib.baro.calibration_date.certificate_upload %}
+                        <br><a href="{{ calib.baro.calibration_date.certificate_upload.url }}" target="_blank">Download Calibration Certificate &#10515</a>
+                    {% endif %}
                 </div>
             </div>
             <div class="flexbox-container_IB">
@@ -136,7 +144,9 @@
                 <div class="flexbox-item_400_IB  flexbox-item-right_IB">
                     <br><br><B>Manufacturers Uncertainty: </B>{{ pillar_survey.hygrometer.mets_specs.manu_unc_const }} &#37, k={{ pillar_survey.hygrometer.mets_specs.manu_unc_k }}
                     <br><B>Calibration Date: </B>{{ calib.hygro.calibration_date }}
-                    <br><a href="{{ calib.hygro.calibration_date.certificate_upload.url }}" target="_blank">Download Calibration Certificate &#10515</a>
+                    {% if calib.hygro.calibration_date.certificate_upload %}
+                        <br><a href="{{ calib.hygro.calibration_date.certificate_upload.url }}" target="_blank">Download Calibration Certificate &#10515</a>
+                    {% endif %}
                 </div>
             </div>
             <div class="flexbox-container_IB">
@@ -567,7 +577,11 @@
             <div class="flexbox-container_IB">
                 <div class="flexbox-item_800_IB flexbox-item-button_IB">
                     <a href= "{% url 'baseline_calibration:calibrate2' id=pillar_survey.pk %}" class="submit-button bg-green-500 hover:bg-green-400" style="text-align: center">Back</a>
-                    <a href= "{% url 'baseline_calibration:pillar_survey_del' id=pillar_survey.pk %}" class="submit-button bg-red-500 hover:bg-green-400" style="text-align: center"> Cancel</a>
+                    {% if pillar_survey.variance is not null %}
+                        <a href= "{% url 'baseline_calibration:calibration_home' %}" class="submit-button bg-red-500 hover:bg-green-400" style="text-align: center"> Cancel</a>
+                    {% else %}
+                        <a href= "{% url 'baseline_calibration:pillar_survey_del' id=pillar_survey.pk %}" class="submit-button bg-red-500 hover:bg-green-400" style="text-align: center"> Cancel</a>
+                    {% endif %}
                     <button type="submit" class="submit-button bg-green-500 hover:bg-green-400" >Save</button>
                 </div>
             </div>

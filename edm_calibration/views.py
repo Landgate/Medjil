@@ -59,11 +59,7 @@ def pillar_survey_del(request, id):
 def calibrate1(request, id):
     if id == 'None':
         qs=''
-        if 'calibrate_e' in request.session:
-            ini_data = request.session['calibrate_e']
-        else:
-            ini_data = {'computation_date':date.today().isoformat()}
-
+        ini_data = {'computation_date':date.today().isoformat()}
         pillar_survey = CalibrateEdmForm(request.POST or None,
                                 request.FILES or None,
                                 user=request.user,
@@ -181,6 +177,7 @@ def calibrate2(request,id):
     pillar_survey_form.is_valid()
     pillar_survey = pillar_survey_form.cleaned_data
     pillar_survey.update({'pk':id})
+    pillar_survey.update({'variance':query_dict['variance']})
     
     # Create form to hide on report and commit when submitted
     pillar_survey_update = PillarSurveyUpdateForm(request.POST or None)
@@ -201,11 +198,12 @@ def calibrate2(request,id):
     if request.method == 'GET':        
         formset = zip(edm_obs_formset, raw_edm_obs.values())
         
-        return render(request, 'edm_calibration/edm_rawdata.html', {
-                                                    'Page': 'Page 5 of 5',
-                                                    'id': id,
-                                                    'edm_obs_formset':edm_obs_formset,
-                                                    'formset': formset})
+        return render(request, 'edm_calibration/edm_rawdata.html', 
+                      {'Page': 'Page 5 of 5',
+                       'id': id,
+                       'edm_obs_formset': edm_obs_formset,
+                       'pillar_survey': pillar_survey,
+                       'formset': formset})
     else:
         # This is a POST request
         # Apply a mask to the raw observations and recheck errors

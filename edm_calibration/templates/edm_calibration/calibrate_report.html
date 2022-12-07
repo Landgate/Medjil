@@ -52,10 +52,6 @@
                 <div class="flexbox-item_400_IB  flexbox-item-right_IB">
                     <br><B>Manufacturers Uncertainty: </B>{{ pillar_survey.edm.edm_specs.manu_unc_const }}mm &plusmn {{ pillar_survey.edm.edm_specs.manu_unc_ppm }}ppm, k={{ pillar_survey.edm.edm_specs.manu_unc_k }}
                     <br><B>Carrier Wavelength: </B>{{ pillar_survey.edm.edm_specs.carrier_wavelength }}nm
-                    <br><B>Calibration Date : </B>{{ calib.edmi.0.calibration_date }}
-                    {% if calib.edmi.0.calibration_date.certificate_upload %}
-                        <br><a href="{{ calib.edmi.0.calibration_date.certificate_upload.url }}" target="_blank">Download Calibration Certificate &#10515</a>                
-                    {% endif %}
                 </div>
             </div> 
             <div class="flexbox-container_IB">
@@ -79,8 +75,8 @@
                 <div class="flexbox-item_400_IB  flexbox-item-right_IB">
                     <br><br><B>Manufacturers Uncertainty: </B>{{ pillar_survey.thermometer.mets_specs.manu_unc_const }} &#186C, k={{ pillar_survey.thermometer.mets_specs.manu_unc_k }}
                     <br><B>Calibration Date: </B>{{ calib.them.calibration_date }}
-                    {% if calib.them.calibration_date.certificate_upload %}
-                        <br><a href="{{ calib.them.calibration_date.certificate_upload.url }}" target="_blank">Download Calibration Certificate &#10515</a>                 
+                    {% if calib.them.certificate_upload %}
+                        <br><a href="{{ calib.them.certificate_upload.url }}" target="_blank">Download Calibration Certificate &#10515</a>                 
                     {% endif %}
                 </div>
             </div> 
@@ -94,8 +90,8 @@
                 <div class="flexbox-item_400_IB  flexbox-item-right_IB">
                     <br><br><B>Manufacturers Uncertainty: </B>{{ pillar_survey.barometer.mets_specs.manu_unc_const }} hPa, k={{ pillar_survey.barometer.mets_specs.manu_unc_k }}                  
                     <br><B>Calibration Date: </B>{{ calib.baro.calibration_date }}
-                    {% if calib.baro.calibration_date.certificate_upload %}
-                        <br><a href="{{ calib.baro.calibration_date.certificate_upload.url }}" target="_blank">Download Calibration Certificate &#10515</a>                
+                    {% if calib.baro.certificate_upload %}
+                        <br><a href="{{ calib.baro.certificate_upload.url }}" target="_blank">Download Calibration Certificate &#10515</a>                
                     {% endif %}
                 </div>
             </div>             
@@ -109,8 +105,8 @@
                 <div class="flexbox-item_400_IB  flexbox-item-right_IB">
                     <br><br><B>Manufacturers Uncertainty: </B>{{ pillar_survey.hygrometer.mets_specs.manu_unc_const }} &#37, k={{ pillar_survey.hygrometer.mets_specs.manu_unc_k }}
                     <br><B>Calibration Date: </B>{{ calib.hygro.calibration_date }}     
-                    {% if calib.hygro.calibration_date.certificate_upload %}
-                        <br><a href="{{ calib.hygro.calibration_date.certificate_upload.url }}" target="_blank">Download Calibration Certificate &#10515</a>                  
+                    {% if calib.hygro.certificate_upload %}
+                        <br><a href="{{ calib.hygro.certificate_upload.url }}" target="_blank">Download Calibration Certificate &#10515</a>                  
                     {% endif %}
                 </div>
             </div>                    
@@ -132,7 +128,7 @@
                 <B>Date of Baseline Calibration Survey: </B>{{ baseline.calibrated_baseline.survey_date }}
                 <br><B>Date of Calibration Certification: </B>{{ baseline.calibrated_baseline.computation_date }}
                 {% if baseline.calibrated_baseline.accreditation.certificate_upload %}
-                    <br><a href="{{ baseline.calibrated_baseline.accreditation.certificate_upload.url }}" target="_blank">Download Acreditation Certificate &#10515</a>                
+                    <br><a href="{{ baseline.calibrated_baseline.accreditation.certificate_upload.url }}" target="_blank">Download Acreditation Certificate &#10515</a>
                 {% endif %}
             	</div>
             </div>
@@ -222,25 +218,25 @@
             <h2 class="text-center">Estimated Instrument Correction</h2>
 						<div class="flexbox-container_IB">
                 <div class="flexbox-item_800_IB">                
-		                <p>The estimated instrument correction (IC) is to be added to the slope distances measured by set of {{ pillar_survey.edm.edm_specs.edm_model.make.make }} {{ pillar_survey.edm.edm_specs.edm_model.model }} EDM instrument (S/N:{{ pillar_survey.edm.edm_number }}) and prism (S/N:{{ pillar_survey.prism.prism_number }} ) using the following formula:</p>    	                
+		                <p>The estimated instrument correction (IC) is to be added to the slope distances measured by EDMI set of {{ pillar_survey.edm.edm_specs.edm_model.make.make }} {{ pillar_survey.edm.edm_specs.edm_model.model }} EDM instrument (S/N:{{ pillar_survey.edm.edm_number }}) and prism (S/N:{{ pillar_survey.prism.prism_number }} ) using the following formula:</p>    	                
 		                {% if calib.edmi.0.parameters|length > 2 %}
 		                	<p class="text-center"><B>IC = zpc + scf * D + 1C * Sin(2 * &#8508 * D/U) + 2C * Cos(2 * &#8508 * D/U) + 3C * Sin(4 * &#8508 * D/U) + 4C * Cos(4 * &#8508 * D/U)</B></p>
 		                {% else %}
 		               		<p class="text-center"><B>IC = zpc + scf * D</B></p>
 		                {% endif %}
-		                Where:
-		                <br>
-		                <br&nbsp;&nbsp;&nbsp;&nbsp;IC = Instrument Correction (m)
-		                <br>&nbsp;&nbsp;&nbsp;&nbsp;D = Distance (m)
-		                <br>&nbsp;&nbsp;&nbsp;&nbsp;zpc = Zero Point Correction (m)
-		                <br>&nbsp;&nbsp;&nbsp;&nbsp;scf = Scale Correction Factor (1:x)
+		                <p>Where:
+		                <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IC = Instrument Correction (m)
+		                <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;D = Distance (m)
+		                <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;zpc = Zero Point Correction (m)
+		                <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;scf = Scale Correction Factor (1:x)
 		                {% if calib.edmi.0.parameters|length > 2 %}
-		                    <br>&nbsp;&nbsp;&nbsp;&nbsp;U = Instrument Unit Length (m)
-		                    <br>&nbsp;&nbsp;&nbsp;&nbsp;1C = 1 - Cyclic (1:x)
-		                    <br>&nbsp;&nbsp;&nbsp;&nbsp;2C = 2 - Cyclic (1:x)
-		                    <br>&nbsp;&nbsp;&nbsp;&nbsp;3C = 3 - Cyclic (1:x)
-		                    <br>&nbsp;&nbsp;&nbsp;&nbsp;4C = 4 - Cyclic (1:x)
-		                {% endif %}	                
+		                    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;U = Instrument Unit Length (m)
+		                    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1C = 1 - Cyclic (1:x)
+		                    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2C = 2 - Cyclic (1:x)
+		                    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3C = 3 - Cyclic (1:x)
+		                    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4C = 4 - Cyclic (1:x)
+		                {% endif %}
+		                </p>
 		            </div>		            
 		        </div>
 		        <div>
@@ -609,7 +605,11 @@
             <div class="flexbox-container_IB">
                 <div class="flexbox-item_800_IB flexbox-item-button_IB">
                     <a href= "{% url 'edm_calibration:calibrate2' id=pillar_survey.pk %}" class="submit-button bg-green-500 hover:bg-green-400" style="text-align: center">Back</a>
-                    <a href= "{% url 'edm_calibration:edm_calibration_home' %}" class="submit-button bg-red-500 hover:bg-green-400" style="text-align: center">Cancel</a>
+                    {% if pillar_survey.variance is not null %}
+                        <a href= "{% url 'edm_calibration:edm_calibration_home' %}" class="submit-button bg-red-500 hover:bg-green-400" style="text-align: center">Cancel</a>
+                    {% else %}
+                        <a href= "{% url 'edm_calibration:pillar_survey_del' id=pillar_survey.pk %}" class="submit-button bg-red-500 hover:bg-green-400" style="text-align: center"> Cancel</a>
+                    {% endif %}
                     <button type="submit" class="submit-button bg-green-500 hover:bg-green-400" >Save</button>
                 </div>
             </div>

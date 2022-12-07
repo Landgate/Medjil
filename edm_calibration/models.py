@@ -1,6 +1,7 @@
 from django.db import models
-from django.core.validators  import MaxValueValidator, MinValueValidator, DecimalValidator
+from django.core.validators  import MaxValueValidator, MinValueValidator
 from django.conf import settings
+from django.db.models import Q
 from datetime import date
 
 from baseline_calibration.models import (Uncertainty_Budget,
@@ -20,10 +21,10 @@ def get_upload_to_location(instance, filename):
                             creation_date+'-'+ filename)
 
 class uPillar_Survey(models.Model):
-   site = models.ForeignKey(CalibrationSite, on_delete = models.PROTECT, null = False,
+   site = models.ForeignKey(CalibrationSite, on_delete = models.PROTECT, null = True,
              help_text="Baseline certified distances")   
    auto_base_calibration = models.BooleanField(default=True)
-   calibrated_baseline = models.ForeignKey(Pillar_Survey, on_delete = models.SET_NULL, null = True,
+   calibrated_baseline = models.ForeignKey(Pillar_Survey, on_delete = models.PROTECT, null = True,
              help_text="Baseline certified distances")
    survey_date = models.DateField(null=False, blank=False)
    computation_date = models.DateField(null=False, blank=False)
@@ -109,6 +110,12 @@ class uPillar_Survey(models.Model):
 
    class Meta:
       ordering = ['edm','survey_date']
+      constraints = [
+            models.CheckConstraint(
+                check=Q(site__isnull=False) | Q(calibrated_baseline__isnull=False),
+                name='Both site and calibrated basline fields can not be null'
+            )
+        ]
 
    def __str__(self):
       return f'{self.job_number} - {self.edm} ({self.survey_date})'
