@@ -195,7 +195,7 @@ def register_edit(request, inst_disp, tab, id):
         # Convert input to database standard units
         if 'unit_manu_unc_const' in frm.keys():
             instance.manu_unc_const = db_std_units(
-                frm['manu_unc_const'],frm['unit_manu_unc_const'])
+                frm['manu_unc_const']*1000,frm['unit_manu_unc_const'])
         if 'unit_manu_unc_ppm' in frm.keys():                
             if frm['unit_manu_unc_ppm'] == '1:x': 
                 instance.manu_unc_ppm = frm['manu_unc_ppm'] * 1e6

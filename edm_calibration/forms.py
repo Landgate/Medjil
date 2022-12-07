@@ -63,7 +63,7 @@ class CalibrateEdmForm(forms.ModelForm):
            'site': forms.Select(attrs={'class': 'page0'}),
            'auto_base_calibration':forms.CheckboxInput(
                attrs={'onclick':'tglCalibBase()'}),
-           'calibrated_baseline': forms.Select(attrs={'class':'bCalib_slct'}),
+           'calibrated_baseline': forms.Select(attrs={'class':'page0'}),
            'computation_date': forms.DateInput(format=('%d-%m-%Y'),
                attrs={'type':'date', 'class': 'page0'}),
            'survey_date': forms.DateInput(format=('%d-%m-%Y'), 
