@@ -68,7 +68,7 @@ Login to Medjil using the email and password.
 
 # ![Medjil](https://github.com/Landgate/Medjil/blob/main/assets/HomePage.PNG)
 
-This is the root user and has all the privillages and access. 
+This is the root user and has all the privilages and access. 
 ### Test Data 
 Use the sample datasets in the folder .\Test Data\ to conduct some test calibrations. 
 
