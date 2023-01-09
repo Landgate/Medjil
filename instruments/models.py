@@ -10,11 +10,7 @@ User = settings.AUTH_USER_MODEL
 from accounts.models import CustomUser
 from accounts.models import Company
 from calibrationsites.models import CalibrationSite
-#####################################################################
-########################## SURVEY INSTRUMENTS #######################
-#####################################################################
-# class InstrumentType(models.Model):
-#     name = models.CharField(max_length=25,help_text="e.g., Digital Level, EDM", unique=True)
+from datetime import date
 
 class InstrumentMake(models.Model):
     make = models.CharField(max_length=25, validators=[MinLengthValidator(4)], help_text="e.g., LEICA, TRIMBLE, SOKKIA", unique=True)
@@ -183,7 +179,7 @@ class EDM_Specification(models.Model):
         return f'{self.edm_model.make} {self.edm_model.model} ({self.edm_owner.company_abbrev})'
 ############################################################################################
 def get_upload_to_edm_photos(instance, filename):
-    modified_date = instance.modified_on.strftime('%Y%m%d')
+    modified_date = date.today().strftime('%Y%m%d')
     filename = filename.split('\\')[-1]
     return 'InstrumentPhotos/%s/EDM/%s/%s/%s' % (instance.edm_specs.edm_owner.company_abbrev, instance.edm_number, modified_date, filename)
 
@@ -225,9 +221,10 @@ class EDM_Inst (models.Model):
 
 class Prism_Specification(models.Model):
     prism_owner = models.ForeignKey(Company, on_delete = models.SET_NULL, null = True, verbose_name="Prism Owner")
-    prism_model = models.ForeignKey(InstrumentModel,
-																limit_choices_to={'inst_type__exact': 'prism'},
-																on_delete = models.PROTECT)
+    prism_model = models.ForeignKey(
+        InstrumentModel,
+        limit_choices_to={'inst_type__exact': 'prism'},
+        on_delete = models.PROTECT)
     manu_unc_const = models.FloatField(
         validators = [MinValueValidator(0.0), MaxValueValidator(10.0)],
         help_text="Manufacturers centring accuracy = ±1mm",
@@ -251,7 +248,7 @@ class Prism_Specification(models.Model):
         return f'{self.prism_model.make} {self.prism_model.model} ({self.prism_owner.company_abbrev})'
 ############################################################################################
 def get_upload_to_prism_photos(instance, filename):
-    modified_date = instance.modified_on.strftime('%Y%m%d')
+    modified_date = date.today().strftime('%Y%m%d')
     filename = filename.split('\\')[-1]
     return 'InstrumentPhotos/%s/Prism/%s/%s/%s' % (instance.prism_specs.prism_owner.company_abbrev, instance.prism_number, modified_date, filename)
 class Prism_Inst (models.Model):
@@ -334,7 +331,7 @@ class Mets_Specification(models.Model):
 
 
 def get_upload_to_mets_photos(instance, filename):
-    modified_date = instance.modified_on.strftime('%Y%m%d')
+    modified_date = date.today().strftime('%Y%m%d')
     filename = filename.split('\\')[-1]
     return 'InstrumentPhotos/%s/%s/%s/%s' % (
         instance.mets_specs.mets_owner.company_abbrev, 
@@ -385,7 +382,7 @@ class Mets_Inst (models.Model):
 ## CALIBRATION CERTIFICATES ##
 ##############################
 def get_upload_to_edmi_certificate(instance, filename):
-    modified_date = instance.modified_on.strftime('%Y%m%d')
+    modified_date = date.today().strftime('%Y%m%d')
     filename = filename.split('\\')[-1]
     return 'calibration_certificates/%s/%s/%s/%s' % (
         instance.edm.edm_specs.edm_owner.company_abbrev, 
@@ -436,7 +433,7 @@ class EDMI_certificate (models.Model):
         null=True,blank = True)
         
     standard_deviation = models.FloatField(
-        validators = [MinValueValidator(0.00000), MaxValueValidator(0.10000)],
+        validators = [MinValueValidator(0.00000), MaxValueValidator(10.00000)],
         help_text="Results of measurement standard deviation (m)")
     degrees_of_freedom = models.IntegerField(
         validators = [MinValueValidator(0), MaxValueValidator(500)],
@@ -466,7 +463,7 @@ class EDMI_certificate (models.Model):
 
 
 def get_upload_to_mets_certificate(instance, filename):
-    modified_date = instance.modified_on.strftime('%Y%m%d')
+    modified_date = date.today().strftime('%Y%m%d')
     filename = filename.split('\\')[-1]
     return 'calibration_certificates/%s/%s/%s/%s' % (
         instance.instrument.mets_specs.mets_owner.company_abbrev, 
