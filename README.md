@@ -25,7 +25,7 @@ virtualenv .venv
 .\.venv\Scripts\activate
 ```
 
-### Clone the Medjil repo 
+### Clone the Medjil repo and install requirements
 The repository can be cloned with a git client or downloading the zip file.  
 Below are the commands for using Git commandline.
   ```
@@ -39,7 +39,7 @@ If you are not familiar with a git client, download the zip file and extract the
 cd Medjil-main
 pip install -r requirements.txt
 ```
-### Django Migration
+<!--- ### Django Migration
 ```
 python manage.py makemigrations
 python manage.py migrate
@@ -59,7 +59,11 @@ set EMAIL_HOST_PASSWORD=admin
 python manage.py migrate
 python manage.py runserver
 ```
-
+--->
+### Run a local server
+```
+python manage.py runserver
+```
 Open a web browser and enter address http://127.0.0.1:8000/ into the address bar. 
 
 Login to Medjil using the email and password.  
