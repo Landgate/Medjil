@@ -19,7 +19,12 @@ from .models import (
     CustomUser, 
     Calibration_Report_Notes)
 from staffcalibration.models import StaffCalibrationRecord
-from .forms import SignupForm, LoginForm, CustomUserChangeForm, CompanyForm
+from .forms import (
+    SignupForm, 
+    LoginForm, 
+    CustomUserChangeForm, 
+    CompanyForm, 
+    calibration_report_notesForm)
 
 
 # Create your views here.
@@ -246,11 +251,6 @@ def user_account(request):
     company_page_number = request.GET.get('page')
     company_page_obj = company_page.get_page(company_page_number)
     
-    # Calibrated Instruments # Staff
-    # staff_list = Staff.objects.filter(staff_owner__exact=request.user.company, calibration_date__isnull=False).distinct().order_by('staff_model'), '-calibration_date')[:10]
-    # staff_list = StaffCalibrationRecord.objects.filter(inst_staff__staff_owner=request.user.company).distinct().order_by('inst_staff__staff_model')
-    # staff_list = StaffCalibrationRecord.objects.all().distinct().order_by('inst_staff__staff_model')
-    
     context = {
         'this_user': this_user,
         'user_page_obj': user_page_obj,
@@ -286,12 +286,30 @@ def calibration_report_notes_list(request, report_disp):
     
 @login_required(login_url="/accounts/login")
 def calibration_report_notes_edit(request, report_disp, id):
+    if id == 'None':
+        form = calibration_report_notesForm(
+            request.POST or None, user=request.user)
+    else:
+        obj = get_object_or_404(Calibration_Report_Notes, id = id)
+        form = calibration_report_notesForm(
+            request.POST or None,
+            instance = obj, user = request.user)
+    
+    if not form.is_valid():
+        context = {'form': form}
+        tmplate = 'accounts/calibration_report_notes_edit.html'
+        return render(request, tmplate, context) 
+    
+    else:
+        obj = form.save(False)
+        obj.report_type = report_disp
+        obj.save()
         
-    return redirect ('instruments:calibration_report_notes_list', report_disp=report_disp)
+        return redirect ('accounts:calibration_report_notes_list', report_disp=report_disp)
 
 
 @login_required(login_url="/accounts/login")
-def calibration_report_notes_delete(request, report_disp):
+def calibration_report_notes_delete(request, report_disp, id):
     
     delete_obj = Calibration_Report_Notes.objects.get(id=id)
             
@@ -305,7 +323,7 @@ def calibration_report_notes_delete(request, report_disp):
     else:
         messages.error(request, "The record does not exists!")
     
-    return redirect ('instruments:calibration_report_notes_list', report_disp=report_disp)
+    return redirect ('accounts:calibration_report_notes_list', report_disp=report_disp)
     
     
     
