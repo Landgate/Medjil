@@ -98,12 +98,12 @@ class Calibration_Report_Notes(models.Model):
                  )
     note_type = models.CharField(max_length=1,
                  choices=note_types,
-                 help_text="Will this note appear accross all company reports",
+                 help_text="Will this note appear on all users reports or only reports for this company?",
                  unique=False,
                  )    
     note = models.TextField(null = False, blank = False,
                  verbose_name= 'Report Note',
-                 help_text="Notes to be detailed at the end of each report")
+                 help_text="Notes will be created at the end of each report")
 
     class Meta:
         ordering = ['company','report_type','note_type']

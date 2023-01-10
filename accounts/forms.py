@@ -84,6 +84,8 @@ class calibration_report_notesForm(forms.ModelForm):
         self.initial['company'] = user.company
         if not user.is_staff:
             self.fields['company'].disabled = True
+            self.fields['note_type'].disabled = True
+            self.initial['note_type'] = 'C'
 
     class Meta:
         model = Calibration_Report_Notes

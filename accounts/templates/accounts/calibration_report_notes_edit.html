@@ -1,0 +1,60 @@
+{% extends 'base_generic.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block content %} 
+
+<article class="post">
+    <div class="post-content">
+        <form action="" class="site-form" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-5 site-form-header bg-indigo-300 rounded px-2">
+                {% if form.instance.pk %}
+                    <h2 class="text-center">Edit Report Endnote</h2>
+                {% else %}
+                    <h2 class="text-center">Create Report Endnote</h2>
+                {% endif %}
+            </div>
+            <div class="mt-5 mb-3">
+                <!-- {{ form.errors }} -->
+                {% if form.errors or form.non_field_errors %}
+                    {% for error in form.non_field_errors %} 
+                        <p class="error error-danger">** {{ error }}</p>
+                    {% endfor %}
+                    <br>
+                {% endif %}
+            </div>
+            <table>
+                {% for field in form %}
+                    <tr>
+                        <td width="20%">
+                            <strong>{{ field.label_tag }}</strong>
+                        </td>
+                        <td width="80%"> {{ field }} 
+                            <!-- Errors -->
+                            {% for error in field.errors %}
+                                <p class="error error-danger">{{ error }}</p>
+                            {% endfor %}
+                            <!-- Help text -->
+                            {% if not field.field.widget.attrs.placeholder and field.help_text %}
+                                <p class="helptext">{{ field.help_text }}</p>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}               
+            </table>
+
+            {% if request.GET.next %}
+                <input type="hidden" name="next" value="{{ request.GET.next }}">
+            {% endif %}
+            <div class="button-container">
+                {% if request.GET.next %}
+                    <a href= {{ request.GET.next }} class="submit-button bg-red-500 hover:bg-green-400" style="text-align: center">Cancel</a>
+                {% endif %}
+                <button class="submit-button bg-green-500 hover:bg-green-400 text-base" type="submit" >Save</button>
+            </div>
+        </form>
+    </div>
+</article>
+
+{% endblock %}

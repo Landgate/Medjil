@@ -249,3 +249,15 @@ def report_notes_qry(company, report_type):
         report_notes = report_notes + (n.note.split('\n'))
 
     return report_notes
+
+def decrypt(en_str):
+    NORMAL_CHARS =  r'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 abcdefghijklmnopqrstuvwxyz.|(),;"!@#$%^&*()_-+={}[]\<>?/:'
+    ENCRYPT_CHARS = r'962XRLD7YJS1AHBQ5NCO3M08EKGIWUPTVZ4F qwertyuiopasdfghjklzxcvbnm|.(),;"!@#$%^&*()_-=+{}[]\<>?/:'
+    
+    dct=dict(zip(ENCRYPT_CHARS,NORMAL_CHARS))
+    decripted_str = ''
+    
+    for s in en_str:
+        decripted_str += dct[s]
+    
+    return decripted_str
