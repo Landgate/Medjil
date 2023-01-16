@@ -470,7 +470,7 @@ tech_manual = {'manual_type':'tbaseline',
 			<li>Calibration of a Baseline against a standardised instrument</li>
 			<li>Calibration of EDM Instruments (EDMI) against standard baseline</li>
 		</ul>
-		<p>It is always important before commencing surveying to verify precision of the measuring equipment. In fact regular calibration of Electronic Distance Measurement Instruments (EDMI) against Baseline (the standard) are required under various State and Territory regulations to ensure the distances measured are legally traceable back to the national and international standard (under NMI Act 1961).</p> 
+		<p>It is always important before commencing surveying to verify precision of the measuring equipment. Regular calibration of Electronic Distance Measurement Instruments (EDMI) against Baseline (the standard) are required under various State and Territory regulations to ensure the distances measured are legally traceable back to the national and international standard (under NMI Act 1961).</p> 
 		<p>The calibration of Baseline determines new/refined distances between its pillars. This should be conducted on regular basis and using high precision calibrated instrument. The calibration of an EDMI provides instrument specific distance correction to be applied to measurements taken by this instrument.</p>
 		<p>The Medjil portal provided tools and reports for both Baseline and EDMI calibration procedures. Refer to specific guides for field calibration instructions.</p>
 		<p>This document provides reference information such as mathematical equations, procedures, algorithms, and computations adopted by the portal. The procedures and equations are based on the following resources:</p>
