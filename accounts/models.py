@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
+from django.db.models.functions import Lower
 
 # Create your models here.
 class Company(models.Model):
@@ -10,7 +11,11 @@ class Company(models.Model):
 
     def __str__(self):
         return self.company_name
-        
+    
+    class Meta:
+        ordering = [Lower('company_name')]
+
+    
 ####### CUSTOM MANAGER TO MAKE EMAIL AS UNIQUE ID INSTEAD OF USERNAME ######
 class CustomUserManager(BaseUserManager):
     """
@@ -43,6 +48,7 @@ class CustomUserManager(BaseUserManager):
         if extra_fields.get('is_superuser') is not True:
             raise ValueError(_('Superuser must have is_superuser=True.'))
         return self.create_user(email, password, **extra_fields)
+    
 
 class LowerCaseEmailField(models.EmailField):
     """
@@ -54,21 +60,23 @@ class LowerCaseEmailField(models.EmailField):
             return value.lower()
         return value
 
+
 class CustomUser(AbstractUser):
     company = models.ForeignKey(
-                                Company,
-                                on_delete = models.SET_NULL,
-                                blank = True,
-                                null = True,
+        Company,
+        on_delete = models.SET_NULL,
+        blank = True,
+        null = True,
     )
 
     username = None
-    email = LowerCaseEmailField(_('email address'), 
-                                max_length = 150,
-                                unique=True,
-                                error_messages = {
-                                    'unique': _("The user with that email address already exists.")
-                                })
+    email = LowerCaseEmailField(
+        _('email address'), 
+        max_length = 150,
+        unique=True,
+        error_messages = {
+            'unique': _("The user with that email address already exists.")
+        })
     # email = models.EmailField(_('email address'), unique=True)
 
     USERNAME_FIELD = 'email'
@@ -79,31 +87,35 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.email
 
+
 class Calibration_Report_Notes(models.Model):
     company = models.ForeignKey(Company, on_delete = models.CASCADE, null = False)
     report_types = (
-                 ('B','Baseline Calibration'),
-                 # ('R','Range Calibration'),
-                 ('E', 'EDMI Calibration'),
-                 # ('S', 'Staff Calibration')
-                 )
-    report_type = models.CharField(max_length=1,
-                 choices=report_types,
-                 help_text="Report type that the notes will be added to",
-                 unique=False,
+        ('B','Baseline Calibration'),
+        # ('R','Range Calibration'),
+        ('E', 'EDMI Calibration'),
+        # ('S', 'Staff Calibration')
+        )
+    report_type = models.CharField(
+        max_length=1,
+        choices=report_types,
+        help_text="Report type that the notes will be added to",
+        unique=False,
                  )
     note_types = (
-                 ('M','Manditory'),
-                 ('C','Company Specific'),
-                 )
-    note_type = models.CharField(max_length=1,
-                 choices=note_types,
-                 help_text="Will this note appear on all users reports or only reports for this company?",
-                 unique=False,
-                 )    
-    note = models.TextField(null = False, blank = False,
-                 verbose_name= 'Report Note',
-                 help_text="Notes will be created at the end of each report")
+        ('M','Manditory'),
+        ('C','Company Specific'),
+        )
+    note_type = models.CharField(
+        max_length=1,
+        choices=note_types,
+        help_text="Will this note appear on all users reports or only reports for this company?",
+        unique=False,
+        )    
+    note = models.TextField(
+        null = False, blank = False,
+        verbose_name= 'Report Note',
+        help_text="Notes will be created at the end of each report")
 
     class Meta:
         ordering = ['company','report_type','note_type']

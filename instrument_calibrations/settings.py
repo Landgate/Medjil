@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.forms',
     # 'crispy_forms',
     'formtools',
     'accounts',
@@ -65,6 +66,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'instrument_calibrations.urls'
 
+FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

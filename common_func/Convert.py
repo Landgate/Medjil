@@ -223,7 +223,7 @@ def baseline_qry(frm_data):
                             float(baseline_enz['easting__avg']),
                             float(baseline_enz['northing__avg']))
     baseline['d_radius'] = rho(baseline_llh[0])
-    
+    print(baseline['d_radius'])
     return baseline
         
     
