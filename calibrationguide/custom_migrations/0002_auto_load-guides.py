@@ -452,6 +452,7 @@ Baseline measurements must be performed in accordance with the ISO17123-4:2012 O
 tech_manual = {'manual_type':'tbaseline',
                'title': 'EDM Calibration Technical Manual',
                'content':r"""<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
   <head>
   	<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
@@ -470,7 +471,7 @@ tech_manual = {'manual_type':'tbaseline',
 			<li>Calibration of a Baseline against a standardised instrument</li>
 			<li>Calibration of EDM Instruments (EDMI) against standard baseline</li>
 		</ul>
-		<p>It is always important before commencing surveying to verify precision of the measuring equipment. In fact regular calibration of Electronic Distance Measurement Instruments (EDMI) against Baseline (the standard) are required under various State and Territory regulations to ensure the distances measured are legally traceable back to the national and international standard (under NMI Act 1961).</p> 
+		<p>The aim of the EDM Instrument calibration is to establish the traceability of users’ instruments to National Standards by determination of the instrument correction and its expanded uncertainty (~95% confidence limits). This is achieved by the certification of reference instruments of the States and Territories by the National Measurement Institute (NMI), by the certification of baselines by the verifying authorities of the States and Territories and by calibrating the users’ instruments against said baselines.</p> 
 		<p>The calibration of Baseline determines new/refined distances between its pillars. This should be conducted on regular basis and using high precision calibrated instrument. The calibration of an EDMI provides instrument specific distance correction to be applied to measurements taken by this instrument.</p>
 		<p>The Medjil portal provided tools and reports for both Baseline and EDMI calibration procedures. Refer to specific guides for field calibration instructions.</p>
 		<p>This document provides reference information such as mathematical equations, procedures, algorithms, and computations adopted by the portal. The procedures and equations are based on the following resources:</p>
@@ -488,8 +489,15 @@ tech_manual = {'manual_type':'tbaseline',
 	</div>	
 	<div><!-- CHAPTER 1 --> 
 		<h1>1	Baseline Calibration</h1>
-		<h2>1.1	Baseline Configuration</h2>
-		<p>Provide design (Herrbrug, Hobart), description and some explanations</p>
+		<h2>1.1	Baseline Designs</h2>
+		<p>Since the introduction of EDM instruments the EDM basline has been their preffered calibration method. There are three main baseline designs:</p>
+		<ul STYLE="margin:30px">
+			<li>Heerbrugg Design</li>
+			<li>Aarau Design</li>
+			<li>Hobart Design</li>
+		</ul>
+		<p>All baseline designs aim at an equal distribution of all measured distances between the shortest and longest line on the baseline, with no repetitions and easy computation with or without known distances. Some baseline designs incorporate a multiple of a basic unit length of EDM instrument(s). A detailed explanation of a different baseline design concepts is out of scope of this manual. For baseline design details refer to the Electronic Distance Measurement book by J.M.Rueger.</p>
+		
 		<h2>1.2	Mathematical model and observation equations for the calibration of Baseline</h2>	
 		<p>To avoid negative distances and to provide greater flexibility of Baseline survey, the following two observation equations can be derived:</p>
 		<div> $$ D_{ij}=x_j-x_i-zpc\ \ \ for\ j > i\ \ \ (Eq. 1.1)$$ </div>	
@@ -561,15 +569,18 @@ tech_manual = {'manual_type':'tbaseline',
 		<p>to be finished</p>			
 	</div>
 	<div><!-- CHAPTER 3 -->
-		<h1>3	Calibration Corrections</h1>
-		<p>Calibration corrections are required for both EDMI and baseline calibration</p>
-		<h2>3.1	Instrumentation corrections</h2>
-		<h3>3.1.1	Thermometer</h3>
-		<h3>3.1.1	Barometer</h3>
-		<h3>3.1.1	Hygrometer</h3>
-		<h3>3.1.1	EDMI</h3>		
-		<h2>3.2	Atmospheric Corrections</h2>
-		<h3>3.2.1 First velocity correction (K) for EDM instrument</h3>
+		<h1>3	Corrections</h1>
+		<h3>3.1 Calibration Correction</h3>
+		<p>Medjil maintains an instrument register that catalogues all instruments used for calibrations. Instrument register belongs to an individual company. The registry includes the archive of calibration certificates for EDMI, Barometer, Thermometer and Hygrometer. If calibration corrections have not been applied to instrument readings, Medjil allows calibration corrections to be applied to the raw readings during the Medjil calibration.</p>
+		<h4>3.1.1 Meteorological instrumentation corrections</h4>
+		<p>All meteorological instruments (thermometer, barometer, hygrometer) corrections appy as zero point correction (zpc) to the EDMI readings (distance)</p>
+		<div>c<sub>M</sub> = zpc</div>
+		<h4>3.1.2 EDMI correction</h4>
+		<p>EDMI calibration sourced from the most recent calibration certificate:</p>		
+		<div>c<sub>EDMI</sub> = sfc * d + zpc</div>	
+		<br>	
+		<p>If the meteorological corrections have not been applied to EDMI readings, corrections to atmospheric readings will be applied prior to calculating the first velocity correction.</p>
+		<h3>3.2 First velocity correction (K)</h3>
 		<div>$$ \mathrm{K\ }=\left[\mathrm{C-}\frac{\mathrm{DP}}{(\mathrm{273.15}+t)}+\frac{\mathrm{11.27e} }{(\mathrm{273.15}+t)}\right]1\mathrm{0}^{\mathrm{-6}}d\ \ \ \ (Eq. 3.1)$$</div>
 		<p>Where:</p>
 		<p>&emsp;&emsp;K = First velocity correction in metres</p>
