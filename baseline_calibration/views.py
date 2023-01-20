@@ -71,12 +71,6 @@ def calibration_home(request):
     return render(request, 'baseline_calibration/baseline_calibration_home.html', context)
 
 
-def clear_cache(request):
-    if 'calibrate_b' in request.session: del request.session['calibrate_b']
-    
-    return redirect('baseline_calibration:calibration_home')
-
-
 @login_required(login_url="/accounts/login") 
 def pillar_survey_del(request, id):
     delete_pillar_survey = Pillar_Survey.objects.get(id=id)
@@ -92,16 +86,13 @@ def calibrate1(request, id):
     # if id==None this is a new pillar survey.
     if id == 'None':
         qs=''
-        if 'calibrate_b' in request.session:
-            ini_data = request.session['calibrate_b']
-        else:
-            ini_data = {'computation_date':date.today().isoformat(),
-                        'accreditation': Accreditation.objects.filter(
-                                valid_from_date__lte = date.today().isoformat(),
-                                valid_to_date__gte = date.today().isoformat(),
-                                accredited_company = request.user.company 
-                                ).order_by('-valid_from_date').first()}
-        
+        ini_data = {'computation_date':date.today().isoformat(),
+                    'accreditation': Accreditation.objects.filter(
+                            valid_from_date__lte = date.today().isoformat(),
+                            valid_to_date__gte = date.today().isoformat(),
+                            accredited_company = request.user.company 
+                            ).order_by('-valid_from_date').first()}
+    
         pillar_survey = PillarSurveyForm(request.POST or None,
                                          request.FILES or None,
                                          user=request.user,
@@ -726,15 +717,7 @@ def uc_budget_edit(request, id=None):
 
 
 @login_required(login_url="/accounts/login") 
-def uc_budget_create(request):
-    context = {}
-    rtn = request.POST.get('next')
-    if rtn:
-        context['return'] = rtn
-    else:
-        context['return'] ='baseline_calibration:uc_budgets'
-        rtn = '/baseline_calibration/uc_budgets'
-    
+def uc_budget_create(request):    
     if request.method == 'POST':
         uc_budget = Uncertainty_BudgetForm(request.POST, user=request.user)
         uc_sources = formset_factory(Uncertainty_Budget_SourceForm, extra=0)
@@ -744,8 +727,11 @@ def uc_budget_create(request):
             for uc_source in uc_sources:
                 f = uc_source.save(commit=False)
                 f.uncertainty_budget = uc_budget.instance
-                f.save()
-            return HttpResponseRedirect(rtn)
+                f.save()            
+                if 'next' in request.POST:
+                    return redirect(request.POST.get('next'))
+                else:
+                    return redirect ('baseline_calibration:uc_budgets')
     else:
         ini_budget={}
         ini_budget['std_dev_of_zero_adjustment'] = (
@@ -762,7 +748,8 @@ def uc_budget_create(request):
         uc_sources = uc_sources(initial=[vars(row) for row in ini_sources])
         
         uc_budget = Uncertainty_BudgetForm(initial=ini_budget, user=request.user)
-
+    
+    context = {}
     context['Header'] = 'Create Uncertainty Budget from Default'        
     context['form'] = uc_budget
     context['formset'] = uc_sources
@@ -792,13 +779,6 @@ def accreditations(request):
 @login_required(login_url="/accounts/login") 
 def accreditation_edit(request, id=None):
     context = {}
-    rtn = request.POST.get('next')
-    if rtn:
-        context['return'] = rtn
-    else:
-        context['return'] ='baseline_calibration:accreditations'
-        rtn = '/baseline_calibration/accreditations'
-    
     # if id==None this is a new pillar survey.
     if id == 'None':
         ini ={'accredited_company': request.user.company}
@@ -816,8 +796,11 @@ def accreditation_edit(request, id=None):
         context['Header'] = 'Edit Accreditation Details'
     
     if accreditation.is_valid():
-        accreditation.save()
-        return HttpResponseRedirect(rtn)
+        if 'next' in request.POST:
+            accreditation.save()
+            return redirect(request.POST.get('next'))
+        else:
+            return redirect ('baseline_calibration:accreditations')
         
     context['form'] = accreditation
     

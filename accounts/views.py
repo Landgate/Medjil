@@ -246,7 +246,7 @@ def user_account(request):
     user_page_obj = user_page.get_page(user_page_number)
 
     # company list
-    company_list = Company.objects.exclude(company_abbrev__exact='OTH').order_by('company_name')
+    company_list = Company.objects.exclude(company_abbrev__exact='OTH')
     company_page = Paginator(company_list, 25) # Show 25 list per page.
     company_page_number = request.GET.get('page')
     company_page_obj = company_page.get_page(company_page_number)

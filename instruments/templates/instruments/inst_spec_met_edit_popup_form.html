@@ -142,7 +142,6 @@
     }
 
 
-
     function showAddPopup(triggeringLink) {
         var name = triggeringLink.id.replace(/^add_/, '');
         href = triggeringLink.href;
@@ -168,8 +167,9 @@
                 }
             }
         modelOptions.dispatchEvent(new Event('change'));
-        window.sessionStorage.clear()
+        window.sessionStorage.removeItem('new_model');
     }
+    
     //  Refresh Parent Function
     function refreshParent() 
         {
