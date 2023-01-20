@@ -57,17 +57,23 @@
                             <tr>
                                 <th width="7%">SL No.</th>
                                 <th width="20%">{{ form.name.label }} </th> 
+                                <th width="20%">{{ form.easting.label }} </th> 
+                                <th width="20%">{{ form.northing.label }} </th> 
+                                <th width="20%">{{ form.zone.label }} </th> 
                                 <th width="30%">{{ form.height.label }}</th>
-                                <th width="10%">Delete</th>
-                                <th width="10%"></th>
+                                <!-- <th width="10%">Delete</th> -->
+                                <!-- <th width="10%"></th> -->
                             </tr>
                         {% endif %}
                         <tr>
                             <td>{{ forloop.counter }}. </td>
                             <td>{{ form.name }}</td>
+                            <td>{{ form.easting }}</td>
+                            <td>{{ form.northing }}</td>
+                            <td>{{ form.zone }}</td>
                             <td>{{ form.height }}</td>
-                            <td>{{ form.DELETE }}</td>
-                            <td><button>Add more</button></td>
+                            <!-- <td>{{ form.DELETE }}</td> -->
+                            <!-- <td><button>Add more</button></td> -->
                         </tr>
                     {% endfor %}
                 {% else %}

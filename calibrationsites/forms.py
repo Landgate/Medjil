@@ -125,6 +125,9 @@ class PillarForm(forms.ModelForm):
 		model = Pillar
 		fields = '__all__'
 		exclude = ('id', 'order',)
+		widgets = {
+            'height': forms.TextInput(attrs={'placeholder': 'Optional'}),
+        }
 
 EditPillarFormSet = modelformset_factory(Pillar, form = PillarForm, 
 								extra=0, 
@@ -146,6 +149,10 @@ class AddPillarForm(forms.ModelForm):
 		super(AddPillarForm, self).__init__(*args, **kwargs)
 		# self.fields['site_id'].queryset = Pillar.objects.filter(site_id__site_name__exact = sitename) 
 		self.fields['name'].widget.attrs['required'] = 'required'
+		self.fields['easting'].widget.attrs['placeholder']= 'Optional'
+		self.fields['northing'].widget.attrs['placeholder']= 'Optional'
+		self.fields['zone'].widget.attrs['placeholder']= 'Optional'
+		self.fields['height'].widget.attrs['placeholder']= 'Optional'
 
 	class Meta:
 		model = Pillar
