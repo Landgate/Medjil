@@ -36,8 +36,8 @@
                     </td>
                     <td width="5%">
                             {% if 'model' in field.name %}
-                                <a href="/instruments/inst_model_createby_inst_type/level/" target="_blank" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" onclick="return showAddPopup(this);" id="add_level">&#43;</a>
-                                <!-- <button class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" onclick="return showAddPopup(this);">&#43;</button> -->
+                                <a href="/instruments/inst_model_createby_inst_type/level/" target="_blank" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" 
+                                onclick="return showAddPopup(this);" id="add_level">&#43;</a>
                             {% elif 'coefficient' in field.name %}
                                 <span>ppm</span>
                             {% elif 'length' in field.name %}
@@ -61,10 +61,9 @@
 </article>
 
 <script>
-        function showAddPopup(triggeringLink) {
+    function showAddPopup(triggeringLink) {
         var name = triggeringLink.id.replace(/^add_/, '');
         href = triggeringLink.href;
-        // var win = window.open("{% url 'instruments:inst_model_createby_inst_type' 'level' %}", "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=850,width=500,height=400");
         var win = window.open(href, name, "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=850,width=500,height=400");
         win.focus();
         return false;
@@ -72,8 +71,6 @@
 
     modelOptions = document.querySelector("#id_level_model")
     function closePopup(win, newID, newRepr) {
-        // $(id).append('<option value=' + newID + ' selected >' + newRepr + '</option>')
-        // console.log(id, newID, newRepr)
         window.sessionStorage.setItem('new_model',  newID);
         win.close();
     }
@@ -87,7 +84,7 @@
                 }
             }
         
-        window.sessionStorage.clear()
+        window.sessionStorage.removeItem('new_model');
     }
     //  Refresh Parent Function
     function refreshParent() 

@@ -56,12 +56,12 @@
             {% if request.GET.next %}
             <input type="hidden" name="next" value="{{ request.GET.next }}">
             {% endif %}
-                <div class="button-container">
-                    {% if request.GET.next %}
-                        <a href= {{ request.GET.next }} class="submit-button bg-red-500 hover:bg-green-400" style="text-align: center">Cancel</a>
-                    {% endif %}
-                    <button class="submit-button bg-green-500 hover:bg-green-400 text-base" type="submit" >Save</button>
-                </div>
+            <div class="button-container">
+                {% if request.GET.next %}
+                    <a href= {{ request.GET.next }} class="submit-button bg-red-500 hover:bg-green-400" style="text-align: center">Cancel</a>
+                {% endif %}
+                <button class="submit-button bg-green-500 hover:bg-green-400 text-base" type="submit" >Save</button>
+            </div>
         </form>
     </div>
 </article>
@@ -98,12 +98,6 @@
         window.sessionStorage.setItem('SN_Number', SN_Number.value);
     })
 
-//    var edmCustodian = document.getElementById('id_{{inst_type}}_custodian');
-//    edmCustodian.addEventListener('change', () => {
-//        edmCustodian_value = edmCustodian.selectedIndex;
-//        window.sessionStorage.setItem('edmCustodian_value', edmCustodian_value);
-//    })
-
     let newInstanceValue = sessionStorage.getItem('new_instance');
     if (newInstanceValue) {
         for(var i = 0;i < specOptions.options.length;i++){
@@ -114,8 +108,9 @@
         
         SN_Number.value = sessionStorage.getItem('SN_Number');
         inst_comment.value = sessionStorage.getItem('inst_comment');
-        //edmCustodian.options[sessionStorage.getItem('edmCustodian_value')].selected = true;
-        window.sessionStorage.clear()
+        window.sessionStorage.removeItem('SN_Number');
+        window.sessionStorage.removeItem('inst_comment');
+        window.sessionStorage.removeItem('new_instance');
     }
 </script>
 

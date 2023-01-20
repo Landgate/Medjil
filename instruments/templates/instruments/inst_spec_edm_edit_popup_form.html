@@ -32,7 +32,9 @@
                     <td width="35%">{{ form.edm_model.label|title }}</td>
                     <td width="45%">{{ form.edm_model }}</td>
                     <td width="15%">
-                        <a href="/instruments/inst_model_createby_inst_type/edm/" target="_blank" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" onclick="return showAddPopup(this);" id="add_level">&#43;</a>
+                        <a href="/instruments/inst_model_createby_inst_type/edm/" target="_blank" 
+                        class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" 
+                        onclick="return showAddPopup(this);" id="add_level">&#43;</a>
                     </td>
                 </tr>
                 <!-- Manufacturers Accuracy Statement -->
@@ -154,7 +156,7 @@
         }
     }
     
-        function showAddPopup(triggeringLink) {
+    function showAddPopup(triggeringLink) {
         var name = triggeringLink.id.replace(/^add_/, '');
         href = triggeringLink.href;
         var win = window.open(href, name, "toolbar=yes,scrollbars=yes,resizable=yes,top=200,left=850,width=600,height=420");
@@ -178,7 +180,7 @@
                 }
             }
         
-        window.sessionStorage.clear()
+        window.sessionStorage.removeItem('new_model');
     }
     //  Refresh Parent Function
     function refreshParent() 

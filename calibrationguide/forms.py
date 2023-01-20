@@ -6,6 +6,10 @@ from .models import (InstructionImage,
 				)
 
 # insert your forms
+class CustomClearableFileInput(forms.ClearableFileInput):
+    template_name = 'custom_widgets/customCustomClearableFileInput.html'
+    
+    
 class CalibrationInstructionForm(forms.ModelForm):
 	class Meta:
 		model = CalibrationInstruction
@@ -20,6 +24,7 @@ class CalibrationInstructionForm(forms.ModelForm):
 			'content': forms.Textarea(attrs={'class': 'text-area2'}),
 		}
 
+
 class CalibrationInstructionUpdateForm(forms.ModelForm):
 	class Meta:
 		model = CalibrationInstruction
@@ -33,16 +38,18 @@ class CalibrationInstructionUpdateForm(forms.ModelForm):
 		self.fields['site_id'].disabled = True
 		self.fields['calibration_type'].disabled = True
 
+
 class InstructionImageForm(forms.ModelForm):
 	photos = forms.ImageField(
 		label='Photo',
-		widget=forms.ClearableFileInput(attrs={'multiple': False}),
+		widget=CustomClearableFileInput(attrs={'multiple': False}),
 		help_text = 'Select one or more images',
 	)
 
 	class Meta:
 		model = InstructionImage
 		fields = ('photos',)
+
 
 class TechnicalManualForm(forms.ModelForm):
 	class Meta:
@@ -57,6 +64,7 @@ class TechnicalManualForm(forms.ModelForm):
 			'content': forms.Textarea(attrs={'class': 'text-area2'}),
 		}
 
+
 class TechnicalManualUpdateForm(forms.ModelForm):
 	class Meta:
 		model = TechnicalManual
@@ -69,10 +77,11 @@ class TechnicalManualUpdateForm(forms.ModelForm):
 		super(TechnicalManualUpdateForm, self).__init__(*args, **kwargs)
 		self.fields['manual_type'].disabled = True
 
+
 class ManualImageForm(forms.ModelForm):
 	photos = forms.ImageField(
 		label='Photo',
-		widget=forms.ClearableFileInput(attrs={'multiple': False}),
+		widget=CustomClearableFileInput(attrs={'multiple': False}),
 		help_text = 'Select one or more images',
 	)
 

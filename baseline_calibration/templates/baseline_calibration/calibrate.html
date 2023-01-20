@@ -21,7 +21,7 @@
             {% endfor %}
 
             {% csrf_token %}
-            <table>
+            <table id="PillarSurveyTable">
                 <colgroup>
                     <col span="1" width="30%">
                     <col span="1" width="65%">
@@ -50,29 +50,32 @@
                         <td>
                             {% if field.name == "edm" or field.name == "prism" or field.name == "edm" %}
                                 <a href="{% url 'instruments:register_edit' inst_disp=field.name tab="insts" id=None %}?next={{request.path}}"
-                                 class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer">&#43;</a>
+                                class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" onclick="cacheInputs();return true;">&#43;</a>
                             {% endif %}
                            
                             {% if field.name == "staff" %}
-                                <a href="{% url 'instruments:inst_staff_create' %}?next={{request.path}}" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer">&#43;</a>
+                                <a href="{% url 'instruments:inst_staff_create' %}?next={{request.path}}" 
+                                class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" onclick="cacheInputs();return true;">&#43;</a>
                             {% endif %}
                             {% if field.name == "thermometer" %}
                                 <a href="{% url 'instruments:register_edit' inst_disp="thermo" tab="insts" id=None %}?next={{request.path}}"
-                                class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer">&#43;</a>
+                                class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" onclick="cacheInputs();return true;">&#43;</a>
                             {% endif %}
                             {% if field.name == "barometer" %}
                                 <a href="{% url 'instruments:register_edit' inst_disp="baro" tab="insts" id=None %}?next={{request.path}}"
-                                 class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer">&#43;</a>
+                                 class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" onclick="cacheInputs();return true;">&#43;</a>
                             {% endif %}
                             {% if field.name == "hygrometer" %}
                                 <a href="{% url 'instruments:register_edit' inst_disp="hygro" tab="insts" id=None %}?next={{request.path}}"
-                                 class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer">&#43;</a>
+                                 class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" onclick="cacheInputs();return true;">&#43;</a>
                             {% endif %}
                             {% if field.name == "accreditation" %}
-                                <a href="{% url 'baseline_calibration:accreditation_edit' id=None%}?next={{request.path}}"  target="_blank" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer">&#43;</a>
+                                <a href="{% url 'baseline_calibration:accreditation_edit' id=None%}?next={{request.path}}"  
+                                class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" onclick="cacheInputs();return true;">&#43;</a>
                             {% endif %}
                             {% if field.name == "uncertainty_budget" %}
-                                <a href="{% url 'baseline_calibration:uc_budget_create' %}?next={{request.path}}"  target="_blank" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer">&#43;</a>
+                                <a href="{% url 'baseline_calibration:uc_budget_create' %}?next={{request.path}}"  
+                                class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" onclick="cacheInputs();return true;">&#43;</a>
                             {% endif %}
                         </td>
                     </tr>
@@ -110,111 +113,143 @@
 </article>
 
 <script>
-// Find Current tab and Last tab
-var currentTab = 0;
-{% for field in form %}
-    {% if field.errors %}
-        currentTab = parseInt('{{ field.field.widget.attrs.class }}'.replace('page',''));
-    {% endif %}
-    {% if forloop.last %}
-        const lastTab = parseInt('{{ field.field.widget.attrs.class }}'.replace('page',''));
-    {% endif %}
-{% endfor %}
-showTab(currentTab); // Display the current tab
-console.log(lastTab)
-
-function showTab(n) {
-  // This function will display the specified tab of the form...
-  var x = document.getElementsByClassName("tgl-page"+(n));
-  for (var i = 0; i < x.length; i++) {
-   x[i].style.display = '';
-   }
-  
-  if (n == 0) {
-    document.getElementById("prevBtn").style.display = "none";
-  } else {
-    document.getElementById("prevBtn").style.display = "inline";
-  }
-  if (n == lastTab) {
-    document.getElementById("nextBtn").innerHTML = "Submit";
-  } else {
-    document.getElementById("nextBtn").innerHTML = "Next";
-  }
-  document.getElementById("pgOfpgs").innerHTML = "Page "+ (n+1) + " of " + (lastTab+1);
-}
-
-function nextPrev(n) {
-  // This function will figure out which tab to display
-  var x = document.getElementsByClassName("tgl-page"+(currentTab));
-  // Exit the function if any field in the current tab is invalid:
-  if (n == 1 && !validateForm()) return false;
-  
-  for (var i = 0; i < x.length; i++) {
-   x[i].style.display = 'none';
-   }
-  currentTab = currentTab + n;
-  
-  if (currentTab > lastTab) {
-    document.getElementById("PillarSurveyForm").submit();
-    return false;
-  }
-  showTab(currentTab);
-}
-
-function validateForm() {
-  // This function deals with validation of the form fields
-  var y, i, valid = true;
-  y = document.getElementsByClassName("page"+(currentTab));
-
-  for (i = y.length-1; i > -1; i--) {
-      if (!y[i].checkValidity()) {
-        y[i].reportValidity();
-        valid = false;
+    // Find Current tab and Last tab
+    var currentTab = 0;
+    let cachedVal = sessionStorage.getItem("currentTab");
+    if (cachedVal != null) {
+        currentTab = parseFloat(cachedVal);
+        sessionStorage.removeItem("currentTab");
+    }
+    {% for field in form %}
+        {% if field.errors %}
+            currentTab = parseInt('{{ field.field.widget.attrs.class }}'.replace('page',''));
+        {% endif %}
+        {% if forloop.last %}
+            const lastTab = parseInt('{{ field.field.widget.attrs.class }}'.replace('page',''));
+        {% endif %}
+    {% endfor %}
+    showTab(currentTab); // Display the current tab
+    
+    function showTab(n) {
+      // This function will display the specified tab of the form...
+      var x = document.getElementsByClassName("tgl-page"+(n));
+      for (var i = 0; i < x.length; i++) {
+       x[i].style.display = '';
+       }
+      
+      if (n == 0) {
+        document.getElementById("prevBtn").style.display = "none";
+      } else {
+        document.getElementById("prevBtn").style.display = "inline";
+      }
+      if (n == lastTab) {
+        document.getElementById("nextBtn").innerHTML = "Submit";
+      } else {
+        document.getElementById("nextBtn").innerHTML = "Next";
+      }
+      document.getElementById("pgOfpgs").innerHTML = "Page "+ (n+1) + " of " + (lastTab+1);
+    }
+    
+    function nextPrev(n) {
+      // This function will figure out which tab to display
+      var x = document.getElementsByClassName("tgl-page"+(currentTab));
+      // Exit the function if any field in the current tab is invalid:
+      if (n == 1 && !validateForm()) return false;
+      
+      for (var i = 0; i < x.length; i++) {
+       x[i].style.display = 'none';
+       }
+      currentTab = currentTab + n;
+      
+      if (currentTab > lastTab) {
+        document.getElementById("PillarSurveyForm").submit();
+        return false;
+      }
+      showTab(currentTab);
+    }
+    
+    function validateForm() {
+      // This function deals with validation of the form fields
+      var y, i, valid = true;
+      y = document.getElementsByClassName("page"+(currentTab));
+    
+      for (i = y.length-1; i > -1; i--) {
+          if (!y[i].checkValidity()) {
+            y[i].reportValidity();
+            valid = false;
+          }
+        }
+    
+      return valid; // return the valid status
+    }
+    
+    function tglEdmFile() {
+      // This function will hide/unhide the EDM file select
+      var chk = document.getElementById("id_change_edm");
+      var slct = document.getElementById("id_edm_file");
+      var e = document.getElementsByClassName("tgl-edm_file");
+      
+      for (var i = 0; i < e.length; i++) {
+         if (chk.checked) {
+              e[i].style.display = '';
+              slct.type = "text";
+              slct.type = "file";
+          } else {
+              e[i].style.display = 'none';
+          }
       }
     }
-
-  return valid; // return the valid status
-}
-
-function tglEdmFile() {
-  // This function will hide/unhide the EDM file select
-  var chk = document.getElementById("id_change_edm");
-  var slct = document.getElementById("id_edm_file");
-  var e = document.getElementsByClassName("tgl-edm_file");
-  
-  for (var i = 0; i < e.length; i++) {
-     if (chk.checked) {
-          e[i].style.display = '';
-          slct.type = "text";
-          slct.type = "file";
-      } else {
-          e[i].style.display = 'none';
+    
+    function tglLvlFile() {
+      // This function will hide/unhide the Level file select
+      var chk = document.getElementById("id_change_lvl");
+      var slct = document.getElementById("id_lvl_file");
+      var e = document.getElementsByClassName("tgl-lvl_file");
+      
+      for (var i = 0; i < e.length; i++) {
+         if (chk.checked) {
+              e[i].style.display = '';
+              slct.type = "text";
+              slct.type = "file";
+          } else {
+              e[i].style.display = 'none';
+          }
       }
-  }
-}
-
-function tglLvlFile() {
-  // This function will hide/unhide the Level file select
-  var chk = document.getElementById("id_change_lvl");
-  var slct = document.getElementById("id_lvl_file");
-  var e = document.getElementsByClassName("tgl-lvl_file");
-  
-  for (var i = 0; i < e.length; i++) {
-     if (chk.checked) {
-          e[i].style.display = '';
-          slct.type = "text";
-          slct.type = "file";
-      } else {
-          e[i].style.display = 'none';
-      }
-  }
-}
-
-function ChgNoteFile() {
-  var lnk = document.getElementById("fieldnotes_link");
-  
-  lnk.textContent = '';
-}
+    }
+    
+    function ChgNoteFile() {
+      var lnk = document.getElementById("fieldnotes_link");
+      
+      lnk.textContent = '';
+    }
+    
+    function cacheInputs() {
+        var inputs, i;
+        window.sessionStorage.clear()
+        
+        tbl = document.getElementById("PillarSurveyTable");
+        inputs = tbl.querySelectorAll("input,select");
+        for (i = 0; i < inputs.length; ++i) {
+            let el = inputs[i];
+            window.sessionStorage.setItem(el.attributes["name"].value, el.value);
+            }
+            
+        window.sessionStorage.setItem("currentTab", currentTab);
+    }
+    
+    //Load Form inputs from Cache
+    window.onload = function () {
+        tbl = document.getElementById("PillarSurveyTable");
+        inputs = tbl.querySelectorAll("input,select");
+        for (let i = 0; i < inputs.length; i++) {
+            let el = inputs[i];
+            let cachedVal = sessionStorage.getItem(el.attributes["name"].value)
+            if (cachedVal != null) {
+                el.value = cachedVal;
+            }
+            sessionStorage.removeItem(el.attributes["name"].value);
+        }
+    }
 </script>
 
 
