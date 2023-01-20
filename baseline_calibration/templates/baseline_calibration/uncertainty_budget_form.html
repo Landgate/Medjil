@@ -8,8 +8,6 @@
    
     <div class="flexbox-container_IB">
           <div class="flexbox-item_1600_IB">
-          <br>
-          <h2 class="text-center">Create New Uncertainty Budget</h2>
              <template id="id_formset_empty_form">
                  <tr>
                       {% for field in formset.empty_form %}
@@ -17,7 +15,14 @@
                               <td>{{ field }}</td>
                           {% endif %}
                       {% endfor %}
-                      <td><a onclick="deleteRow(this)" style="color:red;cursor:pointer;cursor:hand;">Remove</a></td>
+                      <td>
+                           <a onclick="deleteRow(this)">
+                              <svg width="16" height="16" viewBox="0 0 16 16" fill="red" class="bi bi-trash">
+                                  <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"></path>
+                                  <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"></path>
+                              </svg>
+                          </a>
+                      </td>
                       <td>{{ form.id }}</td>
                  </tr>
              </template>     
@@ -124,9 +129,14 @@
                             <p></p>
                       </div>             
                   </div>
+                  {% if request.GET.next %}
+                      <input type="hidden" name="next" value="{{ request.GET.next }}">
+                  {% endif %}
                   <div class="flexbox-item_1600_IB flexbox-item-button_IB">
-                      <a href= "{%url return %}" class="submit-button bg-red-500 hover:bg-green-400" style="text-align: center">Cancel</a>
-                      <button id="id_formset_submit_button" class="submit-button bg-green-500 hover:bg-green-400" type="submit">Save</button>
+                      {% if request.GET.next %}
+                          <a href= {{ request.GET.next }} class="submit-button bg-red-500 hover:bg-green-400" style="text-align: center">Cancel</a>
+                      {% endif %}
+                      <button class="submit-button bg-green-500 hover:bg-green-400 text-base" type="submit" >Save</button>
                   </div>                 
              </form>
          </div>    
