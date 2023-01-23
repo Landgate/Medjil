@@ -46,10 +46,15 @@
 		                        {% endfor %}                            
 		                    {% endfor %}
 		                </table>
-		            </div>	           
+		            </div>
+                  {% if request.GET.next %}
+                      <input type="hidden" name="next" value="{{ request.GET.next }}">
+                  {% endif %}
 		            <div class="flexbox-item_1600_IB flexbox-item-button_IB">
-		                <a href= "{%url return %}" class="submit-button bg-red-500 hover:bg-green-400" style="text-align: center">Cancel</a>
-		                <button class="submit-button bg-green-500 hover:bg-green-400" type="submit">Save</button>
+                      {% if request.GET.next %}
+                          <a href= {{ request.GET.next }} class="submit-button bg-red-500 hover:bg-green-400" style="text-align: center">Cancel</a>
+                      {% endif %}
+                      <button class="submit-button bg-green-500 hover:bg-green-400 text-base" type="submit" >Save</button>
 		            </div>                 
 		       </form>
       	</div>    

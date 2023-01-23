@@ -3,24 +3,23 @@ from django.db.models import Q
 from django.db.utils import OperationalError
 # from django.core.exceptions import NON_FIELD_ERRORS
 from .models import (
-                    InstrumentMake, 
-                    InstrumentModel, 
-                    Staff, 
-                    DigitalLevel,
-                    EDM_Inst,
-                    EDM_Specification,
-                    Prism_Inst,
-                    Prism_Specification,
-                    Mets_Inst,
-                    Mets_Specification,
-                    EDMI_certificate,
-                    Mets_certificate
-                    )
+    InstrumentMake, 
+    InstrumentModel, 
+    Staff, 
+    DigitalLevel,
+    EDM_Inst,
+    EDM_Specification,
+    Prism_Inst,
+    Prism_Specification,
+    Mets_Inst,
+    Mets_Specification,
+    EDMI_certificate,
+    Mets_certificate
+    )
 
 from accounts.models import Company, CustomUser
 
-        
-            
+
 length_units = (
         ('nm','nm'),
         ('mm','mm'),
@@ -34,6 +33,10 @@ scalar_units = (
 ini_units = ()
 
 # Prepare forms
+class CustomClearableFileInput(forms.ClearableFileInput):
+    template_name = 'instruments/customclearablefileinput.html'
+
+
 class InstrumentMakeCreateForm(forms.ModelForm):
     class Meta:
         model = InstrumentMake
@@ -74,9 +77,16 @@ class InstrumentModelCreateByInstTypeForm(forms.Form):
                                 queryset=InstrumentMake.objects.all(),
                                 widget=forms.Select())
 
-    inst_make = forms.CharField(max_length=25, min_length=4, required=False, help_text="e.g., LEICA, TRIMBLE, SOKKIA", label = 'Make (New)')
-    inst_abbrev = forms.CharField(max_length=4, min_length=3, required=False, help_text="e.g., LEI, TRIM, SOKK",  label = 'Abbreviation (New)')
-    model = forms.CharField(max_length=25, min_length=3, required=True, help_text="e.g., LS15, DNA03, TS30, S9, SX12, GT-1200/600", label = 'Model (new)')
+    inst_make = forms.CharField(
+        max_length=25, min_length=4, required=False,
+        help_text="e.g., LEICA, TRIMBLE, SOKKIA", label = 'Make (New)')
+    inst_abbrev = forms.CharField(
+        max_length=4, min_length=3, required=False, 
+        help_text="e.g., LEI, TRIM, SOKK",  label = 'Abbreviation (New)')
+    model = forms.CharField(
+        max_length=25, min_length=3, required=True, 
+        help_text="e.g., LS15, DNA03, TS30, S9, SX12, GT-1200/600", 
+        label = 'Model (new)')
 
 
 class DigitalLevelCreateForm(forms.ModelForm):
@@ -91,9 +101,10 @@ class DigitalLevelCreateForm(forms.ModelForm):
         # self.fields['level_owner'].queryset = Company.objects.exclude(company_abbrev__iexact='OTH')
         self.fields['level_number'].widget.attrs['placeholder'] = 'Level number, e.g., Serial number'
 
-    level_owner = forms.ModelChoiceField(empty_label='Choose a firm/company',
-                                    queryset=Company.objects.exclude(company_abbrev='OTH'),
-                                    widget=forms.Select())
+    level_owner = forms.ModelChoiceField(
+        empty_label='Choose a firm/company',
+        queryset=Company.objects.exclude(company_abbrev='OTH'),
+        widget=forms.Select())
     class Meta:
         model = DigitalLevel
         fields = ('level_model', 'level_owner', 'level_number',)
@@ -110,9 +121,10 @@ class StaffCreateForm(forms.ModelForm):
         self.fields['staff_model'].empty_label = '--- Select one ---'
         self.fields['staff_owner'].empty_label = '--- Select one ---'
 
-    staff_owner = forms.ModelChoiceField(#empty_label='--- Select one ---',
-                                    queryset=Company.objects.exclude(company_abbrev='OTH'),
-                                    widget=forms.Select())
+    staff_owner = forms.ModelChoiceField(
+        #empty_label='--- Select one ---',
+        queryset=Company.objects.exclude(company_abbrev='OTH'),
+        widget=forms.Select())
 
     class Meta:
         model = Staff
@@ -139,7 +151,7 @@ class EDM_InstForm(forms.ModelForm):
         fields = '__all__'
         exclude = ('created_on', 'modified_on')
         widgets = {
-            'photo' :  forms.ClearableFileInput(
+            'photo' :  CustomClearableFileInput(
                 attrs={'accept' : '.pdf, .jpg, .jpeg, .png, .tif',
                        'required': False})
         }
@@ -166,20 +178,17 @@ class EDM_SpecificationForm(forms.ModelForm):
         exclude = ('created_on', 'modified_on')
         
     unit_manu_unc_const = forms.CharField(
-                                    widget=forms.Select(choices=length_units))
-
-    unit_manu_unc_ppm = forms.CharField(widget=forms.Select(choices=scalar_units))
-
-    unit_freq = forms.CharField(widget=forms.Select(choices=freq_units))
-
+        widget=forms.Select(choices=length_units))
+    unit_manu_unc_ppm = forms.CharField(
+        widget=forms.Select(choices=scalar_units))
+    unit_freq = forms.CharField(
+        widget=forms.Select(choices=freq_units))
     unit_unit_length = forms.CharField(
-                                    widget=forms.Select(choices=length_units))
-
+        widget=forms.Select(choices=length_units))
     unit_carrier_wave = forms.CharField(
-                                    widget=forms.Select(choices=length_units))
-
+        widget=forms.Select(choices=length_units))
     unit_measurement_inc = forms.CharField(
-                                    widget=forms.Select(choices=length_units))
+        widget=forms.Select(choices=length_units))
     
     
 class Prism_InstForm(forms.ModelForm):
@@ -197,7 +206,7 @@ class Prism_InstForm(forms.ModelForm):
         fields = '__all__'
         exclude = ('created_on', 'modified_on')
         widgets = {
-            'photo' : forms.ClearableFileInput(
+            'photo' : CustomClearableFileInput(
                 attrs={'accept' : '.pdf, .jpg, .jpeg, .png, .tif',
                        'required': False})
         }
@@ -241,7 +250,7 @@ class Mets_InstForm(forms.ModelForm):
         fields = '__all__'
         exclude = ('created_on', 'modified_on')
         widgets = {
-            'photo' : forms.ClearableFileInput(
+            'photo' : CustomClearableFileInput(
                 attrs={'accept' : '.pdf, .jpg, .jpeg, .png, .tif',
                        'required': False})
         }
@@ -272,8 +281,8 @@ class Mets_SpecificationForm(forms.ModelForm):
         
     unit_measurement_inc = forms.CharField(
         widget=forms.Select(choices=ini_units))
+        
     
-
 class EDMI_certificateForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
@@ -302,7 +311,7 @@ class EDMI_certificateForm(forms.ModelForm):
         widgets = {
             'calibration_date': forms.DateInput(format=('%d-%m-%Y'),
                 attrs={'type':'date'}),
-            'certificate_upload' : forms.ClearableFileInput(
+            'certificate_upload' : CustomClearableFileInput(
                 attrs={'accept' : '.pdf, .jpg, .jpeg, .png, .tif',
                        'required': False})
            }
@@ -348,7 +357,7 @@ class Mets_certificateForm(forms.ModelForm):
         widgets = {
             'calibration_date': forms.DateInput(format=('%d-%m-%Y'),
                 attrs={'type':'date'}),
-            'certificate_upload': forms.ClearableFileInput(
+            'certificate_upload': CustomClearableFileInput(
                 attrs={'accept' : '.pdf, .jpg, jpeg, .png, .tif'})
            }
 
