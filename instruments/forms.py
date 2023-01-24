@@ -34,7 +34,7 @@ ini_units = ()
 
 # Prepare forms
 class CustomClearableFileInput(forms.ClearableFileInput):
-    template_name = 'instruments/customclearablefileinput.html'
+    template_name = 'custom_widgets/customclearablefileinput.html'
 
 
 class InstrumentMakeCreateForm(forms.ModelForm):

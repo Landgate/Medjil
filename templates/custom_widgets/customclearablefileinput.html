@@ -1,5 +1,5 @@
 {% if widget.is_initial %}
-    {{ widget.initial_text }}: <a href="{{ widget.value.url }}" target="_blank">{% if widget.value|length > 40 %} ...{% endif %}{{ widget.value|stringformat:'s' |slice:"-40:" }}</a>
+    {{ widget.initial_text }}: <a href="{{ widget.value.url }}" target="_blank" rel="noopener noreferrer">{% if widget.value|length > 40 %} ...{% endif %}{{ widget.value|stringformat:'s' |slice:"-40:" }}</a>
         {% if not widget.required %}
             <br>{{ widget.clear_checkbox_label }}:<input type="checkbox" name="{{ widget.checkbox_name }}" id="{{ widget.checkbox_id }}"{% if widget.attrs.disabled %} disabled{% endif %}>
         {% endif %}<br>

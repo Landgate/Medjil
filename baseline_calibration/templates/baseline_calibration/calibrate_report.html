@@ -47,7 +47,7 @@
                 <div class="flexbox-item_400_IB  flexbox-item-right_IB">
                     <br><B>Least Uncertainty of Measurement: </B>{{ pillar_survey.accreditation.LUM_constant }}mm &plusmn {{ pillar_survey.accreditation.LUM_ppm }}ppm
                     {% if pillar_survey.accreditation.certificate_upload %}
-                        <br><a href="{{ pillar_survey.accreditation.certificate_upload.url }}" target="_blank">Download Acreditation Certificate &#10515</a>
+                        <br><a href="{{ pillar_survey.accreditation.certificate_upload.url }}" target="_blank" rel="noopener noreferrer">Download Acreditation Certificate &#10515</a>
                     {% endif %}
                 </div>
             </div>
@@ -73,7 +73,7 @@
                     <br><B>Carrier Wavelength: </B>{{ pillar_survey.edm.edm_specs.carrier_wavelength }}nm
                     <br><B>Calibration Date : </B>{{ calib.edmi.0.calibration_date }}
                     {% if calib.edmi.0.certificate_upload %}
-                        <br><a href="{{ calib.edmi.0.certificate_upload.url }}" target="_blank">Download Calibration Certificate &#10515</a>
+                        <br><a href="{{ calib.edmi.0.certificate_upload.url }}" target="_blank" rel="noopener noreferrer">Download Calibration Certificate &#10515</a>
                     {% endif %}
                 </div>
             </div>
@@ -100,7 +100,7 @@
                     <br><br><B>Staff Length: </B>{{ pillar_survey.staff.staff_length }} m
                     <br><B>Calibration Date: </B>{{ calib.staff.calibration_date }}
                     {% if calib.staff.certificate_upload %}
-                        <br><a href="{{ calib.staff.certificate_upload.url }}" target="_blank">Download Calibration Certificate &#10515</a>
+                        <br><a href="{{ calib.staff.certificate_upload.url }}" target="_blank" rel="noopener noreferrer">Download Calibration Certificate &#10515</a>
                     {% endif %}
                 </div>
             </div>
@@ -115,7 +115,7 @@
                     <br><br><B>Manufacturers Uncertainty: </B>{{ pillar_survey.thermometer.mets_specs.manu_unc_const }} &#186C, k={{ pillar_survey.thermometer.mets_specs.manu_unc_k }}
                     <br><B>Calibration Date: </B>{{ calib.them.calibration_date }}
                     {% if calib.them.certificate_upload %}
-                        <br><a href="{{ calib.them.certificate_upload.url }}" target="_blank">Download Calibration Certificate &#10515</a>
+                        <br><a href="{{ calib.them.certificate_upload.url }}" target="_blank" rel="noopener noreferrer">Download Calibration Certificate &#10515</a>
                     {% endif %}
                 </div>
             </div>
@@ -130,7 +130,7 @@
                     <br><br><B>Manufacturers Uncertainty: </B>{{ pillar_survey.barometer.mets_specs.manu_unc_const }} hPa, k={{ pillar_survey.barometer.mets_specs.manu_unc_k }}
                     <br><B>Calibration Date: </B>{{ calib.baro.calibration_date }}
                     {% if calib.baro.certificate_upload %}
-                        <br><a href="{{ calib.baro.certificate_upload.url }}" target="_blank">Download Calibration Certificate &#10515</a>
+                        <br><a href="{{ calib.baro.certificate_upload.url }}" target="_blank" rel="noopener noreferrer">Download Calibration Certificate &#10515</a>
                     {% endif %}
                 </div>
             </div>
@@ -145,7 +145,7 @@
                     <br><br><B>Manufacturers Uncertainty: </B>{{ pillar_survey.hygrometer.mets_specs.manu_unc_const }} &#37, k={{ pillar_survey.hygrometer.mets_specs.manu_unc_k }}
                     <br><B>Calibration Date: </B>{{ calib.hygro.calibration_date }}
                     {% if calib.hygro.certificate_upload %}
-                        <br><a href="{{ calib.hygro.certificate_upload.url }}" target="_blank">Download Calibration Certificate &#10515</a>
+                        <br><a href="{{ calib.hygro.certificate_upload.url }}" target="_blank" rel="noopener noreferrer">Download Calibration Certificate &#10515</a>
                     {% endif %}
                 </div>
             </div>

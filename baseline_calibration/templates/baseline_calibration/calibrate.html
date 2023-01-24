@@ -34,21 +34,18 @@
                             <td>{{ field }}&emsp; &emsp; {{ field.label }} </td>
                         {% else %}
                             {% if field.name == "edm" %}
-                                <td>{{ field.label|upper }}</td>
+                                <td><label>{{ field.label|upper }}</label></td>
                             {% else %}
                                 <td>{{ field.label_tag|title }}</td>
                             {% endif %}  
-                            <td> {{ field }} 
-                                {% if field.name == "accreditation" and field.url %}
-                                    <label for="id_accreditation"><a href="{{ field.url }}" target="_blank">Download Acreditation Certificate &#10515</a></label>
-                                {% endif %}                        
+                            <td> {{ field }}                      
                                 {% if field.name == "fieldnotes_upload" and qs.fieldnotes_upload.file != none %}
-                                    <label id="fieldnotes_link" for="id_fieldnotes_upload"><a href= "{{ qs.fieldnotes_upload.url }}" target="_blank" style="color:blue; cursor: pointer; cursor: hand;"> {% if qs.fieldnotes_upload.name|length > 50 %} ...{% endif %}{{ qs.fieldnotes_upload.name|slice:"-50:" }}</a></label>
+                                    <label id="fieldnotes_link" for="id_fieldnotes_upload"><a href= "{{ qs.fieldnotes_upload.url }}" target="_blank" rel="noopener noreferrer" style="color:blue; cursor: pointer; cursor: hand;"> {% if qs.fieldnotes_upload.name|length > 50 %} ...{% endif %}{{ qs.fieldnotes_upload.name|slice:"-50:" }}</a></label>
                                 {% endif %} 
                             </td>                            
                         {% endif %}                     
                         <td>
-                            {% if field.name == "edm" or field.name == "prism" or field.name == "edm" %}
+                            {% if field.name == "edm" or field.name == "prism" or field.name == "edm" or field.name == "level" %}
                                 <a href="{% url 'instruments:register_edit' inst_disp=field.name tab="insts" id=None %}?next={{request.path}}"
                                 class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" onclick="cacheInputs();return true;">&#43;</a>
                             {% endif %}
