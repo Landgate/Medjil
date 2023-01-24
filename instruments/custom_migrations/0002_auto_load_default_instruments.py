@@ -12,7 +12,6 @@ inst_makes = [
 	{'name': 'PENTAX', 'make_abbrev': 'PEN'},
 	{'name': 'WILD', 'make_abbrev': 'WILD'},
 	{'name': 'ZEISS', 'make_abbrev': 'ZEI'},
-	{'name': 'NEEDO', 'make_abbrev': 'NEE'},
 	{'name': 'GEOMAX', 'make_abbrev': 'GEO'},
 	{'name': 'TOPCON', 'make_abbrev': 'TOP'},
 	{'name': 'OTHERS', 'make_abbrev': 'OTH'},

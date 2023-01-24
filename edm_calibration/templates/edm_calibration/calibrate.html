@@ -120,6 +120,7 @@
         {% endif %}
     {% endfor %}
     showTab(currentTab); // Display the current tab
+    tglCalibBase();
     
     function showTab(n) {
       // This function will display the specified tab of the form...
@@ -129,8 +130,7 @@
        }
       
       if (n == 0) {
-        document.getElementById("prevBtn").style.display = "none";
-        tglCalibBase()    
+        document.getElementById("prevBtn").style.display = "none";  
       } else {
         document.getElementById("prevBtn").style.display = "inline";
       }

@@ -81,6 +81,11 @@ def calibrate1(request, id):
         frm = pillar_survey.cleaned_data
         survey_files = upload_survey_files.cleaned_data
         
+        # Check the baseline has a valid calibration
+        Check_Errors = validate_survey(pillar_survey = frm)
+        if len(Check_Errors['Errors']) > 0:
+            return render(request, 'baseline_calibration/errors_report.html', 
+                          {'Check_Errors': Check_Errors})
     #----------------- Query related fields -----------------#
         calib = Calibrations_qry(frm)
         baseline = baseline_qry(frm)

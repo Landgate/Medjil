@@ -71,7 +71,7 @@ class CalibrateEdmForm(forms.ModelForm):
            'observer': forms.TextInput (attrs={'class': 'page0'}),	
            'weather': forms.Select(attrs={'class': 'page0'}),
            'job_number': forms.TextInput (
-               attrs={'required': 'false', 'class': 'page0'}),
+               attrs={'class': 'page0'}),
            
            'edm': forms.Select(attrs={'class': 'page1'}),
            'prism': forms.Select(attrs={'class': 'page1'}),

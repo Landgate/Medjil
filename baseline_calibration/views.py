@@ -668,9 +668,12 @@ def calibrate2(request,id):
 
 @login_required(login_url="/accounts/login") 
 def uc_budgets(request):
-    uc_budget_list = Uncertainty_Budget.objects.filter(
-                    Q(name = 'Default', company__company_name = 'Landgate')|
-                    Q(company = request.user.company))
+    if request.user.is_staff:
+        uc_budget_list = Uncertainty_Budget.objects.all()
+    else:
+        uc_budget_list = Uncertainty_Budget.objects.filter(
+            Q(name = 'Default', company__company_name = 'Landgate')|
+            Q(company = request.user.company))
     
     context = {
         'uc_budget_list': uc_budget_list}
@@ -695,6 +698,7 @@ def uc_budget_edit(request, id=None):
     qs = Uncertainty_Budget_Source.objects.filter(
                             uncertainty_budget = id)
     formset = uc_sources(request.POST or None, queryset=qs)
+    
     if all([uc_budget.is_valid(), formset.is_valid()]):
         uc_budget.save()
         new_sources_id=[]

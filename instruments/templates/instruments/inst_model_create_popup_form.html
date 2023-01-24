@@ -6,6 +6,12 @@
 <article class="post">
     <div class="post-content">
     <form method = 'POST' action= '' enctype = "multipart/form-data" class="site-form" name="model_form">
+        {% if form.errors or form.non_field_errors %}
+            {% for error in form.non_field_errors %} 
+                <p class="error error-danger">** {{ error }}</p>
+            {% endfor %}
+            <br>
+        {% endif %}    
         {% csrf_token %}
         <div class="mb-5 site-form-header bg-indigo-300 rounded px-2">
                 <h2 class="text-center">Instrument Model</h2>

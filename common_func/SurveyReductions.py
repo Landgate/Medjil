@@ -6,8 +6,10 @@ from statistics import mean
 from scipy.stats import t
 from sklearn.linear_model import LinearRegression
 from scipy.stats.distributions import chi2
-from geodepy.survey import (joins, first_vel_params, first_vel_corrn,
-                            part_h2o_vap_press, mets_partial_differentials)
+from geodepy.survey import (
+    joins, first_vel_params, first_vel_corrn,
+    part_h2o_vap_press, mets_partial_differentials)
+from baseline_calibration.models import Pillar_Survey
 
     #-------------------------------------------------------------------------------#
     #----------------- Functions for SURVEY OBSERVATION REDUCTIONS -----------------#
@@ -584,41 +586,56 @@ def is_float(n):
         return True
 
 
-def validate_survey(pillar_survey, baseline, calibrations, 
+def validate_survey(pillar_survey, baseline=None, calibrations=None,
                     raw_edm_obs=None, raw_lvl_obs=None):
-    # Instrumentation Errors
     Errs=[]
     Wrns=[]
-    if raw_lvl_obs:
-        if (len(calibrations['edmi']) == 0 
-            or calibrations['them'] is None 
-            or calibrations['baro'] is None 
-            or calibrations['hygro'] is None):
-            Errs.append('Instrument calibrations are required for the propagation of uncertainty.')
-            Errs.append('These calibration certificates need to be current for the date of survey:'
-                        + pillar_survey['survey_date'].strftime("%d %b, %Y"))
+    #Baseline Calibration errors
+    if not baseline:
+        qry_obj = (
+            Pillar_Survey.objects.filter(
+                baseline = pillar_survey['site'].pk,
+                survey_date__lte = pillar_survey['survey_date'])
+            .exclude(variance__isnull = True)
+            .order_by('-survey_date'))
+        if len(qry_obj) == 0:
+            Errs.append(
+                'There is no calibration of the ' + str(pillar_survey['site'])
+                + ' baseline for the ' + pillar_survey['survey_date'].strftime("%d %b, %Y")
+                + ' when your EDMI calibration survey was observed.')
     
-        if len(calibrations['edmi']) == 0 : 
-            Errs.append('There are no calibration records for ' +
-                       str(pillar_survey['edm']) + ' with prism ' + str(pillar_survey['prism']))
-        if calibrations['staff'] is None: 
-            Wrns.append('There is no calibration records for ' + str(pillar_survey['staff']))
-        if calibrations['them'] is None: 
-            Errs.append('There is no calibration records for ' + str(pillar_survey['thermometer']))
-        if calibrations['baro'] is None: 
-            Errs.append('There is no calibration records for ' + str(pillar_survey['barometer']))
-        if calibrations['hygro'] is None: 
-            Errs.append('There is no calibration records for ' + str(pillar_survey['hygrometer']))
-    else:
-        if calibrations['them'] is None: 
-            Wrns.append('There is no calibration records for ' + str(pillar_survey['thermometer']))
-        if calibrations['baro'] is None: 
-            Wrns.append('There is no calibration records for ' + str(pillar_survey['barometer']))
-        if calibrations['hygro'] is None: 
-            Wrns.append('There is no calibration records for ' + str(pillar_survey['hygrometer']))
+    # Instrumentation Errors
+    if calibrations:
+        if raw_lvl_obs:
+            if (len(calibrations['edmi']) == 0 
+                or calibrations['them'] is None 
+                or calibrations['baro'] is None 
+                or calibrations['hygro'] is None):
+                Errs.append('Instrument calibrations are required for the propagation of uncertainty.')
+                Errs.append('These calibration certificates need to be current for the date of survey:'
+                            + pillar_survey['survey_date'].strftime("%d %b, %Y"))
+        
+            if len(calibrations['edmi']) == 0 : 
+                Errs.append('There are no calibration records for ' +
+                           str(pillar_survey['edm']) + ' with prism ' + str(pillar_survey['prism']))
+            if calibrations['staff'] is None: 
+                Wrns.append('There is no calibration records for ' + str(pillar_survey['staff']))
+            if calibrations['them'] is None: 
+                Errs.append('There is no calibration records for ' + str(pillar_survey['thermometer']))
+            if calibrations['baro'] is None: 
+                Errs.append('There is no calibration records for ' + str(pillar_survey['barometer']))
+            if calibrations['hygro'] is None: 
+                Errs.append('There is no calibration records for ' + str(pillar_survey['hygrometer']))
+        else:
+            if calibrations['them'] is None: 
+                Wrns.append('There is no calibration records for ' + str(pillar_survey['thermometer']))
+            if calibrations['baro'] is None: 
+                Wrns.append('There is no calibration records for ' + str(pillar_survey['barometer']))
+            if calibrations['hygro'] is None: 
+                Wrns.append('There is no calibration records for ' + str(pillar_survey['hygrometer']))
     
     # EDM upload File
-    if raw_edm_obs:
+    if raw_edm_obs and baseline:
         pillars = [p.name for p in baseline['pillars']]
         pop_list=[]
         for k, o in raw_edm_obs.items():
@@ -723,9 +740,11 @@ def validate_survey(pillar_survey, baseline, calibrations,
         
         for n in pillars:
             if not n in lvl_nmes: Errs.append('Pillar "' + n + '" is not listed in the level file.')
+    
     # Date Warnings
     if pillar_survey['survey_date'] > pillar_survey['computation_date']:
         Wrns.append('The date of computation entered is before the date of survey.')
+        
     if 'accreditation' in pillar_survey:
         if (pillar_survey['survey_date'] < pillar_survey['accreditation'].valid_from_date
             or pillar_survey['survey_date'] > pillar_survey['accreditation'].valid_to_date):

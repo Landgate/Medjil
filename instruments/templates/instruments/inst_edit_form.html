@@ -16,7 +16,6 @@
                 {% endif %}
             </div>
             <div class="mt-5 mb-3">
-                <!-- {{ form.errors }} -->
                 {% if form.errors or form.non_field_errors %}
                     {% for error in form.non_field_errors %} 
                         <p class="error error-danger">** {{ error }}</p>

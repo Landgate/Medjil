@@ -193,10 +193,11 @@ def baseline_qry(frm_data):
         if frm_data['auto_base_calibration']:
             baseline['site'] = frm_data['site']
             baseline['calibrated_baseline'] = (
-                Pillar_Survey.objects.filter(baseline = frm_data['site'].pk,                
-                            survey_date__lte = frm_data['survey_date'])
-                    .exclude(variance__isnull = True)
-                    .order_by('-survey_date'))[0]
+                Pillar_Survey.objects.filter(
+                    baseline = frm_data['site'].pk,
+                    survey_date__lte = frm_data['survey_date'])
+                .exclude(variance__isnull = True)
+                .order_by('-survey_date'))[0]
         else:
             baseline['calibrated_baseline'] = frm_data['calibrated_baseline']
             baseline['site'] = baseline['calibrated_baseline'].baseline
