@@ -12,7 +12,7 @@
     <hr>
     <br> -->
     <div class="post-content">
-        <div class="grid-2 mt-5"> 
+        <div class="grid-2 mt-10"> 
             <div class="pxl-5 text-left text-base">
                 <p>Site Name: <strong>{{ sitename }} ({{ sitestate }})</strong></p>
                 {% if sitetype == 'staff_range' %}
@@ -58,8 +58,8 @@
                                 <th width="7%">SL No.</th>
                                 <th width="20%">{{ form.name.label }} </th> 
                                 <th width="25%">{{ form.easting.label }} </th> 
-                                <th width="25%">{{ form.northing.label }}</th>
-                                <th width="20%">{{ form.zone.label }}</th>
+                                <th width="25%">{{ form.northing.label }} </th> 
+                                <th width="20%">{{ form.zone.label }} </th> 
                             </tr>
                         {% endif %}
                         <tr>
