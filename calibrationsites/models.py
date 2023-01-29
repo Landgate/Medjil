@@ -180,11 +180,13 @@ class Pillar(models.Model):
     easting = models.DecimalField(null=True, blank=True,
                             max_digits=9, 
                             decimal_places=3,
+                            verbose_name = 'Easting [m]',
                             validators=[MinValueValidator(300000), MaxValueValidator(900000)],
                             help_text="MGA2020 Easting (m). eg., 395006.085")
     northing = models.DecimalField(null=True, blank=True,
                             max_digits=10, 
                             decimal_places=3,
+                            verbose_name = 'Northing [m]',
                             validators=[MinValueValidator(3000000), MaxValueValidator(10000000)],
                             help_text="MGA2020 Northing (m). eg., 6458541.334")
     height = models.FloatField(null=True, 
