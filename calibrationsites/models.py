@@ -159,17 +159,17 @@ class Pillar(models.Model):
                             decimal_places=3,
                             verbose_name = 'Easting [m]',
                             validators=[MinValueValidator(300000), MaxValueValidator(900000)],
-                            help_text="MGA2020 Easting (m). eg., 395006.085")
+                            help_text="MGA2020- e.g., 395006.085")
     northing = models.DecimalField(null=True, blank=True,
                             max_digits=10, 
                             decimal_places=3,
                             verbose_name = 'Northing [m]',
                             validators=[MinValueValidator(3000000), MaxValueValidator(10000000)],
-                            help_text="MGA2020 Northing (m). eg., 6458541.334")
+                            help_text="MGA2020- e.g., 6458541.334")
 
     zone = models.PositiveSmallIntegerField(null=True, blank=True,
                             validators=[MinValueValidator(1), MaxValueValidator(60)],
-                            help_text = "Grid Zone, if applicable")
+                            help_text = "Grid Zone, if not 1")
 
     class Meta:
         ordering = ['site_id','order']

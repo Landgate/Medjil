@@ -47,6 +47,7 @@
                 {{ wizard.management_form }}
                 {% if wizard.form.forms %}
                     {{ wizard.form.management_form }}
+                    {{ wizard.form.non_field_errors }}
                     {% for form in wizard.form.forms %}
                         {% if forloop.counter == 1 %}
                             <tr>
@@ -60,12 +61,24 @@
                             </tr>
                         {% endif %}
                         <tr>
-                            <td>{{ forloop.counter }}. </td>
-                            <td>{{ form.name }}</td>
+                            <td style="vertical-align: text-top">{{ forloop.counter }}. </td>
+                            <td style="vertical-align: text-top">{{ form.name }}</td>
                             {% if sitetype == 'baseline' %}
-                                <td>{{ form.easting }}</td>
-                                <td>{{ form.northing }}</td>
-                                <td>{{ form.zone }}</td>
+                                <td style="vertical-align: text-top">
+                                    {{ form.easting }}
+                                    <!-- Errors -->
+                                    <p>{{ form.easting.errors}}</p>
+                                </td>
+                                <td style="vertical-align: text-top">
+                                    {{ form.northing }}
+                                    <!-- Errors -->
+                                    <p>{{ form.northing.errors}}</p>
+                                </td>
+                                <td style="vertical-align: text-top">
+                                    {{ form.zone }}
+                                    <!-- Errors -->
+                                    <p>{{ zone.easting.errors}}</p>
+                                </td>
                             {% endif %}
                         </tr>
                     {% endfor %}
