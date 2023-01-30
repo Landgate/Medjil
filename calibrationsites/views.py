@@ -252,6 +252,7 @@ class CreateCalibrationSiteWizard(LoginRequiredMixin, NamedUrlSessionWizardView)
         pillar_form_data = form_data[1]
         
         site_name = site_form_data['site_name']
+        site_type = site_form_data['site_type']
         # Create Site
         try:
             site = CalibrationSite.objects.create(
@@ -269,15 +270,22 @@ class CreateCalibrationSiteWizard(LoginRequiredMixin, NamedUrlSessionWizardView)
         except:
             site = CalibrationSite.objects.get(site_name = site_name)
 
-        for pillars in pillar_form_data:
-            try:
+        if site_type.startswith('staff'):
+            for pillars in pillar_form_data:
                 new_pillars = Pillar.objects.create(
                     site_id = site,
-                    name = int(pillars['name']),
-                    height = pillars['height']
+                    name = pillars['name'],
                 )
-            except IntegrityError:
-                continue
+        elif site_type.startswith('baseline'):
+            for pillars in pillar_form_data:
+                new_pillars = Pillar.objects.create(
+                    site_id = site,
+                    name = pillars['name'],
+                    easting = pillars['easting'],
+                    northing = pillars['northing'],
+                    zone = pillars['zone'],
+                )
+
 
         return redirect('calibrationsites:home')
 #########################################################################

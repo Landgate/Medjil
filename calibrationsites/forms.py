@@ -150,9 +150,10 @@ class AddPillarForm(forms.ModelForm):
 		# self.fields['site_id'].queryset = Pillar.objects.filter(site_id__site_name__exact = sitename) 
 		self.fields['name'].widget.attrs['required'] = 'required'
 		self.fields['name'].widget.attrs['placeholder'] = 'e.g., 2A'
-		self.fields['easting'].widget.attrs['placeholder'] = 'Optional'
-		self.fields['northing'].widget.attrs['placeholder'] = 'Optional'
-		self.fields['zone'].widget.attrs['placeholder'] = 'Optional'
+		if sitetype == 'baseline':
+			self.fields['easting'].widget.attrs['required'] = 'required'
+			self.fields['northing'].widget.attrs['required'] = 'required'
+			self.fields['zone'].widget.attrs['required'] = 'required'
 
 
 	class Meta:

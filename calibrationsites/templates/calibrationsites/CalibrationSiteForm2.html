@@ -5,12 +5,7 @@
 {% block content %} 
 
 <article class="post">
-    <!-- <div class="post-header mt-12 text-center mb-3">
-        <h1>Welcome to Landgate's Survey Instrument Calibration website.</h1>
-        <p> This form allows to register (or modify) a new (or an existing) calibration site - both Barcode Calibration Range or an EDM Baseline.</p>
-    </div>
-    <hr>
-    <br> -->
+
     <div class="post-content">
         <div class="grid-2 mt-10"> 
             <div class="pxl-5 text-left text-base">
@@ -57,17 +52,21 @@
                             <tr>
                                 <th width="7%">SL No.</th>
                                 <th width="20%">{{ form.name.label }} </th> 
-                                <th width="25%">{{ form.easting.label }} </th> 
-                                <th width="25%">{{ form.northing.label }} </th> 
-                                <th width="20%">{{ form.zone.label }} </th> 
+                                {% if sitetype == 'baseline' %}
+                                    <th width="25%">{{ form.easting.label }} </th> 
+                                    <th width="25%">{{ form.northing.label }} </th> 
+                                    <th width="20%">{{ form.zone.label }} </th> 
+                                {% endif %}
                             </tr>
                         {% endif %}
                         <tr>
                             <td>{{ forloop.counter }}. </td>
                             <td>{{ form.name }}</td>
-                            <td>{{ form.easting }}</td>
-                            <td>{{ form.northing }}</td>
-                            <td>{{ form.zone }}</td>
+                            {% if sitetype == 'baseline' %}
+                                <td>{{ form.easting }}</td>
+                                <td>{{ form.northing }}</td>
+                                <td>{{ form.zone }}</td>
+                            {% endif %}
                         </tr>
                     {% endfor %}
                 {% else %}
