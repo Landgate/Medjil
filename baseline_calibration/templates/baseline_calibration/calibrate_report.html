@@ -559,17 +559,19 @@
             <h2 style="text-align:center">Report Notes</h2>
             <div class="flexbox-container_IB">
                 <div class="flexbox-item_800_IB flexbox-item-left_IB">
-                    {% for n in report_notes %}
+                    {% if report_notes %}{% for n in report_notes %}
                         <p>{{forloop.counter}}. {{n}}</p>
                     {% endfor %}
+                    {% else %} No report notes to display. {% endif %}
                  </div>
             </div>
             <h2 style="text-align:center">Data Warnings</h2>
             <div class="flexbox-container_IB">
                 <div class="flexbox-item_800_IB flexbox-item-left_IB">
-                    {% for w in Check_Errors.Warnings %}
+                    {% if Check_Errors.Warnings %}{% for w in Check_Errors.Warnings %}
                         <p>{{forloop.counter}}. {{w}}</p>
                     {% endfor %}
+                    {% else %} No data warnings to display. {% endif %}
                 </div>
             </div>
         </div>

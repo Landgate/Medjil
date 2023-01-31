@@ -591,7 +591,7 @@ def validate_survey(pillar_survey, baseline=None, calibrations=None,
     Errs=[]
     Wrns=[]
     #Baseline Calibration errors
-    if not baseline:
+    if pillar_survey['auto_base_calibration'] and not baseline:
         qry_obj = (
             Pillar_Survey.objects.filter(
                 baseline = pillar_survey['site'].pk,
