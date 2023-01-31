@@ -2,13 +2,12 @@
 from django.db import models
 from django.db.models import Q
 from django.urls import reverse
-from django.core.validators  import MaxValueValidator, MinValueValidator, DecimalValidator
+from django.core.validators  import MaxValueValidator, MinValueValidator
 from django.conf import settings
 from datetime import date
 
 # Create your models here.
 User = settings.AUTH_USER_MODEL
-from accounts.models import CustomUser
 from instruments.models import EDM_Inst, Prism_Inst, Mets_Inst, DigitalLevel, Staff
 from calibrationsites.models import CalibrationSite, Pillar
 from accounts.models import Company
@@ -197,7 +196,7 @@ class Uncertainty_Budget_Source(models.Model):
         ]
         
         ordering = ['uncertainty_budget','group','pk']
-    
+        
     def dict_2_object(self, uc_dict):
         for ky, vl in uc_dict.items():
             if ky in self.__dict__:

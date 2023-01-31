@@ -21,7 +21,7 @@ def get_upload_to_location(instance, filename):
                             creation_date+'-'+ filename)
 
 class uPillar_Survey(models.Model):
-   site = models.ForeignKey(CalibrationSite, on_delete = models.PROTECT, null = True,
+   site = models.ForeignKey(CalibrationSite, on_delete = models.PROTECT, null = True, blank = True,
              help_text="Baseline certified distances")   
    auto_base_calibration = models.BooleanField(default=True)
    calibrated_baseline = models.ForeignKey(Pillar_Survey, on_delete = models.PROTECT, null = True,
@@ -49,6 +49,8 @@ class uPillar_Survey(models.Model):
    job_number = models.CharField(max_length=25,
              help_text="Job reference eg., JN 20212216",
              unique=False,
+             blank=True, null = True,
+             verbose_name= 'Job Number/Reference'
              )
 
    edm = models.ForeignKey(EDM_Inst, on_delete = models.PROTECT, null = False,

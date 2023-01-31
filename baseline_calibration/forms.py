@@ -187,6 +187,12 @@ class Uncertainty_BudgetForm(forms.ModelForm):
         fields = '__all__'        
         labels = {'std_dev_of_zero_adjustment': 'Std Dev Used When Statistically Zero (m)',}
 
+    def clean(self):
+        nme = self.cleaned_data['name']
+        if nme.lower() == 'default':
+            raise forms.ValidationError("'Default' is a reserved keyword. Please rename this item.")
+        return nme
+    
 
 class Uncertainty_Budget_SourceForm(forms.ModelForm):
     class Meta:
@@ -195,8 +201,10 @@ class Uncertainty_Budget_SourceForm(forms.ModelForm):
         exclude = ('std_dev', 'uncertainty_budget')
         widgets = {
             'group': forms.Select(attrs={'onchange':'FilterUnits(this)'}),
-            'distribution': forms.Select(attrs={'onchange':'RectCoverFctr(this)'})
+            'distribution': forms.Select(attrs={'onchange':'RectCoverFctr(this)'}),
+            'uc95': forms.NumberInput(attrs={'required': 'true'})
             }   
+
 
 class AccreditationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):

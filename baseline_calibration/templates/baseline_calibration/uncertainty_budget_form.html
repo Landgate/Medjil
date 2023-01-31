@@ -92,6 +92,13 @@
                           <th>Action</th>
                       </tr>
                       {% for form in formset %}
+                          {% if form.non_field_errors %}
+                               <div class="mt-1 mb-2 non-field-errors">
+                                 {% for error in form.non_field_errors %}
+                                   <p style="color:Red;">{{ error }}</p>
+                                 {% endfor %}
+                               </div>
+                           {% endif %}
                           <tr id=data-form-index_{{forloop.counter0}}>
                               {% for field in form %}
                                   {% if field.label != "Id" %}
@@ -114,7 +121,7 @@
                                       {% for field in form %}
                                           <td>
                                               {% for error in field.errors %}
-                                                  <p style="color:Red;">{{field.name}}{{ error }}</p>
+                                                  <p style="color:Red;">{{ error }}</p>
                                               {% endfor %}
                                           </td>   
                                       {% endfor %}
