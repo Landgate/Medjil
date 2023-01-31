@@ -169,7 +169,7 @@ class Pillar(models.Model):
 
     zone = models.PositiveSmallIntegerField(null=True, blank=True,
                             validators=[MinValueValidator(1), MaxValueValidator(60)],
-                            help_text = "Grid Zone, if not 1")
+                            help_text = "Grid Zone")
 
     class Meta:
         ordering = ['site_id','order']
