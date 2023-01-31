@@ -40,21 +40,13 @@
                 <table style="margin-left:auto;margin-right:auto;font-size:10.0pt;width:800px;">
                     {% if site.site_type == 'staff_range' %}
                         <tr>
-                            <th>Pin</th>
-                            <th>Easting (MGA2020)</th>
-                            <th>Northing (MGA2020)</th>
-                            <th>Zone</th>
-                            <th>Height</th>   
+                            <th>Pin Number</th>
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
                         {% for pillar in pillars %}
                             <tr>
-                                <td>{{ pillar.name }}</td>
-                                <td>{{ pillar.easting }}</td>
-                                <td>{{ pillar.northing }}</td>
-                                <td>{{ pillar.zone }}</td>                                
-                                <td>{{ pillar.height }}</td>
+                                <td class="pxl-3">{{ pillar.name }}</td>                               
                                 <td>{{ site.status }}</td>
                                 <td>
                                     <a class="svg-icon edit" href="/calibrationsites/each_pillar_update/{{site.id}}/{{pillar.name}}" target="_blank" onclick="return showAddPopup(this);" id="update_pillar">
@@ -66,21 +58,19 @@
                         {% endfor %}
                     {% elif site.site_type == 'baseline' %}
                         <tr>
-                            <th>Pillar</th>
+                            <th>Pillar Number</th>
                             <th>Easting (MGA2020)</th>
                             <th>Northing (MGA2020)</th>
-                            <th>Zone</th>
-                            <th>Height</th>                            
+                            <th>Zone</th>                           
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
                         {% for pillar in pillars %}
                             <tr>
-                                <td>{{ pillar.name }}</td>
+                                <td class="pxl-3">{{ pillar.name }}</td> 
                                 <td>{{ pillar.easting }}</td>
                                 <td>{{ pillar.northing }}</td>
-                                <td>{{ pillar.zone }}</td>
-                                <td>{{ pillar.height }}</td>                                
+                                <td>{{ pillar.zone }}</td>                                
                                 <td>{{ site.status }}</td>
                                 <td>
                                     <a class="svg-icon edit" href="/calibrationsites/each_pillar_update/{{site.id}}/{{pillar.name}}" target="_blank" onclick="return showAddPopup(this);" id="update_pillar">

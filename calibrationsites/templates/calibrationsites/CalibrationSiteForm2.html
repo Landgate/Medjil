@@ -5,14 +5,9 @@
 {% block content %} 
 
 <article class="post">
-    <!-- <div class="post-header mt-12 text-center mb-3">
-        <h1>Welcome to Landgate's Survey Instrument Calibration website.</h1>
-        <p> This form allows to register (or modify) a new (or an existing) calibration site - both Barcode Calibration Range or an EDM Baseline.</p>
-    </div>
-    <hr>
-    <br> -->
+
     <div class="post-content">
-        <div class="grid-2 mt-5"> 
+        <div class="grid-2 mt-10"> 
             <div class="pxl-5 text-left text-base">
                 <p>Site Name: <strong>{{ sitename }} ({{ sitestate }})</strong></p>
                 {% if sitetype == 'staff_range' %}
@@ -52,22 +47,39 @@
                 {{ wizard.management_form }}
                 {% if wizard.form.forms %}
                     {{ wizard.form.management_form }}
+                    {{ wizard.form.non_field_errors }}
                     {% for form in wizard.form.forms %}
                         {% if forloop.counter == 1 %}
                             <tr>
                                 <th width="7%">SL No.</th>
                                 <th width="20%">{{ form.name.label }} </th> 
-                                <th width="30%">{{ form.height.label }}</th>
-                                <th width="10%">Delete</th>
-                                <th width="10%"></th>
+                                {% if sitetype == 'baseline' %}
+                                    <th width="25%">{{ form.easting.label }} </th> 
+                                    <th width="25%">{{ form.northing.label }} </th> 
+                                    <th width="20%">{{ form.zone.label }} </th> 
+                                {% endif %}
                             </tr>
                         {% endif %}
                         <tr>
-                            <td>{{ forloop.counter }}. </td>
-                            <td>{{ form.name }}</td>
-                            <td>{{ form.height }}</td>
-                            <td>{{ form.DELETE }}</td>
-                            <td><button>Add more</button></td>
+                            <td style="vertical-align: text-top">{{ forloop.counter }}. </td>
+                            <td style="vertical-align: text-top">{{ form.name }}</td>
+                            {% if sitetype == 'baseline' %}
+                                <td style="vertical-align: text-top">
+                                    {{ form.easting }}
+                                    <!-- Errors -->
+                                    <p>{{ form.easting.errors}}</p>
+                                </td>
+                                <td style="vertical-align: text-top">
+                                    {{ form.northing }}
+                                    <!-- Errors -->
+                                    <p>{{ form.northing.errors}}</p>
+                                </td>
+                                <td style="vertical-align: text-top">
+                                    {{ form.zone }}
+                                    <!-- Errors -->
+                                    <p>{{ zone.easting.errors}}</p>
+                                </td>
+                            {% endif %}
                         </tr>
                     {% endfor %}
                 {% else %}

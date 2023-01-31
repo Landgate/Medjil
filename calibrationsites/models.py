@@ -65,7 +65,6 @@ def get_upload_to_location(instance, filename):
 class CalibrationSite(models.Model):
     site_types = (
                 (None, '--- Select Type ---'),
-                # ('edm_lab', 'EDM Calibration Laboratory'),
                 ('baseline','EDM Calibration Baseline'),
                 ('staff_lab', 'Staff Calibration Laboratory'),
                 ('staff_range','Staff Calibration Range'),               
@@ -144,31 +143,9 @@ class CalibrationSite(models.Model):
                 return getattr(self.site_config, 'url', None)
             return None
 
-# pin_validate = RegexValidator(r'^[0-9]{1,2}$', 'Only two digits are allowed')
-
-
-# class PinsForRange(models.Model):
-#     site_id = models.ForeignKey(CalibrationSite,
-#                  limit_choices_to={'site_type__exact': 'staff_range'},
-#                  on_delete = models.RESTRICT, null = False,
-#                  verbose_name = 'Site Name')
-#     pin_number = models.CharField(max_length=2,
-#                     unique = True,
-#                     help_text="Enter pin numbers as an integer, e.g., 1",
-#                     validators = [pin_validate],
-#                     verbose_name= 'Pin/Pillar Number')
-#     height = models.FloatField(null=True, 
-#                                 blank=True,
-#                                 validators=[MinValueValidator(-30), MaxValueValidator(10000)],
-#                                 help_text = "Enter the AHD, if known")
-    
-#     def __str__(self):
-#         return f'{self.pin_number} - {self.site_id}'
-
 
 class Pillar(models.Model):
     site_id = models.ForeignKey(CalibrationSite,
-                #  limit_choices_to={'site_type__exact': 'baseline'},
                  on_delete = models.CASCADE, null = False,
                  verbose_name = 'Site Name')
     name = models.CharField(max_length=25, 
@@ -180,20 +157,19 @@ class Pillar(models.Model):
     easting = models.DecimalField(null=True, blank=True,
                             max_digits=9, 
                             decimal_places=3,
+                            verbose_name = 'Easting [m]',
                             validators=[MinValueValidator(300000), MaxValueValidator(900000)],
-                            help_text="MGA2020 Easting (m). eg., 395006.085")
+                            help_text="MGA2020- e.g., 395006.085")
     northing = models.DecimalField(null=True, blank=True,
                             max_digits=10, 
                             decimal_places=3,
+                            verbose_name = 'Northing [m]',
                             validators=[MinValueValidator(3000000), MaxValueValidator(10000000)],
-                            help_text="MGA2020 Northing (m). eg., 6458541.334")
-    height = models.FloatField(null=True, 
-                                blank=True,
-                                validators=[MinValueValidator(-30), MaxValueValidator(10000)],
-                                help_text = "Enter the orthometic height, if known")
+                            help_text="MGA2020- e.g., 6458541.334")
+
     zone = models.PositiveSmallIntegerField(null=True, blank=True,
                             validators=[MinValueValidator(1), MaxValueValidator(60)],
-                            help_text = "Grid Zone, if applicable")
+                            help_text = "Grid Zone")
 
     class Meta:
         ordering = ['site_id','order']
@@ -207,9 +183,6 @@ class Pillar(models.Model):
     def save(self, *args, **kwargs):
          self.order = self.format_name
          super(Pillar, self).save(*args, **kwargs)
-
-    # def get_absolute_url(self):
-    #     return reverse('baseline_calibration:pillar-detail', args=[str(self.id)])
 
     def __str__(self):
         return f'{self.site_id} - Pillar/Pin {self.name}'
