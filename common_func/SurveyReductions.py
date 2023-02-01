@@ -591,18 +591,19 @@ def validate_survey(pillar_survey, baseline=None, calibrations=None,
     Errs=[]
     Wrns=[]
     #Baseline Calibration errors
-    if pillar_survey['auto_base_calibration'] and not baseline:
-        qry_obj = (
-            Pillar_Survey.objects.filter(
-                baseline = pillar_survey['site'].pk,
-                survey_date__lte = pillar_survey['survey_date'])
-            .exclude(variance__isnull = True)
-            .order_by('-survey_date'))
-        if len(qry_obj) == 0:
-            Errs.append(
-                'There is no calibration of the ' + str(pillar_survey['site'])
-                + ' baseline for the ' + pillar_survey['survey_date'].strftime("%d %b, %Y")
-                + ' when your EDMI calibration survey was observed.')
+    if not baseline:
+        if pillar_survey['auto_base_calibration']:
+            qry_obj = (
+                Pillar_Survey.objects.filter(
+                    baseline = pillar_survey['site'].pk,
+                    survey_date__lte = pillar_survey['survey_date'])
+                .exclude(variance__isnull = True)
+                .order_by('-survey_date'))
+            if len(qry_obj) == 0:
+                Errs.append(
+                    'There is no calibration of the ' + str(pillar_survey['site'])
+                    + ' baseline for the ' + pillar_survey['survey_date'].strftime("%d %b, %Y")
+                    + ' when your EDMI calibration survey was observed.')
     
     # Instrumentation Errors
     if calibrations:
