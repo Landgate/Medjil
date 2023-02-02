@@ -76,6 +76,8 @@ This is the root user and has all the privilages and access.
 ### Test Data 
 Use the sample datasets in the folder .\Test Data\ to conduct some test calibrations. 
 
+### Database Relationship diagram
+[dbdiagram.io](https://dbdiagram.io/d/63db952d296d97641d7df322)
 
 ### Authors
 
