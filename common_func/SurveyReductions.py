@@ -213,6 +213,14 @@ def refline_std_dev(o, alignment_survey, edm):
     # units of measurements to (mm) of uncertainty in the direction of the 
     # baseline reference line.
     
+    # Convert ratios to m for Groups that allow ratio and constant
+    for s in o['uc_sources']:
+        if (any(s['group'] =='02', s['group'] =='07', s['group'] =='08') 
+            and s['units'] == '1:x'):
+            print(o['Reduced_distance'],s['unit'],s['std_dev'])
+            s['std_dev'] = o['Reduced_distance'] * s['std_dev'] 
+            s['unit'] = 'm'
+            
     uc_budget = subtotal_uc_budget(o['uc_sources'])
         
     # '01' EDM Scale Factor from calibration certificate

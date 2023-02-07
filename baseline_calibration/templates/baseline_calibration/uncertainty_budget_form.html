@@ -157,7 +157,7 @@ const templateForm = document.getElementById("id_formset_empty_form");
 
 //Initialise the unit selection on the default table
 const OrigTotalRows = document.querySelector('input[id$="-TOTAL_FORMS"]');
-for (i = 0; i < (Number(OrigTotalRows.value))-1; i++) {
+for (i = 0; i < (Number(OrigTotalRows.value)); i++) {
     FilterUnits(document.getElementById("id_form-"+(i).toString()+"-group"));
     }
 
@@ -290,8 +290,16 @@ function FilterUnits(group_slct) {
              }        
        }
     }
+    if (desc.includes("EDMI ") || desc.includes("Certified distances") ) {
+        let uLen = units.length;
+        for (let i = 0; i < uLen; i++) {
+          if (units[i].typ.includes("scal")) {
+              let newOption = new Option(units[i].d, units[i].u);
+              units_slct.add(newOption, undefined);
+              }        
+        }
+    }
 }
-
 
 function RectCoverFctr(dist_slct) {
                    

@@ -726,6 +726,8 @@ def uc_budget_create(request):
         uc_budget = Uncertainty_BudgetForm(request.POST, user=request.user)
         uc_sources = formset_factory(Uncertainty_Budget_SourceForm, extra=0)
         uc_sources = uc_sources(request.POST)
+        print(uc_budget.is_valid())
+        print(uc_sources.is_valid())
         if uc_budget.is_valid() and uc_sources.is_valid():
             uc_budget.save()
             for uc_source in uc_sources:
