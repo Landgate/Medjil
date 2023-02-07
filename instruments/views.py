@@ -39,6 +39,7 @@ from .models import (InstrumentMake,
                     Mets_certificate)
 
 from staffcalibration.models import StaffCalibrationRecord
+from common_func.Convert import db_std_units
 
 # Instrument Settings 
 @login_required(login_url="/accounts/login")
@@ -53,18 +54,6 @@ def instrument_settings(request):
 
     }
     return render(request, 'instruments/inst_global_settings.html', context)
-
-
-def db_std_units(orig_val, orig_unit):
-    new_val = orig_val
-    if orig_unit == 'nm': new_val = orig_val / 1e6
-    if orig_unit == 'mm': new_val = orig_val / 1000
-    if orig_unit == 'Hz': new_val = orig_val / 1e6
-    if orig_unit == 'ppm': new_val = orig_val / 1e6
-    if orig_unit == '°F': new_val = (orig_val -32) * (5/9)
-    if orig_unit == 'mmHg': new_val = orig_val * 1.33322
-    
-    return new_val
 
 
 @login_required(login_url="/accounts/login")
@@ -195,39 +184,39 @@ def register_edit(request, inst_disp, tab, id):
         # Convert input to database standard units
         if 'unit_manu_unc_const' in frm.keys():
             instance.manu_unc_const = db_std_units(
-                frm['manu_unc_const']*1000,frm['unit_manu_unc_const'])
+                frm['manu_unc_const']*1000,frm['unit_manu_unc_const'])[0]
         if 'unit_manu_unc_ppm' in frm.keys():                
             if frm['unit_manu_unc_ppm'] == '1:x': 
                 instance.manu_unc_ppm = frm['manu_unc_ppm'] * 1e6
         if 'unit_freq' in frm.keys(): 
-            instance.freq = db_std_units(frm['frequency'],frm['unit_freq'])
+            instance.freq = db_std_units(frm['frequency'],frm['unit_freq'])[0]
         if 'unit_unit_length' in frm.keys():
             instance.unit_length = db_std_units(
-                frm['unit_length'],frm['unit_unit_length'])
+                frm['unit_length'],frm['unit_unit_length'])[0]
         if 'unit_carrier_wave' in frm.keys():                
             if frm['unit_carrier_wave'] == 'm': 
                 instance.carrier_wave = frm['carrier_wave'] * 1e9
             if frm['unit_carrier_wave'] == 'mm':
                 instance.carrier_wave = frm['carrier_wave'] * 1e6
         if 'unit_measurement_inc' in frm.keys():
-            instance.measurement_inc = db_std_units(
-                frm['measurement_increments'], frm['unit_measurement_inc'])
+            instance.measurement_increments = db_std_units(
+                frm['measurement_increments'], frm['unit_measurement_inc'])[0]
             
         if 'unit_scf' in frm.keys():
             instance.scale_correction_factor = db_std_units(
-                frm['scale_correction_factor'],frm['unit_scf'])
+                frm['scale_correction_factor'],frm['unit_scf'])[0]
         if 'unit_scf_uc' in frm.keys():
             instance.scf_uncertainty = db_std_units(
-                frm['scf_uncertainty'], frm['unit_scf_uc'])
+                frm['scf_uncertainty'], frm['unit_scf_uc'])[0]
         if 'unit_zpc' in frm.keys():
             instance.zero_point_correction = db_std_units(
-                frm['zero_point_correction'],frm['unit_zpc'])
+                frm['zero_point_correction'],frm['unit_zpc'])[0]
         if 'unit_zpc_uc' in frm.keys():
             instance.zpc_uncertainty = db_std_units(
-                frm['zpc_uncertainty'],frm['unit_zpc_uc'])
+                frm['zpc_uncertainty'],frm['unit_zpc_uc'])[0]
         if 'unit_stdev' in frm.keys():
             instance.standard_deviation = db_std_units(
-                frm['standard_deviation'],frm['unit_stdev'])
+                frm['standard_deviation'],frm['unit_stdev'])[0]
     
         if request.user.company and not request.user.is_staff:
             if inst_disp == 'edm': instance.edm_owner = request.user.company

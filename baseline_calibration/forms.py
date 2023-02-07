@@ -187,7 +187,7 @@ class Uncertainty_BudgetForm(forms.ModelForm):
         fields = '__all__'        
         labels = {'std_dev_of_zero_adjustment': 'Std Dev Used When Statistically Zero (m)',}
 
-    def clean(self):
+    def clean_name(self):
         nme = self.cleaned_data['name']
         if nme.lower() == 'default':
             raise forms.ValidationError("'Default' is a reserved keyword. Please rename this item.")

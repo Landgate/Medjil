@@ -16,23 +16,24 @@ from baseline_calibration.models import Pillar_Survey
     #-------------------------------------------------------------------------------#
 def reduce_sets_of_obs(raw_edm_obs):
     bays = group_list(raw_edm_obs.values(),
-                        group_by='Bay',
-                        labels_list=['from_pillar',
-                                     'to_pillar'],
-                        avg_list=['inst_ht',
-                                  'tgt_ht',
-                                  'Temp',
-                                  'Pres',
-                                  'Humid',
-                                  'Mets_Correction',
-                                  'Calibration_Correction',
-                                  'raw_slope_dist',
-                                  'slope_dist',
-                                  'Est',
-                                  'Nth'],
-                        std_list=['slope_dist'],
-                        mask_by='use_for_distance')
+                      group_by='Bay',
+                      labels_list=['from_pillar',
+                                   'to_pillar'],
+                      avg_list=['inst_ht',
+                                'tgt_ht',
+                                'Temp',
+                                'Pres',
+                                'Humid',
+                                'Mets_Correction',
+                                'Calibration_Correction',
+                                'raw_slope_dist',
+                                'slope_dist',
+                                'Est',
+                                'Nth'],
+                      std_list=['slope_dist'],
+                      mask_by='use_for_distance')
     return bays
+
 
 def adjust_alignment_survey(raw_edm_obs, pillars):
     first_pillar_nme =pillars[0].name
@@ -215,12 +216,15 @@ def refline_std_dev(o, alignment_survey, edm):
     
     # Convert ratios to m for Groups that allow ratio and constant
     for s in o['uc_sources']:
-        if (any(s['group'] =='02', s['group'] =='07', s['group'] =='08') 
-            and s['units'] == '1:x'):
-            print(o['Reduced_distance'],s['unit'],s['std_dev'])
-            s['std_dev'] = o['Reduced_distance'] * s['std_dev'] 
-            s['unit'] = 'm'
-            
+        print(s)
+        s['std_dev'], s['units'] = db_std_units(s['std_dev'], s['units'])
+        print('===========')
+        print(s)
+        if (any([s['group'] =='02', s['group'] =='07', s['group'] =='08'])
+            and s['units'] == 'sclr'):
+            s['units'] = 'm'
+            s['std_dev'] = s['std_dev'] * o['Reduced_distance']
+    
     uc_budget = subtotal_uc_budget(o['uc_sources'])
         
     # '01' EDM Scale Factor from calibration certificate
@@ -474,7 +478,7 @@ def add_calib_uc(uc_sources, calib, insts):
         uc_sources.append({'group': '01',
                            'ab_type':'B',
                            'distribution':'N',
-                           'units': '1:x',
+                           'units': 'sclr',
                            'std_dev': calib_edmi.scf_std_dev,
                            'degrees_of_freedom':calib_edmi.degrees_of_freedom,
                            'k':calib_edmi.scf_coverage_factor,
@@ -506,7 +510,7 @@ def add_calib_uc(uc_sources, calib, insts):
         uc_sources.append({'group': '01',
                            'ab_type':'B',
                            'distribution':'N',
-                           'units': '1:x',
+                           'units': 'sclr',
                            'std_dev': abs(scf_d2-calib_edmi.scale_correction_factor),
                            'degrees_of_freedom':30,
                            'k':sqrt(3),

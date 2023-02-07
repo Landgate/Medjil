@@ -683,13 +683,6 @@ def uc_budgets(request):
 
 @login_required(login_url="/accounts/login") 
 def uc_budget_edit(request, id=None):
-    context = {}
-    rtn = request.POST.get('next')
-    if rtn:
-        context['return'] = rtn
-    else:
-        context['return'] ='baseline_calibration:uc_budgets'
-        rtn = '/baseline_calibration/uc_budgets'
     
     obj = get_object_or_404(Uncertainty_Budget, id=id)
     uc_budget = Uncertainty_BudgetForm(request.POST or None, instance=obj)
@@ -712,8 +705,12 @@ def uc_budget_edit(request, id=None):
              if not orig_source.id in new_sources_id:
                  orig_source.delete()
                  
-        return HttpResponseRedirect(rtn)
+        if request.POST.get('next'):
+            return redirect(request.POST.get('next'))
+        else:
+            return redirect(request.POST.get('baseline_calibration:uc_budgets'))
 
+    context = {}
     context['form'] = uc_budget
     context['formset'] = formset
     
@@ -726,18 +723,16 @@ def uc_budget_create(request):
         uc_budget = Uncertainty_BudgetForm(request.POST, user=request.user)
         uc_sources = formset_factory(Uncertainty_Budget_SourceForm, extra=0)
         uc_sources = uc_sources(request.POST)
-        print(uc_budget.is_valid())
-        print(uc_sources.is_valid())
         if uc_budget.is_valid() and uc_sources.is_valid():
             uc_budget.save()
             for uc_source in uc_sources:
                 f = uc_source.save(commit=False)
                 f.uncertainty_budget = uc_budget.instance
                 f.save()            
-                if 'next' in request.POST:
-                    return redirect(request.POST.get('next'))
-                else:
-                    return redirect ('baseline_calibration:uc_budgets')
+            if 'next' in request.POST:
+                return redirect(request.POST.get('next'))
+            else:
+                return redirect ('baseline_calibration:uc_budgets')
     else:
         ini_budget={}
         ini_budget['std_dev_of_zero_adjustment'] = (

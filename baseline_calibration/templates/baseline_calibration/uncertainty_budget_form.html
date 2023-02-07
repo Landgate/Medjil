@@ -225,7 +225,8 @@ function addRow() {
 
 function FilterUnits(group_slct) {
 
-    const units = [{typ:"scal", u:"1:x", d:"Ratio (1:x)"},
+    const units = [{typ:"scal", u:"sclr", d:"Scalar"},
+                   {typ:"scal", u:"1:x", d:"Ratio (1:x)"},
                    {typ:"scal", u:"ppm", d:"ppm"},
                    {typ:"scal", u:"%", d:"%"},
                    {typ:"lgth", u:"m"},
@@ -239,18 +240,18 @@ function FilterUnits(group_slct) {
                    
     let units_slct  = document.getElementById(group_slct.id.replace("-group","-units"));
     let desc = group_slct.options[group_slct.selectedIndex].text;
-    console.log('------------')
-    console.log(group_slct)
-    console.log(units_slct)
-    console.log(desc)
+    orig_indx = units_slct.selectedIndex;
+    if (orig_indx != -1){
+        orig_units = units_slct.options[orig_indx].value;
+    }
     
     //Remove all options to start fresh
     while (units_slct.options.length > 0) {
         units_slct.remove(0);
     }
     
+    let uLen = units.length;
     if (desc.includes("Temperature")) {
-        let uLen = units.length;
         for (let i = 0; i < uLen; i++) {
           if (units[i].typ.includes("temp")) {
               let newOption = new Option(units[i].u, units[i].u);
@@ -258,7 +259,6 @@ function FilterUnits(group_slct) {
               }        
         }
     } else if (desc.includes("Pressure")) {
-        let uLen = units.length;
         for (let i = 0; i < uLen; i++) {
           if (units[i].typ.includes("pres")) {
               let newOption = new Option(units[i].u, units[i].u);
@@ -266,7 +266,6 @@ function FilterUnits(group_slct) {
               }        
         }
     } else if (desc.includes("Humidity")) {
-        let uLen = units.length;
         for (let i = 0; i < uLen; i++) {
           if (units[i].typ.includes("humi")) {
               let newOption = new Option(units[i].u, units[i].u);
@@ -274,7 +273,6 @@ function FilterUnits(group_slct) {
               }        
         }
     } else if (desc.includes("scale")) {
-        let uLen = units.length;
         for (let i = 0; i < uLen; i++) {
           if (units[i].typ.includes("scal")) {
               let newOption = new Option(units[i].d, units[i].u);
@@ -282,22 +280,21 @@ function FilterUnits(group_slct) {
               }        
         }
     } else {
-       let uLen = units.length;
        for (let i = 0; i < uLen; i++) {
          if (units[i].typ.includes("lgth")) {
              let newOption = new Option(units[i].u, units[i].u);
              units_slct.add(newOption, undefined);
-             }        
+             }
+         if (desc.includes("EDMI ") || desc.includes("Certified distances") ) {
+             if (units[i].typ.includes("scal")) {
+                 let newOption = new Option(units[i].d, units[i].u);
+                 units_slct.add(newOption, undefined);
+                 }
+             }
        }
     }
-    if (desc.includes("EDMI ") || desc.includes("Certified distances") ) {
-        let uLen = units.length;
-        for (let i = 0; i < uLen; i++) {
-          if (units[i].typ.includes("scal")) {
-              let newOption = new Option(units[i].d, units[i].u);
-              units_slct.add(newOption, undefined);
-              }        
-        }
+    if (orig_indx != -1){
+        units_slct.value = orig_units;
     }
 }
 
@@ -312,6 +309,7 @@ function RectCoverFctr(dist_slct) {
         k_input.value = 2.0;
     }
 }
+
 </script>
 
 {% endblock %}
