@@ -228,13 +228,13 @@
 		                <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IC = Instrument Correction (m)
 		                <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;D = Distance (m)
 		                <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;zpc = Zero Point Correction (m)
-		                <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;scf = Scale Correction Factor (1:x)
+		                <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;scf = Scale Correction Factor (x:1)
 		                {% if calib.edmi.0.parameters|length > 2 %}
 		                    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;U = Instrument Unit Length (m)
-		                    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1C = 1 - Cyclic (1:x)
-		                    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2C = 2 - Cyclic (1:x)
-		                    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3C = 3 - Cyclic (1:x)
-		                    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4C = 4 - Cyclic (1:x)
+		                    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1C = 1 - Cyclic (x:1)
+		                    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2C = 2 - Cyclic (x:1)
+		                    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3C = 3 - Cyclic (x:1)
+		                    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4C = 4 - Cyclic (x:1)
 		                {% endif %}
 		                </p>
 		            </div>		            
@@ -361,7 +361,7 @@
             <div class="text-center">
                 <h2>Uncertainty Budget - Uncertainty Sources</h2>
                 <div class="flexbox-container_IB">
-                    <div class="flexbox-item_800_IB flexbox-item-left_IB"><p>The quantity of some uncertainties are distance dependent. Thus, the following two tables relate to the uncertainty budget for the certified distance between the first and last pillar only.</p></div>
+                    <div class="flexbox-item_800_IB flexbox-item-left_IB"><p>The quantity of some uncertainties are distance dependent. Thus, the following two tables relate to the uncertainty budget for the longest observed distance only.</p></div>
                 </div>              
                 <table style="margin-left:auto;margin-right:auto;font-size:10.0pt;width:800px;">
                     <tr>
@@ -374,8 +374,7 @@
                         <th>Coverage Factor</th>
                         <th>Degrees of Freedom</th>
                     </tr>
-                    {% with edm_observations|last as d %}
-                        {% for s in d.uc_sources %}
+                        {% for s in first_to_last.uc_sources %}
                             <tr>
                                 <td class="text-left">{{ s.group_verbose }}</td>
                                 <td class="text-left">{{ s.description }}</td>
@@ -392,7 +391,6 @@
                                 <td>{{ s.degrees_of_freedom }}</td>
                             </tr>
                         {% endfor %}
-                    {% endwith %}
                 </table>
             </div>
             <div class="text-center">
@@ -406,8 +404,7 @@
                         <th>Degrees of Freedom</th>
                         <th>Contribution to TDU* (mm)</th>
                     </tr>
-                    {% with edm_observations|last as d %}
-                        {% for s in d.uc_budget.values %}
+                        {% for s in first_to_last.uc_budget.values %}
                             <tr>
                                 <td class="text-left">{{ s.group_verbose }}</td>
                                 {% if not s.units == 'm' %}
@@ -422,7 +419,6 @@
                                 <td>{{ s.ui95|multiply:1000|sigfigs:2 }}</td>
                             </tr>
                         {% endfor %}
-                    {% endwith %}
                 </table>
                 <div class="flexbox-container_IB">
                     <div class="flexbox-item_800_IB flexbox-item-right_IB"><i>*TDU - Total Distance Uncertainty</i></div>

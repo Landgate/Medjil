@@ -117,14 +117,14 @@ def calibrate1(request, id):
         # read new files or read raw data from database
         if survey_files['edm_file']:
             edm_clms=['from_pillar',
-        		      'to_pillar',
-        		      'inst_ht',
-        		      'tgt_ht',
-        		      'hz_direction',
-        		      'raw_slope_dist',
-        		      'raw_temperature',
-        		      'raw_pressure',
-        		      'raw_humidity']
+                      'to_pillar',
+                      'inst_ht',
+                      'tgt_ht',
+                      'hz_direction',
+                      'raw_slope_dist',
+                      'raw_temperature',
+                      'raw_pressure',
+                      'raw_humidity']
             raw_edm_obs = csv2dict(survey_files['edm_file'],edm_clms)
             for v in raw_edm_obs.values():
                 v['use_for_alignment'] = True 
@@ -140,8 +140,8 @@ def calibrate1(request, id):
         
         if survey_files['lvl_file']:
             level_clms=['pillar',
-        		      'reduced_level',
-        		      'Std_Dev']
+                      'reduced_level',
+                      'Std_Dev']
             raw_lvl_obs = csv2dict(survey_files['lvl_file'],level_clms,0)
         else:            
             qs = Level_Observation.objects.filter(pillar_survey__pk=id)
@@ -556,16 +556,18 @@ def calibrate2(request,id):
                 cd['uc_budget'] = OrderedDict(sorted(cd['uc_budget'].items()))
                 
             edm_observations = list(edm_observations.values())
-            
-            residual_chart = [{'from_pillar': e['from_pillar'], 
-                               'to_pillar': e['to_pillar'],
-                               'Reduced_distance': e['Reduced_distance'],
-                               'residual': e['residual'],
-                               'std_residual': e['std_residual']} for e in edm_observations]
+            residual_chart = []
             n_rpt_shots = max([len(e['grp_Bay']) for e in edm_observations])
             for o in edm_observations:
                 while len(o['grp_Bay'])<n_rpt_shots:
                     o['grp_Bay'].append('')
+                    
+                residual_chart.append(
+                    {'from_pillar': o['from_pillar'], 
+                     'to_pillar': o['to_pillar'],
+                     'Reduced_distance': o['Reduced_distance'],
+                     'residual': o['residual'],
+                     'std_residual': o['std_residual']})
 
             calib['edmi_drift']['xyValues'] = [
                     {'x':c['calibration_date'].isoformat()[:10],

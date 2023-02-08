@@ -23,7 +23,7 @@ def forwards_func(apps, schema_editor):
             email=os.environ.get('EMAIL_HOST_USER'),  
             password=os.environ.get('EMAIL_HOST_PASSWORD'),
         company= Company.objects.get(company_abbrev='LG')
-        	)
+            )
 ##    else:
 ##        print("Your passwords do not match. Start again!")
 ##        sys.exit()
@@ -49,7 +49,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-	    migrations.RunPython(
-	            forwards_func, reverse_func
-	        ),
+        migrations.RunPython(
+                forwards_func, reverse_func
+            ),
     ]

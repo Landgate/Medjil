@@ -61,7 +61,7 @@ class PillarSurveyForm(forms.ModelForm):
                attrs={'type':'date', 'class': 'page0'}),
            'survey_date': forms.DateInput(format=('%d-%m-%Y'), 
                attrs={'type':'date', 'class': 'page0'}),
-           'observer': forms.TextInput (attrs={'class': 'page0'}),	
+           'observer': forms.TextInput (attrs={'class': 'page0'}),    
            'weather': forms.Select(attrs={'class': 'page0'}),
            'job_number': forms.TextInput (
                attrs={'required': 'false', 'class': 'page0'}),
@@ -219,7 +219,7 @@ class AccreditationForm(forms.ModelForm):
         fields = '__all__'
 
         widgets = {
-			'statement': forms.Textarea(attrs={'class': 'text-area2'}),
+            'statement': forms.Textarea(attrs={'class': 'text-area2'}),
             'valid_from_date': forms.DateInput(format=('%d-%m-%Y'),
                 attrs={'type':'date'}),
             'valid_to_date': forms.DateInput(format=('%d-%m-%Y'),

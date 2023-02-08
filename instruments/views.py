@@ -47,7 +47,6 @@ def instrument_settings(request):
     inst_types = [[x[0], x[1]] for x in InstrumentModel.inst_type.field.choices if x[0] not in [None, 'others']]
 
     inst_makes = InstrumentMake.objects.exclude(make_abbrev = 'OTH').order_by('make_abbrev')
-    # print(inst_makes)
     context = {
         'inst_types': inst_types,
         'inst_makes': inst_makes
@@ -185,9 +184,9 @@ def register_edit(request, inst_disp, tab, id):
         if 'unit_manu_unc_const' in frm.keys():
             instance.manu_unc_const = db_std_units(
                 frm['manu_unc_const']*1000,frm['unit_manu_unc_const'])[0]
-        if 'unit_manu_unc_ppm' in frm.keys():                
-            if frm['unit_manu_unc_ppm'] == '1:x': 
-                instance.manu_unc_ppm = frm['manu_unc_ppm'] * 1e6
+        if 'unit_manu_unc_ppm' in frm.keys():
+            instance.manu_unc_ppm = db_std_units(
+                frm['manu_unc_ppm'], frm['unit_manu_unc_ppm'])[0] / 1e6
         if 'unit_freq' in frm.keys(): 
             instance.freq = db_std_units(frm['frequency'],frm['unit_freq'])[0]
         if 'unit_unit_length' in frm.keys():
@@ -514,7 +513,7 @@ STAFF_TEMPLATES  = {
 
 class StaffCreationWizard(LoginRequiredMixin, NamedUrlSessionWizardView):
     # get the template names and their steps
-    def get_template_names(self):				
+    def get_template_names(self):                
         return [STAFF_TEMPLATES[self.steps.current]]
 
     # directory to store the ascii files

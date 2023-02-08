@@ -55,7 +55,7 @@ def db_std_units(orig_val, orig_unit):
     if any([orig_unit == 'nm', orig_unit == 'mm']): 
         new_unit = 'm'
     if any([orig_unit == 'ppm', orig_unit == '1:x', orig_unit == '%']):
-        new_unit = 'sclr'
+        new_unit = 'x:1'
 
     return new_val, new_unit
 

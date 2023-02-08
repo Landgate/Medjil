@@ -89,7 +89,7 @@ class Level_ObservationAdmin(admin.ModelAdmin):
 #admin.site.register(Uncertainty_Budget)
 @admin.register(Uncertainty_Budget)
 class Uncertainty_BudgetAdmin(admin.ModelAdmin):
-	inlines = [Uncertainty_Budget_SourceInline]
+    inlines = [Uncertainty_Budget_SourceInline]
 
 
 admin.site.register(Uncertainty_Budget_Source)

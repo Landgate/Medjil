@@ -401,7 +401,10 @@ def calibrate2(request,id):
             back_colours = ['#FF0000', '#800000', '#FFFF00', '#808000', 
                             '#00FF00', '#008000', '#00FFFF', '#008080', 
                             '#0000FF', '#000080', '#FF00FF', '#800080']
+            
             edm_observations = list(edm_observations.values())
+            first_to_last = {'Reduced_distance':0}
+            residual_chart = []
             n_rpt_shots = max([len(e['grp_Bay']) for e in edm_observations])
             for o, colour in zip(edm_observations, back_colours):
                 while len(o['grp_Bay'])<n_rpt_shots:
@@ -415,13 +418,15 @@ def calibrate2(request,id):
                         uc['group_verbose'] = dict(Uncertainty_Budget_Source.group_types)[uc['group']]
                 o['uc_sources']=sorted(o['uc_sources'], key=lambda x: x['group_verbose'])
                 o['uc_budget'] = OrderedDict(sorted(o['uc_budget'].items()))
-
-            residual_chart = [{'from_pillar': e['from_pillar'], 
-                               'to_pillar': e['to_pillar'],
-                               'Reduced_distance': e['Reduced_distance'],
-                               'residual': e['residual'],
-                               'std_residual': e['std_residual']} 
-                              for e in edm_observations]
+                
+                residual_chart.append({'from_pillar': o['from_pillar'], 
+                                   'to_pillar':o['to_pillar'],
+                                   'Reduced_distance': o['Reduced_distance'],
+                                   'residual': o['residual'],
+                                   'std_residual': o['std_residual']})
+                if o['Reduced_distance'] > first_to_last['Reduced_distance']:
+                    first_to_last = o
+                                       
             #Add current pillar survey to history table
             calib['edmi'][0]['variance'] = chi_test['Variance']
             calib['edmi'][0]['degrees_of_freedom'] = chi_test['dof']
@@ -432,11 +437,12 @@ def calibrate2(request,id):
                        'calib':calib,
                        'baseline': baseline,
                        'chi_test': chi_test,
-                       'ISO_test':ISO_test,
+                       'ISO_test': ISO_test,
                        'edm_observations': edm_observations,
-                       'residual_chart':residual_chart,
+                       'residual_chart': residual_chart,
                        'report_notes': report_notes,
-                       'Check_Errors':Check_Errors,
+                       'Check_Errors': Check_Errors,
+                       'first_to_last': first_to_last,
                        'hidden':[calib_params,
                                  pillar_survey_update]}
             return render(request, 'edm_calibration/calibrate_report.html', context)

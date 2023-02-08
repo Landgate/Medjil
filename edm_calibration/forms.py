@@ -68,7 +68,7 @@ class CalibrateEdmForm(forms.ModelForm):
                attrs={'type':'date', 'class': 'page0'}),
            'survey_date': forms.DateInput(format=('%d-%m-%Y'), 
                attrs={'type':'date', 'class': 'page0'}),
-           'observer': forms.TextInput (attrs={'class': 'page0'}),	
+           'observer': forms.TextInput (attrs={'class': 'page0'}),    
            'weather': forms.Select(attrs={'class': 'page0'}),
            'job_number': forms.TextInput (
                attrs={'class': 'page0'}),

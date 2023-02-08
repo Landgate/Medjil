@@ -88,7 +88,7 @@ class Uncertainty_Budget_Source(models.Model):
     description = models.CharField(max_length=256,
                  unique=False,)
     units_list = (
-                 ('sclr','Scalar'),
+                 ('x:1','Scalar (x:1)'),
                  ('ppm','ppm'),
                  ('%','%'),
                  ('1:x','Ratio (1:x)'),
@@ -158,13 +158,13 @@ class Uncertainty_Budget_Source(models.Model):
     def save(self, *args, **kwargs):
         #convert UC -> Std dev or Std -> UC
         if self.k and self.uc95:
-            if not self.std_dev:
-                self.std_dev = self.uc95 / self.k
+            self.std_dev = self.uc95 / self.k
+        if self.k and self.std_dev:                
             if not self.uc95:
                 self.uc95 = self.std_dev * self.k
             
-            if self.distribution == 'R':
-                self.k = 3**0.5
+        if self.distribution == 'R':
+            self.k = 3**0.5
              
         super(Uncertainty_Budget_Source, self).save(*args, **kwargs)
 

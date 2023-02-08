@@ -191,7 +191,7 @@ TEMPLATES  = {"site_form": "calibrationsites/CalibrationSiteForm1.html",
 # Create your views here.
 class CreateCalibrationSiteWizard(LoginRequiredMixin, NamedUrlSessionWizardView):
     # get the template names and their steps
-    def get_template_names(self):				
+    def get_template_names(self):                
         return [TEMPLATES[self.steps.current]]
     
     def perm_check(self):

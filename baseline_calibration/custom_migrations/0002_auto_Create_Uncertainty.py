@@ -11,13 +11,13 @@ from django.core.files.storage import FileSystemStorage
 from django.core.files import File
 
 Default_budget = {
-	'name' : 'Default',
-	'Company': 'Landgate',
+    'name' : 'Default',
+    'Company': 'Landgate',
     'std_dev_of_zero':0.0002
     }
 
 sources = [
-    {'group' : '01', 'description': 'The EDM scale factor affected by temperature. (Type B)', 'units': '1:x', 'ab_type': 'B', 'distribution': 'R', 'std_dev': 0.000000115, 'uc95': 0.0000002, 'k': 3**0.5, 'degrees_of_freedom': 30},
+    {'group' : '01', 'description': 'The EDM scale factor affected by temperature. (Type B)', 'units': 'x:1', 'ab_type': 'B', 'distribution': 'R', 'std_dev': 0.000000115, 'uc95': 0.0000002, 'k': 3**0.5, 'degrees_of_freedom': 30},
     {'group' : '04', 'description': 'Expected variation along measured dist', 'units':  '°C', 'ab_type':  'B', 'distribution':  'N', 'std_dev': 0.5, 'uc95': 1, 'k': 2, 'degrees_of_freedom': 10},
     {'group' : '05', 'description': 'Expected variation along measured dist.', 'units':  'hPa', 'ab_type':  'B', 'distribution':  'N', 'std_dev': 0.5, 'uc95': 1, 'k': 2, 'degrees_of_freedom': 10},
     {'group' : '09', 'description': 'Instrument Centring', 'units':  'm', 'ab_type':  'B', 'distribution':  'N', 'std_dev': 0.0002, 'uc95': 0.0004, 'k': 2, 'degrees_of_freedom': 30},
@@ -26,7 +26,7 @@ sources = [
     {'group' : '10', 'description': 'Measuring of Reflector Height', 'units':  'm', 'ab_type':  'B', 'distribution':  'N', 'std_dev': 0.0005, 'uc95': 0.001, 'k': 2, 'degrees_of_freedom': 30},
 ]
 
-	
+    
 #########################################################################
 def load_initial_data(apps, schema_editor):
     Company = apps.get_model("accounts", "Company")
@@ -39,7 +39,7 @@ def load_initial_data(apps, schema_editor):
         company = company_id,
         std_dev_of_zero_adjustment = Default_budget['std_dev_of_zero']
         )
-	
+    
     uc_budget_id = Uncertainty_Budget.objects.get(name = Default_budget['name'])
     for source in sources:
         Uncertainty_Budget_Source.objects.get_or_create(
@@ -54,15 +54,15 @@ def load_initial_data(apps, schema_editor):
             k = source['k'],
             degrees_of_freedom = source['degrees_of_freedom']
             )
-	
+    
 
 class Migration(migrations.Migration):
 
-	dependencies = [
-		('baseline_calibration', '0001_initial'),
-	]
+    dependencies = [
+        ('baseline_calibration', '0001_initial'),
+    ]
 
-	operations = [
-		migrations.RunPython(load_initial_data),
-	]
+    operations = [
+        migrations.RunPython(load_initial_data),
+    ]
 

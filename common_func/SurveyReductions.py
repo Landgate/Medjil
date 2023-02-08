@@ -1,15 +1,15 @@
 import numpy as np
 from common_func.Convert import *
-from math import sqrt, exp, sin, cos, radians
+from math import sqrt, sin, cos, radians
 from datetime import date
 from statistics import mean
 from scipy.stats import t
 from sklearn.linear_model import LinearRegression
-from scipy.stats.distributions import chi2
 from geodepy.survey import (
     joins, first_vel_params, first_vel_corrn,
     part_h2o_vap_press, mets_partial_differentials)
 from baseline_calibration.models import Pillar_Survey
+from copy import deepcopy
 
     #-------------------------------------------------------------------------------#
     #----------------- Functions for SURVEY OBSERVATION REDUCTIONS -----------------#
@@ -99,11 +99,11 @@ def adjust_alignment_survey(raw_edm_obs, pillars):
 def apply_calib(obs, applied, calib=[],scf=1,zpc=0):
     obs0 = float(obs)
     if applied  == True:
-    	obs1 = obs0
+        obs1 = obs0
     else:
-    	if hasattr(calib,'scale_correction_factor'): scf=calib.scale_correction_factor
-    	if hasattr(calib,'zero_point_correction'): zpc=calib.zero_point_correction
-    	obs1 = obs0*scf + zpc
+        if hasattr(calib,'scale_correction_factor'): scf=calib.scale_correction_factor
+        if hasattr(calib,'zero_point_correction'): zpc=calib.zero_point_correction
+        obs1 = obs0*scf + zpc
     correction = obs1 - obs0
     
     return obs1, correction
@@ -216,15 +216,12 @@ def refline_std_dev(o, alignment_survey, edm):
     
     # Convert ratios to m for Groups that allow ratio and constant
     for s in o['uc_sources']:
-        print(s)
         s['std_dev'], s['units'] = db_std_units(s['std_dev'], s['units'])
-        print('===========')
-        print(s)
         if (any([s['group'] =='02', s['group'] =='07', s['group'] =='08'])
-            and s['units'] == 'sclr'):
+            and s['units'] == 'x:1'):
             s['units'] = 'm'
             s['std_dev'] = s['std_dev'] * o['Reduced_distance']
-    
+            
     uc_budget = subtotal_uc_budget(o['uc_sources'])
         
     # '01' EDM Scale Factor from calibration certificate
@@ -344,7 +341,7 @@ def sum_uc_budget(uc_budget):
 
 def add_surveyed_uc(o, edm_trend, uc_sources, alignment_survey):
     # '02'
-    surveyed_uc = uc_sources.copy()
+    surveyed_uc = deepcopy(uc_sources)
     surveyed_uc.append({'group': '02',
                    'ab_type':'B',
                    'distribution':'N',
@@ -400,7 +397,7 @@ def add_surveyed_uc(o, edm_trend, uc_sources, alignment_survey):
 
 
 def add_certified_dist_uc(o, uc_sources, std_dev_matrix, dof):
-    cd_uc = uc_sources.copy()
+    cd_uc = deepcopy(uc_sources)
     # '07'
     if o['Bay'] in std_dev_matrix.keys():
         bay = o['Bay']
@@ -421,7 +418,7 @@ def add_certified_dist_uc(o, uc_sources, std_dev_matrix, dof):
 def add_typeA(d, matrix_y, dof):
     # Only used for calibration of EDMI
     # add on the uncertainty for the calibration parameters
-    type_a = d['uc_sources'].copy()
+    type_a = deepcopy(d['uc_sources'])
     # '08 calculate uncertainty of instrument correction
     if len(matrix_y)==2:
         s_dev = (matrix_y[0]['std_dev']
@@ -448,7 +445,7 @@ def add_typeA(d, matrix_y, dof):
 
 def add_typeB(uc_sources, d, matrix_y, dof):
     # '03 LSA The EDM zero offset uncertainty 
-    type_b=uc_sources.copy()
+    type_b=deepcopy(uc_sources)
     type_b.append({'group': '03',
                     'ab_type':'A',
                     'distribution':'N',
@@ -478,7 +475,7 @@ def add_calib_uc(uc_sources, calib, insts):
         uc_sources.append({'group': '01',
                            'ab_type':'B',
                            'distribution':'N',
-                           'units': 'sclr',
+                           'units': 'x:1',
                            'std_dev': calib_edmi.scf_std_dev,
                            'degrees_of_freedom':calib_edmi.degrees_of_freedom,
                            'k':calib_edmi.scf_coverage_factor,
@@ -510,7 +507,7 @@ def add_calib_uc(uc_sources, calib, insts):
         uc_sources.append({'group': '01',
                            'ab_type':'B',
                            'distribution':'N',
-                           'units': 'sclr',
+                           'units': 'x:1',
                            'std_dev': abs(scf_d2-calib_edmi.scale_correction_factor),
                            'degrees_of_freedom':30,
                            'k':sqrt(3),
