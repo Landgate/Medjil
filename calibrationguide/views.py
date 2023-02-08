@@ -103,7 +103,6 @@ def guide_downloads(request):
     baselines = [('None', '--- Select one ---'),]
     for obj in obj_baselines:
         baselines.append((obj['site_name'], obj['site_name'],))
-    print(baselines)
     obj_ranges = CalibrationSite.objects.filter(site_type='staff_range').values('site_name')
     staff_ranges = [('None', '--- Select one ---'),]
     for obj in obj_ranges:

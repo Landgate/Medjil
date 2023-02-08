@@ -64,7 +64,6 @@ def user_signup(request):
             email = form.cleaned_data.get('email')
             user = form.save(commit=False)
             user.is_active = False
-            # print(user.company.company_abbrev)
             
             if user.company.company_abbrev == "OTH":
                 company_name = request.POST['company_name']

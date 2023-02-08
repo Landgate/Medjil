@@ -31,6 +31,35 @@ from edm_calibration.models import(
 from geodepy.geodesy import grid2geo, rho
 
 
+def db_std_units(orig_val, orig_unit):
+    # function converts all values to scalar, m, mHz, °C or hPa
+    # if a distance is specified, scalar standard deviations are converted to m
+    new_val = orig_val
+    new_unit = orig_unit
+    
+    if orig_unit == 'ppm': new_val = orig_val / 1e6
+    if orig_unit == '1:x': new_val = 1 / orig_val
+    if orig_unit == '%': new_val = orig_val / 100
+    if orig_unit == 'nm': new_val = orig_val / 1e6
+    if orig_unit == 'mm': new_val = orig_val / 1000
+    if orig_unit == 'Hz': 
+        new_val = orig_val / 1e6
+        new_unit = 'mHz'
+    if orig_unit == '°F': 
+        new_val = (orig_val -32) * (5/9)
+        new_unit = '°C'
+    if orig_unit == 'mmHg': 
+        new_val = orig_val * 1.33322
+        new_unit = 'hPa'
+    
+    if any([orig_unit == 'nm', orig_unit == 'mm']): 
+        new_unit = 'm'
+    if any([orig_unit == 'ppm', orig_unit == '1:x', orig_unit == '%']):
+        new_unit = 'x:1'
+
+    return new_val, new_unit
+
+
 def csv2dict(csv_file,clms,key_names=-1):
     dct={}
     clms.append('line')
@@ -224,7 +253,7 @@ def baseline_qry(frm_data):
                             float(baseline_enz['easting__avg']),
                             float(baseline_enz['northing__avg']))
     baseline['d_radius'] = rho(baseline_llh[0])
-    print(baseline['d_radius'])
+    
     return baseline
         
     

@@ -61,7 +61,7 @@ class PillarSurveyForm(forms.ModelForm):
                attrs={'type':'date', 'class': 'page0'}),
            'survey_date': forms.DateInput(format=('%d-%m-%Y'), 
                attrs={'type':'date', 'class': 'page0'}),
-           'observer': forms.TextInput (attrs={'class': 'page0'}),	
+           'observer': forms.TextInput (attrs={'class': 'page0'}),    
            'weather': forms.Select(attrs={'class': 'page0'}),
            'job_number': forms.TextInput (
                attrs={'required': 'false', 'class': 'page0'}),
@@ -187,7 +187,7 @@ class Uncertainty_BudgetForm(forms.ModelForm):
         fields = '__all__'        
         labels = {'std_dev_of_zero_adjustment': 'Std Dev Used When Statistically Zero (m)',}
 
-    def clean(self):
+    def clean_name(self):
         nme = self.cleaned_data['name']
         if nme.lower() == 'default':
             raise forms.ValidationError("'Default' is a reserved keyword. Please rename this item.")
@@ -219,7 +219,7 @@ class AccreditationForm(forms.ModelForm):
         fields = '__all__'
 
         widgets = {
-			'statement': forms.Textarea(attrs={'class': 'text-area2'}),
+            'statement': forms.Textarea(attrs={'class': 'text-area2'}),
             'valid_from_date': forms.DateInput(format=('%d-%m-%Y'),
                 attrs={'type':'date'}),
             'valid_to_date': forms.DateInput(format=('%d-%m-%Y'),

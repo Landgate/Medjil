@@ -31,7 +31,7 @@ class InstrumentModel(models.Model):
                 ('hygro','Hygrometer'),
                 ('psy','Psychrometer'),
                 ('others','Others'),)
-					        
+                            
     inst_type = models.CharField(max_length=6,
                  choices=inst_types,
                  verbose_name= 'instrument type',
@@ -85,10 +85,10 @@ class Staff(models.Model):
                 ('wood','Wood'),
                 ('aluminium','Aluminium'),
                 ('steel','Steel'),
-				('epoxy','Carbon/epoxy'),
-				('e_glass','E-glass'),
-				('s2_glass','S2-glass'),)
-					        
+                ('epoxy','Carbon/epoxy'),
+                ('e_glass','E-glass'),
+                ('s2_glass','S2-glass'),)
+                            
     staff_type = models.CharField(max_length=10,
                  choices=staff_types)
 
@@ -497,10 +497,10 @@ class Mets_certificate (models.Model):
     degrees_of_freedom = models.IntegerField(
         validators = [MinValueValidator(0), MaxValueValidator(500)],
         help_text="Degrees of freedom of calibration " +
-        					"For a Type B estimate use the following as a guide: "
-        					" 3 for not very confident, "
-        					"10 for moderate confidence, "
-        					"30 for very confident.",
+                            "For a Type B estimate use the following as a guide: "
+                            " 3 for not very confident, "
+                            "10 for moderate confidence, "
+                            "30 for very confident.",
         default = 30)
     certificate_upload = models.FileField(
         upload_to=get_upload_to_mets_certificate,

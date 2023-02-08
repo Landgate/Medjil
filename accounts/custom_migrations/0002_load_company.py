@@ -8,20 +8,19 @@ from datetime import datetime
 
 
 def load_initial_data(apps, schema_editor):
-	Company = apps.get_model("accounts", "Company")
-	with open("assets/company/authority_names.csv", 'r') as f:
-		reader = csv.reader(f)
-		header = next(reader)
+    Company = apps.get_model("accounts", "Company")
+    with open("assets/company/authority_names.csv", 'r') as f:
+        reader = csv.reader(f)
+        header = next(reader)
 
-		companys = []
-		for row in reader:
-			company = Company.objects.create(company_abbrev = row[0], company_name = row[1])
-			#print(company)
+        companys = []
+        for row in reader:
+            company = Company.objects.create(company_abbrev = row[0], company_name = row[1])
 
 def reverse_func(apps, schema_editor):
-	Company = apps.get_model("accounts", Company)
+    Company = apps.get_model("accounts", Company)
 
-	Company.objects.all().delete()
+    Company.objects.all().delete()
 
 class Migration(migrations.Migration):
 
@@ -30,5 +29,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-    	migrations.RunPython(load_initial_data, reverse_func),
+        migrations.RunPython(load_initial_data, reverse_func),
     ]

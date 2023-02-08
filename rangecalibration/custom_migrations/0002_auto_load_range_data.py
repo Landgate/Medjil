@@ -194,7 +194,7 @@ def upload_range_data(apps, schema_editor):
     HeightDifferenceModel = apps.get_model("rangecalibration", "HeightDifferenceModel")
     BarCodeRangeParam = apps.get_model("rangecalibration", "BarCodeRangeParam")
 
-	# Starting to read the files
+    # Starting to read the files
     range_dir = "data_preload/Staff Range/Australia/WA/Boya/Range Calibration"
     FileDir = os.path.join(range_dir, '20172297')
     FileDir = "data_preload/Staff Range/Australia/WA/Boya/Range Calibration/20172297"
@@ -238,7 +238,6 @@ def upload_range_data(apps, schema_editor):
         for filename in files:
             if filename.endswith(('.ASC', '.asc')):
                 file_path = os.path.join(root, filename).replace('\\','/')
-                # print(file_path)
                 fieldfile = os.path.join(root, filename)
                 fieldbooks = [f for f in os.listdir(root) if f.endswith(('pdf', 'PDF'))]
                 if fieldbooks:
@@ -250,22 +249,6 @@ def upload_range_data(apps, schema_editor):
                 staff_number = Staff.objects.get(staff_number = file_path.split('/')[-2].split('-')[1])
                 unique_index = observation_date.strftime('%Y%m%d')+'-'+staff_number.staff_number
 
-        # k+=1
-        # unique_index = None
-        # if files == []:
-        #     pass
-        # else:
-        #     tmp = root.split('\\')[-1].split('-')
-        #     unique_index = tmp[0]+'-'+tmp[1]
-
-        # if unique_index:
-        #     fieldfile = os.path.normpath(os.path.join(root, [f for f in os.listdir(root) if f.endswith(('.asc', 'ASC'))][0]))
-        #     fieldbook = [f for f in os.listdir(root) if f.endswith(('pdf', 'PDF'))]
-            
-        #     if fieldbook:
-        #         fieldbook = os.path.normpath(os.path.join(root, fieldbook[0]))
-        #     else:
-        #         fieldbook = None
                 [instance] = calibration_record[calibration_record[:,0]==unique_index]
                 # Get the Variables
                 observation_date = instance[1]
@@ -400,7 +383,7 @@ def reverse_func(apps, schema_editor):
     AdjustedDataModel = apps.get_model("range_calibration", "AdjustedDataModel")
     HeightDifferenceModel = apps.get_model("range_calibration", "HeightDifferenceModel")
     RangeParameters = apps.get_model("range_calibration", "RangeParameters")
-	
+    
     Calibration_Update.objects.all().delete()
     RawDataModel.objects.all().delete()
     AdjustedDataModel.objects.all().delete()
@@ -417,5 +400,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-    		migrations.RunPython(upload_range_data, reverse_func),
+            migrations.RunPython(upload_range_data, reverse_func),
     ]

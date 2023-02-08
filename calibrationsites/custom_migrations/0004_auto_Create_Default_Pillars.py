@@ -12,109 +12,109 @@ from django.core.files import File
 #########################################################################
 ################################ STAFF ##################################
 boya_pillars = [
-	{'site_name' : 'Boya'},
-	{'name': ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21']}	
-]	
+    {'site_name' : 'Boya'},
+    {'name': ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21']}    
+]    
 #########################################################################
 ################################ EDM ####################################
 curtin_pillars = [
-	{'site_name' : 'Curtin'},
-	{'name': ['2', '3', '4', '5', '6', '7', '8', '9', '10', '11B', '12']},	
-	{'easting': [395006.085, 395005.566, 395003.999, 394976.124, 394948.425, 394917.336, 394912.979, 394908.653, 394904.303, 394899.273, 394894.627]},
-	{'northing': [6458541.334, 6458543.778, 6458551.213, 6458683.216, 6458814.555, 6458961.946, 6458982.534, 6459003.085, 6459023.616, 6459047.605, 6459069.552]},
-	{'zone': [50,50,50,50,50,50,50,50,50,50,50]}
-]	
+    {'site_name' : 'Curtin'},
+    {'name': ['2', '3', '4', '5', '6', '7', '8', '9', '10', '11B', '12']},    
+    {'easting': [395006.085, 395005.566, 395003.999, 394976.124, 394948.425, 394917.336, 394912.979, 394908.653, 394904.303, 394899.273, 394894.627]},
+    {'northing': [6458541.334, 6458543.778, 6458551.213, 6458683.216, 6458814.555, 6458961.946, 6458982.534, 6459003.085, 6459023.616, 6459047.605, 6459069.552]},
+    {'zone': [50,50,50,50,50,50,50,50,50,50,50]}
+]    
 
 busselton_pillars = [
-	{'site_name' : 'Busselton'},
-	{'name': ['1', '2', '3', '4', '5', '6']},	
-	{'easting': [340707.889, 340728.287, 340830.25, 341013.811, 341156.58, 341217.747]},
-	{'northing': [6272539.787 , 6272540.019, 6272541.722, 6272544.783, 6272547.153, 6272548.332]},
-	{'zone': [50,50,50,50,50,50]}
-]	
+    {'site_name' : 'Busselton'},
+    {'name': ['1', '2', '3', '4', '5', '6']},    
+    {'easting': [340707.889, 340728.287, 340830.25, 341013.811, 341156.58, 341217.747]},
+    {'northing': [6272539.787 , 6272540.019, 6272541.722, 6272544.783, 6272547.153, 6272548.332]},
+    {'zone': [50,50,50,50,50,50]}
+]    
 
 kalgoorlie_pillars = [
-	{'site_name' : 'Kalgoorlie'},
-	{'name': ['1', '2', '3', '4', '5', '6', '7', '8']}	,	
-	{'easting': [349921.164, 349924.523, 349927.893, 349969.637, 350011.328, 350079.962, 350175.597, 350325.072]},
-	{'northing': [6596026.036, 6596029.725, 6596033.421, 6596079.238, 6596124.989, 6596200.346, 6596305.337, 6596469.375]},
-	{'zone': [51,51,51,51,51,51,51,51]}
-]	
+    {'site_name' : 'Kalgoorlie'},
+    {'name': ['1', '2', '3', '4', '5', '6', '7', '8']}    ,    
+    {'easting': [349921.164, 349924.523, 349927.893, 349969.637, 350011.328, 350079.962, 350175.597, 350325.072]},
+    {'northing': [6596026.036, 6596029.725, 6596033.421, 6596079.238, 6596124.989, 6596200.346, 6596305.337, 6596469.375]},
+    {'zone': [51,51,51,51,51,51,51,51]}
+]    
 #########################################################################
 def load_initial_data(apps, schema_editor):
-	CalibrationSite = apps.get_model('calibrationsites', 'CalibrationSite')
-	Pillar = apps.get_model('calibrationsites', 'Pillar')
+    CalibrationSite = apps.get_model('calibrationsites', 'CalibrationSite')
+    Pillar = apps.get_model('calibrationsites', 'Pillar')
 
-	# Boya Pillars
-	site_id = CalibrationSite.objects.get(site_name = boya_pillars[0]['site_name'])
-	pillars = boya_pillars[1]['name']
-	for pillar in pillars:
-		Pillar.objects.get_or_create(
-			site_id = site_id,
-			name = pillar,
-			order = '{:03d}'.format(int(pillar))
-		)
-	
-	# Curtin Pillars
-	site_id = CalibrationSite.objects.get(site_name = curtin_pillars[0]['site_name'])
-	pillars = curtin_pillars[1]['name']
-	est = curtin_pillars[2]['easting']
-	nth = curtin_pillars[3]['northing']
-	zne = curtin_pillars[4]['zone']
-	for pillar, e, n, z in zip(pillars, est, nth, zne):
-		match = re.match(r"([0-9]+)([a-z]+)", pillar, re.I)
-		if match:
-    			pillar_number = match.group(1)
-		else:
-    			pillar_number = pillar
-		Pillar.objects.get_or_create(
-			site_id = site_id,
-			name = pillar,
-			order = '{:03d}'.format(int(pillar_number)),
+    # Boya Pillars
+    site_id = CalibrationSite.objects.get(site_name = boya_pillars[0]['site_name'])
+    pillars = boya_pillars[1]['name']
+    for pillar in pillars:
+        Pillar.objects.get_or_create(
+            site_id = site_id,
+            name = pillar,
+            order = '{:03d}'.format(int(pillar))
+        )
+    
+    # Curtin Pillars
+    site_id = CalibrationSite.objects.get(site_name = curtin_pillars[0]['site_name'])
+    pillars = curtin_pillars[1]['name']
+    est = curtin_pillars[2]['easting']
+    nth = curtin_pillars[3]['northing']
+    zne = curtin_pillars[4]['zone']
+    for pillar, e, n, z in zip(pillars, est, nth, zne):
+        match = re.match(r"([0-9]+)([a-z]+)", pillar, re.I)
+        if match:
+                pillar_number = match.group(1)
+        else:
+                pillar_number = pillar
+        Pillar.objects.get_or_create(
+            site_id = site_id,
+            name = pillar,
+            order = '{:03d}'.format(int(pillar_number)),
             easting = e,
             northing = n,
             zone = z
-		)
+        )
 
-	# Busselton Pillars
-	site_id = CalibrationSite.objects.get(site_name = busselton_pillars[0]['site_name'])
-	pillars = busselton_pillars[1]['name']
-	est = busselton_pillars[2]['easting']
-	nth = busselton_pillars[3]['northing']
-	zne = busselton_pillars[4]['zone']
-	for pillar, e, n, z in zip(pillars, est, nth, zne):
-		Pillar.objects.get_or_create(
-			site_id = site_id,
-			name = pillar,
-			order = '{:03d}'.format(int(pillar)),
+    # Busselton Pillars
+    site_id = CalibrationSite.objects.get(site_name = busselton_pillars[0]['site_name'])
+    pillars = busselton_pillars[1]['name']
+    est = busselton_pillars[2]['easting']
+    nth = busselton_pillars[3]['northing']
+    zne = busselton_pillars[4]['zone']
+    for pillar, e, n, z in zip(pillars, est, nth, zne):
+        Pillar.objects.get_or_create(
+            site_id = site_id,
+            name = pillar,
+            order = '{:03d}'.format(int(pillar)),
             easting = e,
             northing = n,
             zone = z
-		)
-	
-	# Kalgoorlie Pillars
-	site_id = CalibrationSite.objects.get(site_name = kalgoorlie_pillars[0]['site_name'])
-	pillars = kalgoorlie_pillars[1]['name']
-	for pillar in pillars:
-		Pillar.objects.get_or_create(
-			site_id = site_id,
-			name = pillar,
-			order = '{:03d}'.format(int(pillar))
-		)
-	
+        )
+    
+    # Kalgoorlie Pillars
+    site_id = CalibrationSite.objects.get(site_name = kalgoorlie_pillars[0]['site_name'])
+    pillars = kalgoorlie_pillars[1]['name']
+    for pillar in pillars:
+        Pillar.objects.get_or_create(
+            site_id = site_id,
+            name = pillar,
+            order = '{:03d}'.format(int(pillar))
+        )
+    
 
 def reverse_func(apps, schema_editor):
-	Pillar = apps.get_model('calibrationsites', 'Pillar')
-	Pillar.objects.all().delete()
-	
+    Pillar = apps.get_model('calibrationsites', 'Pillar')
+    Pillar.objects.all().delete()
+    
 
 class Migration(migrations.Migration):
 
-	dependencies = [
-		('calibrationsites', '0003_auto_Create_Default_Sites'),
-	]
+    dependencies = [
+        ('calibrationsites', '0003_auto_Create_Default_Sites'),
+    ]
 
-	operations = [
-		migrations.RunPython(load_initial_data, reverse_func),
-	]
+    operations = [
+        migrations.RunPython(load_initial_data, reverse_func),
+    ]
 

@@ -28,6 +28,7 @@ freq_units = (
         ('Hz','Hz'),
         ('mHz','mHz'),)
 scalar_units = (
+        ('x:1','x:1'),
         ('1:x','1:x'),
         ('ppm','ppm'),)   
 ini_units = ()

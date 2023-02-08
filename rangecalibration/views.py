@@ -215,7 +215,7 @@ TEMPLATES  = {"prefill_form": "rangecalibration/range_calibration_form_1.html",
 
 class RangeCalibrationWizard(LoginRequiredMixin, SessionWizardView):
     # get the template names and their steps
-    def get_template_names(self):				
+    def get_template_names(self):                
         return [TEMPLATES[self.steps.current]]
     
     def perm_check(self):
@@ -273,7 +273,7 @@ class RangeCalibrationWizard(LoginRequiredMixin, SessionWizardView):
                             'dStdTemperature': thisStaff.standard_temperature,
                         }
             
-            # Read & tabulate field data	
+            # Read & tabulate field data    
             thisStaffReading = check_filetype(field_file)
             
             # Get the Pin information & Tabulate the staff readings
