@@ -2,6 +2,8 @@
 import csv
 from django.db import migrations, models
 from datetime import datetime
+from django.conf import settings
+import os
 
 # Start migration
 inst_makes = [
@@ -29,8 +31,9 @@ def add_default_instruments(apps, schema_editor):
         obj.save()
 
     # try:
-    with open("data_preload/default instruments/Default Instrument Models.csv", "r", encoding="cp1252") as f:
-        reader = csv.reader(f); header = next(reader)
+    with open(os.path.join(settings.MEDIA_ROOT, 'InitialData/Default Instruments/Default Instrument Models.csv'), 'r') as f:
+        reader = csv.reader(f)
+        header = next(reader)
         k = 0
         for row in reader:
                 k +=1

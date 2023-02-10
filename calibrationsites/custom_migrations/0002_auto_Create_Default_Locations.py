@@ -73,7 +73,7 @@ def reverse_func(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('calibrationsites', '0001_initial'),
+        ('calibrationsites', '0002_remove_pillar_height_alter_calibrationsite_id_and_more'),
     ]
 
     operations = [

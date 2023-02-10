@@ -10,7 +10,7 @@ import os
 
 def load_initial_data(apps, schema_editor):
     Company = apps.get_model("accounts", "Company")
-    with open(os.path.join(settings.MEDIA_ROOT, 'Landgate/company_names/authority_names.csv'), 'r') as f:
+    with open(os.path.join(settings.MEDIA_ROOT, 'Landgate/company/authority_names.csv'), 'r') as f:
         reader = csv.reader(f)
         header = next(reader)
 
