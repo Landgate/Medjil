@@ -395,7 +395,6 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('rangecalibration', '0001_initial'),
-        ('rangecalibration', '0002_alter_adjusteddatamodel_id_and_more'),
         ('instruments', '0002_auto_load_default_instruments'),
         
     ]

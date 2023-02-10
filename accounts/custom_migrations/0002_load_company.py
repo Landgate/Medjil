@@ -5,11 +5,12 @@ from __future__ import unicode_literals
 from django.db import migrations, models
 import csv
 from datetime import datetime
-
+from django.conf import settings
+import os
 
 def load_initial_data(apps, schema_editor):
     Company = apps.get_model("accounts", "Company")
-    with open("assets/company/authority_names.csv", 'r') as f:
+    with open(os.path.join(settings.MEDIA_ROOT, 'Landgate/company/authority_names.csv'), 'r') as f:
         reader = csv.reader(f)
         header = next(reader)
 
