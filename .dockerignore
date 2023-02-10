@@ -1,0 +1,8 @@
+#Ignore virtual env
+.venv
+.git
+.cache
+
+# Ignore the following folders
+staticfiles
+mediafiles

@@ -22,15 +22,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'd%t^naj(!0x3-te!aq@gt=2wze9^oqs=3)k3$_(ng7c4d8bk_%'
-#SECRET_KEY = os.environ.get('SECRET_KEY')
+# SECRET_KEY = 'd%t^naj(!0x3-te!aq@gt=2wze9^oqs=3)k3$_(ng7c4d8bk_%'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-# DEBUG = int(os.environ.get('DEBUG', default=0))
+# DEBUG = True
+DEBUG = int(os.environ.get('DEBUG', default=0))
 
-ALLOWED_HOSTS = ['127.0.0.1']
-# ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS').split(' ')
+# ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS').split(' ')
 CSRF_TRUSTED_ORIGINS = ['http://localhost:1337', 'http://127.0.0.1:8000']
 
 # Add Custom user model
@@ -111,7 +111,7 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR , 'db.sqlite3'),
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         }
     }
 
@@ -208,7 +208,5 @@ EMAIL_USE_TLS = True    # use port 587
 EMAIL_PORT = 587
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
-
-
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
