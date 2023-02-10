@@ -79,13 +79,13 @@ Use the sample datasets in the folder .\Test Data\ to conduct some test calibrat
 ### Database Relationship diagram
 [dbdiagram.io](https://dbdiagram.io/d/63db952d296d97641d7df322)
 
-## Django User permission & groups
+### Django User permission & groups
 Permissions are rules or restrictions to view, add, change, delete that can be assigned to a user or group of users
 
 Group is a group of users. One user can be part of many groups and one group can have many users. Groups can use of labeling users.
 Groups can contain list of permissions
 
-## Admin permissions
+### Admin permissions
 ``is_staff`` can access the admin site. Specific permissions should be given to access in the admin site.   
 ``is_superuser`` can access the admin site and has all the permissions without explicitly assigning them. 
 
