@@ -1,0 +1,22 @@
+
+# Development - Build image and run container
+docker-compose up -d --build
+
+# Development - Stop container
+docker-compose down -v
+
+# Delete all containers & images
+docker system prune -a
+
+# Production - Build image and run container
+docker-compose -f docker-compose.prod.yml up -d --build
+
+# Production - Stop container
+docker-compose -f docker-compose.prod.yml down -v
+
+# See logs 
+docker-compose logs -f 
+docker-compose -f docker-compose.prod.yml logs -f 
+
+# Run Python Manage in Docker - example createsuperuser
+docker-compose exec web python manage.py createsuperuser 
