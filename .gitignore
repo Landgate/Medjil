@@ -12,6 +12,7 @@
 # virtual environment
 ##################
 .venv
+.env.
 
 # Static
 ###################
