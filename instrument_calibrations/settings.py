@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
-import django_heroku
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 # BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -22,12 +22,16 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'd%t^naj(!0x3-te!aq@gt=2wze9^oqs=3)k3$_(ng7c4d8bk_%'
-#SECRET_KEY = os.environ.get('SECRET_KEY')
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# SECRET_KEY = 'd%t^naj(!0x3-te!aq@gt=2wze9^oqs=3)k3$_(ng7c4d8bk_%'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
-ALLOWED_HOSTS = ['https://medjil.herokuapp.com/', '127.0.0.1']
+# SECURITY WARNING: don't run with debug turned on in production!
+# DEBUG = True
+DEBUG = int(os.environ.get('DEBUG', default=0))
+
+# ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS').split(' ')
+CSRF_TRUSTED_ORIGINS = ['http://localhost:1337', 'http://127.0.0.1:8000']
 
 # Add Custom user model
 AUTH_USER_MODEL = 'accounts.CustomUser'
@@ -91,14 +95,23 @@ WSGI_APPLICATION = 'instrument_calibrations.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-if 'DATABASE_URL' in os.environ:
-    import dj_database_url
-    DATABASES = {'default': dj_database_url.config()}
+if 'SQL_ENGINE' in os.environ:
+    DATABASES = {
+        'default': {
+            'ENGINE': os.environ.get('SQL_ENGINE'),
+            'NAME': os.environ.get('SQL_DATABASE'),
+            'USER': os.environ.get('SQL_USER'),
+            'PASSWORD': os.environ.get('SQL_PASSWORD'),
+            'HOST': os.environ.get('SQL_HOST'),
+            'PORT': os.environ.get('SQL_PORT'),
+
+        }
+    } 
 else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR , 'db.sqlite3'),
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         }
     }
 
@@ -147,10 +160,9 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
-
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'assets'),]
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -197,12 +209,4 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
 
-
-#This is just for testing
-# UPLOAD_ROOT = 'C:\\Data\Development\\Instrument Calibration - Testing\\uploads'
-
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# settings
-django_heroku.settings(locals())

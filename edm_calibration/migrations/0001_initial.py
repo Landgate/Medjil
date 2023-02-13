@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
     dependencies = [
         ('instruments', '0001_initial'),
         ('baseline_calibration', '0001_initial'),
-        ('calibrationsites', '0001_initial'),
+        # ('calibrationsites', '0001_initial'),
     ]
 
     operations = [

@@ -9,6 +9,8 @@ from datetime import datetime, date
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.core.files import File
+from django.conf import settings
+import os
 #########################################################################
 ################################ STAFF ##################################
 boya = {
@@ -20,8 +22,8 @@ boya = {
     'locality': 'Boya',
     'no_of_pillars': '21',
     'operator' : 'Landgate',
-    'site_access' : 'data_preload/Staff Range/Australia/WA/Boya/Access/Boya Access Sketch.pdf',
-    'site_config' : 'data_preload/Staff Range/Australia/WA/Boya/Access/Boya Pin Configuration.pdf',
+    'site_access' : os.path.join(settings.MEDIA_ROOT, 'InitialData/Staff Range/Australia/WA/Boya/Access/Boya Access Sketch.pdf'),
+    'site_config' : os.path.join(settings.MEDIA_ROOT, 'InitialData/Staff Range/Australia/WA/Boya/Access/Boya Pin Configuration.pdf'),
 }    
 
 muncheng = {
@@ -47,8 +49,8 @@ curtin_basline = {
     'locality': 'Bentley',
     'no_of_pillars': 11,
     'operator' : 'Landgate',
-    'site_access' : 'data_preload/EDM Baseline/Australia/WA/Curtin/Curtin EDM Baseline Access Sketch.pdf',
-    'site_config' : 'data_preload/EDM Baseline/Australia/WA/Curtin/Curtin EDM Baseline Pillar Configuration.pdf',
+    'site_access' : os.path.join(settings.MEDIA_ROOT, 'InitialData/EDM Baseline/Australia/WA/Curtin/Curtin EDM Baseline Access Sketch.pdf'),
+    'site_config' : os.path.join(settings.MEDIA_ROOT, 'InitialData/EDM Baseline/Australia/WA/Curtin/Curtin EDM Baseline Pillar Configuration.pdf'),
 }    
 
 busselton_basline = {
@@ -60,8 +62,8 @@ busselton_basline = {
     'locality': 'Busselton-Vasse',
     'no_of_pillars': 6,
     'operator' : 'Landgate',
-    'site_access' : 'data_preload/EDM Baseline/Australia/WA/Busselton/Busselton EDM Baseline Access Sketch.pdf',
-    'site_config' : 'data_preload/EDM Baseline/Australia/WA/Busselton/Busselton EDM Baseline Pillar Configuration.pdf',
+    'site_access' : os.path.join(settings.MEDIA_ROOT, 'InitialData/EDM Baseline/Australia/WA/Busselton/Busselton EDM Baseline Access Sketch.pdf'),
+    'site_config' : os.path.join(settings.MEDIA_ROOT, 'InitialData/EDM Baseline/Australia/WA/Busselton/Busselton EDM Baseline Pillar Configuration.pdf'),
 }
 
 kalgoorlie_basline = {
@@ -73,8 +75,8 @@ kalgoorlie_basline = {
     'locality': 'Kalgoorlie-Boulder',
     'no_of_pillars': 8,
     'operator' : 'Landgate',
-    'site_access' : 'data_preload/EDM Baseline/Australia/WA/Kalgoorlie/Kalgoorlie EDM Baseline Access Sketch.pdf',
-    'site_config' : 'data_preload/EDM Baseline/Australia/WA/Kalgoorlie/Kalgoorlie EDM Baseline Pillar Configuration.pdf',
+    'site_access' : os.path.join(settings.MEDIA_ROOT, 'InitialData/EDM Baseline/Australia/WA/Kalgoorlie/Kalgoorlie EDM Baseline Access Sketch.pdf'),
+    'site_config' : os.path.join(settings.MEDIA_ROOT, 'InitialData/EDM Baseline/Australia/WA/Kalgoorlie/Kalgoorlie EDM Baseline Pillar Configuration.pdf'),
 }
 
 site_types = (

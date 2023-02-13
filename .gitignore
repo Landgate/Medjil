@@ -7,3 +7,13 @@
 # Python Caches #
 #################
 *.pyc
+
+
+# virtual environment
+##################
+.venv
+.env.*
+
+# Static
+###################
+staticfiles

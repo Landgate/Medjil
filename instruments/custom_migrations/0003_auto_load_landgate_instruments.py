@@ -4,6 +4,8 @@ from django.db import migrations, models
 from datetime import datetime
 from django.core.files.storage import FileSystemStorage
 from django.core.files import File
+from django.conf import settings
+import os
 # Start migration
 
 def add_landgate_instruments(apps, schema_editor):
@@ -15,8 +17,9 @@ def add_landgate_instruments(apps, schema_editor):
     StaffCalibrationRecord = apps.get_model('staffcalibration', 'StaffCalibrationRecord')
 
     # Add digital levels
-    with open("data_preload/Landgate Instruments/Digital Levels/digital_levels.csv", "r") as f:
-        reader = csv.reader(f); header = next(reader)
+    with open(os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate Instruments/Digital Levels/digital_levels.csv'), 'r') as f:
+        reader = csv.reader(f)
+        header = next(reader)
         k = 0
         inst_type = 'level'
         for row in reader:
@@ -31,8 +34,9 @@ def add_landgate_instruments(apps, schema_editor):
                         level_number = level_number,
                         )
     # Add bar-coded staves
-    with open("data_preload/Landgate Instruments/Staves/staves.csv", "r", encoding="cp1252") as f:
-        reader = csv.reader(f); header = next(reader)
+    with open(os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate Instruments/Staves/staves.csv'), 'r') as f:
+        reader = csv.reader(f)
+        header = next(reader)
         k = 0
         inst_type = 'staff'
         for row in reader:
@@ -77,7 +81,7 @@ def add_landgate_instruments(apps, schema_editor):
                     # observer = observer,
                     calibration_date = calibration_date, 
                     # field_book = File(open(field_book, 'rb'), name = field_book.split('/')[-1]),
-                    calibration_report = File(open(calibration_report, 'rb'), name = calibration_report.split('/')[-1]),
+                    calibration_report = File(open(os.path.join(settings.MEDIA_ROOT, calibration_report), 'rb'), name = calibration_report.split('/')[-1]),
                 )
                 if level_model:
                         record_obj.inst_level = DigitalLevel.objects.get(level_model__model__exact = level_model)
@@ -86,7 +90,7 @@ def add_landgate_instruments(apps, schema_editor):
                 if observer:
                         record_obj.observer = observer
                 if field_book and (record_obj.field_book == '' or not record_obj.field_book):
-                        record_obj.field_book = File(open(field_book, 'rb'), name = field_book.split('/')[-1])
+                        record_obj.field_book = File(open(os.path.join(settings.MEDIA_ROOT, field_book), 'rb'), name = field_book.split('/')[-1])
                 record_obj.save()
 def reverse_func(apps, schema_editor):
     Company = apps.get_model("accounts", "Company")    

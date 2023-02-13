@@ -11,6 +11,7 @@ from django.db import IntegrityError, transaction
 from django.core.files.storage import FileSystemStorage
 from django.core.files import File
 from django.core.exceptions import ObjectDoesNotExist
+from django.conf import settings
 ###############################################################################
 ########################## FILE HANDLING ######################################
 ###############################################################################
@@ -195,9 +196,8 @@ def upload_range_data(apps, schema_editor):
     BarCodeRangeParam = apps.get_model("rangecalibration", "BarCodeRangeParam")
 
     # Starting to read the files
-    range_dir = "data_preload/Staff Range/Australia/WA/Boya/Range Calibration"
-    FileDir = os.path.join(range_dir, '20172297')
-    FileDir = "data_preload/Staff Range/Australia/WA/Boya/Range Calibration/20172297"
+    range_dir = os.path.join(settings.MEDIA_ROOT, 'InitialData/Staff Range/Australia/WA/Boya/Range Calibration')
+    FileDir = os.path.join(settings.MEDIA_ROOT, 'InitialData/Staff Range/Australia/WA/Boya/Range Calibration/20172297')
 
     # Reading the temperature record
     if os.path.exists(os.path.join(range_dir, 'calibration_record.csv')):
