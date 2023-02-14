@@ -541,6 +541,12 @@
                 </div>                 
             </div>
             <div class="text-center">
+                <h2>Return Phase Angle of Observed Distances</h2>
+                <div id="charts" class="flex flex-col justify-end items-center">
+                    <canvas id="return-phase-angle-Chart" style="max-width:800px"></canvas>
+                </div>                 
+            </div>
+            <div class="text-center">
                 <h2>EDMI Calibration History</h2>
                 <table style="margin-left:auto;margin-right:auto;font-size:10.0pt;width:800px;">
                     <tr>
@@ -754,6 +760,36 @@ new Chart(document.getElementById("surveyed-vs-certified-Chart"), {
         }],
       }
     }
+});
+
+</script>
+
+<script>
+// Script to produce the Return Phase Angle Chart
+
+new Chart(Chart(document.getElementById("return-phase-angle-Chart"), {
+  type: "line",
+  data: {
+    labels: {{ return_phase_chart.labels }}
+    datasets: {{ return_phase_chart.datasets }}
+  },
+  options: {
+    legend: {display: false},
+    scales: {
+      xAxes: [{
+          type: 'time',
+          time: {format:'YYYY-MM-DD',
+            unitStepSize: 1,
+            tooltipFormat: 'll'},
+          scaleLabel: {display: true,
+            labelString: 'Date'}
+      }],
+      yAxes: [{
+          scaleLabel: {display: true,
+             labelString: 'Scale Factor'}
+      }],
+    }
+  }
 });
 
 </script>
