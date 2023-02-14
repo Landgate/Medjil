@@ -26,7 +26,7 @@ length_units = (
         ('m','m'),)
 freq_units = (
         ('Hz','Hz'),
-        ('mHz','mHz'),)
+        ('MHz','MHz'),)
 scalar_units = (
         ('x:1','x:1'),
         ('1:x','1:x'),
@@ -165,7 +165,7 @@ class EDM_SpecificationForm(forms.ModelForm):
         self.initial['edm_owner'] = user.company
         self.base_fields['unit_manu_unc_const'].initial = 'mm'
         self.base_fields['unit_manu_unc_ppm'].initial = 'ppm'
-        self.base_fields['unit_freq'].initial = 'mHz'
+        self.base_fields['unit_freq'].initial = 'Hz'
         self.base_fields['unit_unit_length'].initial = 'm'
         self.base_fields['unit_carrier_wave'].initial = 'nm'
         self.base_fields['unit_measurement_inc'].initial = 'm'
@@ -296,12 +296,12 @@ class EDMI_certificateForm(forms.ModelForm):
         else:
             self.fields['edm'].queryset = EDM_Inst.objects.all()
             self.fields['prism'].queryset = Prism_Inst.objects.all()
-            
-        self.fields['edm'].empty_label = '--- Select one ---'
-        self.fields['prism'].empty_label = '--- Select one ---'
+        
         self.base_fields['unit_zpc'].initial = 'm'
         self.base_fields['unit_zpc_uc'].initial = 'm'
         self.base_fields['unit_stdev'].initial = 'm'
+        self.fields['edm'].empty_label = '--- Select one ---'
+        self.fields['prism'].empty_label = '--- Select one ---'
 
     class Meta:
         model = EDMI_certificate

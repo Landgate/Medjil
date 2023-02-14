@@ -183,23 +183,28 @@ def register_edit(request, inst_disp, tab, id):
         # Convert input to database standard units
         if 'unit_manu_unc_const' in frm.keys():
             instance.manu_unc_const = db_std_units(
-                frm['manu_unc_const']*1000,frm['unit_manu_unc_const'])[0]
+                frm['manu_unc_const'],frm['unit_manu_unc_const'])[0]
+            if 'edm_model' in frm.keys():
+                instance.manu_unc_const =instance.manu_unc_const * 1000
+            if 'mets_model' in frm.keys():
+                instance.manu_unc_const =instance.manu_unc_const * 100
+            
         if 'unit_manu_unc_ppm' in frm.keys():
             instance.manu_unc_ppm = db_std_units(
-                frm['manu_unc_ppm'], frm['unit_manu_unc_ppm'])[0] / 1e6
+                frm['manu_unc_ppm'], frm['unit_manu_unc_ppm'])[0] * 1e6
         if 'unit_freq' in frm.keys(): 
-            instance.freq = db_std_units(frm['frequency'],frm['unit_freq'])[0]
+            instance.frequency = db_std_units(frm['frequency'],frm['unit_freq'])[0]
         if 'unit_unit_length' in frm.keys():
             instance.unit_length = db_std_units(
                 frm['unit_length'],frm['unit_unit_length'])[0]
-        if 'unit_carrier_wave' in frm.keys():                
-            if frm['unit_carrier_wave'] == 'm': 
-                instance.carrier_wave = frm['carrier_wave'] * 1e9
-            if frm['unit_carrier_wave'] == 'mm':
-                instance.carrier_wave = frm['carrier_wave'] * 1e6
+        if 'unit_carrier_wave' in frm.keys():
+            instance.carrier_wavelength = db_std_units(
+                frm['carrier_wavelength'], frm['unit_carrier_wave'])[0] * 1e9
         if 'unit_measurement_inc' in frm.keys():
             instance.measurement_increments = db_std_units(
                 frm['measurement_increments'], frm['unit_measurement_inc'])[0]
+            if 'mets_model' in frm.keys():
+                instance.measurement_increments =instance.measurement_increments * 100
             
         if 'unit_scf' in frm.keys():
             instance.scale_correction_factor = db_std_units(

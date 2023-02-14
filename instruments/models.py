@@ -150,13 +150,13 @@ class EDM_Specification(models.Model):
         verbose_name= 'manufacturers uncertainty coverage factor')
     
     unit_length = models.FloatField(
-        validators = [MinValueValidator(0.0), MaxValueValidator(30.0)],
+        validators = [MinValueValidator(0.0), MaxValueValidator(10000.0)],
         help_text="Unit Length (m)")
     frequency = models.FloatField(
         validators = [MinValueValidator(1), MaxValueValidator(100000000)],
         help_text="Frequency (Hz)")
     carrier_wavelength = models.FloatField(
-        validators = [MinValueValidator(1), MaxValueValidator(1000)],
+        validators = [MinValueValidator(0), MaxValueValidator(1000)],
         help_text="Carrier Wavelength (nm)")
     manu_ref_refrac_index = models.FloatField(
         validators = [MinValueValidator(0.000000000), MaxValueValidator(2.000000000)],
