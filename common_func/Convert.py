@@ -32,24 +32,24 @@ from geodepy.geodesy import grid2geo, rho
 
 
 def db_std_units(orig_val, orig_unit):
-    # function converts all values to scalar, m, mHz, °C or hPa
+    # function converts all values to scalar, m, Hz, °C or hPa
     # if a distance is specified, scalar standard deviations are converted to m
     new_val = orig_val
     new_unit = orig_unit
     
-    if orig_unit == 'ppm': new_val = orig_val / 1e6
-    if orig_unit == '1:x': new_val = 1 / orig_val
+    if orig_unit == 'ppm': new_val = round(orig_val / 1e6, 20)
+    if orig_unit == '1:x': new_val = round(1 / orig_val, 15)
     if orig_unit == '%': new_val = orig_val / 100
-    if orig_unit == 'nm': new_val = orig_val / 1e6
-    if orig_unit == 'mm': new_val = orig_val / 1000
-    if orig_unit == 'Hz': 
-        new_val = orig_val / 1e6
-        new_unit = 'mHz'
+    if orig_unit == 'nm': new_val = round(orig_val / 1e9, 20)
+    if orig_unit == 'mm': new_val = round(orig_val / 1000, 20)
+    if orig_unit == 'MHz': 
+        new_val = orig_val * 1e6
+        new_unit = 'Hz'
     if orig_unit == '°F': 
         new_val = (orig_val -32) * (5/9)
         new_unit = '°C'
     if orig_unit == 'mmHg': 
-        new_val = orig_val * 1.33322
+        new_val = round(float(orig_val) * 1.33322387415, 13)
         new_unit = 'hPa'
     
     if any([orig_unit == 'nm', orig_unit == 'mm']): 
