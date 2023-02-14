@@ -184,9 +184,9 @@ def register_edit(request, inst_disp, tab, id):
         if 'unit_manu_unc_const' in frm.keys():
             instance.manu_unc_const = db_std_units(
                 frm['manu_unc_const'],frm['unit_manu_unc_const'])[0]
-            if 'edm_model' in frm.keys():
+            if inst_disp == 'edm' or inst_disp == 'prism':
                 instance.manu_unc_const =instance.manu_unc_const * 1000
-            if 'mets_model' in frm.keys():
+            if inst_disp == 'hygro':
                 instance.manu_unc_const =instance.manu_unc_const * 100
             
         if 'unit_manu_unc_ppm' in frm.keys():
@@ -203,7 +203,7 @@ def register_edit(request, inst_disp, tab, id):
         if 'unit_measurement_inc' in frm.keys():
             instance.measurement_increments = db_std_units(
                 frm['measurement_increments'], frm['unit_measurement_inc'])[0]
-            if 'mets_model' in frm.keys():
+            if inst_disp == 'hygro':
                 instance.measurement_increments =instance.measurement_increments * 100
             
         if 'unit_scf' in frm.keys():
