@@ -665,7 +665,7 @@ new Chart("Residual-Chart", {
 <script>
 // Script to produce the bar chart for Uncertainty
 
-new Chart(document.getElementById("Uncertainty-Chart"), {
+new Chart("Uncertainty-Chart", {
     type: 'horizontalBar',
     data: {
       labels: [{% for uc in certified_dists.0.uc_budget.values %}
