@@ -92,7 +92,7 @@ Groups can contain list of permissions
 ### Authors
 
 * **Khandu** - *Application development and deployment*, Landgate
-* **Irek Baran**, *Graphic design, Technical Manuals and Guidelines*, Landgate
+* **Irek Baran**, *Graphic design, Technical Manuals and Guidelines, Testing*, Landgate
 * **Kent Wheeler** - *Project Management, EDMI Calibration software, Testing*, Landgate
 
 
