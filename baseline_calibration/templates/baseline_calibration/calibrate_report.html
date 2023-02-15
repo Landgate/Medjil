@@ -665,7 +665,7 @@ new Chart("Residual-Chart", {
 <script>
 // Script to produce the bar chart for Uncertainty
 
-new Chart(document.getElementById("Uncertainty-Chart"), {
+new Chart("Uncertainty-Chart", {
     type: 'horizontalBar',
     data: {
       labels: [{% for uc in certified_dists.0.uc_budget.values %}
@@ -731,6 +731,7 @@ new Chart(document.getElementById("baseline-history-Chart"), {
 let Data1 = {{calib.edmi_drift.xyValues|safe}}.map(v => ({ x: v.x, y: v.y }));
 let Data2 = {{calib.edmi_drift.xyTrend|safe}}.map(v => ({ x: v.x, y: v.y }));
 
+console.log(Data1);
 new Chart("edm-drift-Chart", {
   type: "line",
   data: {

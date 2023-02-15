@@ -228,13 +228,13 @@
 		                <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IC = Instrument Correction (m)
 		                <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;D = Distance (m)
 		                <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;zpc = Zero Point Correction (m)
-		                <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;scf = Scale Correction Factor (x:1)
+		                <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;scf = Scale Correction Factor (1:x)
 		                {% if calib.edmi.0.parameters|length > 2 %}
 		                    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;U = Instrument Unit Length (m)
-		                    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1C = 1 - Cyclic (x:1)
-		                    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2C = 2 - Cyclic (x:1)
-		                    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3C = 3 - Cyclic (x:1)
-		                    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4C = 4 - Cyclic (x:1)
+		                    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1C = 1 - Cyclic (m)
+		                    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2C = 2 - Cyclic (m)
+		                    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3C = 3 - Cyclic (m)
+		                    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4C = 4 - Cyclic (m)
 		                {% endif %}
 		                </p>
 		            </div>		            
@@ -766,27 +766,70 @@ new Chart(document.getElementById("surveyed-vs-certified-Chart"), {
 
 <script>
 // Script to produce the Return Phase Angle Chart
+distances = [{% for d in edm_observations %} 
+    {{ d.slope_dist }} ,{% endfor %}];
+lbls = [{% for d in edm_observations %}
+    '{{ d.from_pillar|safe }} - {{ d.to_pillar|safe }} ({{ d.Reduced_distance|floatformat:4 }}m)',{% endfor %}]; 
+    
+let Sinewave = [];
+for (let a = 0; a <= 360; a+=5) {
+    let r = a * Math.PI/180;
+    Sinewave.push({x:a, y:Math.sin(r)});
+};
+let cht_datasets = [{
+  label: 'Sinewave',
+  pointRadius: 0,
+  borderColor: 'blue',
+  borderWidth: 1,
+  data: Sinewave,
+  showLine: true,
+  fill: false,
+  tension: 0
+}];
 
-new Chart(Chart(document.getElementById("return-phase-angle-Chart"), {
-  type: "line",
+for (let d = 0; d <= distances.length-1; d++) {
+    Inter = Number.parseInt(distances[d] / {{ pillar_survey.edm.edm_specs.unit_length }},10);
+    fract = distances[d] - (Inter*{{ pillar_survey.edm.edm_specs.unit_length }});
+    fract_prop = fract / {{ pillar_survey.edm.edm_specs.unit_length }};
+    return_phase_ang = fract_prop * 360;
+    cht_datasets.push({
+      label: lbls[d],
+      pointRadius: 1.5,
+      borderColor: 'black',
+      borderWidth: 1,
+      data: [{x:return_phase_ang, y:-1},{x:return_phase_ang, y:1}],
+      showLine: true,
+      fill: false,
+      tension: 0
+    });
+};
+
+new Chart("return-phase-angle-Chart", {
+  type: "scatter",
   data: {
-    labels: {{ return_phase_chart.labels }}
-    datasets: {{ return_phase_chart.datasets }}
+    datasets: cht_datasets
   },
   options: {
-    legend: {display: false},
+    legend: {display: true},
+    tooltips: {
+           callbacks: {
+              label: function(tooltipItem) {
+                 var label = lbls[tooltipItem.datasetIndex-1];
+                 return label;
+              }
+           }
+        },
     scales: {
       xAxes: [{
-          type: 'time',
-          time: {format:'YYYY-MM-DD',
-            unitStepSize: 1,
-            tooltipFormat: 'll'},
           scaleLabel: {display: true,
-            labelString: 'Date'}
+            labelString: 'Phase Angle (°)'},
+         ticks: {
+            stepSize: 45,
+            max: 360,}
       }],
       yAxes: [{
           scaleLabel: {display: true,
-             labelString: 'Scale Factor'}
+             labelString: 'Amplitude'}
       }],
     }
   }

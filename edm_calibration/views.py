@@ -406,11 +406,6 @@ def calibrate2(request,id):
             first_to_last = {'Reduced_distance':0}
             residual_chart = []
             n_rpt_shots = max([len(e['grp_Bay']) for e in edm_observations])
-            return_phase_chart = {
-                'datasets' : [],
-                'labels': []
-                }
-            i=0
             for o, colour in zip(edm_observations, back_colours):
                 while len(o['grp_Bay'])<n_rpt_shots:
                     o['grp_Bay'].append('')
@@ -432,47 +427,13 @@ def calibrate2(request,id):
                                    'std_residual': o['std_residual']})
                 if o['Reduced_distance'] > first_to_last['Reduced_distance']:
                     first_to_last = o
-                
-                # Return Phase Angle Chart
-                fract = o['slope_dist']-int(o['slope_dist'])
-                fract_prop = fract / pillar_survey['edm'].edm_specs.unit_length
-                o['return_phase_ang'] = fract_prop * 360
-                return_phase_chart['datasets'].append({
-                    'pointRadius':2,
-                    'pointBackgroundColor': back_colours[i],
-                    'borderWidth': 1.5,
-                    'data':[{'x': o['return_phase_ang'], 'y':1}, 
-                    {'x': o['return_phase_ang'], 'y':-1}],
-                    'fill': 'false',
-                    'tension':0})
-                return_phase_chart['labels'].append('"'+
-                    o['from_pillar'] + ' - ' + o['to_pillar'] + 
-                    ' (' + str(round(o['Reduced_distance'],4)) + 'm)"')
-                if i==len(back_colours):
-                    i=0
-                else:
-                    i+=1
-            
-            return_phase_chart['datasets'].append({
-                'pointRadius':2,
-                'pointBackgroundColor': '#0033CC',
-                'borderWidth': 1.5,
-                'data':[],
-                'fill': False,
-                'tension':0})
-            return_phase_chart['labels'].append('Sinewave')
-            a=0
-            while a <= 360:
-                return_phase_chart['datasets'][-1]['data'].append(
-                    {'x':a, 'y':sin(radians(a))})
-                a+=5
             
             #Add current pillar survey to history table
             calib['edmi'][0]['variance'] = chi_test['Variance']
             calib['edmi'][0]['degrees_of_freedom'] = chi_test['dof']
             calib['edmi'][0]['k'] = chi_test['k']
             calib['edmi'][0]['parameters'] = matrix_y
-            print(return_phase_chart)
+            
             context = {'pillar_survey':pillar_survey,
                        'calib':calib,
                        'baseline': baseline,
@@ -480,7 +441,6 @@ def calibrate2(request,id):
                        'ISO_test': ISO_test,
                        'edm_observations': edm_observations,
                        'residual_chart': residual_chart,
-                       'return_phase_chart': return_phase_chart,
                        'report_notes': report_notes,
                        'Check_Errors': Check_Errors,
                        'first_to_last': first_to_last,

@@ -9,7 +9,6 @@ def LSA(A, x, P):
     x = np.array(x)
     P = np.array(P)
     dof = len(A)-len(A.T)
-    critical_t = t.ppf(1-0.025,df=dof)
     #(ISO 17123-4:2012 eq.11 & 12 & 15)
     Q = np.linalg.inv(A.T @ P @ A)
     y = (Q @ A.T @ P @ x)
@@ -40,11 +39,14 @@ def LSA(A, x, P):
         chi_test['test'] = 'Fails'
     
     matrix_y=[]
+    #ref ISO 17123:4 eq 29
+    critical_t = t.ppf(1-0.025,df=dof)
     for v , v2 in zip(y, np.diagonal(Q)):
-         matrix_y.append({'value':v, 
-                          'std_dev':sqrt(v2),
-                          't_value':abs(v)/sqrt(v2*So**2),
-                          't_test':(abs(v)/sqrt(v2*So**2))<critical_t})
+         matrix_y.append({
+             'value':v, 
+             'std_dev':sqrt(v2),
+             't_value':abs(v)/So*sqrt(v2),
+             't_test': abs(v) <= (So*sqrt(v2)*critical_t)})
 
     residuals=np.vstack((r, std_residuals)).T
     residuals=list2dict(residuals.tolist(),['residual','std_residual'])
@@ -90,7 +92,7 @@ def ISO_test_b(prev_chi_test, chi_test):
 def ISO_test_c(zpc, zpc_std_dev, chi_test):
     exp_std_dev = sqrt(chi_test['Variance'])
     std_uc = zpc_std_dev * exp_std_dev
-    test_value = chi2.ppf(0.975,chi_test['dof'])*std_uc
+    test_value = t.ppf(0.975,chi_test['dof'])*std_uc
     test_c={'test':'C',
             'hypothesis': 'The zero-point correction, δ, is equal to zero',
             'accept': zpc <= test_value}

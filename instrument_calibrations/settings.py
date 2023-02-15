@@ -28,8 +28,8 @@ if not SECRET_KEY:
     SECRET_KEY = 'd%t^naj(!0x3-te!aq@gt=2wze9^oqs=3)k3$_(ng7c4d8bk_%'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 DEBUG = int(os.environ.get('DEBUG', default=0))
+DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1']
 # ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS').split(' ')
