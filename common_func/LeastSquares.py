@@ -45,7 +45,8 @@ def LSA(A, x, P):
          matrix_y.append({
              'value':v, 
              'std_dev':sqrt(v2),
-             't_value':abs(v)/So*sqrt(v2),
+             'hypothesis': '%s <= %s' % (float('%.2g' % abs(v)), 
+                                         float('%.2g' % (So*sqrt(v2)*critical_t))),
              't_test': abs(v) <= (So*sqrt(v2)*critical_t)})
 
     residuals=np.vstack((r, std_residuals)).T
