@@ -231,10 +231,10 @@
 		                <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;scf = Scale Correction Factor (x:1)
 		                {% if calib.edmi.0.parameters|length > 2 %}
 		                    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;U = Instrument Unit Length (m)
-		                    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1C = 1 - Cyclic (x:1)
-		                    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2C = 2 - Cyclic (x:1)
-		                    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3C = 3 - Cyclic (x:1)
-		                    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4C = 4 - Cyclic (x:1)
+		                    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1C = 1 - Cyclic (m)
+		                    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2C = 2 - Cyclic (m)
+		                    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3C = 3 - Cyclic (m)
+		                    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4C = 4 - Cyclic (m)
 		                {% endif %}
 		                </p>
 		            </div>		            
@@ -246,6 +246,10 @@
                         <th>Term&nbsp;</th>
                         <th class="text-center">Value</th>
                         <th class="text-center">Uncertainty</th>
+                        {% if calib.edmi.0.parameters|length > 2 %}
+                            <th class="text-center">Null Hypothesis</th>
+                            <th class="text-center">Insignificant</th>                            
+                        {% endif %}
                     </tr>
                     {% for parameter in calib.edmi.0.parameters %}
                         <tr>
@@ -253,6 +257,10 @@
                             <td class="text-left"><B>{{ parameter.term }}</B></td>
                             <td class="text-center"><B>{{ parameter.value|floatformat:4 }}</B></td>
                             <td class="text-center"><B>{{ parameter.standard_deviation|multiply:chi_test.k|sigfigs:2 }}</B></td>
+                            {% if calib.edmi.0.parameters|length > 2 %}
+                                <td class="text-center">{{ parameter.hypothesis }}</td>
+                                <td class="text-center">{{ parameter.t_test }}</td>                            
+                            {% endif %}
                         {% endif %}
                         </tr>
                     {% endfor %}
@@ -541,6 +549,12 @@
                 </div>                 
             </div>
             <div class="text-center">
+                <h2>Return Phase Angle of Observed Distances</h2>
+                <div id="charts" class="flex flex-col justify-end items-center">
+                    <canvas id="return-phase-angle-Chart" style="max-width:800px"></canvas>
+                </div>                 
+            </div>
+            <div class="text-center">
                 <h2>EDMI Calibration History</h2>
                 <table style="margin-left:auto;margin-right:auto;font-size:10.0pt;width:800px;">
                     <tr>
@@ -630,28 +644,55 @@
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@0.1.2"></script>
 <script>
 
-// "Script to generate the Residuals scatter plot"
-
-let Data0 = {{residual_chart|safe}}.map(v => ({ x: v.Reduced_distance.toFixed(5),
-                                                y: (v.residual*1000).toFixed(2)}));
+// "Populate the javascript lists and arrays for all the charts"
 let dColour = [];
-let lbls = [];
-for (let i = 0; i < {{residual_chart|safe}}.length; i++) {     
-    if (Math.abs({{residual_chart|safe}}[i].std_residual) > {{pillar_survey.outlier_criterion}}) {
+let lbls0 = [];
+let Data0 =[];
+let lbls1 = [];
+let Data1 =[];
+let lbls2 = [];
+let Data2 =[];
+let distances = [];
+let lbls3 = [];
+let bay = "";
+{% for o in edm_observations %}
+    //"Residual Chart"
+    bay = "(" + {{ o.from_pillar }} + " - " + {{ o.to_pillar }} + ")";
+    if (Math.abs({{ o.std_residual }}) > {{pillar_survey.outlier_criterion}}) {
         dColour.push("#FF0000");
-        lbls.push('Potential Outlier: (' + {{residual_chart|safe}}[i].from_pillar + ' - ' + {{residual_chart|safe}}[i].to_pillar + ') ' + 
-        'Standarized Residual: ' + {{residual_chart|safe}}[i].std_residual.toFixed(2))
+        lbls0.push("Potential Outlier: " + bay + " Standarized Residual: " + {{ o.std_residual }}.toFixed(2));
     } else {
         dColour.push("#0033CC");
-        lbls.push('(' + {{residual_chart|safe}}[i].from_pillar + ' - ' + {{residual_chart|safe}}[i].to_pillar + ') ' + 
-        'Standarized Residual: ' + {{residual_chart|safe}}[i].std_residual.toFixed(2))
+        lbls0.push( bay + " Standarized Residual: " + {{ o.std_residual }}.toFixed(2));
     }
-}
+    Data0.push({x: {{ o.Reduced_distance }}.toFixed(5),
+                y: ({{ o.residual }}*1000).toFixed(2)});
+    // "Uncertainty-Chart"
+    Data1.push({
+      label: bay + " " + {{ o.Reduced_distance }}.toFixed(4) + "m",
+      barPercentage: 0.8,
+      backgroundColor: [{% for uc in o.uc_budget.values %}'{{ uc.chart_colour }}', {% endfor %}],
+      data: [{% for uc in o.uc_budget.values %} 
+          {{ uc.ui95|multiply:1000|sigfigs:2 }},{% endfor %}]
+    });
+    
+    // "Surveyed-vs-certified-Chart"
+    lbls2.push(bay + " " + ({{ o.diff_to_certified_sd }}*1000).toFixed(2));
+    Data2.push({x: {{ o.slope_dist }}.toFixed(5),
+                y: ({{ o.diff_to_certified_sd }}*1000).toFixed(2)});
+    // "return phase angle plot"
+    distances.push({{ o.slope_dist }});
+    lbls3.push(bay + " " + {{ o.Reduced_distance }}.toFixed(4) + "m");
+
+{% endfor %}
+</script>
+<script>
+// "Script to generate the Residuals scatter plot"
 
 new Chart("Residual-Chart", {
   type: "scatter",
   data: {
-    labels: lbls,
+    labels: lbls0,
     datasets: [{
       pointRadius: 2,
       pointHoverRadius: 5,
@@ -683,26 +724,16 @@ new Chart("Residual-Chart", {
     }
   }
 });
-
 </script>
-
 <script>
-"// Script to produce the bar chart for Uncertainty"
-
-new Chart(document.getElementById("Uncertainty-Chart"), {
+// "Script to produce the bar chart for Uncertainty"
+console.log(Data1);
+new Chart("Uncertainty-Chart", {
     type: 'horizontalBar',
     data: {
       labels: [{% for uc in edm_observations.0.uc_budget.values %}
           '{{ uc.group_verbose|safe }}',{% endfor %}],
-      datasets: [{% for d in edm_observations %}
-                {
-                  label: "{{ d.from_pillar|safe }} - {{ d.to_pillar|safe }} ({{ d.Reduced_distance|floatformat:4 }}m)",
-                  barPercentage: 0.8,
-                  backgroundColor: [{% for uc in d.uc_budget.values %}'{{ uc.chart_colour }}', {% endfor %}],
-                  data: [{% for uc in d.uc_budget.values %} 
-                      {{ uc.ui95|multiply:1000|sigfigs:2 }},{% endfor %}]
-                },{% endfor %}
-      ]
+      datasets: Data1
     },
     options: {
       legend: { display: true },
@@ -721,14 +752,12 @@ new Chart(document.getElementById("Uncertainty-Chart"), {
 new Chart(document.getElementById("surveyed-vs-certified-Chart"), {
     type: "scatter",
     data: {
-      labels: [{% for o in edm_observations %}
-          "{{ o.from_pillar|safe }} - {{ o.to_pillar|safe }} ({{ o.diff_to_certified_sd|multiply:1000|floatformat:2 }}mm)",{% endfor %}],
+      labels: lbls2,
       datasets: [{
         pointRadius: 2,
         pointHoverRadius: 5,
         pointBackgroundColor: dColour,
-        data: [{% for d in edm_observations %} 
-                {x:{{ d.slope_dist }}, y: {{ d.diff_to_certified_sd|multiply:1000|floatformat:2 }} },{% endfor %}],
+        data: Data2,
         fill: false,
         tension: 0
       }]
@@ -754,6 +783,75 @@ new Chart(document.getElementById("surveyed-vs-certified-Chart"), {
         }],
       }
     }
+});
+
+</script>
+
+<script>
+// Script to produce the Return Phase Angle Chart
+    
+let Sinewave = [];
+for (let a = 0; a <= 360; a+=5) {
+    let r = a * Math.PI/180;
+    Sinewave.push({x:a, y:Math.sin(r)});
+};
+let cht_datasets = [{
+  label: 'Sinewave',
+  pointRadius: 0,
+  borderColor: 'blue',
+  borderWidth: 1,
+  data: Sinewave,
+  showLine: true,
+  fill: false,
+  tension: 0
+}];
+
+for (let d = 0; d <= distances.length-1; d++) {
+    Inter = Number.parseInt(distances[d] / {{ pillar_survey.edm.edm_specs.unit_length }},10);
+    fract = distances[d] - (Inter*{{ pillar_survey.edm.edm_specs.unit_length }});
+    fract_prop = fract / {{ pillar_survey.edm.edm_specs.unit_length }};
+    return_phase_ang = fract_prop * 360;
+    cht_datasets.push({
+      label: lbls3[d],
+      pointRadius: 1.5,
+      borderColor: 'black',
+      borderWidth: 1,
+      data: [{x:return_phase_ang, y:-1},{x:return_phase_ang, y:1}],
+      showLine: true,
+      fill: false,
+      tension: 0
+    });
+};
+
+new Chart("return-phase-angle-Chart", {
+  type: "scatter",
+  data: {
+    datasets: cht_datasets
+  },
+  options: {
+    legend: {display: true},
+    tooltips: {
+           callbacks: {
+              label: function(tooltipItem) {
+                 var label = lbls3[tooltipItem.datasetIndex-1];
+                 return label;
+              }
+           }
+        },
+    scales: {
+      xAxes: [{
+          scaleLabel: {display: true,
+            labelString: 'Phase Angle (°)'},
+         ticks: {
+            stepSize: 45,
+            max: 360,}
+      }],
+      yAxes: [{
+          scaleLabel: {display: true,
+             labelString: 'Amplitude'}
+      }],
+    }
+  }
 });
 
 </script>

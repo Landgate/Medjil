@@ -409,6 +409,7 @@ def calibrate2(request,id):
             for o, colour in zip(edm_observations, back_colours):
                 while len(o['grp_Bay'])<n_rpt_shots:
                     o['grp_Bay'].append('')
+                    
                 for uc in o['uc_budget'].values():
                     uc['chart_colour'] = colour
                     if uc['group'] in dict(Uncertainty_Budget_Source.group_types).keys():
@@ -426,7 +427,7 @@ def calibrate2(request,id):
                                    'std_residual': o['std_residual']})
                 if o['Reduced_distance'] > first_to_last['Reduced_distance']:
                     first_to_last = o
-                                       
+            
             #Add current pillar survey to history table
             calib['edmi'][0]['variance'] = chi_test['Variance']
             calib['edmi'][0]['degrees_of_freedom'] = chi_test['dof']
