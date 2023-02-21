@@ -516,8 +516,8 @@ def calibrate2(request,id):
                 ini_cd['k_rl_uncertainty'] = cd['uc_budget']['10']['k']
                 ini_data.append(ini_cd)
                 # add an extra for the first pillar
-                ini_cd0 = ini_cd.copy()
                 if i==True:
+                    ini_cd0 = ini_cd.copy()
                     ini_cd0['to_pillar'] = baseline['pillars'].get(name=pillars[0])
                     ini_cd0['distance'] = 0
                     ini_cd0['offset'] = 0
@@ -541,6 +541,7 @@ def calibrate2(request,id):
             od = OrderedDict(sorted(alignment_survey.items()))
             alignment_survey = list(od.values())
             certified_dists = list(certified_dists.values())
+            
             back_colours = ['#FF0000', '#800000', '#FFFF00', '#808000', 
                             '#00FF00', '#008000', '#00FFFF', '#008080', 
                             '#0000FF', '#000080', '#FF00FF', '#800080']
@@ -556,18 +557,10 @@ def calibrate2(request,id):
                 cd['uc_budget'] = OrderedDict(sorted(cd['uc_budget'].items()))
                 
             edm_observations = list(edm_observations.values())
-            residual_chart = []
             n_rpt_shots = max([len(e['grp_Bay']) for e in edm_observations])
             for o in edm_observations:
                 while len(o['grp_Bay'])<n_rpt_shots:
                     o['grp_Bay'].append('')
-                    
-                residual_chart.append(
-                    {'from_pillar': o['from_pillar'], 
-                     'to_pillar': o['to_pillar'],
-                     'Reduced_distance': o['Reduced_distance'],
-                     'residual': o['residual'],
-                     'std_residual': o['std_residual']})
 
             calib['edmi_drift']['xyValues'] = [
                     {'x':c['calibration_date'].isoformat()[:10],
@@ -606,9 +599,14 @@ def calibrate2(request,id):
                      'chart_colour':'#808080'}
                     )
             baseline['history'] = surveys
+            baseline['pillar_meta'] = []
+            for p in baseline['pillars']:
+                baseline['pillar_meta'].append(model_to_dict(p))
+                baseline['pillar_meta'][-1]['reduced_level'] = (
+                    float(raw_lvl_obs[p.name]['reduced_level']))
+            
             context = {'pillar_survey':pillar_survey,
                        'calib':calib,
-                       'residual_chart':residual_chart,
                        'baseline': baseline,
                        'certified_dists': certified_dists,
                        'chi_test':chi_test,

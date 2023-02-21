@@ -155,16 +155,39 @@
                 </div>
             </div>
             <div class="text-center">
+                <h2>Baseline Pillars</h2>
+                <table style="margin-left:auto;margin-right:auto;font-size:10.0pt;width:800px;">
+                    <tr>
+                        <th class="text-center">Pillar Name</th>
+                        <th class="text-center">Easting (m)</th>
+                        <th class="text-center">Northing (m)</th>
+                        <th class="text-center">Zone</th>
+                        <th class="text-center">Grid</th>
+                        <th class="text-center">Reduced Level (mAHD)</th>
+                    </tr>
+                   {% for p in baseline.pillar_meta %}
+                        <tr>
+                            <td>{{ p.name }}</td>
+                            <td>{{ p.easting|floatformat:3 }}</td>
+                            <td>{{ p.northing|floatformat:3 }}</td>
+                            <td>{{ p.zone }}</td>
+                            <td>MGA 2020</td>
+                            <td>{{ p.reduced_level|floatformat:3 }}</td>
+                        </tr>
+                     {% endfor %}
+                </table>
+            </div>
+            <div class="text-center">
                 <h2>Certified Baseline Distances</h2>
                 <table style="margin-left:auto;margin-right:auto;font-size:10.0pt;width:800px;">
                     <tr>
                         <th class="text-center">From Pilar</th>
-                        <th class="text-center">To Pilar</th>
-                        <th class="text-center">Reduced Distance</th>
-                        <th class="text-center">Uncertainty</th>
+                        <th class="text-center">To Pillar</th>
+                        <th class="text-center">Reduced Distance (m)</th>
+                        <th class="text-center">Uncertainty (m)</th>
                         <th class="text-center">k</th>
-                        <th class="text-center">Offset</th>
-                        <th class="text-center">Uncertainty</th>
+                        <th class="text-center">Offset (m)</th>
+                        <th class="text-center">Uncertainty (m)</th>
                     </tr>
                    {% for c in certified_dists %}
                         <tr>
@@ -606,28 +629,50 @@
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@0.1.2"></script>
 <script>
 
-// "Script to generate the Residuals scatter plot"
 
-let Data0 = {{residual_chart|safe}}.map(v => ({ x: v.Reduced_distance.toFixed(5),
-                                                    y: (v.residual*1000).toFixed(2)}));
+// "Populate the javascript lists and arrays for all the charts"
 let dColour = [];
-let lbls = [];
-for (let i = 0; i < {{residual_chart|safe}}.length; i++) {
-    if (Math.abs({{residual_chart|safe}}[i].std_residual) > {{pillar_survey.outlier_criterion}}) {
+let lbls0 = [];
+let Data0 =[];
+let bay = "";
+{% for o in edm_observations %}
+    //"Residual Chart"
+    bay = "(" + {{ o.from_pillar }} + " - " + {{ o.to_pillar }} + ")";
+    if (Math.abs({{ o.std_residual }}) > {{pillar_survey.outlier_criterion}}) {
         dColour.push("#FF0000");
-        lbls.push('Potential Outlier: (' + {{residual_chart|safe}}[i].from_pillar + ' - ' + {{residual_chart|safe}}[i].to_pillar + ') ' +
-        'Standarized Residual: ' + {{residual_chart|safe}}[i].std_residual.toFixed(2))
+         lbls0.push("Potential Outlier: " + bay + " Standarized Residual: " + {{ o.std_residual }}.toFixed(2));
     } else {
         dColour.push("#0033CC");
-        lbls.push('(' + {{residual_chart|safe}}[i].from_pillar + ' - ' + {{residual_chart|safe}}[i].to_pillar + ') ' +
-        'Standarized Residual: ' + {{residual_chart|safe}}[i].std_residual.toFixed(2))
+        lbls0.push( bay + " Standarized Residual: " + {{ o.std_residual }}.toFixed(2));
     }
-}
+    Data0.push({x: {{ o.Reduced_distance }}.toFixed(5),
+                y: ({{ o.residual }}*1000).toFixed(2)});
+{% endfor %}
+
+let lbls1 = [];
+let Data1 =[];
+let lbls2 = [];
+bay = "";
+{% for d in certified_dists %}
+    //"Uncertainty Chart"
+    bay = "(" + {{ d.from_pillar }} + " - " + {{ d.to_pillar }} + ")";
+    Data1.push({
+        label: bay + " ({{ d.Reduced_distance|floatformat:4 }}m)",
+        barPercentage: 0.8,
+        backgroundColor: [{% for uc in d.uc_budget.values %}'{{ uc.chart_colour }}', {% endfor %}],
+        data: [{% for uc in d.uc_budget.values %}
+            {{ uc.ui95|multiply:1000|sigfigs:2 }},{% endfor %}]
+        });
+    lbls2.push( bay + " ({{ d.Reduced_distance|floatformat:3 }}m)");
+
+{% endfor %}
+
+// "Script to generate the Residuals scatter plot"
 
 new Chart("Residual-Chart", {
   type: "scatter",
   data: {
-    labels: lbls,
+    labels: lbls0,
     datasets: [{
       pointRadius: 2,
       pointHoverRadius: 5,
@@ -670,15 +715,7 @@ new Chart("Uncertainty-Chart", {
     data: {
       labels: [{% for uc in certified_dists.0.uc_budget.values %}
           '{{ uc.group_verbose|safe }}',{% endfor %}],
-      datasets: [{% for d in certified_dists %}
-                {
-                  label: "{{ d.from_pillar|safe }} - {{ d.to_pillar|safe }} ({{ d.Reduced_distance|floatformat:4 }}m)",
-                  barPercentage: 0.8,
-                  backgroundColor: [{% for uc in d.uc_budget.values %}'{{ uc.chart_colour }}', {% endfor %}],
-                  data: [{% for uc in d.uc_budget.values %}
-                      {{ uc.ui95|multiply:1000|sigfigs:2 }},{% endfor %}]
-                },{% endfor %}
-      ]
+      datasets: Data1
     },
     options: {
       legend: { display: true },
@@ -693,21 +730,28 @@ new Chart("Uncertainty-Chart", {
 </script>
 <script>
 // Script to produce the Comparison of baseline history bar graph
+let Data2 = []
+{% for survey in baseline.history.values %}
+    bgColor = [];
+    dat = [];
+    {% for p in survey.bays %}
+        bgColor.push('{{ p.chart_colour }}');
+        dat.push('{{ p.diff_to_initial|multiply:1000|floatformat:2  }}');
+    {% endfor %}
+    Data2.push({
+        label: "{{ survey.date|safe }}",
+        barPercentage: 0.8,
+        backgroundColor: bgColor,
+        data: dat
+        });
 
-new Chart(document.getElementById("baseline-history-Chart"), {
+{% endfor %}
+
+new Chart("baseline-history-Chart", {
     type: 'bar',
     data: {
-      labels: [{% for d in certified_dists %}
-          '{{ d.from_pillar|safe }} - {{ d.to_pillar|safe }} ({{ d.Reduced_distance|floatformat:4 }}m)',{% endfor %}],
-      datasets: [{% for survey in baseline.history.values %}
-                {
-                  label: "{{ survey.date|safe }}",
-                  barPercentage: 0.8,
-                  backgroundColor: [{% for p in survey.bays %}'{{ p.chart_colour }}', {% endfor %}],
-                  data: [{% for p in survey.bays %}
-                      {{ p.diff_to_initial|multiply:1000|floatformat:2 }},{% endfor %}]
-                },{% endfor %}
-      ]
+      labels: lbls2,
+      datasets: Data2
     },
     options: {
       legend: { display: true },
@@ -728,8 +772,8 @@ new Chart(document.getElementById("baseline-history-Chart"), {
 <script>
 // Script to produce the EDMI history and scale factor drift over time line graph
 
-let Data1 = {{calib.edmi_drift.xyValues|safe}}.map(v => ({ x: v.x, y: v.y }));
-let Data2 = {{calib.edmi_drift.xyTrend|safe}}.map(v => ({ x: v.x, y: v.y }));
+let Data3 = {{calib.edmi_drift.xyValues|safe}}.map(v => ({ x: v.x, y: v.y }));
+let Data4 = {{calib.edmi_drift.xyTrend|safe}}.map(v => ({ x: v.x, y: v.y }));
 
 new Chart("edm-drift-Chart", {
   type: "line",
@@ -737,7 +781,7 @@ new Chart("edm-drift-Chart", {
     datasets: [{
       pointRadius: 2,
       pointBackgroundColor: "#0033CC",
-      data: Data1,
+      data: Data3,
       fill: false,
       tension: 0
     },{
@@ -745,7 +789,7 @@ new Chart("edm-drift-Chart", {
       borderColor: "#0000FF",
       borderDash: [25, 5],
       borderWidth: 1.5,
-      data: Data2,
+      data: Data4,
       fill: false,
       tension: 0
     }]
