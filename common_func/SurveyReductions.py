@@ -216,7 +216,8 @@ def refline_std_dev(o, alignment_survey, edm):
     
     # Convert ratios to m for Groups that allow ratio and constant
     for s in o['uc_sources']:
-        s['std_dev'], s['units'] = db_std_units(s['std_dev'], s['units'])
+        if s['group'] != '06':
+            s['std_dev'], s['units'] = db_std_units(s['std_dev'], s['units'])
         if (any([s['group'] =='02', s['group'] =='07', s['group'] =='08'])
             and s['units'] == 'x:1'):
             s['units'] = 'm'
@@ -391,7 +392,7 @@ def add_surveyed_uc(o, edm_trend, uc_sources, alignment_survey):
                         'std_dev': comb_std,
                         'degrees_of_freedom':30,
                         'k':t.ppf(1-0.025,df=30),
-                        'description':'Offsets'})
+                        'description':'Pillar survey offsets'})
 
     return surveyed_uc
 
