@@ -97,7 +97,7 @@
                     <br><B>Type: </B>{{ pillar_survey.staff.staff_type }}
                 </div>
                 <div class="flexbox-item_400_IB  flexbox-item-right_IB">
-                    <br><br><B>Staff Length: </B>{{ pillar_survey.staff.staff_length }} m
+                    <br><br><B>Staff Length: </B>{{ pillar_survey.staff.staff_length }}m
                     <br><B>Calibration Date: </B>{{ calib.staff.calibration_date }}
                     {% if calib.staff.certificate_upload %}
                         <br><a href="{{ calib.staff.certificate_upload.url }}" target="_blank" rel="noopener noreferrer">Download Calibration Certificate &#10515</a>
@@ -155,35 +155,12 @@
                 </div>
             </div>
             <div class="text-center">
-                <h2>Baseline Pillars</h2>
+                <h2>Certified Distances</h2>
                 <table style="margin-left:auto;margin-right:auto;font-size:10.0pt;width:800px;">
                     <tr>
-                        <th class="text-center">Pillar Name</th>
-                        <th class="text-center">Easting (m)</th>
-                        <th class="text-center">Northing (m)</th>
-                        <th class="text-center">Zone</th>
-                        <th class="text-center">Grid</th>
-                        <th class="text-center">Reduced Level (mAHD)</th>
-                    </tr>
-                   {% for p in baseline.pillar_meta %}
-                        <tr>
-                            <td>{{ p.name }}</td>
-                            <td>{{ p.easting|floatformat:3 }}</td>
-                            <td>{{ p.northing|floatformat:3 }}</td>
-                            <td>{{ p.zone }}</td>
-                            <td>MGA 2020</td>
-                            <td>{{ p.reduced_level|floatformat:3 }}</td>
-                        </tr>
-                     {% endfor %}
-                </table>
-            </div>
-            <div class="text-center">
-                <h2>Certified Baseline Distances</h2>
-                <table style="margin-left:auto;margin-right:auto;font-size:10.0pt;width:800px;">
-                    <tr>
-                        <th class="text-center">From Pilar</th>
+                        <th class="text-center">From Pillar</th>
                         <th class="text-center">To Pillar</th>
-                        <th class="text-center">Reduced Distance (m)</th>
+                        <th class="text-center">Certified Distance (m)</th>
                         <th class="text-center">Uncertainty (m)</th>
                         <th class="text-center">k</th>
                         <th class="text-center">Offset (m)</th>
@@ -317,7 +294,7 @@
                  {% endfor %}
             </div>
             <div class="text-center">
-                <h2>Height Observations</h2>
+                <h2>Pillar Height Observations</h2>
                 <table style="margin-left:auto;margin-right:auto;font-size:10.0pt;width:800px;">
                     <tr>
                         <th class="text-center">Pillar</th>
@@ -333,10 +310,33 @@
                     </tr>
                     {% endfor %}
                 </table>
+            <div class="text-center">
+                <h2>Pillar Coordinates</h2>
+                <table style="margin-left:auto;margin-right:auto;font-size:10.0pt;width:800px;">
+                    <tr>
+                        <th class="text-center">Pillar</th>
+                        <th class="text-center">Easting (m)</th>
+                        <th class="text-center">Northing (m)</th>
+                        <th class="text-center">Grid</th>                        
+                        <th class="text-center">Zone</th>
+                        <th class="text-center">Reduced Level (m)</th>
+                    </tr>
+                   {% for p in baseline.pillar_meta %}
+                   <tr>
+                       <td>{{ p.name }}</td>
+                       <td>{{ p.easting|floatformat:3 }}</td>
+                       <td>{{ p.northing|floatformat:3 }}</td>
+                       <td>MGA 2020</td>                       
+                       <td>{{ p.zone }}</td>
+                       <td>{{ p.reduced_level|floatformat:3 }}</td>
+                   </tr>
+                     {% endfor %}
+                </table>
+            </div>                
                 <h2>Alignment Survey of Pillar Offsets</h2>
                 <table style="margin-left:auto;margin-right:auto;font-size:10.0pt;width:800px;">
                     <tr>
-                        <th class="text-center">Surveyed From Pillar</th>
+                        <th class="text-center">From Pillar</th>
                         <th class="text-center">To Pillar</th>
                         <th class="text-center">Offset (m)</th>
                         <th class="text-center">Average (m)</th>
