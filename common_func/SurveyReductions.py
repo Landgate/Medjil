@@ -112,7 +112,7 @@ def apply_calib(obs, applied, calib=[],scf=1,zpc=0):
 def edm_mets_correction(o, edm, mets_applied):
     if mets_applied==False:
         mets_parameters = first_vel_params(
-                                edm.edm_specs.carrier_wavelength,
+                                edm.edm_specs.carrier_wavelength/1000,
                                 edm.edm_specs.frequency,
                                 edm.edm_specs.manu_ref_refrac_index)
         
@@ -423,11 +423,11 @@ def add_typeA(d, matrix_y, dof):
     # '08 calculate uncertainty of instrument correction
     if len(matrix_y)==2:
         s_dev = (matrix_y[0]['std_dev']
-                 + matrix_y[1]['std_dev'] * d['Reduced_distance'] * 10**-6)
+                 + matrix_y[1]['std_dev']* 10**-6 * d['Reduced_distance'])
     
     if len(matrix_y)==6:
         s_dev = (matrix_y[0]['std_dev']
-                 + matrix_y[1]['std_dev'] * d['Reduced_distance']
+                 + matrix_y[1]['std_dev']* 10**-6 * d['Reduced_distance']
                  + matrix_y[2]['std_dev'] * sin(d['d_term'])
                  + matrix_y[3]['std_dev'] * cos(d['d_term'])
                  + matrix_y[4]['std_dev'] * sin(2*d['d_term'])
@@ -692,25 +692,6 @@ def validate_survey(pillar_survey, baseline=None, calibrations=None,
         if raw_lvl_obs:
             # Each pillar must be observed from at least 2 other pillars
             bays=[]
-            pillar_cnt = dict(zip(pillars,[0]*len(pillars)))
-            for o in raw_edm_obs.values():
-                if o['use_for_distance']:
-                    bay=[min([pillars.index(o['from_pillar']), pillars.index(o['to_pillar'])]),
-                         max([pillars.index(o['from_pillar']), pillars.index(o['to_pillar'])])]
-                    if not bay in bays: 
-                        bays.append(bay)
-                        pillar_cnt[o['from_pillar']]+=1
-                        pillar_cnt[o['to_pillar']]+=1
-            
-            for p, cnt in pillar_cnt.items():
-                if cnt < 2:
-                    print(baseline)
-                    Errs.append('Pillar "' + str(p) + '" has been observed from ' 
-                                + str(cnt) + ' other pillars.')
-        
-            bays=[]
-            first2last=False
-            first2last=False
             pillar_cnt = dict(zip(pillars,[0]*len(pillars)))
             for o in raw_edm_obs.values():
                 if o['use_for_distance']:

@@ -41,6 +41,7 @@ def db_std_units(orig_val, orig_unit):
     if orig_unit == '1:x': new_val = round(1 / orig_val, 15)
     if orig_unit == '%': new_val = orig_val / 100
     if orig_unit == 'nm': new_val = round(orig_val / 1e9, 20)
+    if orig_unit == 'µm': new_val = round(orig_val / 1e6, 20)
     if orig_unit == 'mm': new_val = round(orig_val / 1000, 20)
     if orig_unit == 'MHz': 
         new_val = orig_val * 1e6
@@ -52,7 +53,7 @@ def db_std_units(orig_val, orig_unit):
         new_val = round(float(orig_val) * 1.33322387415, 13)
         new_unit = 'hPa'
     
-    if any([orig_unit == 'nm', orig_unit == 'mm']): 
+    if any([orig_unit == 'nm', orig_unit == 'mm', orig_unit == 'µm']): 
         new_unit = 'm'
     if any([orig_unit == 'ppm', orig_unit == '1:x', orig_unit == '%']):
         new_unit = 'x:1'
