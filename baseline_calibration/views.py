@@ -6,6 +6,7 @@ from django.forms import formset_factory, modelformset_factory
 from django.forms.models import model_to_dict
 from collections import OrderedDict
 from django.db.models import Q
+from django.apps import apps
 
 
 # Create your views here.
@@ -976,82 +977,83 @@ def import_dli(request):
             # print(str(f.name.replace('.db','')) + ' = ' )
             # print(decrypt_file(f))
     
-    medjil_baseline_calibration = apps.get_model(
-        'baseline_calibration', 'Pillar_Survey')
-    medjil_accreditation = apps.get_model(
-        'baseline_calibration', 'Accreditation')
-
-    for job in rxJob.values():
-        if job['calibration_type'] == 'B':
-            if rxBaselineX[job['baseline_fk']]['name'].lower().find('curtin') != -1:
-                baseline_id = calibrationsites.objects.get(site_name = 'Curtin')
-            elif rxBaselineX[job['baseline_fk']]['name'].lower().find('kalgoorlie') != -1:
-                baseline_id = calibrationsites.objects.get(site_name = 'Kalgoorlie')        
-            elif rxBaselineX[job['baseline_fk']]['name'].lower().find('busselton') != -1:
-                baseline_id = calibrationsites.objects.get(site_name = 'Busselton')
-            
-            medjil_accreditation.objects.get_or_create(
-                accredited_company = request.user.company,
-                valid_from_date = dt(1900,1,1).isoformat(),
-                valid_to_date = dt(2020,1,1).isoformat(),
-                LUM_constant = 0,
-                LUM_ppm = 0,
-                statement = 'Unknown accreditation from BaselineDLI backcaptured data')    
-            
-            pillars =(
-                [p for p in rxPillar.values() if p['baseline_fk'] == job['baseline_fk']])
-            
-            job_measurements =(
-                [meas for meas in rxJMeasure.values() if meas['job_fk'] == job['pk']])
-            mets_applied = False
-            if job_measurements[0]['mets_flag'] == 'N': mets_applied = True
-            
-            thermo_calib_applied = all([job['ThermometerCorr1'] == '0', job['ThermometerCorr2'] == '0'])
-            if mets_applied: thermo_calib_applied = True
-            
-            baro_calib_applied = all([job['BarometerCorr1'] == '0', job['BarometerCorr2'] == '0'])
-            if mets_applied: baro_calib_applied = True
-            
-            edm = rxInstrument[job['instrument_edm_fk']]
-            edm_model = rxInstrumentModel[edm['InstrumentModel_fk']]
-            edm_make = rxInstrumentMake[edm_model['InstrumentMake_fk']]
-            
-            prism = rxInstrument[job['instrument_prism_fk']]
-            prism_model = rxInstrumentModel[prism['InstrumentModel_fk']]
-            prism_make = rxInstrumentMake[prism_model['InstrumentMake_fk']]
-            
-            # medjil_baseline_calibration.objects.get_or_create(
-            #     baseline = baseline_id,
-            #     survey_date = dt.strptime(job['survey_date'],'%d/%m/%Y').isoformat(),
-            #     computation_date = dt.strptime(job['computation_date'],'%d/%m/%Y').isoformat(),
-            #     accreditation = medjil_accreditation.instance,
-            #     apply_lum = False,
-            #     observer = job['observer_name'],
-            #     weather = 'Sunny/Clear',
-            #     job_number = rxBaselineX[job['baseline_fk']]['reference'],
-            #     edm = ,
-            #     prism = ,
-            #     mets_applied = mets_applied,
-            #     edmi_calib_applied = True,
-            #     level = ,
-            #     staff = ,
-            #     staff_calib_applied = True,
-            #     thermometer = ,
-            #     thermo_calib_applied = thermo_calib_applied,
-            #     barometer = ,
-            #     baro_calib_applied = baro_calib_applied,
-            #     hygrometer = ,
-            #     hygro_calib_applied = True,
-            #     psychrometer = None,
-            #     psy_calib_applied = True,
-            #     uncertainty_budget = ,
-            #     outlier_criterion = 3,
-            #     fieldnotes_upload = None,
-            #     zero_point_correction = float(rxBaselineX[job['baseline_fk']]['StdICConstant']),
-            #     zpc_uncertainty = float(rxBaselineAccuracyX[job['baseline_fk']]['UncertaintyConstant']),
-            #     variance = 1,
-            #     degrees_of_freedom = len(job_measurements) - len(pillars),
-            #     )
+        medjil_baseline_calibration = apps.get_model(
+            'baseline_calibration', 'Pillar_Survey')
+        medjil_accreditation = apps.get_model(
+            'baseline_calibration', 'Accreditation')
+    
+        if rxJob:
+            for job in rxJob.values():
+                if job['calibration_type'] == 'B':
+                    if rxBaselineX[job['baseline_fk']]['name'].lower().find('curtin') != -1:
+                        baseline_id = calibrationsites.objects.get(site_name = 'Curtin')
+                    elif rxBaselineX[job['baseline_fk']]['name'].lower().find('kalgoorlie') != -1:
+                        baseline_id = calibrationsites.objects.get(site_name = 'Kalgoorlie')        
+                    elif rxBaselineX[job['baseline_fk']]['name'].lower().find('busselton') != -1:
+                        baseline_id = calibrationsites.objects.get(site_name = 'Busselton')
+                    
+                    medjil_accreditation.objects.get_or_create(
+                        accredited_company = request.user.company,
+                        valid_from_date = dt(1900,1,1).isoformat(),
+                        valid_to_date = dt(2020,1,1).isoformat(),
+                        LUM_constant = 0,
+                        LUM_ppm = 0,
+                        statement = 'Unknown accreditation from BaselineDLI backcaptured data')    
+                    
+                    pillars =(
+                        [p for p in rxPillar.values() if p['baseline_fk'] == job['baseline_fk']])
+                    
+                    job_measurements =(
+                        [meas for meas in rxJMeasure.values() if meas['job_fk'] == job['pk']])
+                    mets_applied = False
+                    if job_measurements[0]['mets_flag'] == 'N': mets_applied = True
+                    
+                    thermo_calib_applied = all([job['ThermometerCorr1'] == '0', job['ThermometerCorr2'] == '0'])
+                    if mets_applied: thermo_calib_applied = True
+                    
+                    baro_calib_applied = all([job['BarometerCorr1'] == '0', job['BarometerCorr2'] == '0'])
+                    if mets_applied: baro_calib_applied = True
+                    
+                    edm = rxInstrument[job['instrument_edm_fk']]
+                    edm_model = rxInstrumentModel[edm['InstrumentModel_fk']]
+                    edm_make = rxInstrumentMake[edm_model['InstrumentMake_fk']]
+                    
+                    prism = rxInstrument[job['instrument_prism_fk']]
+                    prism_model = rxInstrumentModel[prism['InstrumentModel_fk']]
+                    prism_make = rxInstrumentMake[prism_model['InstrumentMake_fk']]
+                    
+                    # medjil_baseline_calibration.objects.get_or_create(
+                    #     baseline = baseline_id,
+                    #     survey_date = dt.strptime(job['survey_date'],'%d/%m/%Y').isoformat(),
+                    #     computation_date = dt.strptime(job['computation_date'],'%d/%m/%Y').isoformat(),
+                    #     accreditation = medjil_accreditation.instance,
+                    #     apply_lum = False,
+                    #     observer = job['observer_name'],
+                    #     weather = 'Sunny/Clear',
+                    #     job_number = rxBaselineX[job['baseline_fk']]['reference'],
+                    #     edm = ,
+                    #     prism = ,
+                    #     mets_applied = mets_applied,
+                    #     edmi_calib_applied = True,
+                    #     level = ,
+                    #     staff = ,
+                    #     staff_calib_applied = True,
+                    #     thermometer = ,
+                    #     thermo_calib_applied = thermo_calib_applied,
+                    #     barometer = ,
+                    #     baro_calib_applied = baro_calib_applied,
+                    #     hygrometer = ,
+                    #     hygro_calib_applied = True,
+                    #     psychrometer = None,
+                    #     psy_calib_applied = True,
+                    #     uncertainty_budget = ,
+                    #     outlier_criterion = 3,
+                    #     fieldnotes_upload = None,
+                    #     zero_point_correction = float(rxBaselineX[job['baseline_fk']]['StdICConstant']),
+                    #     zpc_uncertainty = float(rxBaselineAccuracyX[job['baseline_fk']]['UncertaintyConstant']),
+                    #     variance = 1,
+                    #     degrees_of_freedom = len(job_measurements) - len(pillars),
+                    #     )
     
     context ={
         'Header': 'Import BaselineDLI Database Records',
