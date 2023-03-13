@@ -704,6 +704,25 @@ def validate_survey(pillar_survey, baseline=None, calibrations=None,
             
             for p, cnt in pillar_cnt.items():
                 if cnt < 2:
+                    print(baseline)
+                    Errs.append('Pillar "' + str(p) + '" has been observed from ' 
+                                + str(cnt) + ' other pillars.')
+        
+            bays=[]
+            first2last=False
+            first2last=False
+            pillar_cnt = dict(zip(pillars,[0]*len(pillars)))
+            for o in raw_edm_obs.values():
+                if o['use_for_distance']:
+                    bay=[min([pillars.index(o['from_pillar']), pillars.index(o['to_pillar'])]),
+                         max([pillars.index(o['from_pillar']), pillars.index(o['to_pillar'])])]
+                    if not bay in bays: 
+                        bays.append(bay)
+                        pillar_cnt[o['from_pillar']]+=1
+                        pillar_cnt[o['to_pillar']]+=1
+            
+            for p, cnt in pillar_cnt.items():
+                if cnt < 2:
                     Errs.append('Pillar "' + str(p) + '" has been observed from ' 
                                 + str(cnt) + ' other pillars.')
             
