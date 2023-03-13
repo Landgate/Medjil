@@ -21,6 +21,7 @@ from accounts.models import Company, CustomUser
 
 
 length_units = (
+        ('µm','µm'),
         ('nm','nm'),
         ('mm','mm'),
         ('m','m'),)

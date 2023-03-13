@@ -1,30 +1,31 @@
 {% extends 'base_generic.html' %}
 {% load static %}
-
-
 {% block content %} 
-
 <article class="post">
-	<div class="page-content">
+    <div class="page-content">
         <div class="text-center">
             <h1>Imported EDM Observations</h1>
         </div>
-    <form action="" style="font-size:10.0pt;width:4500px;" class="site-form" method="post" enctype="multipart/form-data">               
-        <div class="flexbox-container_IB flexbox-item-left_IB">
-        		<p>The pillar survey observations are used to calculate the EDMI calibration <a href= "#"> &#x1F6C8</a>
-            <br>Please select/deselect the observations in the following table to use for the calibration calculations.</p>                 
-        </div>  
-        <div class="flexbox-container_IB" style="width: 100%;">
-        		<div class="flexbox-item_400_IB"><i>* Click the table headers to sort table</i></div>
-	        	<div class="flexbox-item_IB" style="width: 100%;text-align:right"><a href="#bottom">Scroll to bottom &#128317</a></div>
-        </div>
-        <div class="flexbox-container_IB flexbox-item_IB" style="min-width: 600px;">
-		        {% csrf_token %}
-						<table id="obsTable">
-		                {{ edm_obs_formset.management_form }}
-		                {% for form, raw in formset %}
-		                    {% if forloop.first %}
-		                    <tr>
+        <form id="edm-rawDataForm" action="" style="font-size:10.0pt;width:4500px;" class="site-form" method="post" enctype="multipart/form-data">
+            <div class="flexbox-container_IB flexbox-item-left_IB">
+                <p>The pillar survey observations are used to calculate the EDMI calibration <a href= "#"> &#x1F6C8</a>
+                    <br>Please select/deselect the observations in the following table to use for the calibration calculations.</p>
+            </div>
+            <div class="flexbox-container_IB" style="width: 100%;">
+                <div class="flexbox-item_400_IB">
+                    <i>* Click the table headers to sort table</i>
+                </div>
+                <div class="flexbox-item_IB" style="width: 100%;text-align:right">
+                    <a href="#bottom">Scroll to bottom &#128317</a>
+                </div>
+            </div>
+            <div class="flexbox-container_IB flexbox-item_IB" style="min-width: 600px;">
+                {% csrf_token %}
+                <table id="obsTable">
+                    {{ edm_obs_formset.management_form }}
+                    {% for form, raw in formset %}
+                        {% if forloop.first %}
+                            <tr>
                                 <th onclick="sortTable(0)"> Obs # </th>
                                 <th onclick="sortTable(1)"> From Pillar </th>
                                 <th onclick="sortTable(2)"> To Pillar </th>
@@ -36,41 +37,49 @@
                                 <th onclick="sortTable(8)"> Raw Humidity (%) </th>
                                 <th onclick="sortTable(10)"> Select Observation</th>
                                 <td style="display: none;"></td>
-		                    </tr>
-		                    {% endif %}
-		                    <tr>
-		                        <td>{{ forloop.counter|stringformat:"03d" }}</td>
-		                        <td>{{ raw.from_pillar }}</td>
-		                        <td>{{ raw.to_pillar }}</td>
-		                        <td>{{ raw.inst_ht|floatformat:3 }}</td>
-		                        <td>{{ raw.tgt_ht|floatformat:3 }}</td>
-		                        <td>{{ raw.raw_slope_dist|floatformat:4 }}</td>
-		                        <td>{{ raw.raw_temperature|floatformat:1 }}</td>
-		                        <td>{{ raw.raw_pressure|floatformat:1 }}</td>
-		                        <td>{{ raw.raw_humidity|floatformat:1 }}</td>
-		                        <td style="text-align:center">{{ form.use_for_distance }}</td>
-		                        <td style="display: none;">{{ form.id }}</td>
-		                    </tr>
-		                    {% endfor %}
-		      	</table>
-      	</div>
-        <div class="button-container">
-            <a href= "{% url 'edm_calibration:calibrate1' id=id %}" class="submit-button bg-green-500 hover:bg-green-400" style="text-align: center">Back</button>
-            {% if pillar_survey.variance is not null %}
-                <a href= "{% url 'edm_calibration:edm_calibration_home' %}" class="submit-button bg-red-500 hover:bg-green-400" style="text-align: center">Cancel</a>
-            {% else %}
-                <a href= "{% url 'edm_calibration:pillar_survey_del' id=pillar_survey.pk %}" class="submit-button bg-red-500 hover:bg-green-400" style="text-align: center"> Cancel</a>
-            {% endif %}
-            <button type="submit" class="submit-button bg-green-500 hover:bg-green-400" >Next</button>
-        </div>     	
-        </form>      
-		<div id="bottom" style="text-align:center;">
-    		<h4>{{ Page }}</h4>
-    </div>   	
-	</div>
+                            </tr>
+                        {% endif %}
+                        <tr>
+                            <td>{{ forloop.counter|stringformat:"03d" }}</td>
+                            <td>{{ raw.from_pillar }}</td>
+                            <td>{{ raw.to_pillar }}</td>
+                            <td>{{ raw.inst_ht|floatformat:3 }}</td>
+                            <td>{{ raw.tgt_ht|floatformat:3 }}</td>
+                            <td>{{ raw.raw_slope_dist|floatformat:4 }}</td>
+                            <td>{{ raw.raw_temperature|floatformat:1 }}</td>
+                            <td>{{ raw.raw_pressure|floatformat:1 }}</td>
+                            <td>{{ raw.raw_humidity|floatformat:1 }}</td>
+                            <td style="text-align:center">{{ form.use_for_distance }}</td>
+                            <td style="display: none;">{{ form.id }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <div class="button-container">
+                <a href= "{% url 'edm_calibration:calibrate1' id=id %}" class="submit-button bg-green-500 hover:bg-green-400" style="text-align: center">Back</button>
+                    {% if pillar_survey.variance is not null %}
+                        <a href= "{% url 'edm_calibration:edm_calibration_home' %}" class="submit-button bg-red-500 hover:bg-green-400" style="text-align: center">Cancel</a>
+                    {% else %}
+                        <a href= "{% url 'edm_calibration:pillar_survey_del' id=pillar_survey.pk %}" class="submit-button bg-red-500 hover:bg-green-400" style="text-align: center"> Cancel</a>
+                    {% endif %}
+                    <button type="button" class="submit-button bg-green-500 hover:bg-green-400" onclick="submit_it()">Next</button>
+            </div>
+        </form>
+        <div class="loader" id="loading-icon" style="display:none;"></div>
+        <div id="bottom" style="text-align:center;">
+            <h4>{{ Page }}</h4>
+        </div>
+    </div>
 </article>
 
 <script>
+function submit_it() {
+    document.getElementById("loading-icon").style.display = "block";
+    document.getElementById("edm-rawDataForm").style.display = "none";
+    document.getElementById("edm-rawDataForm").submit();
+}
+
+
 function sortTable(n) {
   var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
   table = document.getElementById("obsTable");
@@ -86,7 +95,7 @@ function sortTable(n) {
     /*Loop through all table rows (except the
     first, which contains table headers):*/
     for (i = 1; i 
-	< (rows.length - 1); i++) {
+                < (rows.length - 1); i++) {
       //start by saying there should be no switching:
       shouldSwitch = false;
       /*Get the two elements you want to compare,
@@ -103,7 +112,7 @@ function sortTable(n) {
         }
       } else if (dir == "desc") {
         if (x.innerHTML.toLowerCase() 
-		< y.innerHTML.toLowerCase()) {
+                    < y.innerHTML.toLowerCase()) {
           //if so, mark as a switch and break the loop:
           shouldSwitch = true;
           break;

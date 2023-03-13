@@ -504,8 +504,8 @@
                                 {% endfor %}
                                 <!--Avg, Std-->
                                 <td>{{o.raw_slope_dist|floatformat:5}}</td>
-                                <td>{{o.diff_to_certified_sd|multiply:1000|floatformat:2}}</td>
                                 <td>{{o.std_slope_dist|multiply:1000|floatformat:2}}</td>
+                                <td>{{o.diff_to_certified_sd|multiply:1000|floatformat:2}}</td>
                                 <!--OS, Delta Ht-->
                                 <td>{{o.delta_os|floatformat:3}}</td>
                                 <td>{{o.delta_height|floatformat:3}}</td>

@@ -1,7 +1,5 @@
 {% extends 'base_generic.html' %}
 {% load static %}
-
-
 {% block content %} 
 
 <article class="post">
@@ -9,73 +7,84 @@
         <div class="text-center">
             <h1>Imported EDM Observations</h1>
         </div>
-    <form action="" style="font-size:10.0pt;width:4500px;" class="site-form" method="post" enctype="multipart/form-data">               
-        <div class="flexbox-container_IB flexbox-item-left_IB">
-                <p>The pillar survey observations are used to calculate the baseline's 'certified distances'<a href= "#"> &#x1F6C8</a>
-               and the pillar offsets from the first pillar to last pillar alignment.<a href= "#"> &#x1F6C8</a>
-               <br>Please select/deselect the observations in the following table to use for the alignment and/or distance calculations.</p>                 
-        </div>  
-        <div class="flexbox-container_IB" style="width: 100%;">
-                <div class="flexbox-item_400_IB"><i>* Click the table headers to sort table</i></div>
-                <div class="flexbox-item_IB" style="width: 100%;text-align:right"><a href="#bottom">Scroll to bottom &#128317</a></div>
-        </div>
-        <div class="flexbox-container_IB flexbox-item_IB" style="min-width: 600px;">
-            {% csrf_token %}
-            <table id="obsTable">
-                {{ edm_obs_formset.management_form }}
-                {% for form, raw in formset %}
-                    {% if forloop.first %}
+        <form id="edm-rawDataForm" action="" style="font-size:10.0pt;width:4500px;" class="site-form" method="post" enctype="multipart/form-data">
+            <div class="flexbox-container_IB flexbox-item-left_IB">
+                <p>The pillar survey observations are used to calculate the baseline's 'certified distances' <a href= "#"> &#x1F6C8</a> and the pillar offsets from the first pillar to last pillar alignment. <a href= "#"> &#x1F6C8</a>
+                    <br>Please select/deselect the observations in the following table to use for the alignment and/or distance calculations.</p>
+            </div>
+            <div class="flexbox-container_IB" style="width: 100%;">
+                <div class="flexbox-item_400_IB">
+                    <i>* Click the table headers to sort table</i>
+                </div>
+                <div class="flexbox-item_IB" style="width: 100%;text-align:right">
+                    <a href="#bottom">Scroll to bottom &#128317</a>
+                </div>
+            </div>
+            <div class="flexbox-container_IB flexbox-item_IB" style="min-width: 600px;">
+                {% csrf_token %}
+                <table id="obsTable">
+                    {{ edm_obs_formset.management_form }}
+                    {% for form, raw in formset %}
+                        {% if forloop.first %}
+                            <tr>
+                                <th onclick="sortTable(0)"> Obs # </th>
+                                <th onclick="sortTable(1)"> From Pillar </th>
+                                <th onclick="sortTable(2)"> To Pillar </th>
+                                <th onclick="sortTable(3)"> Instrument Height (m)</th>
+                                <th onclick="sortTable(4)"> Target Height (m)</th>
+                                <th onclick="sortTable(5)"> Slope Distance (m)</th>
+                                <th onclick="sortTable(6)"> Offset (m)</th>
+                                <th onclick="sortTable(7)"> Raw Temperature (°C) </th>
+                                <th onclick="sortTable(8)"> Raw Pressure (mBar) </th>
+                                <th onclick="sortTable(9)"> Raw Humidity (%) </th>
+                                <th onclick="sortTable(10)"> Select for Alignment Survey </th>
+                                <th onclick="sortTable(11)"> Select for Certified Distances </th>
+                                <td style="display: none;"></td>
+                            </tr>
+                        {% endif %}
                         <tr>
-                            <th onclick="sortTable(0)"> Obs # </th>
-                            <th onclick="sortTable(1)"> From Pillar </th>
-                            <th onclick="sortTable(2)"> To Pillar </th>
-                            <th onclick="sortTable(3)"> Instrument Height (m)</th>
-                            <th onclick="sortTable(4)"> Target Height (m)</th>
-                            <th onclick="sortTable(5)"> Slope Distance (m)</th>
-                            <th onclick="sortTable(6)"> Offset (m)</th>
-                            <th onclick="sortTable(7)"> Raw Temperature (°C) </th>
-                            <th onclick="sortTable(8)"> Raw Pressure (mBar) </th>
-                            <th onclick="sortTable(9)"> Raw Humidity (%) </th>
-                            <th onclick="sortTable(10)"> Select for Alignment Survey </th>
-                            <th onclick="sortTable(11)"> Select for Certified Distances </th>
-                            <td style="display: none;"></td>
+                            <td>{{ forloop.counter|stringformat:"03d" }}</td>
+                            <td>{{ raw.from_pillar }}</td>
+                            <td>{{ raw.to_pillar }}</td>
+                            <td>{{ raw.inst_ht|floatformat:3 }}</td>
+                            <td>{{ raw.tgt_ht|floatformat:3 }}</td>
+                            <td>{{ raw.raw_slope_dist|floatformat:4 }}</td>
+                            <td>{{ raw.observed_offset|floatformat:3 }}</td>
+                            <td>{{ raw.raw_temperature|floatformat:1 }}</td>
+                            <td>{{ raw.raw_pressure|floatformat:1 }}</td>
+                            <td>{{ raw.raw_humidity|floatformat:1 }}</td>
+                            <td style="text-align:center">{{ form.use_for_alignment }}</td>
+                            <td style="text-align:center">{{ form.use_for_distance }}</td>
+                            <td style="display: none;">{{ form.id }}</td>
                         </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <div class="button-container">
+                <a href= "{% url 'baseline_calibration:calibrate1' id=id %}" class="submit-button bg-green-500 hover:bg-green-400" style="text-align: center">Back</button>
+                    {% if pillar_survey.variance is not null %}
+                        <a href= "{% url 'baseline_calibration:calibration_home' %}" class="submit-button bg-red-500 hover:bg-green-400" style="text-align: center"> Cancel</a>
+                    {% else %}
+                        <a href= "{% url 'baseline_calibration:pillar_survey_del' id=pillar_survey.pk %}" class="submit-button bg-red-500 hover:bg-green-400" style="text-align: center"> Cancel</a>
                     {% endif %}
-                    <tr>
-                        <td>{{ forloop.counter|stringformat:"03d" }}</td>
-                        <td>{{ raw.from_pillar }}</td>
-                        <td>{{ raw.to_pillar }}</td>
-                        <td>{{ raw.inst_ht|floatformat:3 }}</td>
-                        <td>{{ raw.tgt_ht|floatformat:3 }}</td>
-                        <td>{{ raw.raw_slope_dist|floatformat:4 }}</td>
-                        <td>{{ raw.observed_offset|floatformat:3 }}</td>
-                        <td>{{ raw.raw_temperature|floatformat:1 }}</td>
-                        <td>{{ raw.raw_pressure|floatformat:1 }}</td>
-                        <td>{{ raw.raw_humidity|floatformat:1 }}</td>
-                        <td style="text-align:center">{{ form.use_for_alignment }}</td>
-                        <td style="text-align:center">{{ form.use_for_distance }}</td>
-                        <td style="display: none;">{{ form.id }}</td>
-                    </tr>
-                {% endfor %}
-            </table>
-          </div>
-        <div class="button-container">
-            <a href= "{% url 'baseline_calibration:calibrate1' id=id %}" class="submit-button bg-green-500 hover:bg-green-400" style="text-align: center">Back</button>
-            {% if pillar_survey.variance is not null %}
-                <a href= "{% url 'baseline_calibration:calibration_home' %}" class="submit-button bg-red-500 hover:bg-green-400" style="text-align: center"> Cancel</a>
-            {% else %}
-                <a href= "{% url 'baseline_calibration:pillar_survey_del' id=pillar_survey.pk %}" class="submit-button bg-red-500 hover:bg-green-400" style="text-align: center"> Cancel</a>
-            {% endif %}
-            <button type="submit" class="submit-button bg-green-500 hover:bg-green-400" >Next</button>
-        </div>         
-     </form>      
+                    <button type="button" class="submit-button bg-green-500 hover:bg-green-400" onclick="submit_it()">Next</button>
+            </div>
+        </form>
+        <div class="loader" id="loading-icon" style="display:none;"></div>
         <div id="bottom" style="margin-left:auto;margin-right:0;text-align:center;">
             <h4>{{ Page }}</h4>
-    </div>       
+        </div>
     </div>
 </article>
 
 <script>
+function submit_it() {
+    document.getElementById("loading-icon").style.display = "block";
+    document.getElementById("edm-rawDataForm").style.display = "none";
+    document.getElementById("edm-rawDataForm").submit();
+}
+
+
 function sortTable(n) {
   var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
   table = document.getElementById("obsTable");

@@ -637,7 +637,7 @@ let Data0 =[];
 let bay = "";
 {% for o in edm_observations %}
     //"Residual Chart"
-    bay = "(" + {{ o.from_pillar }} + " - " + {{ o.to_pillar }} + ")";
+    bay = "({{ o.from_pillar }} - {{ o.to_pillar }})";
     if (Math.abs({{ o.std_residual }}) > {{pillar_survey.outlier_criterion}}) {
         dColour.push("#FF0000");
          lbls0.push("Potential Outlier: " + bay + " Standarized Residual: " + {{ o.std_residual }}.toFixed(2));
@@ -655,7 +655,7 @@ let lbls2 = [];
 bay = "";
 {% for d in certified_dists %}
     //"Uncertainty Chart"
-    bay = "(" + {{ d.from_pillar }} + " - " + {{ d.to_pillar }} + ")";
+    bay = "({{ d.from_pillar }} - {{ d.to_pillar }})";
     Data1.push({
         label: bay + " ({{ d.Reduced_distance|floatformat:4 }}m)",
         barPercentage: 0.8,
@@ -708,7 +708,7 @@ new Chart("Residual-Chart", {
 </script>
 
 <script>
-// Script to produce the bar chart for Uncertainty
+// "Script to produce the bar chart for Uncertainty"
 
 new Chart("Uncertainty-Chart", {
     type: 'horizontalBar',
@@ -729,7 +729,7 @@ new Chart("Uncertainty-Chart", {
 
 </script>
 <script>
-// Script to produce the Comparison of baseline history bar graph
+//" Script to produce the Comparison of baseline history bar graph"
 let Data2 = []
 {% for survey in baseline.history.values %}
     bgColor = [];

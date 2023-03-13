@@ -315,7 +315,7 @@ def calibrate2(request,id):
                           / pillar_survey['edm'].edm_specs.unit_length)
                 o['d_term'] = d_term
                 a_row = [1,
-                         o['Reduced_distance']*10e-6,
+                         o['Reduced_distance']*1e-6,
                          sin(d_term),
                          cos(d_term),
                          sin(2*d_term),
@@ -400,20 +400,23 @@ def calibrate2(request,id):
             
             back_colours = ['#FF0000', '#800000', '#FFFF00', '#808000', 
                             '#00FF00', '#008000', '#00FFFF', '#008080', 
-                            '#0000FF', '#000080', '#FF00FF', '#800080']
+                            '#0000FF', '#000080', '#FF00FF', '#800080',]
             
             edm_observations = list(edm_observations.values())
             first_to_last = {'Reduced_distance':0}
             residual_chart = []
             n_rpt_shots = max([len(e['grp_Bay']) for e in edm_observations])
-            for o, colour in zip(edm_observations, back_colours):
+            i=0
+            for o in edm_observations:
+                if i == len(back_colours): i=0
                 while len(o['grp_Bay'])<n_rpt_shots:
                     o['grp_Bay'].append('')
                     
                 for uc in o['uc_budget'].values():
-                    uc['chart_colour'] = colour
+                    uc['chart_colour'] = back_colours[i]
                     if uc['group'] in dict(Uncertainty_Budget_Source.group_types).keys():
                         uc['group_verbose'] = dict(Uncertainty_Budget_Source.group_types)[uc['group']]
+                i+=1
                 for uc in o['uc_sources']:
                     if uc['group'] in dict(Uncertainty_Budget_Source.group_types).keys():
                         uc['group_verbose'] = dict(Uncertainty_Budget_Source.group_types)[uc['group']]
