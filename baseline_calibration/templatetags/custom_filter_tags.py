@@ -11,6 +11,7 @@ def multiply(value, arg):
 @register.filter
 def sigfigs(x, sig):
     if x=='': return ''
+    if x==0: return 0
     rnd=sig-int(floor(log10(abs(x))))-1
     aVal = round(x, rnd)
     if rnd <= 0: rnd=0

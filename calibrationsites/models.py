@@ -151,8 +151,7 @@ class Pillar(models.Model):
     name = models.CharField(max_length=25, 
                             help_text="e.g., 1", 
                             verbose_name= 'Pillar/Pin No')
-    order = models.CharField(max_length=25, 
-                            blank = True,
+    order = models.CharField(max_length=25,
                             verbose_name= 'formatted name')
     easting = models.DecimalField(null=True, blank=True,
                             max_digits=9, 
@@ -179,10 +178,6 @@ class Pillar(models.Model):
     def format_name(self):
         num = ''.join([str(s) for s in f'{self.name}' if s.isdigit()])
         return f'{self.name}'.replace(num,num.zfill(3))
-
-    def save(self, *args, **kwargs):
-         self.order = self.format_name
-         super(Pillar, self).save(*args, **kwargs)
 
     def __str__(self):
         return f'{self.site_id} - Pillar/Pin {self.name}'

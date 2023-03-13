@@ -18,5 +18,6 @@ urlpatterns = [
     path('accreditations/', views.accreditations, name = 'accreditations'),
     path('accreditations/<slug:id>/edit/', views.accreditation_edit, name = 'accreditation_edit'),
     path('accreditations/<int:id>/delete/', views.accreditation_delete, name = 'accreditation_delete'),
-    
+
+    path('import/', views.import_dli, name = 'import_dli'),    
 ]

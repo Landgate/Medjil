@@ -315,7 +315,7 @@ def calibrate2(request,id):
                           / pillar_survey['edm'].edm_specs.unit_length)
                 o['d_term'] = d_term
                 a_row = [1,
-                         o['Reduced_distance'],
+                         o['Reduced_distance']*10e-6,
                          sin(d_term),
                          cos(d_term),
                          sin(2*d_term),
