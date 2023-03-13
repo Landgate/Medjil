@@ -77,10 +77,11 @@ def csv2dict(csv_file,clms,key_names=-1):
 def list2dict(lst,clms,key_names=-1):
     dct={}
     for row in lst:
-        if key_names != -1: ky = str(row[clms.index(key_names)])            
-        if key_names == -1: ky = str(len(dct)+1)
-   
-        dct[ky] = dict(zip(clms,row))
+        if len(clms) == len(row):
+            if key_names != -1: ky = str(row[clms.index(key_names)])
+            if key_names == -1: ky = str(len(dct)+1)
+       
+            dct[ky] = dict(zip(clms,row))
                 
     return dct
 
@@ -280,14 +281,17 @@ def report_notes_qry(company, report_type):
 
     return report_notes
 
-def decrypt(en_str):
-    NORMAL_CHARS =  r'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 abcdefghijklmnopqrstuvwxyz.|(),;"!@#$%^&*()_-+={}[]\<>?/:'
-    ENCRYPT_CHARS = r'962XRLD7YJS1AHBQ5NCO3M08EKGIWUPTVZ4F qwertyuiopasdfghjklzxcvbnm|.(),;"!@#$%^&*()_-=+{}[]\<>?/:'
+def decrypt_file(en_file):
+    NORMAL_CHARS =  r'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 abcdefghijklmnopqrstuvwxyz.|(),;"!@#$%^&*()_-+={}[]\<>?/:' +"'"
+    ENCRYPT_CHARS = r'962XRLD7YJS1AHBQ5NCO3M08EKGIWUPTVZ4F qwertyuiopasdfghjklzxcvbnm|.(),;"!@#$%^&*()_-=+{}[]\<>?/:'+"'"
     
     dct=dict(zip(ENCRYPT_CHARS,NORMAL_CHARS))
-    decripted_str = ''
     
-    for s in en_str:
-        decripted_str += dct[s]
+    rows = en_file.read().decode("utf-8").replace('\r','').split("\n")
+    for i, row in enumerate(rows[1:]):
+        decripted_str = ''
+        for s in row:
+            decripted_str += dct[s]
+        rows[i] = decripted_str.split('|')
     
-    return decripted_str
+    return rows

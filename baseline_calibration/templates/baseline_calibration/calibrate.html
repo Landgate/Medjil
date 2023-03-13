@@ -103,6 +103,7 @@
                 <button type="button" id="nextBtn" onclick="nextPrev(1)" class="submit-button bg-green-500 hover:bg-green-400" >Next</button>
             </div>
         </form>
+        <div class="loader" id="loading-icon" style="display:none;"></div>
         <div style="text-align:center;">
             <h4 id=pgOfpgs>1</h4>
         </div>
@@ -159,6 +160,8 @@
       currentTab = currentTab + n;
       
       if (currentTab > lastTab) {
+        document.getElementById("loading-icon").style.display = "block";
+        document.getElementById("PillarSurveyForm").style.display = "none";
         document.getElementById("PillarSurveyForm").submit();
         return false;
       }

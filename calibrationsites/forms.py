@@ -157,7 +157,7 @@ class AddPillarForm(forms.ModelForm):
             # Place holder
             self.fields['easting'].widget.attrs['placeholder'] = 'MGA2020- e.g., 395006.085'
             self.fields['northing'].widget.attrs['placeholder'] = 'MGA2020- e.g., 6458541.334'
-            self.fields['zone'].widget.attrs['placeholder'] = 'Grid Zone, if not 1'
+            self.fields['zone'].widget.attrs['placeholder'] = 'Grid Zone'
 
     class Meta:
         model = Pillar

@@ -423,7 +423,7 @@ def add_typeA(d, matrix_y, dof):
     # '08 calculate uncertainty of instrument correction
     if len(matrix_y)==2:
         s_dev = (matrix_y[0]['std_dev']
-                 + matrix_y[1]['std_dev'] * d['Reduced_distance'])
+                 + matrix_y[1]['std_dev'] * d['Reduced_distance'] * 10**-6)
     
     if len(matrix_y)==6:
         s_dev = (matrix_y[0]['std_dev']
@@ -689,33 +689,14 @@ def validate_survey(pillar_survey, baseline=None, calibrations=None,
         for pop_it in pop_list:
             raw_edm_obs.pop(pop_it, None)
     
-        # Each pillar must be observed from at least 2 other pillars
-        bays=[]
-        pillar_cnt = dict(zip(pillars,[0]*len(pillars)))
-        for o in raw_edm_obs.values():
-            if o['use_for_distance']:
-                bay=[min([pillars.index(o['from_pillar']), pillars.index(o['to_pillar'])]),
-                     max([pillars.index(o['from_pillar']), pillars.index(o['to_pillar'])])]
-                if not bay in bays: 
-                    bays.append(bay)
-                    pillar_cnt[o['from_pillar']]+=1
-                    pillar_cnt[o['to_pillar']]+=1
-        
-        for p, cnt in pillar_cnt.items():
-            if cnt < 2:
-                Errs.append('Pillar "' + str(p) + '" has been observed from ' 
-                            + str(cnt) + ' other pillars.')
-        
         if raw_lvl_obs:
+            # Each pillar must be observed from at least 2 other pillars
             bays=[]
-            first2last=False
             pillar_cnt = dict(zip(pillars,[0]*len(pillars)))
             for o in raw_edm_obs.values():
-                if o['use_for_alignment']:
+                if o['use_for_distance']:
                     bay=[min([pillars.index(o['from_pillar']), pillars.index(o['to_pillar'])]),
                          max([pillars.index(o['from_pillar']), pillars.index(o['to_pillar'])])]
-                    if [o['from_pillar'], o['to_pillar']]==[pillars[0], pillars[-1]]:
-                        first2last=True
                     if not bay in bays: 
                         bays.append(bay)
                         pillar_cnt[o['from_pillar']]+=1
@@ -723,8 +704,27 @@ def validate_survey(pillar_survey, baseline=None, calibrations=None,
             
             for p, cnt in pillar_cnt.items():
                 if cnt < 2:
-                    Errs.append('Pillar "' + str(p) + '" has only been observed from ' 
-                                + str(cnt) + ' other pillars for determining the offset.')
+                    Errs.append('Pillar "' + str(p) + '" has been observed from ' 
+                                + str(cnt) + ' other pillars.')
+            
+                bays=[]
+                first2last=False
+                pillar_cnt = dict(zip(pillars,[0]*len(pillars)))
+                for o in raw_edm_obs.values():
+                    if o['use_for_alignment']:
+                        bay=[min([pillars.index(o['from_pillar']), pillars.index(o['to_pillar'])]),
+                             max([pillars.index(o['from_pillar']), pillars.index(o['to_pillar'])])]
+                        if [o['from_pillar'], o['to_pillar']]==[pillars[0], pillars[-1]]:
+                            first2last=True
+                        if not bay in bays: 
+                            bays.append(bay)
+                            pillar_cnt[o['from_pillar']]+=1
+                            pillar_cnt[o['to_pillar']]+=1
+                
+                for p, cnt in pillar_cnt.items():
+                    if cnt < 2:
+                        Errs.append('Pillar "' + str(p) + '" has only been observed from ' 
+                                    + str(cnt) + ' other pillars for determining the offset.')
                         
             #Each baseline calibration pillar survey must have from first to last pillar
             if not first2last:

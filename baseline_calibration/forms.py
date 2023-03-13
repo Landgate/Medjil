@@ -19,6 +19,9 @@ from instruments.models import (EDM_Inst,
                                 Staff)
 from calibrationsites.models import CalibrationSite
 
+class CustomClearableFileInput(forms.ClearableFileInput):
+    template_name = 'custom_widgets/customclearablefileinput.html'
+    
 class PillarSurveyForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
@@ -224,7 +227,16 @@ class AccreditationForm(forms.ModelForm):
                 attrs={'type':'date'}),
             'valid_to_date': forms.DateInput(format=('%d-%m-%Y'),
                 attrs={'type':'date'}),
-            'certificate_upload': forms.FileInput(
-                attrs={'accept' : '.pdf, .jpg, jpeg, .png, .tif'})
+            'certificate_upload': CustomClearableFileInput(
+                attrs={'accept' : '.pdf, .jpg, .jpeg, .png, .tif',
+                       'required': False})
            }
+
+
+class ImportDliDataForm(forms.Form):
         
+    inst_make_file = forms.FileField(
+        widget = forms.FileInput(
+            attrs={'accept' : '.db',
+                   'multiple': True}),
+        label = 'Select Database Files to Import')
