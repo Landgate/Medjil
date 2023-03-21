@@ -4,7 +4,8 @@ Individual states and territories have regulations that require the Surveyor-Gen
 
 
 
-Medjil is a Django-based open-source web application developed by Landgate that allows for rigorous calibration of baselines (the standard) and survey equipment (e.g. EDM Instrumentation or levelling staff).
+Medjil is the proposed name for an on-line instrument calibration portal that allows for rigorous calibration of baselines (the standard) and survey equipment (e.g. EDM Instrumentation or levelling staff).
+This code is a Django-based open-source web application developed by Landgate 
 
 ### Requirements
 Python 3.8 or higher plus see requirements.txt
