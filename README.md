@@ -15,7 +15,7 @@ Install ```Python 3``` or ```Anaconda 3```. Note that this application has been 
 #### Check version in Command Prompt
 python --version  
 
-### Create a virtual environemnt
+### Create a virtual environment
 Install a python package called "virtualenv" from the command prompt and activate it. 
 By activating the environment, your project packages will be installed in that library. 
 
