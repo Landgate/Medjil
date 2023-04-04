@@ -55,7 +55,7 @@ def site_home(request):
 @login_required(login_url="/accounts/login") 
 def site_detailed_view(request, id):
     site = get_object_or_404(CalibrationSite, id = id)
-    pillars = Pillar.objects.filter(site_id=site)
+    pillars = Pillar.objects.filter(site_id=site).order_by('order')
     
     return render(request, 
                     'calibrationsites/site_detail.html', 
@@ -284,7 +284,7 @@ class CreateCalibrationSiteWizard(LoginRequiredMixin, NamedUrlSessionWizardView)
                     easting = pillars['easting'],
                     northing = pillars['northing'],
                     zone = pillars['zone'],
-                    order = ordr,
+                    order = f'{ordr:0>3}',
                 )
 
 

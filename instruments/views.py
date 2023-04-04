@@ -621,3 +621,8 @@ def get_inst_model_json(request, *args, **kwargs):
     # get instrument models and list them
     obj_makes = list(InstrumentModel.objects.filter(make__make_abbrev__exact = selected_make).values())
     return JsonResponse({'data': obj_makes})
+
+@login_required(login_url="/accounts/login") 
+def edm_recommended_specs(request):
+    context = {}
+    return render(request, 'instruments/inst_spec_edm_recommendations.html', context)

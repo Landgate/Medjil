@@ -1,12 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect, QueryDict
+from django.http import QueryDict, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
-from django.contrib import messages
 from django.forms import formset_factory, modelformset_factory
 from django.forms.models import model_to_dict
+from django.urls import reverse
 from collections import OrderedDict
 from django.db.models import Q
-from django.apps import apps
 
 
 # Create your views here.
@@ -19,13 +18,18 @@ from .forms import (PillarSurveyForm,
                     PillarSurveyUpdateForm,
                     Uncertainty_BudgetForm,
                     Uncertainty_Budget_SourceForm,
-                    AccreditationForm,
-                    ImportDliDataForm)
+                    AccreditationForm
+                    )
 from instruments.models import (EDM_Inst,
                     Prism_Inst,
                     DigitalLevel,
                     Staff,
-                    Mets_Inst)
+                    Mets_Inst,
+                    EDM_Specification,
+                    Prism_Specification,
+                    Mets_Specification,
+                    InstrumentMake,
+                    InstrumentModel)
 from calibrationsites.models import (Pillar,
                     CalibrationSite)
 from .models import (Pillar_Survey,
@@ -43,7 +47,7 @@ from instrument_calibrations.settings import *
 from common_func.LeastSquares import (LSA,
                                       ISO_test_b,
                                       ISO_test_c)
-from datetime import datetime as dt
+
 
 @login_required(login_url="/accounts/login") 
 def calibration_home(request):
@@ -423,17 +427,15 @@ def calibrate2(request,id):
             # Formula 6.10 (6.13) - Adjustment Computation (Ghilani) 4th Edition
             vcv_A = []
             bay = []
-            for p0 in pillars:
-                i0 = pillars.index(p0)
-                for p1 in pillars[1:]:
+            for i0, p0 in enumerate(pillars[:-1]):
+                for p1 in pillars[i0+1:]:
                     i1 = pillars.index(p1)
                     A_row = [0]*(len(pillars))
                     if i0!=0: A_row[i0-1] = -1
                     A_row[i1-1] = 1
-            
-                    if not p1+' - '+ p0 in bay and p1!=p0:
-                        bay.append(p0+' - '+ p1)
-                        vcv_A.append(A_row)
+                    
+                    bay.append(p0+' - '+ p1)
+                    vcv_A.append(A_row)
             
             vcv_A = np.array(vcv_A, dtype=object)
             sigma_vv = vcv_A @ vcv_matrix @ vcv_A.T
@@ -705,13 +707,14 @@ def uc_budget_edit(request, id=None):
         formset.save()
         
         for orig_source in qs:
-             if not orig_source.id in new_sources_id:
-                 orig_source.delete()
+            if not orig_source.id in new_sources_id:
+                orig_source.delete()
                  
-        if request.POST.get('next'):
-            return redirect(request.POST.get('next'))
+        next_url = request.POST.get('next')
+        if next_url:
+            return redirect(next_url)
         else:
-            return redirect(request.POST.get('baseline_calibration:uc_budgets'))
+            return redirect('baseline_calibration:uc_budgets')
 
     context = {}
     context['form'] = uc_budget
@@ -731,11 +734,12 @@ def uc_budget_create(request):
             for uc_source in uc_sources:
                 f = uc_source.save(commit=False)
                 f.uncertainty_budget = uc_budget.instance
-                f.save()            
-            if 'next' in request.POST:
-                return redirect(request.POST.get('next'))
+                f.save()
+            next_url = request.POST.get('next')
+            if next_url:
+                return redirect(next_url)
             else:
-                return redirect ('baseline_calibration:uc_budgets')
+                return redirect('baseline_calibration:uc_budgets')
     else:
         ini_budget={}
         ini_budget['std_dev_of_zero_adjustment'] = (
@@ -802,11 +806,12 @@ def accreditation_edit(request, id=None):
         context['Header'] = 'Edit Accreditation Details'
     
     if accreditation.is_valid():
-        if 'next' in request.POST:
-            accreditation.save()
-            return redirect(request.POST.get('next'))
+        accreditation.save()            
+        next_url = request.POST.get('next')
+        if next_url:
+            return redirect(next_url)
         else:
-            return redirect ('baseline_calibration:accreditations')
+            return redirect('baseline_calibration:accreditations')
         
     context['form'] = accreditation
     
@@ -820,243 +825,4 @@ def accreditation_delete(request, id):
     
     return redirect('baseline_calibration:accreditations')
 
-@login_required(login_url="/accounts/login") 
-def import_dli(request):
-    importForm = ImportDliDataForm(
-        request.POST or None,
-        request.FILES or None)
-    
-    if importForm.is_valid():
-        files = request.FILES.getlist('inst_make_file')
-        
-        for f in files:
-            if f.name == 'rxBaseline.db':
-                clms = ['pk', 'name', 'location',
-                        'operator', 'calibrated_date', 'reference',
-                        'ellipsoid_fk', 'confidence_level', 'reference_height',
-                        'StdICConstant', 'StdICPPM', 'humidity', 'ArchiveFlag']
-                rxBaseline = list2dict(decrypt_file(f), clms, 'pk')
-                print(str(f.name.replace('.db','')) + ' = ' + str(rxBaseline))
-                
-            if f.name == 'rxBaselineX.db':
-                clms = ['pk', 'name', 'location',
-                        'operator', 'calibrated_date', 'reference',
-                        'ellipsoid_fk', 'confidence_level', 'reference_height',
-                        'StdICConstant', 'StdICPPM', 'humidity', 'ArchiveFlag',
-                        'operator_address']
-                rxBaselineX = list2dict(decrypt_file(f), clms, 'pk')
-                print(str(f.name.replace('.db','')) + ' = ' + str(rxBaselineX))
-            
-            if f.name == 'rxBaselineAccuracy.db':
-                clms = ['baseline_fk', 'UncertaintyConstant', 'UncertaintyScale']
-                rxBaselineAccuracy = list2dict(decrypt_file(f), clms, 'baseline_fk')
-                print(str(f.name.replace('.db','')) + ' = ' + str(rxBaselineAccuracy))
-            
-            if f.name == 'rxBaselineAccuracyX.db':
-                clms = ['baseline_fk', 'UncertaintyConstant', 'UncertaintyScale']
-                rxBaselineAccuracyX = list2dict(decrypt_file(f), clms, 'baseline_fk')
-                print(str(f.name.replace('.db','')) + ' = ' + str(rxBaselineAccuracyX))
-            
-            if f.name == 'rxDistance.db':
-                clms = ['pk', 'baseline_fk', 'from_pillar_fk',
-                        'to_pillar_fk', 'certified_distance', 'DistSigma']
-                rxDistance = list2dict(decrypt_file(f), clms, 'pk')
-                print(str(f.name.replace('.db','')) + ' = ' + str(rxDistance))
-            
-            if f.name == 'rxDistanceX.db':
-                clms = ['pk', 'baseline_fk', 'from_pillar_fk',
-                        'to_pillar_fk', 'certified_distance', 'DistSigma']
-                rxDistanceX = list2dict(decrypt_file(f), clms, 'pk')
-                print(str(f.name.replace('.db','')) + ' = ' + str(rxDistanceX))
-            
-            if f.name == 'rxEDMObs.db':
-                clms = ['pk', 'MeasID', 'EDMObsDistance',
-                        'MeasDryTemp', 'MeasHumidity', 'MeasPressure']
-                rxEDMObs = list2dict(decrypt_file(f), clms, 'pk')
-                print(str(f.name.replace('.db','')) + ' = ' + str(rxEDMObs))
-            
-            if f.name == 'rxEDMObsX.db':
-                clms = ['pk', 'MeasID', 'EDMObsDistance',
-                        'MeasDryTemp', 'MeasHumidity', 'MeasPressure']
-                rxEDMObsX = list2dict(decrypt_file(f), clms, 'pk')
-                print(str(f.name.replace('.db','')) + ' = ' + str(rxEDMObsX))
-            
-            if f.name == 'rxInstrument.db':
-                clms = ['pk', 'inst_type', 'InstrumentModel_fk',
-                        'serial_number', 'manu_unc_const', 'manu_unc_ppm',
-                        'AntennaModelID', 'InstAntennaSerialNo', 
-                        'InstConstant', 'InstScaleFact', 'comments']
-                rxInstrument = list2dict(decrypt_file(f), clms, 'pk')
-                print(str(f.name.replace('.db','')) + ' = ' + str(rxInstrument))
-            
-            if f.name == 'rxInstrumentX.db':
-                clms = ['pk', 'inst_type', 'InstrumentModel_fk',
-                        'serial_number', 'manu_unc_const', 'manu_unc_ppm',
-                        'AntennaModelID', 'InstAntennaSerialNo', 
-                        'InstConstant', 'InstScaleFact', 'comments']
-                rxInstrumentX = list2dict(decrypt_file(f), clms, 'pk')
-                print(str(f.name.replace('.db','')) + ' = ' + str(rxInstrumentX))
-            
-            if f.name == ('rxInstrumentMake.db'):
-                clms = ['pk', 'manufacturer', 'country']
-                rxInstrumentMake = list2dict(decrypt_file(f), clms, 'pk')
-                print(str(f.name.replace('.db','')) + ' = ' + str(rxInstrumentMake))
-            
-            if f.name == ('rxInstrumentMakeX.db'):
-                clms = ['pk', 'manufacturer', 'country']
-                rxInstrumentMakeX = list2dict(decrypt_file(f), clms, 'pk')
-                print(str(f.name.replace('.db','')) + ' = ' + str(rxInstrumentMakeX))
-                
-            if f.name == 'rxInstrumentModel.db':
-                clms = ['pk', 'InstrumentMake_fk', 'name', 'type',
-                        'manu_unc_const', 'manu_unc_ppm',
-                        'unit_length', 'frequency', 'carrier_wavelength',
-                        'comments', 'is_pulse', 'manu_ref_refrac_index' ]
-                rxInstrumentModel = list2dict(decrypt_file(f), clms, 'pk')
-                print(str(f.name.replace('.db','')) + ' = ' + str(rxInstrumentModel))
-                
-            if f.name == 'rxInstrumentModelX.db':
-                clms = ['pk', 'InstrumentMake_fk', 'name', 'type',
-                        'manu_unc_const', 'manu_unc_ppm',
-                        'unit_length', 'frequency', 'carrier_wavelength',
-                        'comments', 'is_pulse', 'manu_ref_refrac_index' ]
-                rxInstrumentModelX = list2dict(decrypt_file(f), clms, 'pk')
-                print(str(f.name.replace('.db','')) + ' = ' + str(rxInstrumentModelX))
-            
-            if f.name == 'rxJob.db':
-                clms = ['pk', 'name', 'instrument_edm_fk','instrument_prism_fk',
-                        'edm_owner', 'prism_owner', 'ProcessingSoftware',
-                        'survey_date', 'survey_time', 'computation_date',
-                        'computation_time', 'observer_name', 'baseline_fk',
-                        'weather', 'TempCorr', 'PressureCorr', 'StdDevTemp', 
-                        'StdDevPressure', 'InstCentringStdDev', 'InstLevellingStdDev',
-                        'calibration_type', 'JobComments', 'edm_owner_address', 'Thermometer1',
-                        'Thermometer2','Barometer1','Barometer2','ThermometerCorr1',
-                        'ThermometerCorr2','BarometerCorr1','BarometerCorr2',
-                        'NumberThermometers','NumberBarometers']
-                rxJob = list2dict(decrypt_file(f), clms, 'pk')
-                print(str(f.name.replace('.db','')) + ' = ' + str(rxJob))
-            
-            if f.name == 'rxJMeasure.db':
-                clms = ['pk', 'MeasType', 'job_fk','from_pillar_fk', 'to_pillar_fk',
-                        'from_ht', 'to_ht', 'raw_dry_temp', 'raw_humidity', 'humidity_type',
-                        'raw_pressure', 'mets_flag', 'wet_temp', 'humidity',
-                        'raw_dry_temp2', 'raw_pressure2', 'raw_humidity2']
-                rxJMeasure = list2dict(decrypt_file(f), clms, 'pk')
-                print(str(f.name.replace('.db','')) + ' = ' + str(rxJMeasure))
-            
-            if f.name == 'rxJMeasureX.db':
-                clms = ['pk', 'MeasType', 'job_fk','from_pillar_fk', 'to_pillar_fk',
-                        'from_ht', 'to_ht', 'raw_dry_temp', 'raw_humidity', 'humidity_type',
-                        'raw_pressure', 'mets_flag', 'wet_temp', 'humidity',
-                        'raw_dry_temp2', 'raw_pressure2', 'raw_humidity2']
-                rxJMeasureX = list2dict(decrypt_file(f), clms, 'pk')
-                print(str(f.name.replace('.db','')) + ' = ' + str(rxJMeasureX))
-            
-            if f.name == 'rxPillar.db':
-                clms = ['pk', 'baseline_fk', 'order','name', 'height', 'offset',
-                        'latitude', 'longitude', 'EllipsARadius', 'EllipsBRadius',
-                        'EllipsOrient', 'HtStdDev']
-                rxPillar = list2dict(decrypt_file(f), clms, 'pk')
-                print(str(f.name.replace('.db','')) + ' = ' + str(rxPillar))
-            
-            if f.name == 'rxPillarX.db':
-                clms = ['pk', 'baseline_fk', 'order','name', 'height', 'offset',
-                        'latitude', 'longitude', 'EllipsARadius', 'EllipsBRadius',
-                        'EllipsOrient', 'HtStdDev']
-                rxPillarX = list2dict(decrypt_file(f), clms, 'pk')
-                print(str(f.name.replace('.db','')) + ' = ' + str(rxPillarX))
-            
-            if f.name == 'rxStandard.db':
-                clms = ['Type', 'StandardConstant', 'StandardScale','Authority',
-                        'Description', 'LUMUnits', 'AlternateConstant',
-                        'AlternateScale']
-                rxStandard = list2dict(decrypt_file(f), clms, 'Type')
-                print(str(f.name.replace('.db','')) + ' = ' + str(rxStandard))
-                
-            # print(str(f.name.replace('.db','')) + ' = ' )
-            # print(decrypt_file(f))
-    
-        medjil_baseline_calibration = apps.get_model(
-            'baseline_calibration', 'Pillar_Survey')
-        medjil_accreditation = apps.get_model(
-            'baseline_calibration', 'Accreditation')
-    
-        if rxJob:
-            for job in rxJob.values():
-                if job['calibration_type'] == 'B':
-                    if rxBaselineX[job['baseline_fk']]['name'].lower().find('curtin') != -1:
-                        baseline_id = calibrationsites.objects.get(site_name = 'Curtin')
-                    elif rxBaselineX[job['baseline_fk']]['name'].lower().find('kalgoorlie') != -1:
-                        baseline_id = calibrationsites.objects.get(site_name = 'Kalgoorlie')        
-                    elif rxBaselineX[job['baseline_fk']]['name'].lower().find('busselton') != -1:
-                        baseline_id = calibrationsites.objects.get(site_name = 'Busselton')
-                    
-                    medjil_accreditation.objects.get_or_create(
-                        accredited_company = request.user.company,
-                        valid_from_date = dt(1900,1,1).isoformat(),
-                        valid_to_date = dt(2020,1,1).isoformat(),
-                        LUM_constant = 0,
-                        LUM_ppm = 0,
-                        statement = 'Unknown accreditation from BaselineDLI backcaptured data')    
-                    
-                    pillars =(
-                        [p for p in rxPillar.values() if p['baseline_fk'] == job['baseline_fk']])
-                    
-                    job_measurements =(
-                        [meas for meas in rxJMeasure.values() if meas['job_fk'] == job['pk']])
-                    mets_applied = False
-                    if job_measurements[0]['mets_flag'] == 'N': mets_applied = True
-                    
-                    thermo_calib_applied = all([job['ThermometerCorr1'] == '0', job['ThermometerCorr2'] == '0'])
-                    if mets_applied: thermo_calib_applied = True
-                    
-                    baro_calib_applied = all([job['BarometerCorr1'] == '0', job['BarometerCorr2'] == '0'])
-                    if mets_applied: baro_calib_applied = True
-                    
-                    edm = rxInstrument[job['instrument_edm_fk']]
-                    edm_model = rxInstrumentModel[edm['InstrumentModel_fk']]
-                    edm_make = rxInstrumentMake[edm_model['InstrumentMake_fk']]
-                    
-                    prism = rxInstrument[job['instrument_prism_fk']]
-                    prism_model = rxInstrumentModel[prism['InstrumentModel_fk']]
-                    prism_make = rxInstrumentMake[prism_model['InstrumentMake_fk']]
-                    
-                    # medjil_baseline_calibration.objects.get_or_create(
-                    #     baseline = baseline_id,
-                    #     survey_date = dt.strptime(job['survey_date'],'%d/%m/%Y').isoformat(),
-                    #     computation_date = dt.strptime(job['computation_date'],'%d/%m/%Y').isoformat(),
-                    #     accreditation = medjil_accreditation.instance,
-                    #     apply_lum = False,
-                    #     observer = job['observer_name'],
-                    #     weather = 'Sunny/Clear',
-                    #     job_number = rxBaselineX[job['baseline_fk']]['reference'],
-                    #     edm = ,
-                    #     prism = ,
-                    #     mets_applied = mets_applied,
-                    #     edmi_calib_applied = True,
-                    #     level = ,
-                    #     staff = ,
-                    #     staff_calib_applied = True,
-                    #     thermometer = ,
-                    #     thermo_calib_applied = thermo_calib_applied,
-                    #     barometer = ,
-                    #     baro_calib_applied = baro_calib_applied,
-                    #     hygrometer = ,
-                    #     hygro_calib_applied = True,
-                    #     psychrometer = None,
-                    #     psy_calib_applied = True,
-                    #     uncertainty_budget = ,
-                    #     outlier_criterion = 3,
-                    #     fieldnotes_upload = None,
-                    #     zero_point_correction = float(rxBaselineX[job['baseline_fk']]['StdICConstant']),
-                    #     zpc_uncertainty = float(rxBaselineAccuracyX[job['baseline_fk']]['UncertaintyConstant']),
-                    #     variance = 1,
-                    #     degrees_of_freedom = len(job_measurements) - len(pillars),
-                    #     )
-    
-    context ={
-        'Header': 'Import BaselineDLI Database Records',
-        'form': importForm}
-    
-    return render(request, 'baseline_calibration/Accreditation_form.html', context)
+
