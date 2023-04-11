@@ -277,7 +277,7 @@ class CreateCalibrationSiteWizard(LoginRequiredMixin, NamedUrlSessionWizardView)
                     name = pillars['name'],
                 )
         elif site_type.startswith('baseline'):
-            for ordr, pillars in enumerate(pillar_form_data):
+            for ordr, pillars in enumerate(pillar_form_data, start=1):
                 new_pillars = Pillar.objects.create(
                     site_id = site,
                     name = pillars['name'],
