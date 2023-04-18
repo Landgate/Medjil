@@ -517,8 +517,8 @@ tech_manual = {'manual_type':'tbaseline',
         </div>
         <div id="Chapter_1">
           <!-- CHAPTER 1 -->
-          <h1>1Baseline Calibration</h1>
-          <h2>1.1Baseline Designs</h2>
+          <h1>1 Baseline Calibration</h1>
+          <h2>1.1 Baseline Designs</h2>
           <p>Since the introduction of EDM instruments the EDM basline has been their preffered calibration method. There are three main baseline designs:</p>
           <ul STYLE="margin:30px">
             <li>Heerbrugg Design</li>
@@ -527,7 +527,7 @@ tech_manual = {'manual_type':'tbaseline',
           </ul>
           <p>All baseline designs aim at an equal distribution of all measured distances between the shortest and longest line on the baseline, with no repetitions and easy EDMI calibration with or without known distances with the exeption of Hobart design that requires distances to be known. Some baseline designs incorporate a multiple of a basic unit length of EDM instrument(s). A detailed explanation of baseline design concepts is out of scope of this manual. For baseline design details refer to the Electronic Distance Measurement book by J.M.Rueger.</p>
           <p>Currently Medjil requires distances to be known for all types of baselines to perform EDMI calibration. This approach is required for distance transability to the national standard and thus EDM baseline must be calibrated using NMI certified instrument to determine (certified) distances prior the EDMI calibration. An additional module could be developed to allow EDMI calibration without known distances, however such calibration can't be certified under NMI Act and EDMI distances are not legally traceable to the national standard.</p>
-          <h2>1.2Mathematical model and observation equations for the calibration of Baseline</h2>
+          <h2>1.2 Mathematical model and observation equations for the calibration of Baseline</h2>
           <p>To avoid negative distances and to provide greater flexibility of Baseline survey, the following two observation equations can be derived:</p>
           <div> $$ D_{ij}=x_j-x_i-zpc\ \ \ for\ j > i\ \ \ (Eq. 1.1)$$ </div>
           <div>$$ D_{ij}=x_i-x_j-zpc\ \ \ for\ j 
@@ -541,7 +541,7 @@ tech_manual = {'manual_type':'tbaseline',
                 <sub>j</sub> = Distance from the first pillar to pillar 'j'. Distance corrected for the pillar ofsets and reduced to baseline reference height.</p>
               <p>&emsp;&emsp;zpc = zero point correction - an additive constant of the certified EDMI</p>
               <p>&emsp;&emsp;All distances measured with a certified EDM instrumentation (EDMI)</p>
-              <h2>1.3Example: Formation of observation equations</h2>
+              <h2>1.3 Example: Formation of observation equations</h2>
               <p>Consider the following example Baseline consisting of 4 pillars:</p>
               <img src="\media\TechnicalManual\tbaseline\Tech manual\Picture_1_1.png" alt="Example basline">
                 <br>
@@ -557,7 +557,7 @@ tech_manual = {'manual_type':'tbaseline',
                       <p>&emsp;&emsp;X = The certified distances and zpc (vector of the unknown output estimates)</p>
                       <p>This approach does not require to provide approximate distances between pillars. The observations together with a-priori uncertainties (P) are least squares adjusted as per Section (5) to provides the estimated certified distances d
                         <sub>x</sub> and the zpc with the full VCV matrix.</p>
-                      <h2>1.4Inter-pillar distances survey</h2>
+                      <h2>1.4 Inter-pillar distances survey</h2>
                       <img src="\media\TechnicalManual\tbaseline\Tech manual\Picture_1_3.png" alt="Inter-pillar distances survey">
                         <p>To calibre an EDM baseline a series of the inter-pillar distance measurments (surveys) including atmospheric observations of the conditions during the survey are required. Medjil expects all instrumentation used for this survey to be callibrated with current certificate that states the uncertainty of the instrument readings and the calibration corrections that can be applied. The uncertainty of instrument readings is used for the propagation of uncertainties for the interpillar distance survey.</p>
                         <p>The distance observations are assumed to be slope distances that have not been corrected for the height of instrument or height of targets. Applying atmospheric corrections by entering these into the instrument is optional but Medjil requires temperature, pressure and humidity for every distance measurement even if this has been entered into the instrument. These values are used for estimating the propagation of uncertinty as well as the optional applying of atmospheric corrections in case it was not entered into the instrument during the survey.</p>
@@ -578,7 +578,7 @@ tech_manual = {'manual_type':'tbaseline',
                           <a href = "\media\TechnicalManual\tbaseline\Tech manual\BUSS_baseline_calibration_edm_observations.csv" target = "_self">sample dataset</a> required for an EDM baseline calibration survey data format.</p>
                         <br>
                           <p>Baseline measurements must be performed in accordance with the ISO17123-4:2012 Optics and optical instruments – Field procedures for testing geodetic and surveying instruments – Part 4: Electro-optical distance meters (EDM measurements to reflectors).</p>
-                          <h2>1.5Pillar offsets survey</h2>
+                          <h2>1.5 Pillar offsets survey</h2>
                           <p>The pillar offset survey determines offset of each pillar from the alignment of the first (1) and last pillar (n). Medjil performs the required reduction of observations during the EDM Baseline calibration process. Each survey setup is used to automatically calculate the pillar offset providing the survey setup includes measurements to pillar 1 and pillar n.</p>
                           <img src="\media\TechnicalManual\tbaseline\Tech manual\Picture_1_2.png" alt="Pillar Offsets">
                             <p>For each pillar setup, an arbitrary set of coordinates (E
@@ -606,7 +606,7 @@ tech_manual = {'manual_type':'tbaseline',
                               <sub>j</sub>
                             </p>
                             <p>As the instrument moves between pillars, pillar 1 and pillar n are observed in each setup. This allows the orientation of all setups in the survey and computation of an offset for each pillar from every pillar setup that included observations to pillar 1 and pillar n. Medjil automatically computes the average pillar offset and standard deviation values from the distance survey data. Table 4.4 demonstrates an example set of pillar offsets.</p>
-                            <h2>1.6Pillar heights survey</h2>
+                            <h2>1.6 Pillar heights survey</h2>
                             <p>Pillar heights (H
                               <sub>j</sub>) are to be determined as orthometric heights (eg. AHD) using spirit levelling survey or other suitable method and provided with standard deviations preferably derived from redundant observations. Level data is to be provided in an ASCII file. Refer to this 
                               <a href = "\media\TechnicalManual\tbaseline\Tech manual\BUSS_ baseline_calibration_level_observations.csv" target = "_self">sample dataset</a> for the required data format.</p>
@@ -615,8 +615,8 @@ tech_manual = {'manual_type':'tbaseline',
           </div>
           <div id="Chapter_2">
             <!-- CHAPTER 2 -->
-            <h1>2EDMI Calibration</h1>
-            <h2>2.1Systematic errors in EDM instruments</h2>
+            <h1>2 EDMI Calibration</h1>
+            <h2>2.1 Systematic errors in EDM instruments</h2>
             <p>There are three distinct systematic errors which may occur in EDM instruments. The calibration of an instrument on a certified baseline allows to determine the specific instrument - prism correction that can elimination of the following errors:</p>
             <h3>2.1.1 Zero Point Correction (zpc)</h3>
             <p>All distances measured by a particular EDM instrument and reflector combination are subject to a constant error caused by three factors:</p>
@@ -635,26 +635,26 @@ tech_manual = {'manual_type':'tbaseline',
             </ul>
             <h3>2.1.3 Cyclic Errors</h3>
             <p>The precision of an EDM instrument dependents on the precision of the internal phase measurements. Unwanted interference through electronic/optical cross talk or multi-path effects of the transmitted signal on to the received signal causes cyclic errors. The major form of the cyclic error is sinusoidal with a wavelength equal to the unit length of the instrument. The unit length is the scale on which the EDM instrument measures the distance and is derived from the fine measuring frequency. Unit length is equal to one half of the modulation wavelength.</p>
-            <h2>2.2Mathematical model of the EDM Instrument Correction (IC)</h2>
-            <div>$$ IC=zpc+scf*D+b_1\sin{\left(2\pi\frac{D}{U}\right)+b_2\cos{\left(2\pi\frac{D}{U}\right)+b_3\sin{\left(4\pi\frac{D}{U}\right)+b_4\cos{\left(4\pi\frac{D}{U}\right)}}}}\ \ \ (Eq. 2.1)$$ </div>
+            <h2>2.2 Mathematical model of the EDM Instrument Correction (IC)</h2>
+            <div>$$ IC=zpc+scf*D+1C\sin{\left(2\pi\frac{D}{U}\right)+2C\cos{\left(2\pi\frac{D}{U}\right)+3C\sin{\left(4\pi\frac{D}{U}\right)+4C\cos{\left(4\pi\frac{D}{U}\right)}}}}\ \ \ (Eq. 2.1)$$ </div>
             <p>Where:</p>
             <p>&emsp;&emsp;IC = Instrument Correction</p>
             <p>&emsp;&emsp;D = Distance</p>
             <p>&emsp;&emsp;zpc = Zero Point Correction</p>
             <p>&emsp;&emsp;scf = Scale Correction Factor (1:x)</p>
-            <p>&emsp;&emsp;U = Instrument Unit Length (m) - wavelength</p>
-            <p>&emsp;&emsp;b
-              <sub>i</sub> = Cyclic error parameters</p>
-            <p>By default Medjil solution provides zpc and scf for the EDMI. Medjil is also capable of solving for a cyclic error parameter which is based on wavelength cycle errors. Solving for cyclic error however, is optional as the ability to detect this error reliably depends on the baseline design.</p>
+            <p>&emsp;&emsp;U = Instrument Unit Length (m) - wavelength/2</p>
+            <p>&emsp;&emsp;1C, 2C, 3C and 4C = Cyclic (short periodic) error parameters</p>
+            <p>By default Medjil solution estimates zpc and scf for EDMI only. However Medjil is also capable of solving for a cyclic error parameter (C) which is depends on wavelength cycle errors. Solving for cyclic error however, is optional as the ability to detect this error reliably depends on the baseline design.
+            	User should perform additional calibration on "cyclic error" testline if the instrument callibration was performed on Aarau baseline design or Heerbrugg or Hobart design, which was not designed for the unit length of the distance meter being callibrated or the accuracy of the cyclic errors determined on Heerbrugg or Hobart type baselines is not sufficient.</p>
             <h2>2.3 Observation equations</h2>
             <p>For n distances measured by an EDMI on a certified baseline the following observation equation can be derived:</p>
-            <div>$$ d_i=zpc+scf*D+b_1\sin{\left(2\pi\frac{D}{U}\right)+b_2\cos{\left(2\pi\frac{D}{U}\right)+b_3\sin{\left(4\pi\frac{D}{U}\right)+b_4\cos{\left(4\pi\frac{D}{U}\right)}}}}\ \ \ (Eq. 2.2)$$ </div>
+            <div>$$ d_i=zpc+scf*D+1C\sin{\left(2\pi\frac{D}{U}\right)+2C\cos{\left(2\pi\frac{D}{U}\right)+3C\sin{\left(4\pi\frac{D}{U}\right)+4C\cos{\left(4\pi\frac{D}{U}\right)}}}}\ \ \ (Eq. 2.2)$$ </div>
             <p>to be finished</p>
             <br>
           </div>
           <div id="Chapter_3">
             <!-- CHAPTER 3 -->
-            <h1>3Corrections</h1>
+            <h1>3 Corrections</h1>
             <h2>3.1 Calibration Correction</h2>
             <p>Medjil maintains an instrument register that catalogues all instruments used for calibrations. Instrument register belongs to an individual company. The registry includes the archive of calibration certificates for EDMI, Barometer, Thermometer and Hygrometer. If calibration corrections have not been applied to instrument readings, Medjil allows calibration corrections to be applied to the raw readings during the Medjil calibration.</p>
             <h3>3.1.1 Meteorological instrumentation corrections</h3>
@@ -691,8 +691,7 @@ tech_manual = {'manual_type':'tbaseline',
                 <p>Where:</p>
                 <p>&emsp;&emsp;p = Atmospheric pressure in hectopascals</p>
                 <p>&emsp;&emsp;t = Dry temperature in degrees Celsius</p>
-                <h3>3.2.2 Reference Refractive Index (n
-                  <sub>REF</sub>)</h3>
+                <h3>3.2.2 Reference Refractive Index (n<sub>REF</sub>)</h3>
                 <p>The reference refractive index is instrument specific:</p>
                 <div>$$ n_{\mathrm{REF}}=\frac{C_O}{\lambda_{\mathrm{MOD\ }}f_{MOD}}=\frac{C_O}{2Uf_{MOD}}\ \ \ \ (Eq. 3.5) $$</div>
                 <p>Where:</p>
@@ -828,7 +827,7 @@ The 1.0 ppm stated before makes some allowance for anomalous refractivity and th
               <li>‘Coverage factor’ numerical factor used as a multiplier of the standard uncertainty in order to obtain an expanded uncertainty</li>
             </ul>
             <p>Medjil complies with the ISO 17123 (all parts) recommendations to evaluate individual precision (experimental standard deviation known as Type A standard uncertainty) of individual instrument but also to define uncertainty budget which allows for combining all uncertainty components (random or systematic - Type B) to derive combined standard uncertainty (or expanded uncertainty) as a representative measure of accuracy.</p>
-            <h2>4.1Combined standard and expanded uncertainty</h2>
+            <h2>4.1 Combined standard and expanded uncertainty</h2>
             <p>The combined standard uncertainty C
               <sub>SU</sub> of a number of individual uncertainty sources (u
               <sub>i</sub>) is computed using the following formula:</p>
@@ -847,9 +846,9 @@ The 1.0 ppm stated before makes some allowance for anomalous refractivity and th
             <p>&emsp;&emsp;v
               <sub>i</sub> = degrees of freedom of an uncertainty source (i)</p>
             <p>&emsp;&emsp;t = t-student distribution (probability, effective degrees of freedom)</p>
-            <h2>4.2Uncertainty budget</h2>
+            <h2>4.2 Uncertainty budget</h2>
             <p>An uncertainty budget consists of a table of the uncertainty sources that contribute to the combined uncertainty. Medjil automatically populates some records in the uncertainty budget and allows users to add custom uncertainty sources to the uncertainty budget.</p>
-            <h3>4.2.1Automatically populated uncertainty sources</h3>
+            <h3>4.2.1 Automatically populated uncertainty sources</h3>
 Medjil automatically populates the uncertainty sources (Table 4.1 and Table 4.2) when processing the calibration of EDM baselines and EDM Instrumentation.</p>
             <br>Table 4.1: Medjil uncertainty budget for calibration of EDM Baseline 
               <table border="1">
@@ -1831,7 +1830,7 @@ s
                         <td style="vertical-align: bottom;">0.001 </td>
                       </tr>
                     </table>
-                    <h3>4.2.2Custom uncertainty budgets</h3>
+                    <h3>4.2.2 Custom uncertainty budgets</h3>
                     <p>Medjil default uncertainty budget is used during the calibration process and it contains typical uncertainty sources and their values. Medjil also allows to setup a user (company) specific uncertainty budget(s) based on the default which is used for calibrations instead of the default one. During the setup process user can delete, modify or add additional error sources.</p>
                     <img src="\media\TechnicalManual\tbaseline\Tech manual\Picture_4_1.png" alt="Uncertainty budgets">
                       <p>Where:</p>
@@ -1891,17 +1890,17 @@ s
                       <p>&emsp;&emsp;K = Partial differential for temperature defined as:</p>
                       <div>$$ K=\left[\frac{\frac{\left(n_G-1\right)\left(273.15p\right)}{1013.25}-11.27e*{10}^{-6}}{273.15+t^2}\right]*{10}^6\ \ \ (Eq. 4.15)$$ </div>
                       <p>Where:</p>
-                      <p>&emsp;&emsp;p = Preassure [hPa]</p>
+                      <p>&emsp;&emsp;p = Pressure [hPa]</p>
                       <p>&emsp;&emsp;t = Temperature [C]</p>
                       <p>&emsp;&emsp;n
                         <sub>G</sub> = Manufacturers reference refractive index </p>
-                      <p>&emsp;&emsp;e = Partial water vapour preassure [hPa] defined as:</p>
+                      <p>&emsp;&emsp;e = Partial water vapour Pressure [hPa] defined as:</p>
                       <div>$$ e=\frac{Eh}{100}\ \ \ (Eq. 4.16)$$ </div>
                       <p>Where:</p>
                       <p>&emsp;&emsp;E = Saturation water vapour [hPa] at the dry bulb temperature</p>
                       <p>&emsp;&emsp;h = Relative humidity [%]</p>
                       <p>
-                        <b>Preassure</b> = Uncertainty related to the presure can be specified in millibars (mBar), hectopascals (hPa) or millimetres of mercury (mmHg). All error sources belonging to this group will be combined before the contribution to the total uncertainty of the calibration according to the following formula:</p>
+                        <b>Pressure</b> = Uncertainty related to the presure can be specified in millibars (mBar), hectopascals (hPa) or millimetres of mercury (mmHg). All error sources belonging to this group will be combined before the contribution to the total uncertainty of the calibration according to the following formula:</p>
                       <div>$$ su_d = D*L*csu_g*10^{-6}\ \ \ (Eq. 4.17)$$ </div>
                       <p>Where:</p>
                       <p>&emsp;&emsp;su
@@ -1909,7 +1908,7 @@ s
                       <p>&emsp;&emsp;D = Distance</p>
                       <p>&emsp;&emsp;csu
                         <sub>g</sub> = Combined standard uncertainty of the group</p>
-                      <p>&emsp;&emsp;L = Partial differential for preassure defined as:</p>
+                      <p>&emsp;&emsp;L = Partial differential for Pressure defined as:</p>
                       <div>$$ L=\left[0.26957809\frac{\left(n_G-1\right)}{273.15+t^2}\right]\ast{10}^6\ \ \ (Eq. 4.18)$$ </div>
                       <p>
                         <b>Humidity</b> = Uncertainty relating to the humidity must be specified as a percent (%). All error sources belonging to this group will be combined before the contribution to the total uncertainty of the calibration according to the following formula:</p>
@@ -1958,7 +1957,7 @@ s
           </div>
           <div id="Chapter_5">
             <!-- CHAPTER 5 -->
-            <h1>5Least squares adjustment</h1>
+            <h1>5 Least squares adjustment</h1>
             <p>In matrix notation:</p>
             <div>$$ X+r=F\left(y\right)\ \ \ (Eq. 5.1)$$ </div>
             <p>Residuals:</p>
@@ -1974,8 +1973,8 @@ s
           </div>
           <div id="Chapter_6">
             <!-- CHAPTER 6 -->
-            <h1>6Reports</h1>
-            <h2>6.1Statistical tests</h2>
+            <h1>6 Reports</h1>
+            <h2>6.1 Statistical tests</h2>
             <p>Table 6.1 provides a lists of the ISO 17123-4:2012 recommended hypothesis testing to help the interpretation of the calibration results.</p>
             <br>Table 6.1 Hypothesis tests
               <table border="1">

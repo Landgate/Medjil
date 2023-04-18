@@ -40,7 +40,7 @@ muncheng = {
 }    
 #########################################################################
 ################################ EDM ####################################
-curtin_basline = {
+edm_sites = [{
     'site_type' : 'baseline',
     'site_name' : 'Curtin',
     'site_address' : 'Kent Street',
@@ -50,10 +50,19 @@ curtin_basline = {
     'no_of_pillars': 11,
     'operator' : 'Landgate',
     'site_access' : os.path.join(settings.MEDIA_ROOT, 'InitialData/EDM Baseline/Australia/WA/Curtin/Curtin EDM Baseline Access Sketch.pdf'),
-    'site_config' : os.path.join(settings.MEDIA_ROOT, 'InitialData/EDM Baseline/Australia/WA/Curtin/Curtin EDM Baseline Pillar Configuration.pdf'),
-}    
-
-busselton_basline = {
+    'site_config' : os.path.join(settings.MEDIA_ROOT, 'InitialData/EDM Baseline/Australia/WA/Curtin/Curtin EDM Baseline Pillar Configuration.pdf')
+},{
+    'site_type' : 'baseline',
+    'site_name' : 'Curtin 12 Pillar',
+    'site_address' : 'Kent Street',
+    'country' : 'Australia',
+    'state' : 'WA',
+    'locality': 'Bentley',
+    'no_of_pillars': 12,
+    'operator' : 'Landgate',
+    'site_access' : os.path.join(settings.MEDIA_ROOT, 'InitialData/EDM Baseline/Australia/WA/Curtin/Curtin EDM Baseline Access Sketch.pdf'),
+    'site_config' : os.path.join(settings.MEDIA_ROOT, 'InitialData/EDM Baseline/Australia/WA/Curtin/Curtin EDM Baseline Pillar Configuration.pdf')
+},{
     'site_type' : 'baseline',
     'site_name' : 'Busselton',
     'site_address' : 'Busselton Bypass Road',
@@ -64,10 +73,8 @@ busselton_basline = {
     'operator' : 'Landgate',
     'site_access' : os.path.join(settings.MEDIA_ROOT, 'InitialData/EDM Baseline/Australia/WA/Busselton/Busselton EDM Baseline Access Sketch.pdf'),
     'site_config' : os.path.join(settings.MEDIA_ROOT, 'InitialData/EDM Baseline/Australia/WA/Busselton/Busselton EDM Baseline Pillar Configuration.pdf'),
-}
-
-kalgoorlie_basline = {
-    'site_type' : 'baseline',
+},{
+   'site_type' : 'baseline',
     'site_name' : 'Kalgoorlie',
     'site_address' : 'Piccadilly Street',
     'country' : 'Australia',
@@ -76,8 +83,8 @@ kalgoorlie_basline = {
     'no_of_pillars': 8,
     'operator' : 'Landgate',
     'site_access' : os.path.join(settings.MEDIA_ROOT, 'InitialData/EDM Baseline/Australia/WA/Kalgoorlie/Kalgoorlie EDM Baseline Access Sketch.pdf'),
-    'site_config' : os.path.join(settings.MEDIA_ROOT, 'InitialData/EDM Baseline/Australia/WA/Kalgoorlie/Kalgoorlie EDM Baseline Pillar Configuration.pdf'),
-}
+    'site_config' : os.path.join(settings.MEDIA_ROOT, 'InitialData/EDM Baseline/Australia/WA/Kalgoorlie/Kalgoorlie EDM Baseline Pillar Configuration.pdf')
+}]
 
 site_types = (
         (None, '--- Select Type ---'),
@@ -101,6 +108,7 @@ def load_initial_data(apps, schema_editor):
     State = apps.get_model("calibrationsites", "State")
     Locality = apps.get_model("calibrationsites", "Locality")
     CalibrationSite = apps.get_model('calibrationsites', 'CalibrationSite')
+    
     
     boya_site, created = CalibrationSite.objects.get_or_create(
         site_type = boya['site_type'],
@@ -127,45 +135,20 @@ def load_initial_data(apps, schema_editor):
         # site_access = File(open(boya['site_access'], 'rb'), name = boya['site_access'].split('/')[-1]),
         # site_config = File(open(boya['site_config'], 'rb'), name = boya['site_config'].split('/')[-1]),
     )
-
-    curtin_site, created = CalibrationSite.objects.get_or_create(
-        site_type = curtin_basline['site_type'],
-        site_name = curtin_basline['site_name'],
-        site_address = curtin_basline['site_address'],
-        country = Country.objects.get(name = curtin_basline['country']),
-        state = State.objects.get(statecode = curtin_basline['state']),
-        locality = Locality.objects.get(name = curtin_basline['locality']),
-        no_of_pillars = curtin_basline['no_of_pillars'],
-        operator = Company.objects.get(company_name = curtin_basline['operator']),
-        site_access = File(open(curtin_basline['site_access'], 'rb'), name = curtin_basline['site_access'].split('/')[-1]),
-        site_config = File(open(curtin_basline['site_config'], 'rb'), name = curtin_basline['site_config'].split('/')[-1]),
-    )
-
-    busselton_site, created = CalibrationSite.objects.get_or_create(
-        site_type = busselton_basline['site_type'],
-        site_name = busselton_basline['site_name'],
-        site_address = busselton_basline['site_address'],
-        country = Country.objects.get(name = busselton_basline['country']),
-        state = State.objects.get(statecode = busselton_basline['state']),
-        locality = Locality.objects.get(name = busselton_basline['locality']),
-        no_of_pillars = busselton_basline['no_of_pillars'],
-        operator = Company.objects.get(company_name = busselton_basline['operator']),
-        site_access = File(open(busselton_basline['site_access'], 'rb'), name = busselton_basline['site_access'].split('/')[-1]),
-        site_config = File(open(busselton_basline['site_config'], 'rb'), name = busselton_basline['site_config'].split('/')[-1]),
-    )
-
-    kalgoorlie_site, created = CalibrationSite.objects.get_or_create(
-        site_type = kalgoorlie_basline['site_type'],
-        site_name = kalgoorlie_basline['site_name'],
-        site_address = kalgoorlie_basline['site_address'],
-        country = Country.objects.get(name = kalgoorlie_basline['country']),
-        state = State.objects.get(statecode = kalgoorlie_basline['state']),
-        locality = Locality.objects.get(name = kalgoorlie_basline['locality']),
-        no_of_pillars = kalgoorlie_basline['no_of_pillars'],
-        operator = Company.objects.get(company_name = busselton_basline['operator']),
-        site_access = File(open(kalgoorlie_basline['site_access'], 'rb'), name = kalgoorlie_basline['site_access'].split('/')[-1]),
-        site_config = File(open(kalgoorlie_basline['site_config'], 'rb'), name = kalgoorlie_basline['site_config'].split('/')[-1]),
-    )
+    
+    for edm_site in edm_sites:
+        site, created = CalibrationSite.objects.get_or_create(
+            site_type = edm_site['site_type'],
+            site_name = edm_site['site_name'],
+            site_address = edm_site['site_address'],
+            country = Country.objects.get(name = edm_site['country']),
+            state = State.objects.get(statecode = edm_site['state']),
+            locality = Locality.objects.get(name = edm_site['locality']),
+            no_of_pillars = edm_site['no_of_pillars'],
+            operator = Company.objects.get(company_name = edm_site['operator']),
+            site_access = File(open(edm_site['site_access'], 'rb'), name = edm_site['site_access'].split('/')[-1]),
+            site_config = File(open(edm_site['site_config'], 'rb'), name = edm_site['site_config'].split('/')[-1]),
+        )
 
 def reverse_func(apps, schema_editor):
     CalibrationSite = apps.get_model('calibrationsites', 'CalibrationSite')

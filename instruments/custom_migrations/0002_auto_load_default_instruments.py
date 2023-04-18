@@ -16,6 +16,8 @@ inst_makes = [
     {'name': 'ZEISS', 'make_abbrev': 'ZEI'},
     {'name': 'GEOMAX', 'make_abbrev': 'GEO'},
     {'name': 'TOPCON', 'make_abbrev': 'TOP'},
+    {'name': 'DRUCK', 'make_abbrev': 'DRUC'},
+    {'name': 'DELTA OHM', 'make_abbrev': 'DLTA'},
     {'name': 'OTHERS', 'make_abbrev': 'OTH'},
 ]
 

@@ -243,6 +243,7 @@ def import_dli(request):
             'rxUncertaintyBaseline.db':['Description', 'Default', 'Unit'],
             'rxUncertaintyEDM.db':['Description', 'Default', 'Unit']
             }
+        #Import the BASELINE_WA database into a single dictionary.
         rx={}
         for f in files:
             if f.name in columns_dict.keys():
