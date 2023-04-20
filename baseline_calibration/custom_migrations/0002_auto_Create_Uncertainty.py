@@ -26,23 +26,31 @@ sources = [
     {'group' : '10', 'description': 'Measuring of Reflector Height', 'units':  'm', 'ab_type':  'B', 'distribution':  'N', 'std_dev': 0.0005, 'uc95': 0.001, 'k': 2, 'degrees_of_freedom': 30},
 ]
 
+lg_accreditation = [
+    {'valid_from_date':'2021-06-14',
+    'valid_to_date':'2024-06-13',
+    'LUM_constant':0.5,
+    'LUM_ppm':1.3,
+    'statement':r'Accredited for compliance with ISO/IEC 17025 - Calibration.  The results of the tests, calibrations and/or measurements included in  this document are traceable to the international System of Units (SI) units and Australian/national standards. This document shall not be reproduced except in full.',
+    'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData/Accreditation/2021_LG_Accreditation.pdf')
+     }]
     
 #########################################################################
 def load_initial_data(apps, schema_editor):
     Company = apps.get_model("accounts", "Company")
     Uncertainty_Budget = apps.get_model('baseline_calibration', 'Uncertainty_Budget')
     Uncertainty_Budget_Source = apps.get_model('baseline_calibration', 'Uncertainty_Budget_Source')
+    medjil_accreditation = apps.get_model("baseline_calibration", "Accreditation")
 
     company_id = Company.objects.get(company_name = Default_budget['Company'])
-    Uncertainty_Budget.objects.get_or_create(
+    uc_budget_id, created = Uncertainty_Budget.objects.get_or_create(
         name = Default_budget['name'],
         company = company_id,
         std_dev_of_zero_adjustment = Default_budget['std_dev_of_zero']
         )
     
-    uc_budget_id = Uncertainty_Budget.objects.get(name = Default_budget['name'])
     for source in sources:
-        Uncertainty_Budget_Source.objects.get_or_create(
+        obj, created = Uncertainty_Budget_Source.objects.get_or_create(
             uncertainty_budget=uc_budget_id,
             group  = source['group'],
             description = source['description'],
@@ -55,6 +63,16 @@ def load_initial_data(apps, schema_editor):
             degrees_of_freedom = source['degrees_of_freedom']
             )
     
+    for accred in lg_accreditation:
+        obj, created = medjil_accreditation.objects.get_or_create(
+            valid_from_date = accred['valid_from_date'],
+            valid_to_date = accred['valid_to_date'],
+            LUM_constant = accred['LUM_constant'],
+            LUM_ppm = accred['LUM_ppm'],
+            statement = accred['statement'],
+            certificate_upload = accred['certificate_upload'],
+            accredited_company = company_id,
+            )
 
 class Migration(migrations.Migration):
 

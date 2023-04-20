@@ -67,7 +67,7 @@ lg_edmi_certs = [
     'zpc_std_dev':0.000080952380952381,
     'standard_deviation':0.15,
     'degrees_of_freedom':14,
-    'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData/EDMIs/364182/2013_TS30_Calibration_Report.pdf'),
+    'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate Instruments/EDMIs/364182/2013_TS30_Calibration_Report.pdf'),
     'edm_number':364182,
     'prism_number':100},
     {'calibration_date':'2015-06-17',
@@ -81,7 +81,7 @@ lg_edmi_certs = [
     'zpc_std_dev':0.00012,
     'standard_deviation':0.00022,
     'degrees_of_freedom':14,
-    'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData/EDMIs/364182/2015_TS30_Calibration_Report.pdf'),
+    'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate Instruments/EDMIs/364182/2015_TS30_Calibration_Report.pdf'),
     'edm_number':364182,
     'prism_number':100},
     {'calibration_date':'2017-06-14',
@@ -95,7 +95,7 @@ lg_edmi_certs = [
     'zpc_std_dev':0.0001,
     'standard_deviation':0.0001,
     'degrees_of_freedom':14,
-    'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData/EDMIs/364182/2017_TS30_Calibration_Report.pdf'),
+    'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate Instruments/EDMIs/364182/2017_TS30_Calibration_Report.pdf'),
     'edm_number':364182,
     'prism_number':100},
     {'calibration_date':'2019-05-16',
@@ -109,7 +109,7 @@ lg_edmi_certs = [
     'zpc_std_dev':0.00017,
     'standard_deviation':0.00032,
     'degrees_of_freedom':14,
-    'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData/EDMIs/364182/2019_TS30_Calibration_Report.pdf'),
+    'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate Instruments/EDMIs/364182/2019_TS30_Calibration_Report.pdf'),
     'edm_number':364182,
     'prism_number':100},
     {'calibration_date':'2021-04-29',
@@ -123,7 +123,7 @@ lg_edmi_certs = [
     'zpc_std_dev':7.61904761904762E-05,
     'standard_deviation':0.0003,
     'degrees_of_freedom':27,
-    'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData/EDMIs/364182/2021_TS30_Calibration_Report.pdf'),
+    'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate Instruments/EDMIs/364182/2021_TS30_Calibration_Report.pdf'),
     'edm_number':364182,
     'prism_number':100}
     ]
@@ -391,10 +391,10 @@ def add_landgate_instruments(apps, schema_editor):
             degrees_of_freedom = cert['degrees_of_freedom'],
             certificate_upload = cert['certificate_upload'],
             instrument = medjil_mets_inst.objects.get(
-                mets_specs__mets_model__inst_type__exact=inst['type'],
+                mets_specs__mets_model__inst_type__exact=cert['type'],
                 mets_specs__mets_owner__exact = Company.objects.get(
                     company_name__exact='Landgate'),
-                mets_number__exact=inst['mets_number'])
+                mets_number__exact=cert['mets_number'])
             )
 
 
