@@ -14,7 +14,7 @@ from instruments.models import (
 from baseline_calibration.models import (
     Accreditation, Certified_Distance,
     Pillar_Survey, Std_Deviation_Matrix,
-    Uncertainty_Budget
+    Uncertainty_Budget, EDM_Observation
 )
 
 from common_func.Convert import group_list
@@ -160,36 +160,27 @@ def create_medjil_insts(rx, request, commit_errors):
     return rx, commit_errors
     
 
-def match_baseline(pillars, medjil_pillars):
+def match_baseline(pillars, medjil_baselines):
     # Find the Medjil baseline that matches
-    baseline_id = None
+    medjil_pillars = None
+    medjil_bline = None
     min_match_dist = 1e10
-    for medjil_baseline in medjil_pillars.values():
-        if len(pillars) == len(medjil_baseline['grp_site_id']):
+    for medjil_baseline in medjil_baselines:
+        if len(pillars) == len(medjil_baseline['pillars']):
             match_dist = 0
-            for pillar, medjil_pillar in zip(pillars, medjil_baseline['grp_site_id']):
+            for pillar, medjil_pillar in zip(pillars, medjil_baseline['pillars']):
                 medjil_join, az = joins(
-                    medjil_baseline['grp_site_id'][0]['easting'],
-                    medjil_baseline['grp_site_id'][0]['northing'],
-                    medjil_pillar['easting'],
-                    medjil_pillar['northing'])
+                    medjil_baseline['pillars'][0].easting,
+                    medjil_baseline['pillars'][0].northing,
+                    medjil_pillar.easting,
+                    medjil_pillar.northing)
                 match_dist += abs(pillar['certified_distance'] - medjil_join)
             if match_dist < min_match_dist:
                 min_match_dist = match_dist
-                baseline_id = medjil_baseline['site_id']
-    return baseline_id
-
-
-def find_pillar(baseline_id, order):
-    try:
-        medjil_pillar = Pillar.objects.get(
-            site_id__pk=baseline_id, order=str(order).zfill(3))
-    except Pillar.DoesNotExist:
-        print(f'Pillar order = "{order}" for baseline {baseline_id} not found')
-        return None
-    
-    return medjil_pillar
-    
+                medjil_pillars = medjil_baseline['pillars']
+                medjil_bline = medjil_baseline['baseline']
+    return medjil_bline, medjil_pillars
+   
     
 @login_required(login_url="/accounts/login") 
 def import_dli(request):
@@ -243,7 +234,7 @@ def import_dli(request):
             'rxUncertaintyBaseline.db':['Description', 'Default', 'Unit'],
             'rxUncertaintyEDM.db':['Description', 'Default', 'Unit']
             }
-        #Import the BASELINE_WA database into a single dictionary.
+        # Import the BASELINE_WA database into a single dictionary.
         rx={}
         for f in files:
             if f.name in columns_dict.keys():
@@ -258,10 +249,16 @@ def import_dli(request):
                     name = 'Default', 
                     company__company_name = 'Landgate')
         
-        medjil_pillars = Pillar.objects.select_related('site_id').filter(
-            site_id__site_type = 'baseline').order_by('order')
-        medjil_pillars = ([model_to_dict(instance) for instance in medjil_pillars])
-        medjil_pillars = group_list(medjil_pillars, 'site_id')
+        # query the medjil baselines
+        medjil_baselines_obj = CalibrationSite.objects.filter(
+            site_type = 'baseline')
+        medjil_baselines = []
+        for medjil_baseline in medjil_baselines_obj:
+            medjil_baselines.append({
+                'baseline' : medjil_baseline,
+                'pillars' :  Pillar.objects.filter(
+                    site_id = medjil_baseline.pk).order_by('order')
+                })
         
         commit_errors = []
         # Create BASELINE Makes as Medjil Manufacturers
@@ -299,7 +296,7 @@ def import_dli(request):
         # Create dummy accreditation in Medjil
         medjil_accreditation = Accreditation.objects.filter(
             accredited_company = request.user.company,
-            statement = 'Unknown accreditation from BaselineDLI backcaptured data')
+            statement = 'Unknown accreditation from BaselineDLI backcaptured data').first()
         if not medjil_accreditation:
             try:
                 medjil_accreditation, created = Accreditation.objects.get_or_create(
@@ -313,8 +310,33 @@ def import_dli(request):
                 commit_errors.append(
                     f'Error creating generic accreditation in Medjil: {e}')
         
+        jobs_measurements = group_list(rx['JMeasure'].values(),'job_fk')
+        
+        # Combine the rxDistance and rxPillar data into one usable dictionary
+        rxDistance = group_list(rx['Distance'].values(), 'baseline_fk')
+        rxPillar = group_list(rx['Pillar'].values(), 'baseline_fk')
+        for baseline_id, grp in rxDistance.items():
+            pillars = rxPillar[baseline_id]['grp_baseline_fk']
+            certified_dists = grp['grp_baseline_fk']
+            for dist in certified_dists:
+                dist['from_pillar_order'] = int(
+                    rx['Pillar'][dist['from_pillar_fk']]['order'])
+            grp['grp_baseline_fk'] = sorted(certified_dists, key=lambda x: x['from_pillar_order'])     
+            
+            # Add certified_distances to rxPillar Dictionary
+            pillars = sorted(pillars, key=lambda x: float(x['order']))
+            sum_dist = 0
+            pillars[0]['certified_distance'] = 0
+            pillars[0]['DistSigma'] = 0
+            for pillar, dist in zip(pillars[1:], certified_dists):
+                sum_dist+= float(dist['certified_distance'])
+                pillar['certified_distance'] = sum_dist
+                pillar['DistSigma'] = dist['DistSigma']
+                
+
         if rx['Job']:
             for job in rx['Job'].values():
+                commit_error = []
                 # Create the Mets gear in Medjil
                 job['medjil_baro1_pk'] = unknown_mets('baro', request, job['Barometer1'])
                 job['medjil_baro2_pk'] = unknown_mets('baro', request, job['Barometer2'])
@@ -322,38 +344,22 @@ def import_dli(request):
                 job['medjil_thermo2_pk'] = unknown_mets('thermo', request, job['Thermometer2'])
                 medjil_hygro = unknown_mets('hygro', request)
                 
-                commit_error = []
-                pillars = {
-                    k:v for k,v in rx['Pillar'].items() 
-                    if v.get('baseline_fk') ==  job['baseline_fk']}
-
-                certified_dists = []
-                for dist in rx['Distance'].values():
-                    if dist['baseline_fk'] == job['baseline_fk']:
-                        dist['from_pillar_order'] = int(pillars[dist['from_pillar_fk']]['order'])
-                        certified_dists.append(dist)
-                certified_dists = sorted(certified_dists, key=lambda x: x['from_pillar_order'])
-                
-                # Add certified_distances to pillars list
-                pillars = sorted(pillars.values(), key=lambda x: float(x['order']))
-                sum_dist = 0
-                pillars[0]['certified_distance'] = 0
-                pillars[0]['DistSigma'] = 0
-                for pillar, dist in zip(pillars[1:], certified_dists):
-                    sum_dist+= float(dist['certified_distance'])
-                    pillar['certified_distance'] = sum_dist
-                    pillar['DistSigma'] = dist['DistSigma']
-                
-                job_measurements =(
-                    [meas for meas in rx['JMeasure'].values() if meas['job_fk'] == job['pk']])
+                try:
+                    job_measurements = jobs_measurements[job['pk']]['grp_job_fk']
+                except:
+                    job_measurements = []
+                meas_kys = [m['pk'] for m in job_measurements]
+                job_measurements = dict(zip(meas_kys, job_measurements))
+                job_edm_obs = [obs for obs in rx['EDMObs'].values() if obs['MeasID'] in meas_kys]
                 
                 # Find the Medjil baseline that matches
-                baseline_id = match_baseline(pillars, medjil_pillars)
-                if not baseline_id:
+                pillars = rxPillar[job['baseline_fk']]['grp_baseline_fk']
+                medjil_baseline, medjil_pillars = match_baseline(
+                    pillars, medjil_baselines)
+                pillars = dict(zip([p['pk'] for p in pillars], pillars))
+                if not medjil_pillars:
                     commit_error.append(
                             f"No Medjil baseline matched for job: {job['name']}")
-                else:
-                    baseline_id = CalibrationSite.objects.get(pk = baseline_id)
 
                 mets_applied = False
                 try:
@@ -385,15 +391,14 @@ def import_dli(request):
                     commit_error.append(
                         f'Prism specified for {job["name"]} not in BASELINE database files: {e}')
 
-                if len(commit_error) != 0: print(commit_error)
                 if job['calibration_type'] == 'B' and len(commit_error) == 0:                    
-                    medjil_baseline_calibration = Pillar_Survey.objects.get_or_create(
-                        baseline = baseline_id,
+                    medjil_baseline_calibration, created = Pillar_Survey.objects.get_or_create(
+                        baseline = medjil_baseline,
                         survey_date = dt.strptime(
                             job['survey_date'],'%d/%m/%Y').isoformat()[:10],
                         computation_date = dt.strptime(
                             job['computation_date'],'%d/%m/%Y').isoformat()[:10],
-                        accreditation = medjil_accreditation[0],
+                        accreditation = medjil_accreditation,
                         apply_lum = False,
                         observer = job['observer_name'],
                         weather = 'Sunny/Clear',
@@ -422,19 +427,18 @@ def import_dli(request):
                         degrees_of_freedom = int(len(job_measurements)/4) - len(pillars),
                         )
                     
-                    first_pillar = find_pillar(baseline_id.pk, 1)
+                    first_pillar = medjil_pillars[0]
                     UC_formula = rx['BaselineAccuracy'][job['baseline_fk']]
-                    for pillar in pillars:
+                    for pillar, medjil_pillar in zip(pillars.values(), medjil_pillars):
                         combined_uc = (
                             float(UC_formula['UncertaintyScale'])*10**-6 * pillar['certified_distance']
                             + float(UC_formula['UncertaintyConstant']) * 0.001)
+                        pillar['medjil_pillar'] = medjil_pillar
                         
-                        medjil_cert_dist = Certified_Distance.objects.get_or_create(
-                            pillar_survey = medjil_baseline_calibration[0],
+                        medjil_cert_dist, created = Certified_Distance.objects.get_or_create(
+                            pillar_survey = medjil_baseline_calibration,
                             from_pillar = first_pillar,
-                            to_pillar = find_pillar(
-                                baseline_id.pk,
-                                pillar['order']),
+                            to_pillar = medjil_pillar,
                             distance =  pillar['certified_distance'],
                             a_uncertainty = float(pillar['DistSigma']),
                             combined_uncertainty = combined_uc,
@@ -444,25 +448,48 @@ def import_dli(request):
                             reduced_level = float(pillar['height']),
                             rl_uncertainty = float(pillar['HtStdDev'])
                             )
+
+                    for obs in job_edm_obs:
+                        meas = job_measurements[obs['MeasID']]
+                        from_pillar = pillars[meas['from_pillar_fk']]
+                        to_pillar = pillars[meas['to_pillar_fk']]
+                        dist, az = joins(
+                            from_pillar['offset'],
+                            from_pillar['certified_distance'],
+                            to_pillar['offset'],
+                            to_pillar['certified_distance'])
+                        medjil_obs, created = EDM_Observation.objects.get_or_create(
+                            pillar_survey = medjil_baseline_calibration,
+                            from_pillar = from_pillar['medjil_pillar'],
+                            to_pillar = to_pillar['medjil_pillar'],
+                            inst_ht = meas['from_ht'],
+                            tgt_ht = meas['to_ht'],
+                            hz_direction = az,
+                            raw_slope_dist = obs['EDMObsDistance'],
+                            raw_temperature = obs['MeasDryTemp'],
+                            raw_pressure = obs['MeasPressure'],
+                            raw_humidity = obs['MeasHumidity']
+                            )
                     
                     # BASELINE WA used a linear formula to assign standard deviations
                     # to the certified distances. Medjil stores the full vcv by
                     # recording standard deviations of all from and to pillar combinations
-                    for i1, p1 in enumerate(pillars[:-1]):
-                        from_pillar = find_pillar(baseline_id.pk, p1['order'])
-                        for p2 in pillars[i1+1:]:
-                            to_pillar = find_pillar(baseline_id.pk, p2['order'])
-                            p1_p2_dist = abs(p1['certified_distance'] - 
-                                          p2['certified_distance'])
+                    pillars = list(pillars.values())
+                    for i1, from_pillar in enumerate(pillars[:-1]):
+                        for to_pillar in pillars[i1+1:]:
+                            p1_p2_dist = abs(from_pillar['certified_distance'] - 
+                                          to_pillar['certified_distance'])
                             uc = (float(UC_formula['UncertaintyScale']) * p1_p2_dist
                                   + float(UC_formula['UncertaintyConstant']) * 0.001)
-                            medjil_sdev_mtx = (
+                            medjil_sdev_mtx, created = (
                                 Std_Deviation_Matrix.objects.get_or_create(
-                                    pillar_survey = medjil_baseline_calibration[0],
-                                    from_pillar = from_pillar,
-                                    to_pillar = to_pillar,
+                                    pillar_survey = medjil_baseline_calibration,
+                                    from_pillar = from_pillar['medjil_pillar'],
+                                    to_pillar = to_pillar['medjil_pillar'],
                                     std_uncertainty = uc
                                     ))
+
+                            
                 commit_errors.append(commit_error)
 
     context ={
