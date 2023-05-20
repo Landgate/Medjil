@@ -75,14 +75,17 @@ def csv2dict(csv_file,clms,key_names=-1):
     return dct
 
 
-def list2dict(lst,clms,key_names=-1):
+def list2dict(lst, clms, key_names=-1, filter_key=None, filter_value=None):
     dct={}
     for row in lst:
         if len(clms) == len(row):
             if key_names != -1: ky = str(row[clms.index(key_names)])
             if key_names == -1: ky = str(len(dct)+1)
-       
-            dct[ky] = dict(zip(clms,row))
+            
+            if not filter_key:
+                dct[ky] = dict(zip(clms,row))
+            elif row[clms.index(filter_key)] == filter_value:
+                dct[ky] = dict(zip(clms,row))                
                 
     return dct
 

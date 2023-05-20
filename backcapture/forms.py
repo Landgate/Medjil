@@ -1,4 +1,3 @@
-
 from django import forms
 
 class ImportDliDataForm(forms.Form):

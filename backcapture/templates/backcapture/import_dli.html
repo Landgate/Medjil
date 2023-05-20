@@ -1,0 +1,68 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+
+{% block content %}
+<article class="post">
+  <div class="flexbox-container_IB">
+    <div class="flexbox-item_800_IB">
+      <form id='id_html_form' style="font-size:10.0pt;width:4500px;" action="" class="site-form" method="post" enctype="multipart/form-data">
+        <div class="mb-5 site-form-header bg-indigo-300 rounded px-2">
+          <h1 style="text-align:center">{{ Header }}</h1>
+        </div>
+        {% if form.non_field_errors %}
+          <div class="mt-1 mb-2 non-field-errors">
+            {% for error in form.non_field_errors %}
+              <p style="color:Red;">{{ error }}</p>
+            {% endfor %}
+          </div>
+        {% endif %}
+        {% csrf_token %}
+        <div class="flexbox-item_800_IB">
+          <div style="padding-left: 0.5rem; font-size:11pt">"Baseline.exe" stores data in a folder called "database" in the install directory.</div>
+          <div style="padding-left: 0.5rem; font-size:11pt">Select all files in this directory to run import.</div>
+          <table style="font-size:10pt;width:100%">
+            <colgroup>
+              <col span="1" width="40%">
+              <col span="1" width="60%">
+            </colgroup>
+            {% for field in form %}
+              <tr>
+                {% if field.field.is_checkbox %}
+                  <td>{{ field }}</td>
+                  <td>{{ field.label|title }}</td>
+                {% else %}
+                  <td>{{ field.label_tag|title }}</td>
+                  <td>{{ field }}</td>
+                {% endif %}
+              </tr>
+              {% for error in field.errors %}
+                <tr>
+                  <td></td>
+                  <td>
+                    <p style="color:Red;">{{ error }}</p>
+                  </td>
+                </tr>
+              {% endfor %}
+            {% endfor %}
+          </table>
+        </div>
+        {% if request.GET.next %}
+          <input type="hidden" name="next" value="{{ request.GET.next }}">
+        {% endif %}
+        <div class="flexbox-item_1600_IB flexbox-item-button_IB">
+          {% if request.GET.next %}
+            <a href="{{ request.GET.next }}" class="submit-button bg-red-500 hover:bg-green-400" style="text-align: center">Cancel</a>
+          {% endif %}
+          <button class="submit-button bg-green-500 hover:bg-green-400 text-base" type="submit">Save</button>
+        </div>
+      </form>
+      <div class = "site-form" style="padding-left: 20px; text-indent:-10px;">** This import function uses the best possible methodology to translate legacy "Baseline.exe" data into Medjil. Not all fields accross the two databases are directly translateable. Therefore, results must be checked a some assumptions are made for the import to be successful. Due to resource restrictions users are limited to three import attempts per day.</div>
+    </div>
+  </div>
+</article>
+
+<script>
+
+</script>
+
+{% endblock %}

@@ -9,7 +9,7 @@ import os
 inst_makes = [
     {'name': 'LEICA', 'make_abbrev': 'LEI'},
     {'name': 'TRIMBLE', 'make_abbrev': 'TRIM'},
-    {'name': 'SOKKIA', 'make_abbrev': 'SOKK'},
+    {'name': 'SOKKIA', 'make_abbrev': 'SOK'},
     {'name': 'NIKON', 'make_abbrev': 'NIK'},
     {'name': 'PENTAX', 'make_abbrev': 'PEN'},
     {'name': 'WILD', 'make_abbrev': 'WILD'},
