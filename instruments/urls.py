@@ -29,6 +29,7 @@ urlpatterns = [
     
     # Make & Models
     path('inst_model_createby_inst_type/<str:inst_type>/', views.inst_model_createby_inst_type, name = 'inst_model_createby_inst_type'),
+    path('edm_recommended_specifications/', views.edm_recommended_specs, name = 'edm_recommended_specs'),
     
     # Digital Level
     path('inst_level_create/', views.DigitalLevelCreateView.as_view(), name='inst_level_create'),

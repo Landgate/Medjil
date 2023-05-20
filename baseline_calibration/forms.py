@@ -1,26 +1,33 @@
-from django import forms
 from datetime import date
-from django.forms.fields import Field
-from django.db.models import Q
-setattr(Field, 'is_checkbox', lambda self: isinstance(self.widget, forms.CheckboxInput ))
 
-# import Models
-from .models import (Pillar_Survey,
-                     Accreditation, 
-                     Uncertainty_Budget,
-                     Uncertainty_Budget_Source,
-                     EDM_Observation,
-                     Certified_Distance,
-                     Std_Deviation_Matrix)
-from instruments.models import (EDM_Inst,
-                                Prism_Inst,
-                                Mets_Inst,
-                                DigitalLevel,
-                                Staff)
+from django import forms
+from django.db.models import Q
+from django.forms.fields import Field
+
+from .models import (
+    Pillar_Survey,
+    Accreditation, 
+    Uncertainty_Budget,
+    Uncertainty_Budget_Source,
+    EDM_Observation,
+    Certified_Distance,
+    Std_Deviation_Matrix,
+)
+from instruments.models import (
+    EDM_Inst,
+    Prism_Inst,
+    Mets_Inst,
+    DigitalLevel,
+    Staff,
+)
 from calibrationsites.models import CalibrationSite
+
+
+setattr(Field, 'is_checkbox', lambda self: isinstance(self.widget, forms.CheckboxInput))
 
 class CustomClearableFileInput(forms.ClearableFileInput):
     template_name = 'custom_widgets/customclearablefileinput.html'
+
     
 class PillarSurveyForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -102,7 +109,7 @@ class PillarSurveyForm(forms.ModelForm):
             raise forms.ValidationError("The survey date cannot be in the future!")
         return survey_date
     
-    def computation_date_date(self):
+    def clean_computation_date(self):
         computation_date = self.cleaned_data['computation_date']
         if computation_date > date.today():
             raise forms.ValidationError("The computation date cannot be in the future!")

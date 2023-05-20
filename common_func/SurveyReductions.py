@@ -240,9 +240,9 @@ def refline_std_dev(o, alignment_survey, edm):
     # Mets #
     if ('Temp' in o.keys() and 'Pres' in o.keys() and 'Humid' in o.keys()):
         K, L, M = mets_partial_differentials(edm.edm_specs.manu_ref_refrac_index,
-                                             o['Temp'],
-                                             o['Pres'],
-                                             o['Humid'])
+                                             o['Temp'] or 15,
+                                             o['Pres'] or 1013.25,
+                                             o['Humid'] or 60)
         # '04' Temperature
         if ('04' in uc_budget.keys() and 'Reduced_distance' in o.keys()):
             uc_budget['04']['ui'] = (o['Reduced_distance'] *
@@ -596,6 +596,13 @@ def is_float(n):
         return True
 
 
+def float_or_null (n):
+    try:
+        return float(n)
+    except ValueError:
+        return None
+    
+    
 def validate_survey(pillar_survey, baseline=None, calibrations=None,
                     raw_edm_obs=None, raw_lvl_obs=None):
     Errs=[]

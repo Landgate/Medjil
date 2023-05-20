@@ -75,14 +75,17 @@ def csv2dict(csv_file,clms,key_names=-1):
     return dct
 
 
-def list2dict(lst,clms,key_names=-1):
+def list2dict(lst, clms, key_names=-1, filter_key=None, filter_value=None):
     dct={}
     for row in lst:
         if len(clms) == len(row):
             if key_names != -1: ky = str(row[clms.index(key_names)])
             if key_names == -1: ky = str(len(dct)+1)
-       
-            dct[ky] = dict(zip(clms,row))
+            
+            if not filter_key:
+                dct[ky] = dict(zip(clms,row))
+            elif row[clms.index(filter_key)] == filter_value:
+                dct[ky] = dict(zip(clms,row))                
                 
     return dct
 
@@ -271,6 +274,7 @@ def uncertainty_qry(frm_data):
                                       .std_dev_of_zero_adjustment)
     return uc_budget
 
+
 def report_notes_qry(company, report_type):
     rpt_notes = Calibration_Report_Notes.objects.filter(
                     Q(report_type = report_type, note_type = 'M') |
@@ -282,17 +286,19 @@ def report_notes_qry(company, report_type):
 
     return report_notes
 
-def decrypt_file(en_file):
+
+def decrypt_file(file):
     NORMAL_CHARS =  r'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 abcdefghijklmnopqrstuvwxyz.|(),;"!@#$%^&*()_-+={}[]\<>?/:' +"'"
     ENCRYPT_CHARS = r'962XRLD7YJS1AHBQ5NCO3M08EKGIWUPTVZ4F qwertyuiopasdfghjklzxcvbnm|.(),;"!@#$%^&*()_-=+{}[]\<>?/:'+"'"
     
     dct=dict(zip(ENCRYPT_CHARS,NORMAL_CHARS))
     
-    rows = en_file.read().decode("utf-8").replace('\r','').split("\n")
-    for i, row in enumerate(rows[1:]):
-        decripted_str = ''
+    encrypted_rows = file.read().decode("utf-8").replace('\r','').split("\n")
+    decrypted_rows = []
+    for row in encrypted_rows[1:]:
+        decrypted_str = ''
         for s in row:
-            decripted_str += dct[s]
-        rows[i] = decripted_str.split('|')
+            decrypted_str += dct[s]
+        decrypted_rows.append(decrypted_str.split('|'))
     
-    return rows
+    return decrypted_rows

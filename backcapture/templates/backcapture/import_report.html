@@ -1,0 +1,46 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+{% load custom_filter_tags %}
+
+
+{% block content %} 
+
+<article class="post">
+    <div class="post-content">
+      {% if messages %}
+        <ul class="message-list">
+          {% for message in messages %}
+            <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+          {% endfor %} </ul>
+        <br>
+      {% endif %}
+    </div>
+    <div class="post-content">
+        <div class="site-form">
+            {% if commits|length > 0 %}
+                <h2>Jobs imported to Medjil</h2>
+                <div class="flexbox-container_IB">
+                    <div class="flexbox-item_800_IB flexbox-item-left_IB">                       
+                        {% for c in commits %}
+                            <p>{{c}}</p> 
+                        {% endfor %}               
+                    </div>
+                </div>
+            {% endif %}
+            {% if Check_Errors|length > 0 %}
+                <h2>Data Warnings</h2>
+                <div class="flexbox-container_IB">
+                    <div class="flexbox-item_800_IB flexbox-item-left_IB">                       
+                        {% for c in Check_Errors %}
+                            <p>{{forloop.counter}}. {{c}}</p> 
+                        {% endfor %}               
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</article>
+
+
+{% endblock content %}
+

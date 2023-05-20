@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     # 'crispy_forms',
     'formtools',
     'accounts',
+    'backcapture',
     'calibrationsites',
     'instruments',
     'rangecalibration',
