@@ -1,9 +1,9 @@
 from django import forms
 
 class ImportDliDataForm(forms.Form):
-        
-    inst_make_file = forms.FileField(
+
+    dot_db_files = forms.FileField(
         widget = forms.FileInput(
-            attrs={'accept' : '.db',
-                   'multiple': True}),
+            attrs={'allow_multiple_selected': True,
+                   'accept' : '.db'}),
         label = 'Select Database Files to Import')

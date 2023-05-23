@@ -360,7 +360,7 @@ def import_dli(request):
     
     if importForm.is_valid():
         # Import the BASELINE_WA database into a single dictionary.
-        rx = db_files2dict(request.FILES.getlist('inst_make_file'),
+        rx = db_files2dict(request.FILES.getlist('dot_db_files'),
                            request.user.is_staff)
         
         Unknown_UC_budget = Uncertainty_Budget.objects.get(
