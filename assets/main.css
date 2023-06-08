@@ -105,14 +105,14 @@ a {
   .a-link:visited {
     color: #0a84ff; 
     }
-  /* 
   a:hover {
     color: #0c0c0d; 
     text-decoration: underline; 
-    } */
+    }
+    /* 
     .hover\:a-underline:hover {
       text-decoration: underline;
-    }    
+    }*/ 
   a:not([class])[href*="//"]::after {
     background-repeat: no-repeat;
     background-size: 16px 16px;
