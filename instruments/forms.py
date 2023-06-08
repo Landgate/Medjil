@@ -164,12 +164,12 @@ class EDM_SpecificationForm(forms.ModelForm):
         user = kwargs.pop('user', None)
         super(EDM_SpecificationForm, self).__init__(*args, **kwargs) 
         self.initial['edm_owner'] = user.company
-        self.base_fields['unit_manu_unc_const'].initial = 'mm'
-        self.base_fields['unit_manu_unc_ppm'].initial = 'ppm'
-        self.base_fields['unit_freq'].initial = 'Hz'
-        self.base_fields['unit_unit_length'].initial = 'm'
-        self.base_fields['unit_carrier_wave'].initial = 'nm'
-        self.base_fields['unit_measurement_inc'].initial = 'm'
+        self.base_fields['units_manu_unc_const'].initial = 'mm'
+        self.base_fields['units_manu_unc_ppm'].initial = 'ppm'
+        self.base_fields['units_frequency'].initial = 'Hz'
+        self.base_fields['units_unit_length'].initial = 'm'
+        self.base_fields['units_carrier_wavelength'].initial = 'nm'
+        self.base_fields['units_measurement_inc'].initial = 'm'
         if not user.is_staff:
             self.fields['edm_owner'].disabled = True
         self.fields['edm_model'].empty_label = '--- Select one ---'
@@ -179,17 +179,17 @@ class EDM_SpecificationForm(forms.ModelForm):
         fields = '__all__'
         exclude = ('created_on', 'modified_on')
         
-    unit_manu_unc_const = forms.CharField(
+    units_manu_unc_const = forms.CharField(
         widget=forms.Select(choices=length_units))
-    unit_manu_unc_ppm = forms.CharField(
+    units_manu_unc_ppm = forms.CharField(
         widget=forms.Select(choices=scalar_units))
-    unit_freq = forms.CharField(
+    units_frequency = forms.CharField(
         widget=forms.Select(choices=freq_units))
-    unit_unit_length = forms.CharField(
+    units_unit_length = forms.CharField(
         widget=forms.Select(choices=length_units))
-    unit_carrier_wave = forms.CharField(
+    units_carrier_wavelength = forms.CharField(
         widget=forms.Select(choices=length_units))
-    unit_measurement_inc = forms.CharField(
+    units_measurement_inc = forms.CharField(
         widget=forms.Select(choices=length_units))
     
     
@@ -219,7 +219,7 @@ class Prism_SpecificationForm(forms.ModelForm):
         user = kwargs.pop('user', None)
         super(Prism_SpecificationForm, self).__init__(*args, **kwargs) 
         self.initial['prism_owner'] = user.company
-        self.base_fields['unit_manu_unc_const'].initial = 'mm'
+        self.base_fields['units_manu_unc_const'].initial = 'mm'
         if not user.is_staff:
             self.fields['prism_owner'].disabled = True
         self.fields['prism_model'].empty_label = '--- Select one ---'
@@ -229,7 +229,7 @@ class Prism_SpecificationForm(forms.ModelForm):
         fields = '__all__'
         exclude = ('created_on', 'modified_on')
         
-    unit_manu_unc_const = forms.CharField(
+    units_manu_unc_const = forms.CharField(
         widget=forms.Select(choices=length_units))
 
 
@@ -278,10 +278,10 @@ class Mets_SpecificationForm(forms.ModelForm):
         widgets = {'mets_model': forms.Select(attrs={'onchange':'ChgUnits()'})
                     }    
     
-    unit_manu_unc_const = forms.CharField(
+    units_manu_unc_const = forms.CharField(
         widget=forms.Select(choices=ini_units))
         
-    unit_measurement_inc = forms.CharField(
+    units_measurement_inc = forms.CharField(
         widget=forms.Select(choices=ini_units))
         
     
@@ -298,9 +298,9 @@ class EDMI_certificateForm(forms.ModelForm):
             self.fields['edm'].queryset = EDM_Inst.objects.all()
             self.fields['prism'].queryset = Prism_Inst.objects.all()
         
-        self.base_fields['unit_zpc'].initial = 'm'
-        self.base_fields['unit_zpc_uc'].initial = 'm'
-        self.base_fields['unit_stdev'].initial = 'm'
+        self.base_fields['units_zpc'].initial = 'm'
+        self.base_fields['units_zpc_uc'].initial = 'm'
+        self.base_fields['units_stdev'].initial = 'm'
         self.fields['edm'].empty_label = '--- Select one ---'
         self.fields['prism'].empty_label = '--- Select one ---'
 
@@ -318,15 +318,15 @@ class EDMI_certificateForm(forms.ModelForm):
                        'required': False})
            }
         
-    unit_scf = forms.CharField(
+    units_scf = forms.CharField(
         widget=forms.Select(choices=scalar_units))
-    unit_scf_uc = forms.CharField(
+    units_scf_uc = forms.CharField(
         widget=forms.Select(choices=scalar_units))
-    unit_zpc = forms.CharField(
+    units_zpc = forms.CharField(
         widget=forms.Select(choices=length_units))
-    unit_zpc_uc = forms.CharField(
+    units_zpc_uc = forms.CharField(
         widget=forms.Select(choices=length_units))
-    unit_stdev = forms.CharField(
+    units_stdev = forms.CharField(
         widget=forms.Select(choices=length_units))
 
 
@@ -363,9 +363,9 @@ class Mets_certificateForm(forms.ModelForm):
                 attrs={'accept' : '.pdf, .jpg, jpeg, .png, .tif'})
            }
 
-    unit_zpc = forms.CharField(
+    units_zpc = forms.CharField(
         widget=forms.Select(choices=ini_units))
-    unit_zpc_uc = forms.CharField(
+    units_zpc_uc = forms.CharField(
         widget=forms.Select(choices=ini_units))
         
         

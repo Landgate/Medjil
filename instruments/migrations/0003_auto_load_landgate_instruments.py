@@ -38,7 +38,7 @@ lg_edms_specs = [
     'manu_unc_k':2,
     'unit_length':1.5,
     'frequency':100,
-    'carrier_wavelength':1.5,
+    'carrier_wavelength':658,
     'manu_ref_refrac_index':1.000286338,
     'measurement_increments':0.0001,
     'edm_model':'TS 30',

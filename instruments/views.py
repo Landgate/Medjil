@@ -10,8 +10,7 @@ from formtools.wizard.views import NamedUrlSessionWizardView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 # from django.forms import formset_factory
-from .forms import (InstrumentMakeCreateForm, 
-                    InstrumentModelCreateForm,
+from .forms import (InstrumentModelCreateForm,
                     InstrumentModelCreateByInstTypeForm,
                     StaffCreateForm, 
                     DigitalLevelCreateForm,
@@ -36,7 +35,9 @@ from .models import (InstrumentMake,
                     Prism_Inst,
                     Mets_Inst,
                     EDMI_certificate,
-                    Mets_certificate)
+                    Mets_certificate,
+                    Specifications_Recommendations
+                    )
 
 from staffcalibration.models import StaffCalibrationRecord
 from common_func.Convert import db_std_units
@@ -182,42 +183,42 @@ def register_edit(request, inst_disp, tab, id):
         instance = form.save(commit=False)
         # Convert input to database standard units
         if inst_disp != 'hygro':
-            if 'unit_manu_unc_const' in frm.keys():
+            if 'units_manu_unc_const' in frm.keys():
                 instance.manu_unc_const = db_std_units(
-                    frm['manu_unc_const'],frm['unit_manu_unc_const'])[0]
+                    frm['manu_unc_const'],frm['units_manu_unc_const'])[0]
                 if inst_disp == 'edm' or inst_disp == 'prism':
                     instance.manu_unc_const =instance.manu_unc_const * 1000
                 
-            if 'unit_manu_unc_ppm' in frm.keys():
+            if 'units_manu_unc_ppm' in frm.keys():
                 instance.manu_unc_ppm = db_std_units(
-                    frm['manu_unc_ppm'], frm['unit_manu_unc_ppm'])[0] * 1e6
-            if 'unit_freq' in frm.keys(): 
-                instance.frequency = db_std_units(frm['frequency'],frm['unit_freq'])[0]
-            if 'unit_unit_length' in frm.keys():
-                instance.unit_length = db_std_units(
-                    frm['unit_length'],frm['unit_unit_length'])[0]
-            if 'unit_carrier_wave' in frm.keys():
+                    frm['manu_unc_ppm'], frm['units_manu_unc_ppm'])[0] * 1e6
+            if 'units_frequency' in frm.keys(): 
+                instance.frequency = db_std_units(frm['frequency'],frm['units_frequency'])[0]
+            if 'units_unit_length' in frm.keys():
+                instance.units_length = db_std_units(
+                    frm['units_length'],frm['units_unit_length'])[0]
+            if 'units_carrier_wavelength' in frm.keys():
                 instance.carrier_wavelength = db_std_units(
-                    frm['carrier_wavelength'], frm['unit_carrier_wave'])[0] * 1e9
-            if 'unit_measurement_inc' in frm.keys():
+                    frm['carrier_wavelength'], frm['units_carrier_wavelength'])[0] * 1e9
+            if 'units_measurement_inc' in frm.keys():
                 instance.measurement_increments = db_std_units(
-                    frm['measurement_increments'], frm['unit_measurement_inc'])[0]
+                    frm['measurement_increments'], frm['units_measurement_inc'])[0]
                 
-            if 'unit_scf' in frm.keys():
+            if 'units_scf' in frm.keys():
                 instance.scale_correction_factor = db_std_units(
-                    frm['scale_correction_factor'],frm['unit_scf'])[0]
-            if 'unit_scf_uc' in frm.keys():
+                    frm['scale_correction_factor'],frm['units_scf'])[0]
+            if 'units_scf_uc' in frm.keys():
                 instance.scf_uncertainty = db_std_units(
-                    frm['scf_uncertainty'], frm['unit_scf_uc'])[0]
-            if 'unit_zpc' in frm.keys():
+                    frm['scf_uncertainty'], frm['units_scf_uc'])[0]
+            if 'units_zpc' in frm.keys():
                 instance.zero_point_correction = db_std_units(
-                    frm['zero_point_correction'],frm['unit_zpc'])[0]
-            if 'unit_zpc_uc' in frm.keys():
+                    frm['zero_point_correction'],frm['units_zpc'])[0]
+            if 'units_zpc_uc' in frm.keys():
                 instance.zpc_uncertainty = db_std_units(
-                    frm['zpc_uncertainty'],frm['unit_zpc_uc'])[0]
-            if 'unit_stdev' in frm.keys():
+                    frm['zpc_uncertainty'],frm['units_zpc_uc'])[0]
+            if 'units_stdev' in frm.keys():
                 instance.standard_deviation = db_std_units(
-                    frm['standard_deviation'],frm['unit_stdev'])[0]
+                    frm['standard_deviation'],frm['units_stdev'])[0]
     
         if request.user.company and not request.user.is_staff:
             if inst_disp == 'edm': instance.edm_owner = request.user.company
@@ -622,7 +623,17 @@ def get_inst_model_json(request, *args, **kwargs):
     obj_makes = list(InstrumentModel.objects.filter(make__make_abbrev__exact = selected_make).values())
     return JsonResponse({'data': obj_makes})
 
+
 @login_required(login_url="/accounts/login") 
 def edm_recommended_specs(request):
-    context = {}
+    queryset = Specifications_Recommendations.objects.all()
+    queryset_dict = [
+        {field.verbose_name: {'field_id':field.name, 
+                              'value':getattr(item, field.name)} 
+         for field in Specifications_Recommendations._meta.get_fields()[1:]}
+        for item in queryset
+    ]
+    context = {
+        'queryset': queryset_dict
+    }
     return render(request, 'instruments/inst_spec_edm_recommendations.html', context)
