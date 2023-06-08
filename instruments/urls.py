@@ -27,6 +27,7 @@ urlpatterns = [
     path('instrument_register/<slug:inst_disp>/<slug:tab>/<slug:id>/edit/', views.register_edit, name = 'register_edit'),
     path('instrument_register/<slug:inst_disp>/<slug:tab>/<id>/delete/', views.register_delete, name = 'register_delete'),
     
+    
     # Make & Models
     path('inst_model_createby_inst_type/<str:inst_type>/', views.inst_model_createby_inst_type, name = 'inst_model_createby_inst_type'),
     path('edm_recommended_specifications/', views.edm_recommended_specs, name = 'edm_recommended_specs'),

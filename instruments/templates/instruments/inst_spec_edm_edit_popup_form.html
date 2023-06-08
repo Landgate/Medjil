@@ -36,6 +36,13 @@
                         class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" 
                         onclick="return showAddPopup(this);" id="add_level">&#43;</a>
                     </td>
+                </tr>                
+                <tr>
+                    <td></td>
+                    <td>
+                        <a href="/instruments/edm_recommended_specifications/" target="_blank"
+                        onclick="return showAddPopup(this);">*lookup specification recommendations</a>
+                    </td>
                 </tr>
                 <!-- Manufacturers Accuracy Statement -->
                 <tr>
@@ -123,6 +130,24 @@
                     <td width="35%">{{ form.manu_ref_refrac_index.label|title }}</td>
                     <td width="45%">{{ form.manu_ref_refrac_index }}
                         {% for error in form.manu_ref_refrac_index.errors %}
+                            <p class="error error-danger">{{ error }}</p>
+                        {% endfor %}
+                    </td>
+                    <td width="15%"></td>
+                </tr>
+                <tr>
+                    <td width="35%">{{ form.c_term.label|title }}</td>
+                    <td width="45%">{{ form.c_term }}
+                        {% for error in form.c_term.errors %}
+                            <p class="error error-danger">{{ error }}</p>
+                        {% endfor %}
+                    </td>
+                    <td width="15%"></td>
+                </tr>
+                <tr>
+                    <td width="35%">{{ form.d_term.label|title }}</td>
+                    <td width="45%">{{ form.d_term }}
+                        {% for error in form.d_term.errors %}
                             <p class="error error-danger">{{ error }}</p>
                         {% endfor %}
                     </td>

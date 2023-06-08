@@ -12,6 +12,23 @@ from accounts.models import Company
 from calibrationsites.models import CalibrationSite
 from datetime import date
 
+length_units = (
+        ('µm','µm'),
+        ('nm','nm'),
+        ('mm','mm'),
+        ('m','m'),)
+freq_units = (
+        ('Hz','Hz'),
+        ('MHz','MHz'),)
+scalar_units = (
+        ('x:1','x:1'),
+        ('1:x','1:x'),
+        ('ppm','ppm'),)
+edm_types = (
+    ('ph','Phase'),
+    ('pu','Pulse'),
+)
+
 class InstrumentMake(models.Model):
     make = models.CharField(max_length=25, validators=[MinLengthValidator(4)], help_text="e.g., LEICA, TRIMBLE, SOKKIA", unique=True)
     make_abbrev = models.CharField(max_length=4, validators=[MinLengthValidator(3)], help_text="e.g., LEI, TRIM, SOKK", unique=True, verbose_name = 'Abbreviation')
@@ -124,10 +141,7 @@ class EDM_Specification(models.Model):
                                   limit_choices_to={'inst_type__exact': 'edm'},
                                   on_delete = models.PROTECT, 
                                     verbose_name = 'EDM model')
-    edm_types = (
-        ('ph','Phase'),
-        ('pu','Pulse'),
-    )
+
     edm_type = models.CharField(
         max_length=2,
         choices=edm_types,
@@ -162,6 +176,16 @@ class EDM_Specification(models.Model):
         validators = [MinValueValidator(0.000000000), MaxValueValidator(2.000000000)],
         help_text="Manufacturers reference refractive index",
         verbose_name= 'Manufacturers reference refractive index')
+
+    c_term = models.DecimalField(
+        max_digits=6, decimal_places=2,
+        help_text="Coefficients C for first velocity correction eg 281.8",
+        null=True, blank=True)
+    d_term = models.DecimalField(
+        max_digits=5, decimal_places=2,
+        help_text="Coefficients D for first velocity correction eg 79.39",
+        null=True, blank=True)
+    
     measurement_increments = models.DecimalField(
         max_digits=7, decimal_places=6,
         help_text="Resolution of the measurement eg. 0.01")
@@ -522,3 +546,89 @@ class Mets_certificate (models.Model):
 
     def __str__(self):
         return f'{self.instrument} ({self.calibration_date.strftime("%Y-%m-%d")})'
+
+
+class Specifications_Recommendations(models.Model):
+    source_ref = models.CharField(
+        max_length=265,           
+        verbose_name='Source Reference')
+    manufacturer = models.CharField(max_length=25)
+    model = models.CharField(max_length=25)
+
+    edm_type = models.CharField(
+        max_length=2,
+        choices=edm_types,
+        default='ph',
+        help_text='Instrument measurement type',
+        verbose_name='EDM type',
+        null=True, blank=True)
+    manu_unc_const = models.FloatField(
+        validators=[MinValueValidator(0.0), MaxValueValidator(10.0)],
+        help_text="Accuracy = 1mm ± 1.5ppm, Uncertainty Constant = 1",
+        verbose_name='Manufacturers uncertainty constant',
+        null=True, blank=True)
+    units_manu_unc_const = models.CharField(        
+        max_length=3,
+        choices=length_units,
+        null=True, blank=True)
+        
+    manu_unc_ppm = models.FloatField(
+        validators=[MinValueValidator(0.0), MaxValueValidator(10.0)],
+        help_text="Accuracy = 1mm ± 1.5ppm, Uncertainty ppm = 1.5",
+        verbose_name='Manufacturers ppm uncertainty',
+        null=True, blank=True)
+    units_manu_unc_ppm = models.CharField(        
+       max_length=3,
+       choices=scalar_units,
+       null=True, blank=True)
+    manu_unc_k = models.FloatField(
+        validators=[MinValueValidator(1.0), MaxValueValidator(5.0)],
+        help_text="Coverage factor at 95% Confidence Level eg. 2.0",
+        default=2.0,
+        verbose_name='Manufacturers uncertainty coverage factor',
+        null=True, blank=True)
+
+    unit_length = models.FloatField(
+        validators=[MinValueValidator(0.0), MaxValueValidator(10000.0)],
+        help_text="Unit Length (m)",
+        null=True, blank=True)
+    units_unit_length = models.CharField(        
+       max_length=3,
+       choices=length_units,
+       null=True, blank=True)
+    frequency = models.FloatField(
+        validators=[MinValueValidator(1), MaxValueValidator(100000000)],
+        help_text="Frequency (Hz)",
+        null=True, blank=True)
+    units_frequency = models.CharField(        
+       max_length=3,
+       choices=freq_units,
+       null=True, blank=True)
+    carrier_wavelength = models.FloatField(
+        validators=[MinValueValidator(0), MaxValueValidator(1000)],
+        help_text="Carrier Wavelength (nm)",
+        null=True, blank=True)
+    units_carrier_wavelength = models.CharField(        
+       max_length=3,
+       choices=length_units,
+       null=True, blank=True)
+    manu_ref_refrac_index = models.FloatField(
+        validators=[MinValueValidator(0.000000000), MaxValueValidator(2.000000000)],
+        help_text="Manufacturers reference refractive index",
+        verbose_name='Manufacturers reference refractive index',
+        null=True, blank=True)
+
+    c_term = models.DecimalField(
+        max_digits=6, decimal_places=2,
+        help_text="Coefficients C for first velocity correction eg 281.8",
+        null=True, blank=True)
+    d_term = models.DecimalField(
+        max_digits=5, decimal_places=2,
+        help_text="Coefficients D for first velocity correction eg 79.39",
+        null=True, blank=True)
+    
+    remark = models.CharField(max_length=265, null=True, blank=True)
+    
+    
+    def __str__(self):
+        return f'{self.manufacturer} - {self.model} ({self.source_ref})'

@@ -1,98 +1,105 @@
-<!DOCTYPE html>
-<html>
+{% extends 'base_popup.html' %}
+{% load static %}
+
+{% block content %}
+
 <head>
-	<title>Table Search Example</title>
-	<style>
-		table {
-			border-collapse: collapse;
-			width: 100%;
-		}
+    <title>Table</title>
+    <style>
 
-		th, td {
-			text-align: left;
-			padding: 8px;
-			border-bottom: 1px solid #ddd;
-		}
+        th, td {
+            border: 1px solid green;
+            padding: 3px;
+            cursor: pointer;
+            position: relative;
+        }
 
-		tr:hover {
-			background-color: #f5f5f5;
-		}
-		
-		input[type=text] {
-			padding: 6px;
-			border: 1px solid #ccc;
-			border-radius: 4px;
-			box-sizing: border-box;
-			margin-bottom: 12px;
-			width: 100%;
-		}
-	</style>
+    </style>
 </head>
-<body>
-	<h1>Table Search Example</h1>
-	
-	<label for="search">Search:</label>
-	<input type="text" id="search" name="search" placeholder="Type here to search..." onchange="searchTable()">
-	
-	<table id="myTable">
-		<thead>
-			<tr>
-				<th>Name</th>
-				<th>Age</th>
-				<th>City</th>
-			</tr>
-		</thead>
-		<tbody>
-			{% for person in people %}
-				<tr>
-					<td>{{ person.name }}</td>
-					<td>{{ person.age }}</td>
-					<td>{{ person.city }}</td>
-				</tr>
-			{% endfor %}
-		</tbody>
-	</table>
-	
-	<script>
-		function searchTable() {
-			var input, filter, table, tr, td, i, txtValue;
-			input = document.getElementById("search");
-			filter = input.value.toUpperCase();
-			table = document.getElementById("myTable");
-			tr = table.getElementsByTagName("tr");
-			for (i = 0; i < tr.length; i++) {
-				td = tr[i].getElementsByTagName("td")[0];
-				if (td) {
-					txtValue = td.textContent || td.innerText;
-					if (txtValue.toUpperCase().indexOf(filter) > -1) {
-						tr[i].style.display = "";
-					} else {
-						tr[i].style.display = "none";
-					}
-				}
-			}
-		}
-	</script>
-// In this code, we first get a reference to the myTable table using document.getElementById(). We then get all the rows in the table using getElementsByTagName("tr").
-//
-// We loop through each row and add an onclick event listener to it. When a row is clicked, the event listener fires and retrieves the contents of the three cells (name, age, and city) using this.cells[]. We then use window.opener to access the parent window (i.e., the window that opened this window), and set the values of the name, age, and city fields in that window. Finally, we close the child window using window.close().
 
-// Note that in order for this code to work, you need to have a parent window with text input fields that have id attributes set to name, age, and city. The window.opener.document.getElementById() function is used to access these fields in the parent window.
-	<script>
-		var table = document.getElementById("myTable");
-		var rows = table.getElementsByTagName("tr");
-		for (var i = 0; i < rows.length; i++) {
-			rows[i].onclick = function(){
-				var name = this.cells[0].innerHTML;
-				var age = this.cells[1].innerHTML;
-				var city = this.cells[2].innerHTML;
-				window.opener.document.getElementById("name").value = name;
-				window.opener.document.getElementById("age").value = age;
-				window.opener.document.getElementById("city").value = city;
-				window.close();
-			};
-		}
-	</script>
+<body class="site-form" style="max-width:fit-content;width:fit-content;margin:1rem 1rem;padding:1rem">
+    <h1>Table of EDM specifications and references</h1>
 
+    <label for="search">Search:</label>
+    <input type="text" id="search" name="search" placeholder="Type here to search...">
+
+        <table id="myTable">
+            {% for item in queryset %}
+                {% if forloop.first %}
+                    <tr>
+                        {% for field in item.keys %}
+                            <th>{% if not field|slice:"0:5" == "units" %}{{ field }}{% endif %}</th>
+                        {% endfor %}
+                    </tr>
+                {% endif %}
+                <tr onclick="rtn_recommendation()">
+                    {% for field in item.values %}
+                        {% if field.field_id == "source_ref" %}
+                            <td style="white-space: nowrap;">{{ field.value }}</td>
+                        {% else %}
+                            <td field_id={{ field.field_id }}>
+                                {% if field.value %}{{ field.value }}{% endif %}
+                            </td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
 </body>
-</html>
+<script>
+    // JavaScript for wildcard filtering the table
+    document.getElementById("search").addEventListener("keyup", function() {
+        var input, filter, table, tr, td, i;
+        input = document.getElementById("search");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable");
+        tr = table.getElementsByTagName("tr");
+
+        // Create a regular expression pattern from the filter text
+        var pattern = new RegExp(filter.replace(/[*]/g, ".*"));
+
+        for (i = 1; i < tr.length; i++) {
+            var matchFound = false;
+            td = tr[i].getElementsByTagName("td");
+            var cellContent = "";
+
+            for (var j = 0; j < td.length; j++) {
+                if (td[j]) {
+                    cellContent += td[j].innerHTML.toUpperCase() + " ";
+
+                    // Check if cellContent matches the regular expression pattern
+                    if (pattern.test(cellContent)) {
+                        matchFound = true;
+                        break;
+                    }
+                }
+            }
+
+            // Show/hide rows based on matchFound flag
+            if (matchFound) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+    });
+
+    
+function rtn_recommendation() {
+    var cells = event.currentTarget.getElementsByTagName("td");
+    for (var j = 1; j < cells.length; j++) {
+        var cellField = cells[j].getAttribute("field_id");
+        var cellContent = cells[j].innerHTML.trim();
+
+        var elementId = "id_" + cellField;
+        var element = window.opener.document.getElementById(elementId);
+
+        if (element) {
+            element.value = cellContent;
+        }
+        window.close();
+    }
+}
+</script>
+
+{% endblock %}
