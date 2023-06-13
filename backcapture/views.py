@@ -360,7 +360,7 @@ def import_dli(request):
     
     if importForm.is_valid():
         # Import the BASELINE_WA database into a single dictionary.
-        rx = db_files2dict(request.FILES.getlist('dot_db_files'),
+        rx = db_files2dict(importForm.cleaned_data["file_field"],
                            request.user.is_staff)
         
         Unknown_UC_budget = Uncertainty_Budget.objects.get(
@@ -417,6 +417,7 @@ def import_dli(request):
                         )
                 except:
                     job_measurements = []
+                    uniq_bays = []
                 meas_kys = [m['pk'] for m in job_measurements]
                 job_measurements = dict(zip(meas_kys, job_measurements))
                 job_edm_obs = [obs for obs in rx['EDMObs'].values() if obs['MeasID'] in meas_kys]
@@ -450,6 +451,7 @@ def import_dli(request):
                 try:
                     edm = rx['Instrument'][job['instrument_edm_fk']]
                     medjil_edm = edm['medjil_pk']
+                    if float(medjil_edm.edm_specs.id):pass
                 except Exception as e:
                     commit_error.append(
                         f'EDM specified for {job["name"]} not in BASELINE database files: {e}')
@@ -458,6 +460,7 @@ def import_dli(request):
                 try:
                     prism = rx['Instrument'][job['instrument_prism_fk']]
                     medjil_prism = prism['medjil_pk']
+                    if float(medjil_prism.prism_specs.id):pass
                 except Exception as e:
                     commit_error.append(
                         f'Prism specified for {job["name"]} not in BASELINE database files: {e}')
