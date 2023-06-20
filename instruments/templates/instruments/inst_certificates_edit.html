@@ -34,7 +34,7 @@
                     </colgroup>
                     {% for field in form %}
                         <tr>
-                            {% if not 'unit_' in field.name %}
+                            {% if not 'units_' in field.name %}
                                 {% if field.field.is_checkbox %}
                                     <td>{{ field }}</td>
                                     <td>{{ field.label|title }}</td>
@@ -43,15 +43,15 @@
                                     <td>{{ field.label_tag|title }}</td>
                                     <td>{{ field }}</td>
                                     {% if 'zero_point_correction' == field.name %}
-                                        <td>{{ form.unit_zpc }}</td>
+                                        <td>{{ form.units_zpc }}</td>
                                     {% elif 'zpc_uncertainty' == field.name %}
-                                        <td>{{ form.unit_zpc_uc }}</td>
+                                        <td>{{ form.units_zpc_uc }}</td>
                                     {% elif 'scale_correction_factor' == field.name %}
-                                        <td>{{ form.unit_scf }}</td>
+                                        <td>{{ form.units_scf }}</td>
                                     {% elif 'scf_uncertainty' == field.name %}
-                                        <td>{{ form.unit_scf_uc }}</td>
+                                        <td>{{ form.units_scf_uc }}</td>
                                     {% elif 'standard_deviation' == field.name %}
-                                        <td>{{ form.unit_stdev }}</td>
+                                        <td>{{ form.units_stdev }}</td>
                                     {% else %}
                                         <td></td>
                                     {% endif %}
