@@ -27,12 +27,14 @@
             {% for item in queryset %}
                 {% if forloop.first %}
                     <tr>
+                        <th></th>
                         {% for field in item.keys %}
                             <th>{% if not field|slice:"0:5" == "units" %}{{ field }}{% endif %}</th>
                         {% endfor %}
                     </tr>
                 {% endif %}
                 <tr onclick="rtn_recommendation()">
+                    <td><input type="radio"></td>
                     {% for field in item.values %}
                         {% if field.field_id == "source_ref" %}
                             <td style="white-space: nowrap;">{{ field.value }}</td>

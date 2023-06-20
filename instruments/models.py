@@ -551,9 +551,13 @@ class Mets_certificate (models.Model):
 class Specifications_Recommendations(models.Model):
     source_ref = models.CharField(
         max_length=265,           
-        verbose_name='Source Reference')
-    manufacturer = models.CharField(max_length=25)
-    model = models.CharField(max_length=25)
+        verbose_name='Source reference')
+    manufacturer = models.CharField(
+        max_length=25,
+        verbose_name='Manufacturer')
+    model = models.CharField(
+        max_length=25,
+        verbose_name='Model')
 
     edm_type = models.CharField(
         max_length=2,
@@ -591,6 +595,7 @@ class Specifications_Recommendations(models.Model):
     unit_length = models.FloatField(
         validators=[MinValueValidator(0.0), MaxValueValidator(10000.0)],
         help_text="Unit Length (m)",
+        verbose_name='Unit Length',
         null=True, blank=True)
     units_unit_length = models.CharField(        
        max_length=3,
@@ -599,6 +604,7 @@ class Specifications_Recommendations(models.Model):
     frequency = models.FloatField(
         validators=[MinValueValidator(1), MaxValueValidator(100000000)],
         help_text="Frequency (Hz)",
+        verbose_name='Frequency',
         null=True, blank=True)
     units_frequency = models.CharField(        
        max_length=3,
@@ -607,6 +613,7 @@ class Specifications_Recommendations(models.Model):
     carrier_wavelength = models.FloatField(
         validators=[MinValueValidator(0), MaxValueValidator(1000)],
         help_text="Carrier Wavelength (nm)",
+        verbose_name='Carrier wavelength',
         null=True, blank=True)
     units_carrier_wavelength = models.CharField(        
        max_length=3,
@@ -621,13 +628,16 @@ class Specifications_Recommendations(models.Model):
     c_term = models.DecimalField(
         max_digits=6, decimal_places=2,
         help_text="Coefficients C for first velocity correction eg 281.8",
+        verbose_name='C term',        
         null=True, blank=True)
     d_term = models.DecimalField(
         max_digits=5, decimal_places=2,
         help_text="Coefficients D for first velocity correction eg 79.39",
+        verbose_name='D term',     
         null=True, blank=True)
     
-    remark = models.CharField(max_length=265, null=True, blank=True)
+    remark = models.CharField(max_length=265, null=True, blank=True,
+                              verbose_name='Remark')
     
     
     def __str__(self):
