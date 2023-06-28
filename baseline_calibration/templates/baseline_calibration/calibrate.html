@@ -5,13 +5,6 @@
 {% block content %} 
 
 <article class="post">
-    <!-- <div class="post-header mt-12 text-center mb-3">
-        {% for pg, Header in Headers.items %}
-            <div class="tgl-{{ pg }}" style="display:none;">
-            <h1>{{ Header }}</h1>
-            </div>
-        {% endfor %}
-    </div> -->
     <div class="post-content">
         <form id="PillarSurveyForm" action="" class="site-form" method="post" enctype="multipart/form-data">
             {% for pg, Header in Headers.items %}
@@ -28,16 +21,12 @@
                     <col span="1" width="5%">
                 </colgroup>
                 {% for field in form %}
-                    <tr class="tgl-{{ field.field.widget.attrs.class }}" style="display:none;">
+                    <tr class="tgl-{{ field.field.widget.attrs.class }}" style="display:none;" title="{{ field.help_text }}">
                         {% if field.field.is_checkbox %}
                             <td></td>                                        
                             <td>{{ field }}&emsp; &emsp; {{ field.label }} </td>
                         {% else %}
-                            {% if field.name == "edm" %}
-                                <td><label>{{ field.label|upper }}</label></td>
-                            {% else %}
-                                <td>{{ field.label_tag|title }}</td>
-                            {% endif %}  
+                            <td>{{ field.label_tag }}</td>
                             <td> {{ field }}                      
                                 {% if field.name == "fieldnotes_upload" and qs.fieldnotes_upload.file != none %}
                                     <label id="fieldnotes_link" for="id_fieldnotes_upload"><a href= "{{ qs.fieldnotes_upload.url }}" target="_blank" rel="noopener noreferrer" style="color:blue; cursor: pointer; cursor: hand;"> {% if qs.fieldnotes_upload.name|length > 50 %} ...{% endif %}{{ qs.fieldnotes_upload.name|slice:"-50:" }}</a></label>
@@ -89,8 +78,8 @@
                             
                 {% endfor %}
                 {% for field in survey_files %}
-                    <tr class="tgl-{{ field.field.widget.attrs.class }}" style="display:none;">
-                        <td>{{ field.label_tag|title }}</td>
+                    <tr class="tgl-{{ field.field.widget.attrs.class }}" style="display:none;" title={{ field.help_text }}>
+                        <td>{{ field.label_tag }}</td>
                         <td>
                             {{ field }}
                         </td>
@@ -133,7 +122,8 @@
       var x = document.getElementsByClassName("tgl-page"+(n));
       for (var i = 0; i < x.length; i++) {
        x[i].style.display = '';
-       }
+      }
+      tglCO2();
       
       if (n == 0) {
         document.getElementById("prevBtn").style.display = "none";
@@ -213,6 +203,23 @@
               slct.type = "file";
           } else {
               e[i].style.display = 'none';
+          }
+      }
+    }
+
+    function tglCO2() {
+      // This function will hide/unhide the CO2 content row
+      var CO2_box = document.getElementById("id_co2_content");
+      var chk_mets = document.getElementById("id_mets_applied");
+      var CO2_Tr = CO2_box.parentNode.parentNode;
+      var mets_Tr = chk_mets.parentNode.parentNode;
+      console.log(mets_Tr.style.display);
+      
+      if (mets_Tr.style.display!=='none'){
+          if (chk_mets.checked) {
+              CO2_Tr.style.display = 'none';
+          } else {
+              CO2_Tr.style.display = '';
           }
       }
     }

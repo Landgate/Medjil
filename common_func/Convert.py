@@ -2,9 +2,6 @@ import numpy as np
 from statistics import mean, pstdev
 from django.db.models import Avg
 from django.forms.models import model_to_dict
-from django.core.files.uploadedfile import InMemoryUploadedFile
-from datetime import date
-from decimal import Decimal
 from django.db.models import Q
 
 from instruments.models import (
@@ -17,10 +14,8 @@ from instruments.models import (
 from staffcalibration.models import StaffCalibrationRecord
 from accounts.models import Calibration_Report_Notes
 from calibrationsites.models import (
-    Pillar,
-    CalibrationSite)
+    Pillar)
 from baseline_calibration.models import (
-    Uncertainty_Budget,
     Uncertainty_Budget_Source,
     Certified_Distance,
     Pillar_Survey,
@@ -61,17 +56,45 @@ def db_std_units(orig_val, orig_unit):
     return new_val, new_unit
 
 
-def csv2dict(csv_file,clms,key_names=-1):
+def convert_headings(raw_headings):
+    converted_headings = []
+    conversion_dict = {
+        'height_of_instrument': 'inst_ht',
+        'height_of_target': 'tgt_ht',
+        'horizontal_direction(dd)': 'hz_direction',
+        'slope_distance': 'raw_slope_dist',
+        'temperature': 'raw_temperature',
+        'pressure': 'raw_pressure',
+        'humidity': 'raw_humidity'
+    }
+
+    for item in raw_headings:
+        if item.lower() in conversion_dict.keys():
+            converted_headings.append(
+                conversion_dict.get(item.lower().replace(' ', '_')))
+        else:
+            converted_headings.append(item.lower().replace(' ', '_'))
+    
+    return converted_headings
+
+
+def csv2dict(csv_file, clms=None, key_names=-1):
     dct={}
+    rows = csv_file.read().decode("utf-8-sig").replace("\r","").split("\n")
+    if not clms:
+        clms = convert_headings(rows[0].split(','))
+
     clms.append('line')
-    rows = csv_file.read().decode("utf-8").split("\n")
     for lne, row in enumerate(rows[1:]):
         r = (row+','+str(lne+1)).replace('\r','').split(',')
         if key_names != -1: ky = str(r[key_names])            
-        if key_names == -1: ky = str(len(dct)+1)
-        if len(clms) == len(r):
-            dct[ky] = dict(zip(clms,r))
-                    
+        if key_names == -1: ky = str(lne + 1)
+        number_of_clms = len(clms)
+        try:
+            if len(r) >= number_of_clms:
+                dct[ky] = dict(zip(clms,r[:number_of_clms]))
+        except Exception as e:
+            raise ValueError (f'Invalid formating of csv file: {e}')              
     return dct
 
 
@@ -215,6 +238,7 @@ def Calibrations_qry(frm_data):
     
     return calib
 
+
 def baseline_qry(frm_data):
     baseline={}
     if 'baseline' in frm_data:
@@ -264,9 +288,10 @@ def baseline_qry(frm_data):
     
 def uncertainty_qry(frm_data):
     uc_budget={}
-    uc_sources = (Uncertainty_Budget_Source.objects.filter(
-                            uncertainty_budget__pk = frm_data['uncertainty_budget'].pk ,
-                            ))
+    uc_sources = (
+        Uncertainty_Budget_Source.objects.filter(
+            uncertainty_budget__pk = frm_data['uncertainty_budget'].pk)
+        )
 
     uc_budget['sources'] = list(uc_sources.values())
 

@@ -6,7 +6,7 @@ from statistics import mean
 from scipy.stats import t
 from sklearn.linear_model import LinearRegression
 from geodepy.survey import (
-    joins, first_vel_params, first_vel_corrn,
+    joins, first_vel_corrn, first_vel_params,
     part_h2o_vap_press, mets_partial_differentials)
 from baseline_calibration.models import Pillar_Survey
 from copy import deepcopy
@@ -109,18 +109,31 @@ def apply_calib(obs, applied, calib=[],scf=1,zpc=0):
     return obs1, correction
 
 
-def edm_mets_correction(o, edm, mets_applied):
-    if mets_applied==False:
-        mets_parameters = first_vel_params(
-                                edm.edm_specs.carrier_wavelength/1000,
-                                edm.edm_specs.frequency,
-                                edm.edm_specs.manu_ref_refrac_index)
+def get_mets_params(edm, mets_applied=True):
+    if not mets_applied:
+        c = edm.edm_specs.c_term
+        d = edm.edm_specs.d_term
+        if not c or not d:
+            mets_parameters = first_vel_params(
+                edm.edm_specs.carrier_wavelength/1000,
+                edm.edm_specs.frequency,
+                edm.edm_specs.manu_ref_refrac_index)
+            if not edm.edm_specs.c_term:
+                edm.edm_specs.c_term = mets_parameters[0]
+            if not edm.edm_specs.d_term:
+                edm.edm_specs.d_term = mets_parameters[1]
         
-        o['Mets_Correction'] = first_vel_corrn(float(o['raw_slope_dist']),
-                                          mets_parameters,
-                                           o['Temp'],
-                                           o['Pres'],
-                                           o['Humid'])
+
+def edm_mets_correction(o, edm, mets_applied, co2_content=None):
+    if not mets_applied:
+        o['Mets_Correction'] = first_vel_corrn(
+            dist = float(o['raw_slope_dist']),
+            first_vel_param = (edm.edm_specs.c_term, edm.edm_specs.d_term),
+            temp = o['Temp'],
+            pressure = o['Pres'],
+            rel_humidity = o['Humid'],
+            CO2_ppm = co2_content,
+            wavelength = edm.edm_specs.carrier_wavelength/1000)
     else:
         o['Mets_Correction'] = 0
     return o
@@ -355,13 +368,13 @@ def add_surveyed_uc(o, edm_trend, uc_sources, alignment_survey):
     # '10'
     frm_rl= alignment_survey[o['from_pillar']]
     to_rl = alignment_survey[o['to_pillar']]
-    frm_rl['Std_Dev']= (float(frm_rl['rl_uncertainty'])/
+    frm_rl['std_dev']= (float(frm_rl['rl_uncertainty'])/
                         float(frm_rl['k_rl_uncertainty']))
-    to_rl['Std_Dev'] = (float(to_rl['rl_uncertainty'])/
+    to_rl['std_dev'] = (float(to_rl['rl_uncertainty'])/
                         float(to_rl['k_rl_uncertainty']))
 
-    comb_std = sqrt(float(frm_rl['Std_Dev'])**2
-                    + float(to_rl['Std_Dev'])**2)
+    comb_std = sqrt(float(frm_rl['std_dev'])**2
+                    + float(to_rl['std_dev'])**2)
         
     surveyed_uc.append({'group': '10',
                         'ab_type':'B',
@@ -685,7 +698,7 @@ def validate_survey(pillar_survey, baseline=None, calibrations=None,
             #Check pillar names are valid
             if not o['from_pillar'] in pillars:
                 pop_list.append(k)
-                Errs.append('pillar "' + o['from_pillar'] + '" is not a valid pillar name.'
+                Errs.append('Pillar "' + o['from_pillar'] + '" is not a valid pillar name.'
                             + 'The observation "' +  o['from_pillar'] + '--' + o['to_pillar'] 
                             + '" has been removed from the data')
             if not o['to_pillar'] in pillars:
@@ -746,23 +759,42 @@ def validate_survey(pillar_survey, baseline=None, calibrations=None,
         for k, o in raw_lvl_obs.items():
             if not is_float(o['reduced_level']):
                  Errs.append('Reduced Level reading "' +o['reduced_level'] + '"is invalid')
-            if not is_float(o['Std_Dev']):
-                 Errs.append('Reduced Level standard deviation "' +o['Std_Dev'] + '"is invalid')
+            if not is_float(o['std_dev']):
+                 Errs.append('Reduced Level standard deviation "' +o['std_dev'] + '"is invalid')
             else:
-                if o['Std_Dev']==0:
-                    o['Std_Dev']=0.00001
+                if o['std_dev']==0:
+                    o['std_dev']=0.00001
             
             if not o['pillar'] in lvl_nmes:
                 lvl_nmes.append(o['pillar'])
                     
             if not o['pillar'] in pillars:
                 o.pop(k, None)
-                Wrns.append('Pillar "' + o['Pillar'] + '" is not a valid pillar name.'
-                            + 'The level data for "' +  o['from_pillar'] 
+                Wrns.append('Pillar "' + o['pillar'] + '" is not a valid pillar name.'
+                            + 'The level data for "' +  o['pillar'] 
                             + '" has been removed from the data')
         
         for n in pillars:
             if not n in lvl_nmes: Errs.append('Pillar "' + n + '" is not listed in the level file.')
+
+
+    if not pillar_survey['mets_applied']:
+        c = pillar_survey['edm'].edm_specs.c_term
+        d = pillar_survey['edm'].edm_specs.d_term
+        if any([c,d]) == None:
+            inputs = [
+                pillar_survey['edm'].edm_specs.carrier_wavelength,
+                pillar_survey['edm'].edm_specs.frequency,
+                pillar_survey['edm'].edm_specs.manu_ref_refrac_index]
+            if any(inputs) == None:
+                Errs.append(
+                    'In order for Medjil to apply atmospheric corrections,'
+                    ' either the C-term and D-term must be specified'
+                    ' or the carrier wavelength, modulation frequency and'
+                    ' manufacturers refractive index must be specified'
+                    ' insufficient data has been supplied for the EDM'
+                    'Instrument used for this calibration')
+                
     
     # Date Warnings
     if pillar_survey['survey_date'] > pillar_survey['computation_date']:

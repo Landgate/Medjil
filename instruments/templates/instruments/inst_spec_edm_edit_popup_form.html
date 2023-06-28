@@ -1,33 +1,34 @@
 {% extends 'base_popup.html' %}
 {% load i18n %}
-{% load }
 {% load static %}
 
-{% block content %} 
-
+{% block content %}
 <article class="post">
     <div class="post-content">
         <form action="" class="site-form" method="post">
             {% csrf_token %}
             <div class="mb-5 site-form-header bg-indigo-300 rounded px-2">
-                {% if form.instance.pk %}
-                    <h2 class="text-center">Edit EDM Model Specifications</h2>
-                {% else %}
-                    <h2 class="text-center">Create EDM Model Specifications</h2>
-                {% endif %}
+                <h2 class="text-center">
+                    {% if form.instance.pk %}
+                        Edit EDM Model Specifications
+                    {% else %}
+                        Create EDM Model Specifications
+                    {% endif %}
+                </h2>
             </div>
             {% if form.non_field_errors %}
                 <div class="mt-5 mb-3">
-                    <b>{{ form.non_field_errors }}</b>
-                    <br>
+                    <b>{{ form.non_field_errors }}</b><br>
                 </div>
             {% endif %}
             <table>
+                <!-- EDM Owner -->
                 <tr>
                     <td width="35%">{{ form.edm_owner.label|title }}</td>
                     <td width="45%">{{ form.edm_owner }}</td>
                     <td width="15%"></td>
                 </tr>
+                <!-- EDM Model -->
                 <tr>
                     <td width="35%">{{ form.edm_model.label|title }}</td>
                     <td width="45%">{{ form.edm_model }}</td>
@@ -36,17 +37,17 @@
                         class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" 
                         onclick="return showAddPopup(this);" id="add_level">&#43;</a>
                     </td>
-                </tr>                
-
+                </tr>
+                <!-- Lookup recommended specification -->
                 <tr>
                     <td>Lookup recommended specification</td>
-                    <td> 
-                      <a href="/instruments/edm_recommended_specifications/" target="_blank"
-                      onclick="return showAddPopup(this);">
-                        <svg version="1.1" baseProfile="tiny" id="report-view" xmlns:x="&amp;ns_extend;" xmlns:i="&amp;ns_ai;" xmlns:graph="&amp;ns_graphs;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/" x="0px" y="0px" width="22" height="22" viewBox="0 0 42 42" xml:space="preserve">
-                          <path fill-rule="evenodd" d="M22.5,1.5h-14c-2.55,0-3,0.561-3,3v32c0,2.49,0.55,3,3,3h24c2.5,0,3-0.47,3-3v-22h-13V1.5z M35.5,11.5l-10-10v10H35.5z"></path>
-                        </svg>
-                      </a>                
+                    <td>
+                        <a href="/instruments/edm_recommended_specifications/" target="_blank"
+                           onclick="return showAddPopup(this);">
+                            <svg version="1.1" baseProfile="tiny" id="report-view" xmlns:x="&amp;ns_extend;" xmlns:i="&amp;ns_ai;" xmlns:graph="&amp;ns_graphs;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/" x="0px" y="0px" width="22" height="22" viewBox="0 0 42 42" xml:space="preserve">
+                                <path fill-rule="evenodd" d="M22.5,1.5h-14c-2.55,0-3,0.561-3,3v32c0,2.49,0.55,3,3,3h24c2.5,0,3-0.47,3-3v-22h-13V1.5z M35.5,11.5l-10-10v10H35.5z"></path>
+                            </svg>
+                        </a>
                     </td>
                 </tr>
                 <!-- Manufacturers Accuracy Statement -->
@@ -61,9 +62,7 @@
                             <p class="helptext">{{ form.manu_unc_const.help_text }}</p>
                         {% endif %}
                     </td>
-                    <td width="15%">{{ form.unit_manu_unc_const }}
-                        <br>
-                    </td>
+                    <td width="15%">{{ form.unit_manu_unc_const }}</td>
                 </tr>
                 <tr>
                     <td width="35%">{{ form.manu_unc_ppm.label|title }}</td>
@@ -173,11 +172,12 @@
                 <input type="hidden" name="next" value="{{ request.GET.next }}">
             {% endif %}
             <div class="button-container">
-                <button class="submit-button bg-green-500 hover:bg-green-400 text-base" type="submit" >Save</button>
+                <button class="submit-button bg-green-500 hover:bg-green-400 text-base" type="submit">Save</button>
             </div>
         </form>
     </div>
 </article>
+
 <script>
     window.onload = function() {
         if(!window.location.hash) {
@@ -218,6 +218,6 @@
             window.opener.location.reload(true);
         }
 </script>
-        <body onunload="javascript:refreshParent()">
+<body onunload="javascript:refreshParent()">
 
 {% endblock %}
