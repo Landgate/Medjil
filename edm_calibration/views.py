@@ -1,30 +1,55 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse, QueryDict
+from django.http import QueryDict
 from django.forms import modelformset_factory, formset_factory
 from django.forms.models import model_to_dict
 
 from collections import OrderedDict
 from math import pi, sin, cos
-from common_func.Convert import *
-from common_func.SurveyReductions import *
-from .forms import (CalibrateEdmForm,
-                    UploadSurveyFiles,
-                    ChangeSurveyFiles,
-                    EDM_ObservationForm,
-                    PillarSurveyUpdateForm,
-                    CalibrationParamForm
-                    )
-from .models import (uPillar_Survey,
-                     uEDM_Observation,
-                     uCalibration_Parameter
-                     )
+from datetime import date
+from common_func.Convert import (
+    Calibrations_qry,
+    baseline_qry,
+    csv2dict,
+    report_notes_qry,
+    uncertainty_qry,
+    group_list)
+from common_func.SurveyReductions import (
+    validate_survey,
+    get_mets_params,
+    apply_calib,
+    edm_mets_correction,
+    edm_std_function,
+    offset_slope_correction,
+    slope_certified_dist,
+    add_certified_dist_uc,
+    add_surveyed_uc,
+    add_calib_uc,
+    refline_std_dev,
+    sum_uc_budget,
+    add_typeA
+    )
+from .forms import (
+    CalibrateEdmForm,
+    UploadSurveyFiles,
+    ChangeSurveyFiles,
+    EDM_ObservationForm,
+    PillarSurveyUpdateForm,
+    CalibrationParamForm
+    )
+from .models import (
+    uPillar_Survey,
+    uEDM_Observation,
+    uCalibration_Parameter
+    )
 from common_func.LeastSquares import (
-                    LSA,
-                    ISO_test_a,
-                    ISO_test_b,
-                    ISO_test_c)
-# Create your views here.
+    LSA,
+    ISO_test_a,
+    ISO_test_b,
+    ISO_test_c)
+from baseline_calibration.models import (
+    Uncertainty_Budget_Source)
+
     
 @login_required(login_url="/accounts/login")
 def edm_calibration_home(request):
@@ -236,7 +261,10 @@ def calibrate2(request,id):
             uc_budget['sources'] = add_calib_uc(uc_budget['sources'], 
                                                 calib,
                                                 pillar_survey)
-
+            get_mets_params(
+                pillar_survey['edm'], 
+                pillar_survey['mets_applied'])
+            
             for o in raw_edm_obs.values():
                 #----------------- Instrument Corrections -----------------#
                 o['Temp'],c = apply_calib(o['raw_temperature'],
@@ -248,9 +276,9 @@ def calibrate2(request,id):
                 o['Humid'],c = apply_calib(o['raw_humidity'],
                                             pillar_survey['hygro_calib_applied'],
                                             calib['hygro'])
-                o = (edm_mets_correction(o, 
-                                         pillar_survey['edm'],
-                                         pillar_survey['mets_applied']))
+                o = edm_mets_correction(o, 
+                                        pillar_survey['edm'],
+                                        pillar_survey['mets_applied'])
                 
                 o['slope_dist'] = (float(o['raw_slope_dist'] )
                                    + o['Mets_Correction'])

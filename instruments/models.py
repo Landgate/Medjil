@@ -168,14 +168,17 @@ class EDM_Specification(models.Model):
         help_text="Unit Length (m)")
     frequency = models.FloatField(
         validators = [MinValueValidator(1), MaxValueValidator(100000000)],
-        help_text="Frequency (Hz)")
+        help_text="Frequency (Hz)",
+        null=True, blank=True)
     carrier_wavelength = models.FloatField(
         validators = [MinValueValidator(0), MaxValueValidator(1000)],
-        help_text="Carrier Wavelength (nm)")
+        help_text="Carrier Wavelength (nm)",
+        null=True, blank=True)
     manu_ref_refrac_index = models.FloatField(
         validators = [MinValueValidator(0.000000000), MaxValueValidator(2.000000000)],
         help_text="Manufacturers reference refractive index",
-        verbose_name= 'Manufacturers reference refractive index')
+        verbose_name= 'Manufacturers reference refractive index',
+        null=True, blank=True)
 
     c_term = models.DecimalField(
         max_digits=6, decimal_places=2,

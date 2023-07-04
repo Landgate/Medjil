@@ -84,7 +84,9 @@ class PillarSurveyForm(forms.ModelForm):
            'barometer': forms.Select(attrs={'class': 'page1'}),
            'hygrometer': forms.Select(attrs={'class': 'page1'}),
            
-           'mets_applied': forms.CheckboxInput(attrs={'class': 'page2'}),
+           'mets_applied': forms.CheckboxInput(attrs={'class': 'page2',
+                                                      'onclick':'tglCO2()'}),
+           'co2_content': forms.NumberInput(attrs={'class': 'page2'}),
            'edmi_calib_applied': forms.CheckboxInput(attrs={'class': 'page2'}), 
            'staff_calib_applied': forms.CheckboxInput(attrs={'class': 'page2'}),
            'thermo_calib_applied': forms.CheckboxInput(attrs={'class': 'page2'}), 
