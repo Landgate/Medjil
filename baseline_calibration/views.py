@@ -7,8 +7,11 @@ from django.urls import reverse
 from collections import OrderedDict
 from django.db.models import Q
 
+from datetime import date
+from math import sqrt
+import numpy as np
+from statistics import mean
 
-# Create your views here.
 from .forms import (PillarSurveyForm,
                     UploadSurveyFiles,
                     ChangeSurveyFiles,
@@ -41,12 +44,32 @@ from .models import (Pillar_Survey,
                     Certified_Distance,
                     Std_Deviation_Matrix)
 from geodepy.survey import radiations
-from common_func.Convert import *
-from common_func.SurveyReductions import *
+from common_func.Convert import (
+    csv2dict,
+    Calibrations_qry, 
+    baseline_qry)
+from common_func.SurveyReductions import (
+    validate_survey,
+    apply_calib,
+    get_mets_params,
+    edm_mets_correction,
+    adjust_alignment_survey,
+    report_notes_qry,
+    uncertainty_qry,
+    add_calib_uc,
+    reduce_sets_of_obs, 
+    edm_std_function, 
+    offset_slope_correction, 
+    add_surveyed_uc, 
+    refline_std_dev, 
+    sum_uc_budget,
+    get_delta_os,
+    add_typeB)
 from instrument_calibrations.settings import *
-from common_func.LeastSquares import (LSA,
-                                      ISO_test_b,
-                                      ISO_test_c)
+from common_func.LeastSquares import (
+    LSA,
+    ISO_test_b,
+    ISO_test_c)
 
 
 @login_required(login_url="/accounts/login") 
@@ -93,17 +116,19 @@ def calibrate1(request, id):
     # if id==None this is a new pillar survey.
     if id == 'None':
         qs=''
-        ini_data = {'computation_date':date.today().isoformat(),
-                    'accreditation': Accreditation.objects.filter(
-                            valid_from_date__lte = date.today().isoformat(),
-                            valid_to_date__gte = date.today().isoformat(),
-                            accredited_company = request.user.company 
-                            ).order_by('-valid_from_date').first()}
+        ini_data = {
+            'computation_date':date.today().isoformat(),
+            'accreditation': Accreditation.objects.filter(
+                valid_from_date__lte = date.today().isoformat(),
+                valid_to_date__gte = date.today().isoformat(),
+                accredited_company = request.user.company).order_by(
+                    '-valid_from_date').first()}
     
-        pillar_survey = PillarSurveyForm(request.POST or None,
-                                         request.FILES or None,
-                                         user=request.user,
-                                         initial=ini_data)
+        pillar_survey = PillarSurveyForm(
+            request.POST or None,
+            request.FILES or None,
+            user=request.user,
+            initial=ini_data)
         upload_survey_files = UploadSurveyFiles(request.POST or None,
                                                 request.FILES or None)
     else:
@@ -123,16 +148,7 @@ def calibrate1(request, id):
         
         # read new files or read raw data from database
         if survey_files['edm_file']:
-            edm_clms=['from_pillar',
-                      'to_pillar',
-                      'inst_ht',
-                      'tgt_ht',
-                      'hz_direction',
-                      'raw_slope_dist',
-                      'raw_temperature',
-                      'raw_pressure',
-                      'raw_humidity']
-            raw_edm_obs = csv2dict(survey_files['edm_file'],edm_clms)
+            raw_edm_obs = csv2dict(survey_files['edm_file'])
             for v in raw_edm_obs.values():
                 v['use_for_alignment'] = True 
                 v['use_for_distance'] = True
@@ -146,17 +162,14 @@ def calibrate1(request, id):
                 raw_edm_obs[str(o.id)] = dct
         
         if survey_files['lvl_file']:
-            level_clms=['pillar',
-                      'reduced_level',
-                      'Std_Dev']
-            raw_lvl_obs = csv2dict(survey_files['lvl_file'],level_clms,0)
+            raw_lvl_obs = csv2dict(survey_files['lvl_file'],key_names=0)
         else:            
             qs = Level_Observation.objects.filter(pillar_survey__pk=id)
             raw_lvl_obs = {}
             for o in qs:
                 dct = model_to_dict(o)
                 dct['pillar'] = o.pillar.name
-                dct['Std_Dev'] = dct['rl_standard_deviation']
+                dct['std_dev'] = dct['rl_standard_deviation']
                 del dct['rl_standard_deviation']
                 raw_lvl_obs[o.pillar.name] = dct
         
@@ -206,16 +219,16 @@ def calibrate1(request, id):
                     pillar_survey = ps_instance,
                     pillar = baseline['pillars'].get(name=l['pillar']),
                     reduced_level = l['reduced_level'],
-                    rl_standard_deviation = l['Std_Dev'])
+                    rl_standard_deviation = l['std_dev'])
                         
         return redirect('baseline_calibration:calibrate2', id=id)
 
     else:
         print(upload_survey_files.is_valid())
         for e in pillar_survey.errors:
-            print(e)
+            pass
         for e in upload_survey_files.errors:
-            print(e)
+            pass
             
     headers = {'page0':'Calibrate the Baseline',
                 'page1': 'Instrumentation',
@@ -271,7 +284,7 @@ def calibrate2(request,id):
     for o in qs:
         dct = model_to_dict(o)
         dct['pillar'] = o.pillar.name
-        dct['Std_Dev'] = dct['rl_standard_deviation']
+        dct['std_dev'] = dct['rl_standard_deviation']
         del dct['rl_standard_deviation']
         raw_lvl_obs[o.pillar.name] = dct
 
@@ -280,7 +293,11 @@ def calibrate2(request,id):
     uc_budget = {}
     calib = Calibrations_qry(pillar_survey)
     baseline = baseline_qry(pillar_survey)
-        
+    
+    get_mets_params(
+        pillar_survey['edm'], 
+        pillar_survey['mets_applied'])
+    
     for o in raw_edm_obs.values():
         #----------------- Instrument Corrections -----------------#
         o['Temp'],c = apply_calib(o['raw_temperature'],
@@ -292,12 +309,13 @@ def calibrate2(request,id):
         o['Humid'],c = apply_calib(o['raw_humidity'],
                                     pillar_survey['hygro_calib_applied'],
                                     calib['hygro'])
-        c,o['Calibration_Correction'] = apply_calib(o['raw_slope_dist'],
+        c, o['Calibration_Correction'] = apply_calib(o['raw_slope_dist'],
                                     pillar_survey['edmi_calib_applied'],
                                     calib['edmi'][0])
-        o = (edm_mets_correction(o, 
-                                   pillar_survey['edm'],
-                                   pillar_survey['mets_applied']))
+        o = edm_mets_correction(o, 
+                                pillar_survey['edm'],
+                                pillar_survey['mets_applied'],
+                                pillar_survey['co2_content'])
         
         o['slope_dist'] = (float(o['raw_slope_dist'] )
                                      + o['Calibration_Correction']
@@ -335,7 +353,7 @@ def calibrate2(request,id):
                 frm =form.cleaned_data
                 raw_edm_obs[str(frm['id'].pk)]['use_for_distance']=frm['use_for_distance']
                 raw_edm_obs[str(frm['id'].pk)]['use_for_alignment']=frm['use_for_alignment']
-
+            
             Check_Errors = validate_survey(pillar_survey=pillar_survey,
                                         baseline=baseline,
                                         calibrations=calib,
@@ -346,17 +364,18 @@ def calibrate2(request,id):
                              {'Check_Errors':Check_Errors})
             
             #----------------- Query related data -----------------#
-            report_notes = report_notes_qry(company=request.user.company, report_type='B')
+            report_notes = report_notes_qry(
+                company=request.user.company, report_type='B')                
             uc_budget = uncertainty_qry(pillar_survey)
             uc_budget['sources'] = add_calib_uc(uc_budget['sources'], 
-                                                        calib,
-                                                        pillar_survey)
+                                                calib,
+                                                pillar_survey)
            
             alignment_survey = adjust_alignment_survey(raw_edm_obs,
                                                       baseline['pillars'])
             for k, p in alignment_survey.items():
                 p['reduced_level'] = float(raw_lvl_obs[k]['reduced_level'])
-                p['rl_uncertainty'] = float(raw_lvl_obs[k]['Std_Dev'])*2
+                p['rl_uncertainty'] = float(raw_lvl_obs[k]['std_dev'])*2
                 p['k_rl_uncertainty'] = 2
             edm_observations = reduce_sets_of_obs(raw_edm_obs)
             
@@ -369,10 +388,10 @@ def calibrate2(request,id):
             matrix_x = []
             matrix_P = []
             for i, o in enumerate(edm_observations.values()):
-                o = (offset_slope_correction(o,
+                o = offset_slope_correction(o,
                                           raw_lvl_obs,
                                           alignment_survey,
-                                          baseline['d_radius']))
+                                          baseline['d_radius'])
                   
                 o['Reduced_distance'] = (o['slope_dist'] 
                                         + o['Offset_Correction']
@@ -459,7 +478,6 @@ def calibrate2(request,id):
             avg_h = mean([float(o['Humid']) for o in edm_observations.values()])
             ini_data =[]
             i=True
-            some_lum_adopted = False
             for p, d in zip(pillars[1:], matrix_y[:-1]):
                 cd={}
                 ini_cd={}
@@ -527,7 +545,7 @@ def calibrate2(request,id):
                     ini_cd0['distance'] = 0
                     ini_cd0['offset'] = 0
                     ini_cd0['reduced_level'] = float(raw_lvl_obs[pillars[0]]['reduced_level'])
-                    ini_cd0['rl_uncertainty'] = float(raw_lvl_obs[pillars[0]]['Std_Dev'])
+                    ini_cd0['rl_uncertainty'] = float(raw_lvl_obs[pillars[0]]['std_dev'])
                     ini_data.insert(0,ini_cd0)
                     i=False
                     
@@ -638,7 +656,7 @@ def calibrate2(request,id):
             # this is a POST command asking to commit the hidden calibration 
             # data held on the report page
             ps_update = pillar_survey_update.cleaned_data
-            pillar_survey = Pillar_Survey.objects.get(id=id)    
+            pillar_survey = Pillar_Survey.objects.get(id=id)
             pillar_survey.zero_point_correction = ps_update['zero_point_correction']
             pillar_survey.zpc_uncertainty = ps_update['zpc_uncertainty']
             pillar_survey.degrees_of_freedom = ps_update['degrees_of_freedom']

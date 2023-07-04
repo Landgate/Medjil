@@ -44,6 +44,7 @@ class Migration(migrations.Migration):
                 ('weather', models.CharField(choices=[('Sunny/Clear', 'Sunny/Clear'), ('Partially cloudy', 'Partially cloudy'), ('Cloudy', 'Cloudy'), ('Overcast', 'Overcast'), ('Drizzle', 'Drizzle'), ('Raining', 'Raining'), ('Stormy', 'Stormy')], help_text='Weather conditions', max_length=25)),
                 ('job_number', models.CharField(help_text='Job reference eg., JN 20212216', max_length=25)),
                 ('mets_applied', models.BooleanField(default=True, help_text='Meterological corrections have been applied in the EDM instrument.', verbose_name='Atmospheric corrections applied')),
+                ('co2_content', models.FloatField(blank=True, default=420,help_text="Atmospheric CO2 content in ppm",null=True,verbose_name="Atmospheric CO2 content")),
                 ('edmi_calib_applied', models.BooleanField(default=False, help_text='The EDMI calibration correction has been applied prior to data import.', verbose_name='EDMI calibration corrections applied')),
                 ('staff_calib_applied', models.BooleanField(default=True, help_text='The staff calibration correction has been applied prior to data import.', verbose_name='staff calibration corrections applied')),
                 ('thermo_calib_applied', models.BooleanField(default=True, help_text='The thermometer calibration correction has been applied prior to data import.', verbose_name='thermometer calibration corrections applied')),

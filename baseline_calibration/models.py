@@ -246,6 +246,10 @@ class Pillar_Survey(models.Model):
     mets_applied = models.BooleanField(default=True,
                  verbose_name= 'Atmospheric corrections applied',
                  help_text="Meterological corrections have been applied in the EDM instrument.")
+    co2_content = models.FloatField(blank = True, null=True, default=420,
+                 verbose_name= 'CO2 content (ppm)',
+                 help_text="Atmospheric CO2 content in ppm")
+    
     edmi_calib_applied = models.BooleanField(default=False,
                  verbose_name= 'EDMI calibration corrections applied',
                  help_text="The EDMI calibration correction has been applied prior to data import.")

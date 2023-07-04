@@ -715,32 +715,38 @@ class Migration(migrations.Migration):
                 (
                     "frequency",
                     models.FloatField(
+                        blank=True,
                         help_text="Frequency (Hz)",
                         validators=[
                             django.core.validators.MinValueValidator(1),
                             django.core.validators.MaxValueValidator(100000000),
                         ],
+                        null=True,
                     ),
                 ),
                 (
                     "carrier_wavelength",
                     models.FloatField(
+                        blank=True,
                         help_text="Carrier Wavelength (nm)",
                         validators=[
                             django.core.validators.MinValueValidator(0),
                             django.core.validators.MaxValueValidator(1000),
                         ],
+                        null=True,
                     ),
                 ),
                 (
                     "manu_ref_refrac_index",
                     models.FloatField(
+                        blank=True,
                         help_text="Manufacturers reference refractive index",
                         validators=[
                             django.core.validators.MinValueValidator(0.0),
                             django.core.validators.MaxValueValidator(2.0),
                         ],
                         verbose_name="Manufacturers reference refractive index",
+                        null=True,
                     ),
                 ),
                 (
