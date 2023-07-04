@@ -33,7 +33,7 @@
                         <col span="1" width="10%">
                     </colgroup>
                     {% for field in form %}
-                        <tr>
+                        <tr title="{{ field.help_text }}">
                             {% if not 'units_' in field.name %}
                                 {% if field.field.is_checkbox %}
                                     <td>{{ field }}</td>
@@ -80,15 +80,17 @@
 
 
 <script>
+  document.addEventListener("DOMContentLoaded", function() {
     const units = [{typ:"temp", u:"°C"},
                    {typ:"temp", u:"°F"},
                    {typ:"pres", u:"hPa"},
                    {typ:"pres", u:"mBar"},
                    {typ:"pres", u:"mmHg"},
+                   {typ:"pres", u:"inHg"},
                    {typ:"humi", u:"%"}];
 
-    const  unit_slt = document.getElementById("id_unit_zpc")
-    const  uc_units_slt = document.getElementById("id_unit_zpc_uc")
+    const  unit_slt = document.getElementById("id_units_zpc")
+    const  uc_units_slt = document.getElementById("id_units_zpc_uc")
     
 {% if inst_type == 'thermo' or inst_type == 'psy' %}
     let uLen = units.length;
@@ -121,7 +123,7 @@
           }
     }
 {% endif %}
-
+  });
 </script>
 
                
