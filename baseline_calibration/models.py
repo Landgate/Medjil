@@ -240,6 +240,7 @@ class Pillar_Survey(models.Model):
                  )
 
     edm = models.ForeignKey(EDM_Inst, on_delete = models.PROTECT, null = False,
+                verbose_name= 'EDM',
                  help_text="EDM used for survey")
     prism = models.ForeignKey(Prism_Inst, on_delete = models.PROTECT, null = False,
                  help_text="Prism used for survey")

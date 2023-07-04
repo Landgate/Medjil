@@ -26,7 +26,7 @@
                             <td></td>                                        
                             <td>{{ field }}&emsp; &emsp; {{ field.label }} </td>
                         {% else %}
-                            <td>{{ field.label_tag }}</td>
+                            <td>{{ field.label }}</td>
                             <td> {{ field }}                      
                                 {% if field.name == "fieldnotes_upload" and qs.fieldnotes_upload.file != none %}
                                     <label id="fieldnotes_link" for="id_fieldnotes_upload"><a href= "{{ qs.fieldnotes_upload.url }}" target="_blank" rel="noopener noreferrer" style="color:blue; cursor: pointer; cursor: hand;"> {% if qs.fieldnotes_upload.name|length > 50 %} ...{% endif %}{{ qs.fieldnotes_upload.name|slice:"-50:" }}</a></label>
@@ -79,7 +79,7 @@
                 {% endfor %}
                 {% for field in survey_files %}
                     <tr class="tgl-{{ field.field.widget.attrs.class }}" style="display:none;" title={{ field.help_text }}>
-                        <td>{{ field.label_tag }}</td>
+                        <td>{{ field.label }}</td>
                         <td>
                             {{ field }}
                         </td>
