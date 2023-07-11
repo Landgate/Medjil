@@ -128,19 +128,19 @@ lg_edmi_certs = [
     'prism_number':100}
     ]
 lg_mets_specs = [
-    {'manu_unc_const':150,
+    {'manu_unc_const':0.3,
     'manu_unc_k':2,
     'measurement_increments':0.01,
     'type':'baro',
     'mets_model':'DPI740',
     'mets_owner':'Landgate'},
-    {'manu_unc_const':300,
+    {'manu_unc_const':0.6,
     'manu_unc_k':2,
     'measurement_increments':0.1,
     'type':'thermo',
     'mets_model':'HD 2301.0R - HP472ACR',
     'mets_owner':'Landgate'},
-    {'manu_unc_const':1500,
+    {'manu_unc_const':3,
     'manu_unc_k':2,
     'measurement_increments':0.1,
     'type':'hygro',

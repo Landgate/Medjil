@@ -44,7 +44,7 @@
                             <p class="helptext">{{ form.manu_unc_const.help_text }}</p>
                         {% endif %}
                     </td>
-                    <td width="15%">{{ form.unit_manu_unc_const }}</td>
+                    <td width="15%">{{ form.units_manu_unc_const }}</td>
                 </tr>
                 <tr>
                     <td width="35%">{{ form.manu_unc_k.label|title }}</td>
@@ -70,7 +70,7 @@
                             <p class="helptext">{{ form.measurement_increments.help_text }}</p>
                         {% endif %}
                     </td>
-                    <td width="15%">{{ form.unit_measurement_inc }}</td>
+                    <td width="15%">{{ form.units_measurement_inc }}</td>
                 </tr>
             </table>
 
@@ -89,11 +89,12 @@
                    {typ:"pres", u:"hPa"},
                    {typ:"pres", u:"mBar"},
                    {typ:"pres", u:"mmHg"},
+                   {typ:"pres", u:"inHg"},
                    {typ:"humi", u:"%"}];
 
     const  mets_model_slt = document.getElementById("id_mets_model")
-    const  uc_units_slt = document.getElementById("id_unit_manu_unc_const")
-    const  inc_unit_slt = document.getElementById("id_unit_measurement_inc")
+    const  uc_units_slt = document.getElementById("id_units_manu_unc_const")
+    const  inc_units_slt = document.getElementById("id_units_measurement_inc")
     ChgUnits();
     
     // On dropdown change, Change unit options
@@ -103,7 +104,7 @@
         
         while (uc_units_slt.options.length > 0) {
             uc_units_slt.remove(0);
-            inc_unit_slt.remove(0);
+            inc_units_slt.remove(0);
         }
         if (desc.includes("(thermo)")||desc.includes("(psy)")) {
             let uLen = units.length;
@@ -112,7 +113,7 @@
                   let newOption = new Option(units[i].u, units[i].u);
                   uc_units_slt.add(newOption, undefined);
                   let nextOption = new Option(units[i].u, units[i].u);
-                  inc_unit_slt.add(nextOption, undefined);
+                  inc_units_slt.add(nextOption, undefined);
                   }
             }
         }
@@ -123,7 +124,7 @@
                   let newOption = new Option(units[i].u, units[i].u);
                   uc_units_slt.add(newOption, undefined);
                   let nextOption = new Option(units[i].u, units[i].u);
-                  inc_unit_slt.add(nextOption, undefined);
+                  inc_units_slt.add(nextOption, undefined);
                   }
             }
         }
@@ -134,7 +135,7 @@
                   let newOption = new Option(units[i].u, units[i].u);
                   uc_units_slt.add(newOption, undefined);
                   let nextOption = new Option(units[i].u, units[i].u);
-                  inc_unit_slt.add(nextOption, undefined);
+                  inc_units_slt.add(nextOption, undefined);
                   }
             }
         }

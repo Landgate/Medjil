@@ -2,7 +2,7 @@
 ######################
 *.log
 *.sql
-*.sqlite
+*.sqlite3
 
 # Python Caches #
 #################

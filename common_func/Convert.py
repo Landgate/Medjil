@@ -38,20 +38,23 @@ def db_std_units(orig_val, orig_unit):
     if orig_unit == 'nm': new_val = round(orig_val / 1e9, 20)
     if orig_unit == 'µm': new_val = round(orig_val / 1e6, 20)
     if orig_unit == 'mm': new_val = round(orig_val / 1000, 20)
+    if orig_unit == 'mmHg': 
+        new_val = round(float(orig_val) * 1.33322387415, 13)
+    if orig_unit == 'inHg': 
+        new_val = round(float(orig_val) * 33.8639, 13)
     if orig_unit == 'MHz': 
         new_val = orig_val * 1e6
         new_unit = 'Hz'
     if orig_unit == '°F': 
         new_val = (orig_val -32) * (5/9)
         new_unit = '°C'
-    if orig_unit == 'mmHg': 
-        new_val = round(float(orig_val) * 1.33322387415, 13)
-        new_unit = 'hPa'
-    
+        
     if any([orig_unit == 'nm', orig_unit == 'mm', orig_unit == 'µm']): 
         new_unit = 'm'
     if any([orig_unit == 'ppm', orig_unit == '1:x', orig_unit == '%']):
         new_unit = 'x:1'
+    if any([orig_unit == 'inHg', orig_unit == 'mmHg']):
+        new_unit = 'hPa'
 
     return new_val, new_unit
 
@@ -65,15 +68,17 @@ def convert_headings(raw_headings):
         'slope_distance': 'raw_slope_dist',
         'temperature': 'raw_temperature',
         'pressure': 'raw_pressure',
-        'humidity': 'raw_humidity'
+        'humidity': 'raw_humidity',
+        'pillar_rl': 'reduced_level',
+        'pillar_name': 'pillar'
     }
-
-    for item in raw_headings:
-        if item.lower() in conversion_dict.keys():
+    
+    for raw_heading in raw_headings:
+        if raw_heading.lower() in conversion_dict.keys():
             converted_headings.append(
-                conversion_dict.get(item.lower().replace(' ', '_')))
+                conversion_dict[raw_heading.lower()].replace(' ', '_'))
         else:
-            converted_headings.append(item.lower().replace(' ', '_'))
+            converted_headings.append(raw_heading.lower().replace(' ', '_'))
     
     return converted_headings
 

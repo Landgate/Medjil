@@ -23,14 +23,14 @@
             {% endif %}
             <table>
                 <!-- EDM Owner -->
-                <tr>
-                    <td width="35%">{{ form.edm_owner.label|title }}</td>
+                <tr title="{{ form.edm_owner.help_text }}">
+                    <td width="35%">{{ form.edm_owner.label }}</td>
                     <td width="45%">{{ form.edm_owner }}</td>
                     <td width="15%"></td>
                 </tr>
                 <!-- EDM Model -->
-                <tr>
-                    <td width="35%">{{ form.edm_model.label|title }}</td>
+                <tr title="{{ form.edm_model.help_text }}">
+                    <td width="35%">{{ form.edm_model.label }}</td>
                     <td width="45%">{{ form.edm_model }}</td>
                     <td width="15%">
                         <a href="/instruments/inst_model_createby_inst_type/edm/" target="_blank" 
@@ -49,48 +49,36 @@
                     </td>
                 </tr>
                 <!-- Manufacturers Accuracy Statement -->
-                <tr>
+                <tr title="{{ form.manu_unc_const.help_text }}">
                     <td width="35%">{{ form.manu_unc_const.label|title }}</td>
                     <td width="45%">{{ form.manu_unc_const }}
                         {% for error in form.manu_unc_const.errors %}
                             <p class="error error-danger">{{ error }}</p>
                         {% endfor %}
-                        <!-- Help text -->
-                        {% if not form.manu_unc_const.widget.attrs.placeholder and form.manu_unc_const.help_text %}
-                            <p class="helptext">{{ form.manu_unc_const.help_text }}</p>
-                        {% endif %}
                     </td>
-                    <td width="15%">{{ form.unit_manu_unc_const }}</td>
+                    <td width="15%">{{ form.units_manu_unc_const }}</td>
                 </tr>
-                <tr>
+                <tr title="{{ form.manu_unc_ppm.help_text }}">
                     <td width="35%">{{ form.manu_unc_ppm.label|title }}</td>
                     <td width="45%">{{ form.manu_unc_ppm }}
                         {% for error in form.manu_unc_ppm.errors %}
                             <p class="error error-danger">{{ error }}</p>
                         {% endfor %}
-                        <!-- Help text -->
-                        {% if not form.manu_unc_ppm.widget.attrs.placeholder and form.manu_unc_ppm.help_text %}
-                            <p class="helptext">{{ form.manu_unc_ppm.help_text }}</p>
-                        {% endif %}
                     </td>
-                    <td width="15%">{{ form.unit_manu_unc_ppm }}</td>
+                    <td width="15%">{{ form.units_manu_unc_ppm }}</td>
                 </tr>
-                <tr>
+                <tr title="{{ form.manu_unc_k.help_text }}">
                     <td width="35%">{{ form.manu_unc_k.label|title }}</td>
                     <td width="45%">{{ form.manu_unc_k }}
                         {% for error in form.manu_unc_k.errors %}
                             <p class="error error-danger">{{ error }}</p>
                         {% endfor %}
-                        <!-- Help text -->
-                        {% if not form.manu_unc_k.widget.attrs.placeholder and form.manu_unc_k.help_text %}
-                            <p class="helptext">{{ form.manu_unc_k.help_text }}</p>
-                        {% endif %}
                     </td>
                     <td width="15%"></td>
                 </tr>
                 <!-- Unit Length -->
-                <tr>
-                    <td width="35%">{{ form.edm_type.label|title }}</td>
+                <tr title="{{ form.edm_type.help_text }}">
+                    <td width="35%">{{ form.edm_type.label }}</td>
                     <td width="45%">{{ form.edm_type }}
                         {% for error in form.edm_type.errors %}
                             <p class="error error-danger">{{ error }}</p>
@@ -99,36 +87,36 @@
                     <td width="15%"></td>
                 </tr>
                 <!-- Unit Length -->
-                <tr>
+                <tr title="{{ form.unit_length.help_text }}">
                     <td width="35%">{{ form.unit_length.label|title }}</td>
                     <td width="45%">{{ form.unit_length }}
                         {% for error in form.unit_length.errors %}
                             <p class="error error-danger">{{ error }}</p>
                         {% endfor %}
                     </td>
-                    <td width="15%">{{ form.unit_unit_length }}</td>
+                    <td width="15%">{{ form.units_unit_length }}</td>
                 </tr>
                 <!-- Frequency -->
-                <tr>
+                <tr title="{{ form.frequency.help_text }}">
                     <td width="35%">{{ form.frequency.label|title }}</td>
                     <td width="45%">{{ form.frequency }}
                         {% for error in form.frequency.errors %}
                             <p class="error error-danger">{{ error }}</p>
                         {% endfor %}
                     </td>
-                    <td width="15%">{{ form.unit_freq }}</td>
+                    <td width="15%">{{ form.units_frequency }}</td>
                 </tr>
                 <!-- Wavelength -->
-                <tr>
+                <tr title="{{ form.carrier_wavelength.help_text }}">
                     <td width="35%">{{ form.carrier_wavelength.label|title }}</td>
                     <td width="45%">{{ form.carrier_wavelength }}
                         {% for error in form.carrier_wavelength.errors %}
                             <p class="error error-danger">{{ error }}</p>
                         {% endfor %}
                     </td>
-                    <td width="15%">{{ form.unit_carrier_wave }}</td>
+                    <td width="15%">{{ form.units_carrier_wave }}</td>
                 </tr>
-                <tr>
+                <tr title="{{ form.manu_ref_refrac_index.help_text }}">
                     <td width="35%">{{ form.manu_ref_refrac_index.label|title }}</td>
                     <td width="45%">{{ form.manu_ref_refrac_index }}
                         {% for error in form.manu_ref_refrac_index.errors %}
@@ -137,7 +125,7 @@
                     </td>
                     <td width="15%"></td>
                 </tr>
-                <tr>
+                <tr title="{{ form.c_term.help_text }}">
                     <td width="35%">{{ form.c_term.label|title }}</td>
                     <td width="45%">{{ form.c_term }}
                         {% for error in form.c_term.errors %}
@@ -146,7 +134,7 @@
                     </td>
                     <td width="15%"></td>
                 </tr>
-                <tr>
+                <tr title="{{ form.d_term.help_text }}">
                     <td width="35%">{{ form.d_term.label|title }}</td>
                     <td width="45%">{{ form.d_term }}
                         {% for error in form.d_term.errors %}
@@ -155,14 +143,14 @@
                     </td>
                     <td width="15%"></td>
                 </tr>
-                <tr>
+                <tr title="{{ form.measurement_increments.help_text }}">
                     <td width="35%">{{ form.measurement_increments.label|title }}</td>
                     <td width="45%">{{ form.measurement_increments }}
                         {% for error in form.measurement_increments.errors %}
                             <p class="error error-danger">{{ error }}</p>
                         {% endfor %}
                     </td>
-                    <td width="15%">{{ form.unit_measurement_inc }}</td>
+                    <td width="15%">{{ form.units_measurement_inc }}</td>
                 </tr>
             </table>
 
