@@ -68,15 +68,17 @@ def convert_headings(raw_headings):
         'slope_distance': 'raw_slope_dist',
         'temperature': 'raw_temperature',
         'pressure': 'raw_pressure',
-        'humidity': 'raw_humidity'
+        'humidity': 'raw_humidity',
+        'pillar_rl': 'reduced_level',
+        'pillar_name': 'pillar'
     }
-
-    for item in raw_headings:
-        if item.lower() in conversion_dict.keys():
+    
+    for raw_heading in raw_headings:
+        if raw_heading.lower() in conversion_dict.keys():
             converted_headings.append(
-                conversion_dict.get(item.lower().replace(' ', '_')))
+                conversion_dict[raw_heading.lower()].replace(' ', '_'))
         else:
-            converted_headings.append(item.lower().replace(' ', '_'))
+            converted_headings.append(raw_heading.lower().replace(' ', '_'))
     
     return converted_headings
 

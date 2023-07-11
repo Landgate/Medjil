@@ -669,9 +669,36 @@ def validate_survey(pillar_survey, baseline=None, calibrations=None,
                 Wrns.append('There is no calibration records for ' + str(pillar_survey['barometer']))
             if calibrations['hygro'] is None: 
                 Wrns.append('There is no calibration records for ' + str(pillar_survey['hygrometer']))
+                
+    if raw_edm_obs:
+        # check all the upload file headings are correct
+        required_clms = ['from_pillar','to_pillar','inst_ht', 'tgt_ht', 
+                         'hz_direction', 'raw_slope_dist',
+                         'raw_temperature', 'raw_pressure', 'raw_humidity']
+        file_clms = list(raw_edm_obs.values())[0] 
+        if all(key in file_clms for key in required_clms):
+            edm_file_checked = True
+        else:
+            Errs.append('The column headings in the "Reduced Levels file csv"'
+                        + ' are either incorrect or missing. This file must'
+                        + ' contain the headings From_pillar, to_pillar,'
+                        + ' Height_of_instrument, Height_of_target, Horizontal_direction(dd),'
+                        + ' slope_distance, temperature, pressure, humidity')
     
+    if raw_lvl_obs:
+        # check all the upload file headings are correct
+        required_clms = ['pillar', 'reduced_level', 'std_dev']
+        file_clms = list(raw_lvl_obs.values())[0] 
+        if all(key in file_clms for key in required_clms):
+            lvl_file_checked = True
+        else:
+            Errs.append('The column headings in the "Reduced Levels file csv"'
+                        + ' are either incorrect or missing. This file must'
+                        + ' contain the headings "pillar", "reduced_level" and'
+                        + ' "std_dev"')
+        
     # EDM upload File
-    if raw_edm_obs and baseline:
+    if raw_edm_obs and baseline and edm_file_checked:
         pillars = [p.name for p in baseline['pillars']]
         pop_list=[]
         for k, o in raw_edm_obs.items():
@@ -754,8 +781,8 @@ def validate_survey(pillar_survey, baseline=None, calibrations=None,
                             +' Pillar '+ str(pillars[0]) +' to '+ 'Pillar ' 
                             + str(pillars[-1]) +'.')
     # level upload File
-    if raw_lvl_obs:
-        lvl_nmes = []
+    if raw_lvl_obs and lvl_file_checked:
+        lvl_nmes =[]
         for k, o in raw_lvl_obs.items():
             if not is_float(o['reduced_level']):
                  Errs.append('Reduced Level reading "' +o['reduced_level'] + '"is invalid')
