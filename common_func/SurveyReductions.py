@@ -620,6 +620,10 @@ def validate_survey(pillar_survey, baseline=None, calibrations=None,
                     raw_edm_obs=None, raw_lvl_obs=None):
     Errs=[]
     Wrns=[]
+    lvl_file_checked = False
+    edm_file_checked = False
+    if raw_lvl_obs: calibration_type = 'B'
+    else: calibration_type = 'I'
     #Baseline Calibration errors
     if not baseline:
         if pillar_survey['auto_base_calibration']:
@@ -642,7 +646,7 @@ def validate_survey(pillar_survey, baseline=None, calibrations=None,
     
     # Instrumentation Errors
     if calibrations:
-        if raw_lvl_obs:
+        if calibration_type =='B':
             if (len(calibrations['edmi']) == 0 
                 or calibrations['them'] is None 
                 or calibrations['baro'] is None 
@@ -736,7 +740,7 @@ def validate_survey(pillar_survey, baseline=None, calibrations=None,
         for pop_it in pop_list:
             raw_edm_obs.pop(pop_it, None)
     
-        if raw_lvl_obs:
+        if calibration_type =='B':
             # Each pillar must be observed from at least 2 other pillars
             bays=[]
             pillar_cnt = dict(zip(pillars,[0]*len(pillars)))
