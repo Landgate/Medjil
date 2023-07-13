@@ -292,7 +292,7 @@
             <h2>Statistical Tests</h2>
             <table style="margin-left:auto;margin-right:auto;font-size:10.0pt;width:800px;">
                 <tr>
-                    <th class="text-center">Test</th>
+                    <th class="text-center" style="width: 10%;">Test</th>
                     <th class="text-center">Null Hypothesis</th>
                     <th class="text-center">Confidence Level</th>
                     <th class="text-center">Accept</th>
@@ -300,7 +300,7 @@
                 {% for t in ISO_test %}
                     <tr>
                         <td>{{ t.test }}</td>
-                        <td>{{ t.hypothesis }}</td>
+                        <td class="text-left">{{ t.hypothesis|linebreaks }}</td>
                         <td>95%</td>
                         <td>{{ t.accept }}</td>
                     </tr>

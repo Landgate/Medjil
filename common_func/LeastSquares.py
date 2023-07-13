@@ -99,7 +99,10 @@ def ISO_test_c(zpc, zpc_std_dev, chi_test):
     test_value = t.ppf(0.975, chi_test['dof']) * std_uc
     test_c = {
         'test': 'C',
-        'hypothesis': 'The zero-point correction, δ, is equal to zero',
+        'hypothesis': (
+            'The zero-point correction, δ, is equal to zero \n'
+            + f'zero-point correction: {round(zpc,5)}m \n'
+            + f'zero-point correction standard deviation: {round(zpc_std_dev,5)}m'),
         'accept': zpc <= test_value
     }
     return test_c
