@@ -46,31 +46,43 @@ def adjust_alignment_survey(raw_edm_obs, pillars):
                         mask_by='use_for_alignment')
     at_pillar_os=[]
     for p in setups.values():
-        #find Est, Nth of From, To pillars
-        Coords = group_list(p['grp_from_pillar'],
-                        group_by='to_pillar',
-                        avg_list=['Est',
-                                  'Nth'],
-                        mask_by='use_for_alignment')
-        Coords[p['from_pillar']] = {'Est':0, 'Nth':0}
-    
-        # find the arbitary azimuth from first to last pillar
-        d0, rot0 = joins(Coords[first_pillar_nme]['Est'],Coords[first_pillar_nme]['Nth'],
-                     Coords[last_pillar_nme]['Est'],Coords[last_pillar_nme]['Nth'])
-        # find the arbitary azimuth from first to each pillar
-        # join the difference between the 2 Azimuths to calc Offset
-        d1, rot1 = joins(Coords[first_pillar_nme]['Est'],Coords[first_pillar_nme]['Nth'],
-            0,0)
-        at_pillar_os.append({'Bay':p['from_pillar'] + ' - ' + p['from_pillar'],
-                              'from_pillar': p['from_pillar'],
-                              'to_pillar': p['from_pillar'],
-                              'observed_offset':sin(radians(rot1-rot0))*d1,
-                              'use_for_alignment': True})
-        for tgt in p['grp_from_pillar']:
-            d2, rot2 = joins(Coords[first_pillar_nme]['Est'],Coords[first_pillar_nme]['Nth'],
-                tgt['Est'],tgt['Nth'])
-            tgt['observed_offset']= sin(radians(rot2-rot0))*d2    
-    
+        pillars_in_setup = set([s['to_pillar']  for s in p['grp_from_pillar']])
+        pillars_in_setup.add(p['from_pillar'])
+        if (first_pillar_nme not in pillars_in_setup 
+            or last_pillar_nme not in pillars_in_setup):
+            for single_obs in p['grp_from_pillar']:
+                single_obs['use_for_alignment'] = False
+        else:
+            #find Est, Nth of From, To pillars
+            Coords = group_list(p['grp_from_pillar'],
+                                group_by='to_pillar',
+                                avg_list=['Est',
+                                          'Nth'],
+                                mask_by='use_for_alignment')
+            Coords[p['from_pillar']] = {'Est':0, 'Nth':0}
+        
+            # find the arbitary azimuth from first to last pillar
+            d0, rot0 = joins(
+                Coords[first_pillar_nme]['Est'],Coords[first_pillar_nme]['Nth'],
+                Coords[last_pillar_nme]['Est'],Coords[last_pillar_nme]['Nth'])
+            # find the arbitary azimuth from first to each pillar
+            # join the difference between the 2 Azimuths to calc Offset
+            d1, rot1 = joins(
+                Coords[first_pillar_nme]['Est'],Coords[first_pillar_nme]['Nth'],
+                0,0)
+            at_pillar_os.append(
+                {'Bay':p['from_pillar'] + ' - ' + p['from_pillar'],
+                 'from_pillar': p['from_pillar'],
+                 'to_pillar': p['from_pillar'],
+                 'observed_offset':sin(radians(rot1-rot0))*d1,
+                 'use_for_alignment': True})
+
+            for tgt in p['grp_from_pillar']:
+                d2, rot2 = joins(
+                    Coords[first_pillar_nme]['Est'],Coords[first_pillar_nme]['Nth'],
+                    tgt['Est'],tgt['Nth'])
+                tgt['observed_offset'] = sin(radians(rot2-rot0))*d2
+
     targets = group_list(list(raw_edm_obs.values()) + at_pillar_os,
                          group_by='to_pillar',
                          avg_list=['observed_offset'],
@@ -624,8 +636,9 @@ def validate_survey(pillar_survey, baseline=None, calibrations=None,
     edm_file_checked = False
     if raw_lvl_obs: calibration_type = 'B'
     else: calibration_type = 'I'
-    #Baseline Calibration errors
-    if not baseline:
+    
+    #Baseline Calibration errors in instrument calibration
+    if calibration_type == 'I':
         if pillar_survey['auto_base_calibration']:
             site_pk = pillar_survey['site'].pk
             site = str(pillar_survey['site'])
@@ -644,7 +657,7 @@ def validate_survey(pillar_survey, baseline=None, calibrations=None,
                 + ' baseline for the ' + pillar_survey['survey_date'].strftime("%d %b, %Y")
                 + ' when your EDMI calibration survey was observed.')
     
-    # Instrumentation Errors
+    # Instrumentation Selection Errors
     if calibrations:
         if calibration_type =='B':
             if (len(calibrations['edmi']) == 0 
@@ -741,6 +754,7 @@ def validate_survey(pillar_survey, baseline=None, calibrations=None,
             raw_edm_obs.pop(pop_it, None)
     
         if calibration_type =='B':
+            #'use_for_distance' checks
             # Each pillar must be observed from at least 2 other pillars
             bays=[]
             pillar_cnt = dict(zip(pillars,[0]*len(pillars)))
@@ -758,27 +772,39 @@ def validate_survey(pillar_survey, baseline=None, calibrations=None,
                     Errs.append('Pillar "' + str(p) + '" has been observed from ' 
                                 + str(cnt) + ' other pillars.')
             
-                bays=[]
-                first2last=False
-                pillar_cnt = dict(zip(pillars,[0]*len(pillars)))
-                for o in raw_edm_obs.values():
-                    if o['use_for_alignment']:
-                        bay=[min([pillars.index(o['from_pillar']), pillars.index(o['to_pillar'])]),
-                             max([pillars.index(o['from_pillar']), pillars.index(o['to_pillar'])])]
-                        if [o['from_pillar'], o['to_pillar']]==[pillars[0], pillars[-1]]:
-                            first2last=True
-                        if not bay in bays: 
-                            bays.append(bay)
-                            pillar_cnt[o['from_pillar']]+=1
-                            pillar_cnt[o['to_pillar']]+=1
-                
-                for p, cnt in pillar_cnt.items():
-                    if cnt < 2:
-                        Errs.append('Pillar "' + str(p) + '" has only been observed from ' 
-                                    + str(cnt) + ' other pillars for determining the offset.')
+            #'use_for_alignment' checks
+            # setups used for alignment survey must have first and last pillar
+            setups = group_list(raw_edm_obs.values(),
+                                group_by='from_pillar',
+                                mask_by='use_for_alignment')
+            for p in setups.values():
+                pillars_in_setup = set([s['to_pillar']  for s in p['grp_from_pillar']])
+                pillars_in_setup.add(p['from_pillar'])
+                # Look for first to last pillar observation
+                if (pillars[0] not in pillars_in_setup 
+                    or pillars[-1] not in pillars_in_setup):
+                    for single_obs in p['grp_from_pillar']:
+                        single_obs['use_for_alignment'] = False
+            
+            # Each pillar must be observed from at least 2 other pillars
+            bays=[]
+            pillar_cnt = dict(zip(pillars,[0]*len(pillars)))
+            for o in raw_edm_obs.values():
+                if o['use_for_alignment']:
+                    bay=[min([pillars.index(o['from_pillar']), pillars.index(o['to_pillar'])]),
+                         max([pillars.index(o['from_pillar']), pillars.index(o['to_pillar'])])]
+                    if not bay in bays: 
+                        bays.append(bay)
+                        pillar_cnt[o['from_pillar']]+=1
+                        pillar_cnt[o['to_pillar']]+=1
+            
+            for p, cnt in pillar_cnt.items():
+                if cnt < 2:
+                    Errs.append('Pillar "' + str(p) + '" has only been observed from ' 
+                                + str(cnt) + ' other pillars for determining the offset.')
                         
             #Each baseline calibration pillar survey must have from first to last pillar
-            if not first2last:
+            if not [0, len(pillars) - 1] in bays:
                 Errs.append('The pillar survey used for the calibration of the baseline'
                             +' must include an observation from the first to the last'
                             +' pillar. The current pillar survey is missing observation'

@@ -142,42 +142,41 @@ def format_name(nme):
 
 
 def group_list(raw_list, group_by, labels_list=[], avg_list=[], sum_list=[], std_list=[], mask_by=''):
-    grouped={}
-    group_ky='grp_'+group_by
+    grouped = {}
+    group_ky = 'grp_' + group_by
+
     for v in raw_list:
-        if not v[group_by] in grouped.keys(): 
-            grouped[v[group_by]]={group_ky:[],group_by:v[group_by]}
-            if len(labels_list)!=0:
-                for ky in labels_list:
-                    grouped[v[group_by]][ky] = v[ky]
-        
-        if len(mask_by)==0:
+        if not v[group_by] in grouped.keys():
+            grouped[v[group_by]] = {group_ky: [], group_by: v[group_by]}
+            for ky in labels_list:
+                grouped[v[group_by]][ky] = v.get(ky)
+
+        if len(mask_by) == 0 or v.get(mask_by):
             grouped[v[group_by]][group_ky].append(v)
-        else:
-            if v[mask_by]:
-                grouped[v[group_by]][group_ky].append(v)
-    
-    pop_list=[]
-    if len(avg_list)!=0 or len(std_list)!=0 or len(sum_list)!=0:
+
+    pop_list = []
+    if len(avg_list) != 0 or len(std_list) != 0 or len(sum_list) != 0:
         for i, group in grouped.items():
-            if len(group[group_ky])==0:
+            if len(group[group_ky]) == 0:
                 pop_list.append(i)
             else:
-                if len(avg_list)!=0:
-                    for ky in avg_list:
-                        group[ky] = mean([float(v[ky]) for v in group[group_ky]])
-                
-                if len(std_list)!=0:
-                    for ky in std_list:
-                        group['std_'+ky] = pstdev([float(v[ky]) for v in group[group_ky]])
-                
-                if len(sum_list)!=0:
-                    for ky in sum_list:
-                        group['sum_'+ky] = sum([float(v[ky]) for v in group[group_ky]])
+                for ky in avg_list:
+                    values = [float(v.get(ky, 0)) for v in group[group_ky]]
+                    group[ky] = mean(values)
+
+                for ky in std_list:
+                    values = [float(v.get(ky, 0)) for v in group[group_ky]]
+                    group['std_' + ky] = pstdev(values)
+
+                for ky in sum_list:
+                    values = [float(v.get(ky, 0)) for v in group[group_ky]]
+                    group['sum_' + ky] = sum(values)
+
     for i in pop_list:
         grouped.pop(i)
-    
+
     return grouped
+
 
 def Instruments_qry(cache_data):
     instruments={}
