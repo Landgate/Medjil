@@ -62,18 +62,18 @@
             </div>
         </div>
     </header>
-    <nav class="page-nav">
+    <nav class="page-nav;no-print">
         <ul class="nav-header">
             <li class="nav-header-item"><a href="#"><i class="fas fa-home"></i></a></li>
             <li class="nav-header-item toggle"><a href="#"><i class="fas fa-bars"></i></a></li>
         </ul>
         <div class="wrapper">        	
             <ul class="nav-links">
-            		<li>
-            				<ul>
-            						<button class="btn_home"><a href="{% url 'home' %}"><i class="fa fa-home"></i></a></button>
-            				</ul>
-            		</li>
+                <li>
+                    <ul>
+                        <button class="btn_home"><a href="{% url 'home' %}"><i class="fa fa-home"></i></a></button>
+                    </ul>
+                </li>
                 <li class="nav-item has-subnav"><a tabindex="0">Dashboard</a>
                      <ul class="sub-links">
                         <li class="sub-items">
@@ -189,6 +189,11 @@
                         </li>                    
                     </ul>
                 </li>
+                <li>
+                    <ul>
+                        <button id="printButton" class="btn_home"><a href="{% url 'home' %}"><i class="fas fa-print"></i></a></button>
+                    </ul>
+                </li>
             </ul>
         </div>
     </nav>
@@ -290,7 +295,34 @@
             }   
         })
     </script>
-
+    <script>
+        function changeToPrintFormat() {
+          // Create a new stylesheet for print styles
+          var printStyles = document.createElement('style');
+          printStyles.setAttribute('media', 'print');
+          document.head.appendChild(printStyles);
+        
+          // Add CSS rules for print styles
+          printStyles.sheet.insertRule('body { font-size: 12pt; }', 0);
+          printStyles.sheet.insertRule('.no-print { display: none; }', 0);
+        
+          // Hide elements that should not be printed
+          var elementsToHide = document.querySelectorAll('.no-print');
+          for (var i = 0; i < elementsToHide.length; i++) {
+            elementsToHide[i].style.display = 'none';
+          }
+        
+          // Trigger the print dialog
+          window.print();
+        
+          // Remove the print styles after printing
+          document.head.removeChild(printStyles);
+        }
+        
+        // Call the function when a button or link is clicked, for example
+        var printButton = document.getElementById('printButton');
+        printButton.addEventListener('click', changeToPrintFormat);
+    </script>
 
 </body>
 </html>
