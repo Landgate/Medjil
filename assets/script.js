@@ -50,3 +50,30 @@ var wrapper = document.querySelector('.wrapper');
 
 // Replace the whole wrapper with its own contents
 // wrapper.outerHTML = wrapper.innerHTML;
+
+function changeToPrintFormat() {
+  // Create a new stylesheet for print styles
+  var printStyles = document.createElement('style');
+  printStyles.setAttribute('media', 'print');
+  document.head.appendChild(printStyles);
+
+  // Add CSS rules for print styles
+  printStyles.sheet.insertRule('body { font-size: 12pt; }', 0);
+  printStyles.sheet.insertRule('.no-print { display: none; }', 0);
+
+  // Hide elements that should not be printed
+  var elementsToHide = document.querySelectorAll('.no-print');
+  for (var i = 0; i < elementsToHide.length; i++) {
+    elementsToHide[i].style.display = 'none';
+  }
+
+  // Trigger the print dialog
+  window.print();
+
+  // Remove the print styles after printing
+  document.head.removeChild(printStyles);
+}
+
+// Call the function when a button or link is clicked, for example
+var printButton = document.getElementById('printButton');
+printButton.addEventListener('click', changeToPrintFormat);

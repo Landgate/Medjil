@@ -458,6 +458,9 @@ textarea {
     display: block;
 }
 
+.sub-links .sub-items {
+  list-style-type: none;
+}
 .has-subnav > a::after {
     font-size: 1.5rem;
     line-height: 1.2;
