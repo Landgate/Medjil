@@ -785,7 +785,12 @@ def uc_budget_create(request):
 
 @login_required(login_url="/accounts/login") 
 def uc_budget_delete(request, id):
-    delete_budget = Uncertainty_Budget.objects.get(id=id)
+    if request.user.is_staff:
+        delete_budget = Uncertainty_Budget.objects.get(id=id)
+    else:
+        delete_budget = Uncertainty_Budget.objects.get(
+            id=id,
+            accredited_company = request.user.company)
     delete_budget.delete()
     
     return redirect('baseline_calibration:uc_budgets')
@@ -793,8 +798,11 @@ def uc_budget_delete(request, id):
 
 @login_required(login_url="/accounts/login") 
 def accreditations(request):
-    accreditation_list = Accreditation.objects.filter(
-                        accredited_company = request.user.company)
+    if request.user.is_staff:
+        accreditation_list = Accreditation.objects.all()
+    else:
+        accreditation_list = Accreditation.objects.filter(
+            accredited_company = request.user.company)
     
     context = {
         'accreditation_list': accreditation_list}
@@ -838,7 +846,12 @@ def accreditation_edit(request, id=None):
 
 @login_required(login_url="/accounts/login") 
 def accreditation_delete(request, id):
-    accreditation = Accreditation.objects.get(id=id)
+    if request.user.is_staff:
+        accreditation = Accreditation.objects.get(id=id)
+    else:
+        accreditation = Accreditation.objects.get(
+            id=id,
+            accredited_company = request.user.company)
     accreditation.delete()
     
     return redirect('baseline_calibration:accreditations')
