@@ -195,8 +195,8 @@ def register_edit(request, inst_disp, tab, id):
             if 'units_frequency' in frm.keys(): 
                 instance.frequency = db_std_units(frm['frequency'],frm['units_frequency'])[0]
             if 'units_unit_length' in frm.keys():
-                instance.units_length = db_std_units(
-                    frm['units_length'],frm['units_unit_length'])[0]
+                instance.unit_length = db_std_units(
+                    frm['unit_length'],frm['units_unit_length'])[0]
             if 'units_carrier_wavelength' in frm.keys():
                 instance.carrier_wavelength = db_std_units(
                     frm['carrier_wavelength'], frm['units_carrier_wavelength'])[0] * 1e9
