@@ -690,8 +690,9 @@ def validate_survey(pillar_survey, baseline=None, calibrations=None,
     if raw_edm_obs:
         # check all the upload file headings are correct
         required_clms = ['from_pillar','to_pillar','inst_ht', 'tgt_ht', 
-                         'hz_direction', 'raw_slope_dist',
+                         'raw_slope_dist',
                          'raw_temperature', 'raw_pressure', 'raw_humidity']
+        if calibration_type =='B': required_clms.append('hz_direction')
         file_clms = list(raw_edm_obs.values())[0] 
         if all(key in file_clms for key in required_clms):
             edm_file_checked = True
@@ -701,6 +702,8 @@ def validate_survey(pillar_survey, baseline=None, calibrations=None,
                         + ' contain the headings From_pillar, to_pillar,'
                         + ' Height_of_instrument, Height_of_target, Horizontal_direction(dd),'
                         + ' slope_distance, temperature, pressure, humidity')
+            if calibration_type =='I': 
+                Errs[-1].replace(' Horizontal_direction(dd),','')
     
     if raw_lvl_obs:
         # check all the upload file headings are correct

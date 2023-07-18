@@ -18,7 +18,7 @@
             </div>
             {% if form.non_field_errors %}
                 <div class="mt-5 mb-3">
-                    <b>{{ form.non_field_errors }}</b><br>
+                    <b>Non field error {{ form.non_field_errors }}</b><br>
                 </div>
             {% endif %}
             <table>
@@ -114,7 +114,7 @@
                             <p class="error error-danger">{{ error }}</p>
                         {% endfor %}
                     </td>
-                    <td width="15%">{{ form.units_carrier_wave }}</td>
+                    <td width="15%">{{ form.units_carrier_wavelength }}</td>
                 </tr>
                 <tr title="{{ form.manu_ref_refrac_index.help_text }}">
                     <td width="35%">{{ form.manu_ref_refrac_index.label|title }}</td>

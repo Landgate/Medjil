@@ -54,7 +54,8 @@ class uPillar_Survey(models.Model):
              )
 
    edm = models.ForeignKey(EDM_Inst, on_delete = models.PROTECT, null = False,
-             help_text="EDM used for survey")
+             help_text="EDM used for survey",
+             verbose_name= 'EDM')
    prism = models.ForeignKey(Prism_Inst, on_delete = models.PROTECT, null = False,
              help_text="Prism used for survey")
    mets_applied = models.BooleanField(default=True,

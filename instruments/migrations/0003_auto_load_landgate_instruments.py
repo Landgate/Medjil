@@ -227,10 +227,10 @@ def add_landgate_instruments(apps, schema_editor):
                 level_number = row[0].strip()
                 level_owner = 'Landgate'
                 level_obj, created = DigitalLevel.objects.get_or_create(
-                        level_model = InstrumentModel.objects.get(model__exact=level_model), 
-                        level_owner = Company.objects.get(company_name__exact=level_owner),
-                        level_number = level_number,
-                        )
+                    level_model = InstrumentModel.objects.get(model__exact=level_model), 
+                    level_owner = Company.objects.get(company_name__exact=level_owner),
+                    level_number = level_number,
+                    )
     # Add bar-coded staves
     with open(os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate Instruments/Staves/staves.csv'), 'r') as f:
         reader = csv.reader(f)
