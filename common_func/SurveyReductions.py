@@ -223,9 +223,9 @@ def edm_std_function(edm_observations, stddev_0_adj):
     #y = Ax + B
     A = model.coef_[0]
     B = model.intercept_
-    if B < 0 :
-        B=0
-        A=np.average(std_dev)
+    # if B < 0 :
+    #     B=0
+    #     A=np.average(std_dev)
     
     return {'A':A, 'B':B}
 
