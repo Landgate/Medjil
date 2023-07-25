@@ -360,21 +360,32 @@ def calibrate2(request,id):
                         (o['uc_combined']['std_dev']*float(pillar_survey['scalar']))**2)
                 matrix_P.append(P_row)
             
-            if pillar_survey['test_cyclic']:
-                #----------------- 6 Parameter least squares adjustment -----------------#
-                matrix_y, vcv_matrix, chi_test, residuals = LSA(matrix_A, matrix_x, matrix_P)
-                            
-                # Check t-student test results to determine if cyclic errors are significant
-                if False not in [t['t_test'] for t in matrix_y[2:]]:
-                    report_notes.append('The t-student test has been used to test and determine that cyclic errors are statistically insignificant in this calibration data.')
-                    matrix_A=[[a[0], a[1]] for a in matrix_A]
-                    matrix_y, vcv_matrix, chi_test, residuals = LSA(matrix_A, matrix_x, matrix_P)
-                else:
-                    report_notes.append('The t-student test has been used to test and determine that cyclic errors are statistically significant in this calibration data.')
-            else:
+            if not pillar_survey['test_cyclic']:
+                matrix_A = [a[:2] for a in matrix_A]
                 report_notes.append('User input for this calibration requested that no test for cyclic errors be performed.')
-                matrix_A=[[a[0], a[1]] for a in matrix_A]
-                matrix_y, vcv_matrix, chi_test, residuals = LSA(matrix_A, matrix_x, matrix_P)
+            
+            # run LSA with 6, 4 then 2 parameters
+            # Check t-student test results after each LSA to determine if the end 2 cyclic errors are significant
+            order_cmt = 'second'
+            testing_terms = [True, True]
+            while False not in testing_terms and not matrix_A[0] == []:
+                matrix_y, vcv_matrix, chi_test, residuals = LSA(matrix_A, 
+                                                                matrix_x,
+                                                                matrix_P)
+                testing_terms = [t['t_test'] for t in matrix_y[-2:]]
+                if False in testing_terms:
+                    report_notes.append(
+                        f'The t-student test has been used to test and determine that the {order_cmt} ' \
+                        f'order cyclic errors are statistically significant in this calibration data.')
+                else:
+                    report_notes.append(
+                        f'The t-student test has been used to test the significance of the {order_cmt} order cyclic errors.' \
+                        f' This has determined that these cyclic errors are statistically insignificant in this calibration data.' \
+                        f'{matrix_y[0]["report_table"]}')
+                    
+                    # remove 2 parameters and run again
+                    matrix_A = [a[:-2] for a in matrix_A]
+                    order_cmt = 'first'
 
             #create update for pillar survey processing
             ini_data = {'variance': chi_test['Variance'],

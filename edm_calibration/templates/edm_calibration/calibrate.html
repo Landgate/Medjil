@@ -84,7 +84,7 @@
                 {% endfor %}
                 {% for field in survey_files %}
                     <tr class="tgl-{{ field.field.widget.attrs.class }}" style="display:none;">
-                        <td>{{ field.label_tag|title }}</td>
+                        <td>{{ field.label_tag }}</td>
                         <td>
                             {{ field }}
                         </td>

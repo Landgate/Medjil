@@ -2,7 +2,9 @@ import numpy as np
 from math import sqrt
 from scipy.stats.distributions import chi2
 from scipy.stats import t, f
-from common_func.Convert import list2dict
+from common_func.Convert import (
+    list2dict,
+    dict_2_html_table)
 
 
 def LSA(A, x, P):
@@ -40,16 +42,30 @@ def LSA(A, x, P):
         chi_test['test'] = 'Fails'
 
     matrix_y = []
+    report_table = [{'Term':'zpc'}, 
+                    {'Term':'scf'}, 
+                    {'Term':'1C'}, 
+                    {'Term':'2C'}, 
+                    {'Term':'3C'},
+                    {'Term':'4C'}][:len(y)]
     # ref ISO 17123:4 eq 29
     critical_t = t.ppf(1 - 0.025, df=dof)
-    for v, v2 in zip(y, np.diagonal(Q)):
+    for v, v2, rpt_tbl in zip(y, np.diagonal(Q), report_table):
+        hypothesis = '%s <= %s' % (float('%.2g' % abs(v)),
+                                    float('%.2g' % (So * sqrt(v2) * critical_t)))
+        t_test = abs(v) <= (So * sqrt(v2) * critical_t)
+        rpt_tbl.update(
+            {'Value': round(v,5),
+             'Uncertainty': "{:.2g}".format(sqrt(v2) * chi_test['k']),
+             'Null Hypothesis': hypothesis,
+             'Insignificant':t_test})
         matrix_y.append({
             'value': v,
             'std_dev': sqrt(v2),
-            'hypothesis': '%s <= %s' % (float('%.2g' % abs(v)),
-                                        float('%.2g' % (So * sqrt(v2) * critical_t))),
-            't_test': abs(v) <= (So * sqrt(v2) * critical_t)})
-
+            'hypothesis': hypothesis,
+            't_test': t_test})
+    matrix_y[0]['report_table'] = dict_2_html_table(report_table)
+    
     residuals = np.vstack((r, std_residuals)).T
     residuals = list2dict(residuals.tolist(), ['residual', 'std_residual'])
 

@@ -136,6 +136,29 @@ def dict2np(dct):
     return np.array(ilist, dtype=object), list(v.keys())
 
 
+def dict_2_html_table(data):
+    if not data:
+        return "<p>No data to display.</p>"
+    
+    table_html = "<table>\n"
+    
+    # Assuming the keys of the first dictionary are the headers
+    headers = data[0].keys()
+    table_html += "<tr>"
+    for header in headers:
+        table_html += f"<th>{header}</th>"
+    table_html += "</tr>\n"
+    
+    # Iterating over each dictionary to create rows
+    for row in data:
+        table_html += "<tr>"
+        for key in headers:
+            table_html += f"<td>{row.get(key, '')}</td>"
+        table_html += "</tr>\n"
+    table_html += "</table>"
+    return table_html
+
+
 def format_name(nme):
     num = ''.join([str(s) for s in nme if s.isdigit()])
     return nme.replace(num,num.zfill(3))

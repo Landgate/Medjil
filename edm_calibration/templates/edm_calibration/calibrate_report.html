@@ -683,10 +683,11 @@
         </div>
         <h2 style="text-align:center">Report Notes</h2>
         <div class="flexbox-container_IB">
+            <!-- NB. tables contained in these notes are formated in common_func>Convert.py -->
             <div class="flexbox-item_800_IB flexbox-item-left_IB">
                 {% if report_notes %}
                     {% for n in report_notes %}
-                        <p>{{forloop.counter}}. {{n}}</p>
+                        <p>{{forloop.counter}}. {{ n|safe }}</p>
                     {% endfor %}
                 {% else %} No report notes to display. {% endif %}
             </div>
