@@ -81,12 +81,9 @@
 <div> $$ D_{ij}=x_j-x_i-zpc\ \ \ for\ j > i\ \ \ (Eq. 1.1)$$ </div>
 <div>$$ D_{ij}=x_i-x_j-zpc\ \ \ for\ j < i\ \ \ (Eq. 1.2)$$ </div>
 <p>Where:</p>
-<p>&emsp;&emsp;D
-<sub>ij</sub> = Measured distance between pillars i and j (the observations)</p>
-<p>&emsp;&emsp;x
-<sub>i</sub> = Distance from the first pillar to pillar 'i'. Distance corrected for the pillar ofsets and reduced to baseline reference height.</p>
-<p>&emsp;&emsp;x
-<sub>j</sub> = Distance from the first pillar to pillar 'j'. Distance corrected for the pillar ofsets and reduced to baseline reference height.</p>
+<p>&emsp;&emsp;D<sub>ij</sub> = Measured distance between pillars i and j (the observations)</p>
+<p>&emsp;&emsp;x<sub>i</sub> = Distance from the first pillar to pillar 'i'. Distance corrected for the pillar ofsets and reduced to baseline reference height.</p>
+<p>&emsp;&emsp;x<sub>j</sub> = Distance from the first pillar to pillar 'j'. Distance corrected for the pillar ofsets and reduced to baseline reference height.</p>
 <p>&emsp;&emsp;zpc = zero point correction - an additive constant of the certified EDMI</p>
 <p>&emsp;&emsp;All distances measured with a certified EDM instrumentation (EDMI)</p>
 <div id="Chapter_1_3"></div>
@@ -100,19 +97,16 @@
 <p>The observation equations can be further expressed in a matrix notation as D = AX</p>
 <div>$$ \left[\begin{matrix}D_{12}\\D_{13}\\D_{14}\\D_{21}\\D_{23}\\D_{24}\\D_{31}\\D_{32}\\D_{34}\\D_{41}\\D_{42}\\D_{43}\\\end{matrix}\right]=\left[\begin{matrix}1&0&0&-1\\0&1&0&-1\\0&0&1&-1\\1&0&0&-1\\-1&1&0&-1\\-1&0&1&-1\\0&1&0&-1\\-1&1&0&-1\\0&-1&1&-1\\0&0&1&-1\\-1&0&1&-1\\0&-1&1&-1\\\end{matrix}\right]\left[\begin{matrix}X_2\\X_3\\X_4\\zpc\\\end{matrix}\right]\ \ \ (Eq. 1.4)$$ </div>
 <p>Where:</p>
-<p>&emsp;&emsp;D
-<sub>ij</sub> = Measured distance between pillars i and j (vector of the observations)</p>
+<p>&emsp;&emsp;D<sub>ij</sub> = Measured distance between pillars i and j (vector of the observations)</p>
 <p>&emsp;&emsp;A = The design matrix
 <p>&emsp;&emsp;X = The certified distances and zpc (vector of the unknown output estimates)</p>
-<p>This approach does not require to provide approximate distances between pillars. The observations together with a-priori uncertainties (p) are least squares adjusted as per Section (5) to provides the estimated certified distances d
-<sub>x</sub> and the zpc with the full VCV matrix.</p>
+<p>This approach does not require to provide approximate distances between pillars. The observations together with a-priori uncertainties (p) are least squares adjusted as per Section (5) to provides the estimated certified distances d<sub>x</sub> and the zpc with the full VCV matrix.</p>
 <div id="Chapter_1_4"></div>
 <h2>1.4 Inter-pillar distances survey</h2>
 <img src="\media\TechnicalManual\tbaseline\Tech manual\Picture_1_3.png" alt="Inter-pillar distances survey">
 <p>To calibre an EDM baseline a series of the inter-pillar distance measurments (surveys) including atmospheric observations of the conditions during the survey are required. Medjil expects all instrumentation used for this survey to be callibrated with current certificate that states the uncertainty of the instrument readings and the calibration corrections that can be applied. The uncertainty of instrument readings is used for the propagation of uncertainties for the interpillar distance survey.</p>
 <p>The distance observations are assumed to be slope distances that have not been corrected for the height of instrument or height of targets. Applying atmospheric corrections by entering these into the instrument is optional but Medjil requires temperature, pressure and humidity for every distance measurement even if this has been entered into the instrument. These values are used for estimating the propagation of uncertinty as well as the optional applying of atmospheric corrections in case it was not entered into the instrument during the survey.</p>
-<p>It is recommended each distance (bay) d
-<sub>ij</sub> (where i = from_pillar; j = to_pillar) should be measured four times. However, Medjil allows the number of repeat measurements to vary between bays and between surveys. The pillar survey data is to be provided in an ASCII file and must contain the following fields:</p>
+<p>It is recommended each distance (bay) d<sub>ij</sub> (where i = from_pillar; j = to_pillar) should be measured four times. However, Medjil allows the number of repeat measurements to vary between bays and between surveys. The pillar survey data is to be provided in an ASCII file and must contain the following fields:</p>
 <ul STYLE="margin:30px">
 <li>from_pillar: Pillar name as defined in Medjil calibration sites</li>
 <li>to_pillar: Pillar name as defined in Medjil calibration sites</li>
@@ -131,29 +125,17 @@
 <h2>1.5 Pillar offsets survey</h2>
 <p>The pillar offset survey determines offset of each pillar from the alignment of the first (1) and last pillar (n). Medjil performs the required reduction of observations during the EDM Baseline calibration process. Each survey setup is used to automatically calculate the pillar offset providing the survey setup includes measurements to pillar 1 and pillar n.</p>
 <img src="\media\TechnicalManual\tbaseline\Tech manual\Picture_1_2.png" alt="Pillar Offsets">
-<p>For each pillar setup, an arbitrary set of coordinates (E
-<sub>j</sub>, N
-<sub>j</sub>) are calculated for all pillars observed according to the formula:</p>
+<p>For each pillar setup, an arbitrary set of coordinates (E<sub>j</sub>, N<sub>j</sub>) are calculated for all pillars observed according to the formula:</p>
 <div>$$\left[E_j,N_j\right]=\ Polar2Reclangular\left(A_{ij},d_{ij}\right)\ \ \ (Eq. 1.5)$$ </div>
 <p>Where:</p>
-<p>&emsp;&emsp;d
-<sub>ij</sub> = horizontal distance (in metres) corrected for calibration parameters and atmospheric corrections between pillars i and j</p>
-<p>&emsp;&emsp;Hz
-<sub>ij</sub> = direction observed at pillar i to pillar j</p>
-<p>&emsp;&emsp;[E
-<sub>j</sub>,N
-<sub>j</sub>] = set of arbitrary coordinates (Easting and Northing) of pillar j</p>
+<p>&emsp;&emsp;d<sub>ij</sub> = horizontal distance (in metres) corrected for calibration parameters and atmospheric corrections between pillars i and j</p>
+<p>&emsp;&emsp;Hz<sub>ij</sub> = direction observed at pillar i to pillar j</p>
+<p>&emsp;&emsp;[E<sub>j</sub>,N<sub>j</sub>] = set of arbitrary coordinates (Easting and Northing) of pillar j</p>
 <p>Then the offset of pillar j is calculated according to:</p>
 <div>$$O_j=d_{j}sin\left(A_{1n}-A_{j}\right)\ \ \ (Eq. 1.6)$$ </div>
 <p>Where:</p>
-<p>&emsp;&emsp;d
-<sub>j</sub> = horizontal distance between pillars i and j</p>
-<p>&emsp;&emsp;A
-<sub>j</sub> = derived bearing using coordinates of pillars: E
-<sub>1</sub>,N
-<sub>1</sub> and E
-<sub>j</sub>,N
-<sub>j</sub>
+<p>&emsp;&emsp;d<sub>j</sub> = horizontal distance between pillars i and j</p>
+<p>&emsp;&emsp;A<sub>j</sub> = derived bearing using coordinates of pillars: E<sub>1</sub>,N<sub>1</sub> and E<sub>j</sub>,N<sub>j</sub>
 </p>
 <p>As the instrument moves between pillars, pillar 1 and pillar n are observed in each setup. This allows the orientation of all setups in the survey and computation of an offset for each pillar from every pillar setup that included observations to pillar 1 and pillar n. Medjil automatically computes the average pillar offset and standard deviation values from the distance survey data. Table 4.4 demonstrates an example set of pillar offsets.</p>
 <div id="Chapter_1_6"></div>
@@ -237,13 +219,11 @@ User should perform additional calibration on "cyclic error" testline if the ins
 <div id="Chapter_3_1_1"></div>
 <h3>3.1.1 Meteorological instrumentation corrections</h3>
 <p>All meteorological instruments (thermometer, barometer, hygrometer) corrections apply as zero point correction (zpc) to the EDMI readings (distance)</p>
-<div>c
-<sub>M</sub> = zpc</div>
+<div>c<sub>M</sub> = zpc</div>
 <div id="Chapter_3_1_2"></div>
 <h3>3.1.2 EDMI correction</h3>
 <p>EDMI calibration sourced from the most recent instrument calibration certificate:</p>
-<div>c
-<sub>EDMI</sub> = sfc * d + zpc</div>
+<div>c<sub>EDMI</sub> = sfc * d + zpc</div>
 <br>
 <p>If the meteorological corrections have not been applied to EDMI readings, corrections to atmospheric readings will be applied prior to calculating the first velocity correction.</p>
 <div id="Chapter_3_2"></div>
@@ -258,11 +238,9 @@ User should perform additional calibration on "cyclic error" testline if the ins
 <p>&emsp;&emsp;d = Distance in metres</p>
 <p>&emsp;&emsp;e = Partial water pressure in hectopascals</p>
 <p>$$C = (N_{REF} – 1)10^6$$</p>
-<p>&emsp;&emsp;n
-<sub>REF</sub> = Reference refractive index (Section 3.2.2)</p>
+<p>&emsp;&emsp;n<sub>REF</sub> = Reference refractive index (Section 3.2.2)</p>
 <p>$$D = (n_G – 1) 10^6 (273.15 / 1013.25)\ \ \ \ (Eq. 3.2)$$</p>
-<p>&emsp;&emsp;n
-<sub>G</sub> = Group refractive index of atmosphere for standard conditions</p>
+<p>&emsp;&emsp;n<sub>G</sub> = Group refractive index of atmosphere for standard conditions</p>
 <p>Partial vapour pressure is derived from relative humidity:</>
 <div>$$ \mathrm{e\ }=\ \frac{\mathrm{E\ h}}{\mathrm{100}}\ \ \ \ (Eq. 3.3) $$</div>
 <p>Where:</p>
@@ -278,17 +256,12 @@ User should perform additional calibration on "cyclic error" testline if the ins
 <p>The reference refractive index is instrument specific:</p>
 <div>$$ n_{\mathrm{REF}}=\frac{C_O}{\lambda_{\mathrm{MOD\ }}f_{MOD}}=\frac{C_O}{2Uf_{MOD}}\ \ \ \ (Eq. 3.5) $$</div>
 <p>Where:</p>
-<p>&emsp;&emsp;C
-<sub>O</sub> = Velocity of light in a vacuum = 299 792 458 m/s</p>
-<p>&emsp;&emsp;&#955
-<sub>MOD</sub> = Constant modulation wavelength of the fine measurements for which the instrument is designed</p>
-<p>&emsp;&emsp;f
-<sub>MOD</sub> = Constant modulation frequency of the fine measurements</p>
-<p>&emsp;&emsp;U = The exact half of &#955
-<sub>MOD</sub> , called the unit length of the instrument.</p>
+<p>&emsp;&emsp;C<sub>O</sub> = Velocity of light in a vacuum = 299 792 458 m/s</p>
+<p>&emsp;&emsp;&#955<sub>MOD</sub> = Constant modulation wavelength of the fine measurements for which the instrument is designed</p>
+<p>&emsp;&emsp;f<sub>MOD</sub> = Constant modulation frequency of the fine measurements</p>
+<p>&emsp;&emsp;U = The exact half of &#955<sub>MOD</sub> , called the unit length of the instrument.</p>
 <p>The velocity of light in a vacuum is fixed at 299792458 m/s by the 1983 definition of the SI metre.</p>
-<p>The unit length of the instrument (U) and the constant modulation frequency of the fine measurements (f
-<sub>MOD</sub>) are instrument specific and are generally provided by the manufacturer.</p>
+<p>The unit length of the instrument (U) and the constant modulation frequency of the fine measurements (f<sub>MOD</sub>) are instrument specific and are generally provided by the manufacturer.</p>
 <div id="Chapter_3_2_3"></div>
 <h3>3.2.3  Group refractive Index of light in the atmosphere</h3>
 <p>In electro-optical EDM, the refractive index is dependent on the wavelength of the visible or infrared radiation. Different frequencies have the same propagation velocity in a vacuum, but not in air because of the interference occurrence between the different frequencies. The signal resulting from the sum of all frequencies will have the so-called group velocity, which is always smaller than the phase velocities of its individual frequencies.</p>
@@ -296,13 +269,9 @@ User should perform additional calibration on "cyclic error" testline if the ins
 <p>The following closed formulae can be adopted for the computation of the group refractive index in air for electronic distance measurements to within 1 ppm with visible and near infrared waves in the atmosphere:</p>
 <div>$$ N_L=\left(n_L-1\right)\mathrm{\mathrm{.1}}0^6=\left(\frac{\mathrm{273.15\ }}{1013.25}.\frac{N_Gp}{(273.15+t)}\right)\mathrm{\mathrm{-}}\left(\frac{1\mathrm{1.27e}}{\left(\mathrm{273.15}+t\right)}\right)\ \ \ \ (Eq. 3.6)$$ </div>
 <p>Where:</p>
-<p>&emsp;&emsp;N
-<sub>L</sub> = Group refractivity of visible and near infrared waves in ambient moist air. Valid for atmospheric conditions described by t, p and e</p>
-<p>&emsp;&emsp;n
-<sub>L</sub> = Corresponding group refractive index</p>
-<p>&emsp;&emsp;N
-<sub>G</sub> = Group refractivity index for standard conditions (visible light in dry air at 0 C, 1013.25 hPa, partial water vapour pressure = 0 and the air contains 0.0375 % CO
-<sub>2</sub>). See Equation 3.7.</p>
+<p>&emsp;&emsp;N<sub>L</sub> = Group refractivity of visible and near infrared waves in ambient moist air. Valid for atmospheric conditions described by t, p and e</p>
+<p>&emsp;&emsp;n<sub>L</sub> = Corresponding group refractive index</p>
+<p>&emsp;&emsp;N<sub>G</sub> = Group refractivity index for standard conditions (visible light in dry air at 0 C, 1013.25 hPa, partial water vapour pressure = 0 and the air contains 0.0375 % CO<sub>2</sub>). See Equation 3.7.</p>
 <p>&emsp;&emsp;t = Dry bulb temperature of air (C).</p>
 <p>&emsp;&emsp;p = Atmospheric pressure in hectopascals</p>
 <p>&emsp;&emsp;e = Partial water vapour pressure (hPa)</p>
@@ -325,68 +294,39 @@ The 1.0 ppm stated before makes some allowance for anomalous refractivity and th
 <img src="\media\TechnicalManual\tbaseline\Tech manual\Picture_3_1.png" alt="Geometric correction">
 <div>$$ d_R\ =\ \sqrt{\frac{\left(d_O\right)^2-\left(O_1-O_2\right)^2-(\Delta H)^2}{\left(1+\left(\frac{H_1-H_{REF}}{R+H_{REF}}\right)\right)\left(1+\left(\frac{H_2-H_{REF}}{R+H_{REF}}\right)\right)}}\ \ \ \ (Eq. 3.8) $$</div>
 <p>Where:</p>
-<p>&emsp;&emsp;d
-<sub>R</sub> = Certified horizontal distance between two pillars reduced to a reference elevation H
-<sub>REF</sub>
+<p>&emsp;&emsp;d<sub>R</sub> = Certified horizontal distance between two pillars reduced to a reference elevation H<sub>REF</sub>
 </p>
-<p>&emsp;&emsp;H
-<sub>1</sub> = Elevation of EDM instrument pillar + H
-<sub>EDM</sub>
+<p>&emsp;&emsp;H<sub>1</sub> = Elevation of EDM instrument pillar + H<sub>EDM</sub>
 </p>
-<p>&emsp;&emsp;H
-<sub>2</sub> = Elevation of reflector pillar + H
-<sub>REF</sub>
+<p>&emsp;&emsp;H<sub>2</sub> = Elevation of reflector pillar + H<sub>REF</sub>
 </p>
-<p>&emsp;&emsp;H
-<sub>EDM</sub> = Height of EDM instrument above pillar</p>
-<p>&emsp;&emsp;H
-<sub>REF</sub> = Height of reflector above pillar</p>
-<p>&emsp;&emsp;d
-<sub>O</sub>= Mean observed distance between EDM instrument and reflector as corrected for atmospheric effects</p>
-<p>&emsp;&emsp;&Delta;H = H
-<sub>1</sub> – H
-<sub>2</sub>
+<p>&emsp;&emsp;H<sub>EDM</sub> = Height of EDM instrument above pillar</p>
+<p>&emsp;&emsp;H<sub>REF</sub> = Height of reflector above pillar</p>
+<p>&emsp;&emsp;d<sub>O</sub>= Mean observed distance between EDM instrument and reflector as corrected for atmospheric effects</p>
+<p>&emsp;&emsp;&Delta;H = H<sub>1</sub> – H<sub>2</sub>
 </p>
-<p>&emsp;&emsp;H
-<sub>REF</sub> = Reference Elevation</p>
-<p>&emsp;&emsp;O
-<sub>1</sub> =Offset at pillar 1 from the straight line between the first and last pillars</p>
-<p>&emsp;&emsp;O
-<sub>2</sub> = Offset at pillar 2 from the straight line between the first and last pillars</p>
+<p>&emsp;&emsp;H<sub>REF</sub> = Reference Elevation</p>
+<p>&emsp;&emsp;O<sub>1</sub> =Offset at pillar 1 from the straight line between the first and last pillars</p>
+<p>&emsp;&emsp;O<sub>2</sub> = Offset at pillar 2 from the straight line between the first and last pillars</p>
 <p>&emsp;&emsp;R =Mean radius of curvature of the Earth at the baseline location.</p>
 <p>To convert a certified horizontal distance between two pillars to a slope distance between the tops of these pillars the following equations is used:</p>
 <div>$$ d_X\ =\ \sqrt{\left(d_R^2\left(1+\left(\frac{H_1-H_{REF}}{R+H_{REF}}\right)\right)\left(1+\left(\frac{H_2-H_{REF}}{R+H_{REF}}\right)\right)+(\Delta H)^2\right)+\left(O_1-O_2\right)^2}\ \ \ \ (Eq. 3.9) $$</div>
 <p>Where:</p>
-<p>&emsp;&emsp;d
-<sub>R</sub> = Certified horizontal distance between two pillars reduced to a reference elevation H
-<sub>REF</sub>
+<p>&emsp;&emsp;d<sub>R</sub> = Certified horizontal distance between two pillars reduced to a reference elevation H<sub>REF</sub>
 </p>
-<p>&emsp;&emsp;d
-<sub>X</sub> = Slope distance between the tops of two pillars</p>
-<p>&emsp;&emsp;H
-<sub>1</sub> = Elevation of EDM instrument pillar + H
-<sub>EDM</sub>
+<p>&emsp;&emsp;d<sub>X</sub> = Slope distance between the tops of two pillars</p>
+<p>&emsp;&emsp;H<sub>1</sub> = Elevation of EDM instrument pillar + H<sub>EDM</sub>
 </p>
-<p>&emsp;&emsp;H
-<sub>2</sub> = Elevation of reflector pillar + H
-<sub>REF</sub>
+<p>&emsp;&emsp;H<sub>2</sub> = Elevation of reflector pillar + H<sub>REF</sub>
 </p>
-<p>&emsp;&emsp;H
-<sub>EDM</sub> = Height of EDM instrument above pillar</p>
-<p>&emsp;&emsp;H
-<sub>REF</sub> = Height of reflector above pillar</p>
-<p>&emsp;&emsp;d
-<sub>O</sub>= Mean observed distance between EDM instrument and reflector as corrected for atmospheric effects</p>
-<p>&emsp;&emsp;&Delta;H = H
-<sub>1</sub> – H
-<sub>2</sub>
+<p>&emsp;&emsp;H<sub>EDM</sub> = Height of EDM instrument above pillar</p>
+<p>&emsp;&emsp;H<sub>REF</sub> = Height of reflector above pillar</p>
+<p>&emsp;&emsp;d<sub>O</sub>= Mean observed distance between EDM instrument and reflector as corrected for atmospheric effects</p>
+<p>&emsp;&emsp;&Delta;H = H<sub>1</sub> – H<sub>2</sub>
 </p>
-<p>&emsp;&emsp;H
-<sub>REF</sub> = Reference Elevation</p>
-<p>&emsp;&emsp;O
-<sub>1</sub> = Offset at pillar 1 from the straight line between the first and last pillars</p>
-<p>&emsp;&emsp;O
-<sub>2</sub> = Offset at pillar 2 from the straight line between the first and last pillars</p>
+<p>&emsp;&emsp;H<sub>REF</sub> = Reference Elevation</p>
+<p>&emsp;&emsp;O<sub>1</sub> = Offset at pillar 1 from the straight line between the first and last pillars</p>
+<p>&emsp;&emsp;O<sub>2</sub> = Offset at pillar 2 from the straight line between the first and last pillars</p>
 <p>&emsp;&emsp;R = Mean radius of curvature of the Earth at the baseline location.</p>
 <p>The geometric correction equations 3.8 and 3.9 were derived from The Australian Geodetic Datum Technical Manual, National Mapping Council of Australia, Special Publication 10 and are suitable for baselines with steep gradients.</p>
 <p>Medjil uses the GRS80 spheroid for determining the mean radius of the earth (R) used in the calculation of the geometric correction. Medjil requires UTM coordinates to be specified for all EDMI calibration pillars. These coordintes are used along with the following formula to determine R for each geometric correction. (GDA2020 technical manual pp. 47)</p>
@@ -414,23 +354,18 @@ The 1.0 ppm stated before makes some allowance for anomalous refractivity and th
 <p>Medjil complies with the ISO 17123 (all parts) recommendations to evaluate individual precision (experimental standard deviation known as Type A standard uncertainty) of individual instrument but also to define uncertainty budget which allows for combining all uncertainty components (random or systematic - Type B) to derive combined standard uncertainty (or expanded uncertainty) as a representative measure of accuracy.</p>
 <div id="Chapter_4_1"></div>
 <h2>4.1 Combined standard and expanded uncertainty</h2>
-<p>The combined standard uncertainty C
-<sub>SU</sub> of a number of individual uncertainty sources (u
-<sub>i</sub>) is computed using the following formula:</p>
+<p>The combined standard uncertainty C<sub>SU</sub> of a number of individual uncertainty sources (u<sub>i</sub>) is computed using the following formula:</p>
 <div>$$ C_{SU}=√(∑_{(i=1)}^n u_{i}^2)\ \ \ (Eq. 4.1)  $$</div>
-<p>The combined expanded uncertainty C
-<sub>EU</sub> is defined as follows:</p>
+<p>The combined expanded uncertainty C<sub>EU</sub> is defined as follows:</p>
 <div>$$ C_{EU}=C_{SU}k\ \ \ (Eq. 4.2)  $$</div>
 <p>Where:</p>
 <p>&emsp;&emsp;k = coverage factor</p>
 <div>$$ k=t_{(95\%, v_{eff})}\ \ \ (Eq. 4.3) $$</div>
-<p>&emsp;&emsp;v
-<sub>eff</sub> = effective degrees of freedom</p>
+<p>&emsp;&emsp;v<sub>eff</sub> = effective degrees of freedom</p>
 <div>$$ v_{eff}=\frac{s^4}{C_{su}}\ \ \ (Eq. 4.4)  $$</div>
 <div>$$ s=∑_{(i=1)}^n\frac{u_{i}^4}{v_i}\ \ \ (Eq. 4.5)  $$</div>
 <p>Where:</p>
-<p>&emsp;&emsp;v
-<sub>i</sub> = degrees of freedom of an uncertainty source (i)</p>
+<p>&emsp;&emsp;v<sub>i</sub> = degrees of freedom of an uncertainty source (i)</p>
 <p>&emsp;&emsp;t = t-student distribution (probability, effective degrees of freedom)</p>
 <div id="Chapter_4_2"></div>
 <h2>4.2 Uncertainty budget</h2>
@@ -758,52 +693,36 @@ Medjil automatically populates the uncertainty sources (Table 4.1 and Table 4.2)
 </table>
 <p>The values for these automatically populated uncertainty sources are derived as follows:</p>
 <ul STYLE="margin:30px">
-<li>Certified distances - Least Squares Adjustment (LSA) uncertainty - The uncertainty of each inter-pillar distance is uniquely assigned from the diagonal elements of the Cofactormatrix derived from the least squares adjustment of the baseline calibration. The degrees of freedom is the equal to the degrees of freedom of the calibration of the baseline and the coverage factor is derived from  t-student distribution at 95% and selected degrees of freedom t
-<sub>(95%,dof)</sub>
+<li>Certified distances - Least Squares Adjustment (LSA) uncertainty - The uncertainty of each inter-pillar distance is uniquely assigned from the diagonal elements of the Cofactormatrix derived from the least squares adjustment of the baseline calibration. The degrees of freedom is the equal to the degrees of freedom of the calibration of the baseline and the coverage factor is derived from  t-student distribution at 95% and selected degrees of freedom t<sub>(95%,dof)</sub>
 </li>
-<li>EDM LS zero offset - Zero Point Correction (ZPC) uncertainty - The uncertainty of the zero point correction is assigned from last element of the Cofactormatrix derived from the least squares adjustment of the baseline calibration.  The degrees of freedom is the equal to the degrees of freedom of the calibration of the baseline and the coverage factor is the t-student at 95% and selected degrees of freedom (t
-<sub>(95%,dof)</sub>)</li>
+<li>EDM LS zero offset - Zero Point Correction (ZPC) uncertainty - The uncertainty of the zero point correction is assigned from last element of the Cofactormatrix derived from the least squares adjustment of the baseline calibration.  The degrees of freedom is the equal to the degrees of freedom of the calibration of the baseline and the coverage factor is the t-student at 95% and selected degrees of freedom (t<sub>(95%,dof)</sub>)</li>
 <li>EDM scale factor - EDMI Reg13 Scale correction factor - The uncertainty, degrees of freedom and coverage factor is assigned from the values specified in the register of calibration certificates of EDM instrument (EDMI). The selected values correspond to the most current certificate (at the time of survey) of the EDMI used for the calibration of the EDM Baseline</li>
 <li>EDM scale factor - EDM scale factor (drift over time) - The uncertainty is derived using linear regression of the scale factors from all available calibration certificates of the same EDM Baseline (certified distances). The scale factor is extrapolated at the time of calibration survey and the difference between this value and the last computed value (as per the most current certificate) is adopted as the uncertainty. This uncertainty source is assigned 30 degrees of freedom and a coverage factor of √3</li>
 <li>EDMI measurement - Distance Instrument Rounding - The uncertainty is equivalent to half of the instrument measurement increment reading. This uncertainty source is assigned 100 degrees of freedom and a coverage factor of √3.</li>
 <li>EDMI measurement - Linear regression on EDM distance standard deviations - Table 4.3 shows an example of a typical subset of EDMI measurements observed on a EDM Baseline. Measurements with the same ‘From’ and ‘To’ pillar are grouped into sets, then average and standard deviations of these sets are tabulated. The ‘Std Dev Used when statistically zero’ field value defined in the specified Uncertainty Budget of the calibration can be used to exclude and overwrite experimental standard deviations of measurement sets that have all the same values (eg. experimental standard deviations equal to zero).
-<br>Linear regression is used on the average ‘slope distance’ and ‘standard deviation’ to derive a formula for the experimental standard deviation of EDMI measurements in the calibration:
-s
-<sub>B</sub> = P mm + Q ppm. Where s
-<sub>B</sub> is the standard deviation of a baseline interval. 
-<br>Uncertainties are uniquely assigned to each measurement set as calculated from the derived linear regression equation. This uncertainty source is assigned 30 degrees of freedom and the coverage factor is the t-student at 95% and 30 degrees of freedom t
-<sub>(95%,30)</sub>
+<br>Linear regression is used on the average ‘slope distance’ and ‘standard deviation’ to derive a formula for the experimental standard deviation of EDMI measurements in the calibration: s<sub>B</sub> = P mm + Q ppm. Where s<sub>B</sub> is the standard deviation of a baseline interval. 
+<br>Uncertainties are uniquely assigned to each measurement set as calculated from the derived linear regression equation. This uncertainty source is assigned 30 degrees of freedom and the coverage factor is the t-student at 95% and 30 degrees of freedom t<sub>(95%,30)</sub>
 </li>
 <li>Heights - Height Differences - During the ‘Calibrate an EDM Baseline’ process, a *.csv file is required to upload the standard uncertainty (standard deviation) of the heights of each pillar. These uncertainties are used to derive the uncertainty of the height differences according to the equation 4.6.</li>
 <div>$$ {uc}_{\Delta H}=k\sqrt{\left(H_i^2+H_j^2\right)}\ \ \ (Eq. 4.6)   $$</div>
 <p>Where:</p>
-<p>&emsp;&emsp;uc
-<sub>&#916;H</sub> = Expanded uncertainty of the height difference between pillar i and pillar j
-<p>&emsp;&emsp;uc
-<sub>o</sub> = Expanded uncertainty of the offset between pillar i and pillar j</p>
-<p>&emsp;&emsp;H
-<sub>i</sub> = Tabulated experimental standard deviation of the ‘From Pillar’</p>
-<p>&emsp;&emsp;H
-<sub>j</sub> = Tabulated experimental standard deviation of the ‘To Pillar’</p>
-<p>&emsp;&emsp;k = t
-<sub>(95%,30)</sub>
+<p>&emsp;&emsp;uc<sub>&#916;H</sub> = Expanded uncertainty of the height difference between pillar i and pillar j
+<p>&emsp;&emsp;uc<sub>o</sub> = Expanded uncertainty of the offset between pillar i and pillar j</p>
+<p>&emsp;&emsp;H<sub>i</sub> = Tabulated experimental standard deviation of the ‘From Pillar’</p>
+<p>&emsp;&emsp;H<sub>j</sub> = Tabulated experimental standard deviation of the ‘To Pillar’</p>
+<p>&emsp;&emsp;k = t<sub>(95%,30)</sub>
 </p>
 <li>Humidity - Hygrometer calibrated correction factor - Hygrometers used for baseline calibration surveys must have a calibration that indicates the uncertainty of the readings. Medjil will automatically assign a current hygrometer calibration based on the survey date. The uncertainty, coverage factor and degrees of freedom specified for that hygrometer calibration record will be used for the uncertainty ‘Humidity - Hygrometer calibrated correction factor’</li>
 <li>Humidity - Hygrometer Rounding - The uncertainty is equivalent to half the measurement increment reading of the instrument used for the calibration. This uncertainty source is assigned 100 degrees of freedom and a coverage factor of √3.</li>
 <li>Offsets - Offsets - Table 4.4 shows the results of a typical alignment survey. The offset of each pillar is surveyed from multiple pillars. The offset results with the same ‘To Pillar’ are grouped into sets, then the average and experimental standard deviations of these sets are tabulated. The uncertainty of each offset is derived from the standard deviation of the offset measurements at both the ‘From Pillar’ and the ‘To Pillar’.
 <div>$$ {\rm uc}_o=k\sqrt{\left(o_i^2+o_j^2\right)}\ \ \ (Eq. 4.7)   $$ </div>
 <p>Where:</p>
-<p>&emsp;&emsp;uc
-<sub>o</sub> = Expanded uncertainty of the offset between pillar i and pillar j</p>
-<p>&emsp;&emsp;o
-<sub>i</sub> = Tabulated experimental standard deviation of the ‘From Pillar’</p>
-<p>&emsp;&emsp;o
-<sub>j</sub> = Tabulated experimental standard deviation of the ‘To Pillar’</p>
-<p>&emsp;&emsp;k = t
-<sub>(95%,30)</sub>
+<p>&emsp;&emsp;uc<sub>o</sub> = Expanded uncertainty of the offset between pillar i and pillar j</p>
+<p>&emsp;&emsp;o<sub>i</sub> = Tabulated experimental standard deviation of the ‘From Pillar’</p>
+<p>&emsp;&emsp;o<sub>j</sub> = Tabulated experimental standard deviation of the ‘To Pillar’</p>
+<p>&emsp;&emsp;k = t<sub>(95%,30)</sub>
 </p>
-<p>This uncertainty source is assigned 30 degrees of freedom and the coverage factor is the t-student at 95% and 30 degrees of freedom t
-<sub>(95%,30)</sub>
+<p>This uncertainty source is assigned 30 degrees of freedom and the coverage factor is the t-student at 95% and 30 degrees of freedom t<sub>(95%,30)</sub>
 </p>
 <li>Pressure - Barometer calibrated correction factor - Barometers used for calibration surveys must have a calibration that indicates the uncertainty of the readings. Medjil will automatically assign a current barometer calibration based on the survey date. The uncertainty, coverage factor and degrees of freedom specified for that hygrometer calibration will be used for the uncertainty ‘Pressure - Barometer calibrated correction factor’</li>
 <li>Pressure - Barometer Rounding - The uncertainty is equivalent to half the measurement increment reading of the instrument used for the calibration. This uncertainty source is assigned 100 degrees of freedom and a coverage factor of √3.</li>
@@ -812,53 +731,36 @@ s
 <li>Certified distances - Uncertainty of Certified Distances - The standard uncertainty of all inter-pillar distances are calculated from the CoFactorMatrix of baseline calibrations. This is done by creating a design matrix for every combination of pillars and calculating another CoFactorMatrix according to the formula:</li>
 <div>$$ Q_2=A_2QA_2^T\ \ \ (Eq. 4.8)$$ </div>
 <p>Where:</p>
-<p>&emsp;&emsp;Q
-<sub>2</sub> = The secondary CoFactorMatrix</p>
+<p>&emsp;&emsp;Q<sub>2</sub> = The secondary CoFactorMatrix</p>
 <p>&emsp;&emsp;Q = The CoFactorMatrix from the LSA of calibrating a baseline</p>
-<p>&emsp;&emsp;A
-<sub>2</sub> = A design matrix for every possible combination of from and to pillars</p>
+<p>&emsp;&emsp;A<sub>2</sub> = A design matrix for every possible combination of from and to pillars</p>
 <p>The standard uncertainties of all inter-pillar distances are equivalent to the square root of the diagonals of the secondary CoFactorMatrix. These values are stored for each baseline calibration. The inter-pillar distance standard uncertainties that correspond to EDMI calibrations are used to calculate the ‘Uncertainty of Certified Distances’ according to the formula:</p>
-<p>&emsp;&emsp;uc
-<sub>ij</sub> = k * S
-<sub>ij</sub>
-</p>
+<p>&emsp;&emsp;uc<sub>ij</sub> = k * S<sub>ij</sub></p>
 <p>Where:</p>
-<p>&emsp;&emsp;uc
-<sub>ij</sub> = Expanded uncertainty of a distance between pillar i and pillar j</p>
-<p>&emsp;&emsp;k = Coverage factor of a baseline calibration determined by the t-student at 95% and LSA derived degree of freedom (dof) t
-<sub>(95%,dof)</sub>
+<p>&emsp;&emsp;uc<sub>ij</sub> = Expanded uncertainty of a distance between pillar i and pillar j</p>
+<p>&emsp;&emsp;k = Coverage factor of a baseline calibration determined by the t-student at 95% and LSA derived degree of freedom (dof) t<sub>(95%,dof)</sub>
 </p>
-<p>&emsp;&emsp;S
-<sub>ij</sub> = Standard uncertainty of a distance between pillar i and pillar j</p>
+<p>&emsp;&emsp;S<sub>ij</sub> = Standard uncertainty of a distance between pillar i and pillar j</p>
 <li>EDM Calibration - Uncertainty of LSA EDMI Correction - This is a type A uncertainty output by the least squares adjustment used to determine calibration parameters for the calibration of EDM Instrumentation. The uncertainty of the parameters are equivalent to the diagonal elements of the Cofactormatrix. The ‘Uncertainty of (LSA) EDMI Correction’ is calculated according to the following conditions:</li>
 <p>(a) if the calibration of the EDMI has tested for cyclic errors and found them to be significant:</p>
 <div>$$ S_{IC}=S_{zpc}+S_{scf}D+S_1\sin{\left(2\pi\frac{D}{U}\right)+S_2\cos{\left(2\pi\frac{D}{U}\right)+S_3\sin{\left(4\pi\frac{D}{U}\right)+S_4\cos{\left(4\pi\frac{D}{U}\right)}}}}\ \ \ (Eq. 4.9)$$ </div>
 <p>Where:</p>
-<p>&emsp;&emsp;S
-<sub>IC</sub> = Standard uncertainty of the Instrument Correction</p>
+<p>&emsp;&emsp;S<sub>IC</sub> = Standard uncertainty of the Instrument Correction</p>
 <p>&emsp;&emsp;D = Distance</p>
-<p>&emsp;&emsp;S
-<sub>zpc</sub> = Standard uncertainty of the Zero Point Correction (m)</p>
-<p>&emsp;&emsp;S
-<sub>scf</sub> = Standard uncertainty of the Scale Correction Factor (1:x)</p>
+<p>&emsp;&emsp;S<sub>zpc</sub> = Standard uncertainty of the Zero Point Correction (m)</p>
+<p>&emsp;&emsp;S<sub>scf</sub> = Standard uncertainty of the Scale Correction Factor (1:x)</p>
 <p>&emsp;&emsp;U = Instrument Unit Length (m)</p>
-<p>&emsp;&emsp;S
-<sub>1</sub> = Standard uncertainty of the term 1 - Cyclic (1:x)</p>
-<p>&emsp;&emsp;S
-<sub>2</sub> = Standard uncertainty of the term 2 - Cyclic (1:x)</p>
-<p>&emsp;&emsp;S
-<sub>3</sub> = Standard uncertainty of the term 3 - Cyclic (1:x)</p>
-<p>&emsp;&emsp;S
-<sub>4</sub> = Standard uncertainty of the term 4 - Cyclic (1:x)</p>
+<p>&emsp;&emsp;S<sub>1</sub> = Standard uncertainty of the term 1 - Cyclic (1:x)</p>
+<p>&emsp;&emsp;S<sub>2</sub> = Standard uncertainty of the term 2 - Cyclic (1:x)</p>
+<p>&emsp;&emsp;S<sub>3</sub> = Standard uncertainty of the term 3 - Cyclic (1:x)</p>
+<p>&emsp;&emsp;S<sub>4</sub> = Standard uncertainty of the term 4 - Cyclic (1:x)</p>
 <p> (b) if the calibration of the EDMI has not tested for cyclic errors, has found them to be insignificant:</p>
 <div>$$ S_{IC}=S_{zpc}+S_{scf}D\ \ \ (Eq. 4.10)$$ </div>
 <p>The uncertainty is calculated according to the following formula:</p>
 <div>$$ {uc}_{IC}=k * S_{IC}\ \ \ (Eq. 4.11)   $$</div>
 <p>Where:</p>
-<p>&emsp;&emsp;u
-<sub>IC</sub> = Expanded uncertainty of the Instrument Correction</p>
-<p>&emsp;&emsp;k = Coverage factor determined by the t-student at 95% and LSA derived degree of freedom (dof) t
-<sub>(95%,dof)</sub>
+<p>&emsp;&emsp;u<sub>IC</sub> = Expanded uncertainty of the Instrument Correction</p>
+<p>&emsp;&emsp;k = Coverage factor determined by the t-student at 95% and LSA derived degree of freedom (dof) t<sub>(95%,dof)</sub>
 </p>
 </ul>
 <br>Table 4.3 An example set of EDMI measurements observed on a EDM Baseline 
@@ -1451,38 +1353,31 @@ A rectangular distribution represents an arbitrary outcome that lies between cer
 <b>EDM scale factor</b> = Uncertainty related to the EDM scale factor can be specified in parts per million (ppm), percent (%), scalar(x:1) or a ratio (1:x). All error sources belonging to this group will be combined before the contribution to the total uncertainty of the calibration according to the following formula:</p>
 <div>$$ su_d = D*csu_g\ \ \ (Eq. 4.12)$$ </div>
 <p>Where:</p>
-<p>&emsp;&emsp;su
-<sub>d</sub> = Standard uncertainty of the distance</p>
+<p>&emsp;&emsp;su<sub>d</sub> = Standard uncertainty of the distance</p>
 <p>&emsp;&emsp;D = Distance</p>
-<p>&emsp;&emsp;csu
-<sub>g</sub> = Combined standard uncertainty of the group</p>
+<p>&emsp;&emsp;csu<sub>g</sub> = Combined standard uncertainty of the group</p>
 <p>The 'Default' Uncertainty Budget lists an error source with the description 'EDM scale factor affected by Temp (Type B)'. The EDM scale factor can be affected by temperature. This uncertainty component is a Type B estimate based on previous knowledge.</p>
 <p>
 <b>EDMI measurement</b> = Uncertainty relating to the EDMI measurement can be specified in metres (m), millimetres (mm), parts per million (ppm), percent (%), scalar(x:1) or a ratio (1:x). All error sources belonging to this group will be combined before the contribution to the total uncertainty of the calibration according to the following formula:</p>
 <div>$$ su_d = csu_g\ \ \ (Eq. 4.13)$$ </div>
 <p>Where:</p>
-<p>&emsp;&emsp;su
-<sub>d</sub> = Standard uncertainty of the distance</p>
-<p>&emsp;&emsp;csu
-<sub>g</sub> = Combined standard uncertainty of the group</p>
+<p>&emsp;&emsp;su<sub>d</sub> = Standard uncertainty of the distance</p>
+<p>&emsp;&emsp;csu<sub>g</sub> = Combined standard uncertainty of the group</p>
 <p>
 <b>EDM LS zero offset</b> = Uncertainty relating to the EDM Least Squares zero offset can be specified in metres (m) or millimetres (mm). All error sources belonging to this group will be combined before the contribution to the total uncertainty of the calibration according to the following formula 4.13</p>
 <p>
 <b>Temperature</b> = Uncertainty related to the temperature can be specified in degrees Celsius (°C) or degrees Fahrenheit (°F). All error sources belonging to this group will be combined before the contribution to the total uncertainty of the calibration according to the following formula:</p>
 <div>$$ su_d = D*K*csu_g*10^{-6}\ \ \ (Eq. 4.14)$$ </div>
 <p>Where:</p>
-<p>&emsp;&emsp;su
-<sub>d</sub> = Standard uncertainty of the distance</p>
+<p>&emsp;&emsp;su<sub>d</sub> = Standard uncertainty of the distance</p>
 <p>&emsp;&emsp;D = Distance</p>
-<p>&emsp;&emsp;csu
-<sub>g</sub> = Combined standard uncertainty of the group</p>
+<p>&emsp;&emsp;csu<sub>g</sub> = Combined standard uncertainty of the group</p>
 <p>&emsp;&emsp;K = Partial differential for temperature defined as:</p>
 <div>$$ K=\left[\frac{\frac{\left(n_G-1\right)\left(273.15p\right)}{1013.25}-11.27e*{10}^{-6}}{273.15+t^2}\right]*{10}^6\ \ \ (Eq. 4.15)$$ </div>
 <p>Where:</p>
 <p>&emsp;&emsp;p = Pressure [hPa]</p>
 <p>&emsp;&emsp;t = Temperature [C]</p>
-<p>&emsp;&emsp;n
-<sub>G</sub> = Manufacturers reference refractive index </p>
+<p>&emsp;&emsp;n<sub>G</sub> = Manufacturers reference refractive index </p>
 <p>&emsp;&emsp;e = Partial water vapour Pressure [hPa] defined as:</p>
 <div>$$ e=\frac{Eh}{100}\ \ \ (Eq. 4.16)$$ </div>
 <p>Where:</p>
@@ -1492,32 +1387,26 @@ A rectangular distribution represents an arbitrary outcome that lies between cer
 <b>Pressure</b> = Uncertainty related to the presure can be specified in millibars (mBar), hectopascals (hPa) or millimetres of mercury (mmHg). All error sources belonging to this group will be combined before the contribution to the total uncertainty of the calibration according to the following formula:</p>
 <div>$$ su_d = D*L*csu_g*10^{-6}\ \ \ (Eq. 4.17)$$ </div>
 <p>Where:</p>
-<p>&emsp;&emsp;su
-<sub>d</sub> = Standard uncertainty of the distance</p>
+<p>&emsp;&emsp;su<sub>d</sub> = Standard uncertainty of the distance</p>
 <p>&emsp;&emsp;D = Distance</p>
-<p>&emsp;&emsp;csu
-<sub>g</sub> = Combined standard uncertainty of the group</p>
+<p>&emsp;&emsp;csu<sub>g</sub> = Combined standard uncertainty of the group</p>
 <p>&emsp;&emsp;L = Partial differential for Pressure defined as:</p>
 <div>$$ L=\left[0.26957809\frac{\left(n_G-1\right)}{273.15+t^2}\right]\ast{10}^6\ \ \ (Eq. 4.18)$$ </div>
 <p>
 <b>Humidity</b> = Uncertainty relating to the humidity must be specified as a percent (%). All error sources belonging to this group will be combined before the contribution to the total uncertainty of the calibration according to the following formula:</p>
 <div>$$ su_d = D*M*csu_g*10^{-6}\ \ \ (Eq. 4.19)$$ </div>
 <p>Where:</p>
-<p>&emsp;&emsp;su
-<sub>d</sub> = Standard uncertainty of the distance</p>
+<p>&emsp;&emsp;su<sub>d</sub> = Standard uncertainty of the distance</p>
 <p>&emsp;&emsp;D = Distance</p>
-<p>&emsp;&emsp;csu
-<sub>g</sub> = Combined standard uncertainty of the group</p>
+<p>&emsp;&emsp;csu<sub>g</sub> = Combined standard uncertainty of the group</p>
 <p>&emsp;&emsp;M = Partial differential for humidity defined as:</p>
 <div>$$ M=\left[\frac{11.27*10^{-6}}{273.15+t^2}\right]*{10}^6\ \ \ (Eq. 4.20)$$ </div>
 <p>
 <b>Certified distances</b> = Uncertainty relating to the certified distances can be specified in metres (m), millimetres (mm), parts per million (ppm), percent (%), scalar(x:1) or a ratio (1:x). All error sources belonging to this group will be combined before the contribution to the total uncertainty of the calibration according to the following formula:</p>
 <div>$$ su_d = csu_g\ \ \ (Eq. 4.21)$$ </div>
 <p>Where:</p>
-<p>&emsp;&emsp;su
-<sub>d</sub> = Standard uncertainty of the distance</p>
-<p>&emsp;&emsp;csu
-<sub>g</sub> = Combined standard uncertainty of the group</p>
+<p>&emsp;&emsp;su<sub>d</sub> = Standard uncertainty of the distance</p>
+<p>&emsp;&emsp;csu<sub>g</sub> = Combined standard uncertainty of the group</p>
 <p>
 <b>EDMI calibration</b> = Uncertainty relating to the EDMI calibration can be specified in metres (m) or millimetres (mm). All error sources belonging to this group will be combined before the contribution to the total uncertainty of the calibration according to the Eg. 4.21.</p>
 <p>
@@ -1526,21 +1415,17 @@ A rectangular distribution represents an arbitrary outcome that lies between cer
 <b>Heights</b> = Uncertainty relating to the heights can be specified in metres (m) or millimetres (mm). All error sources belonging to this group will be combined before the contribution to the total uncertainty of the calibration according to the following formula:</p>
 <div>$$ su_d = csu_g*\frac{∆H}{D}\ \ \ (Eq. 4.22)$$ </div>
 <p>Where:</p>
-<p>&emsp;&emsp;su
-<sub>d</sub> = Standard uncertainty of the distance</p>
+<p>&emsp;&emsp;su<sub>d</sub> = Standard uncertainty of the distance</p>
 <p>&emsp;&emsp;D = Distance</p>
-<p>&emsp;&emsp;csu
-<sub>g</sub> = Combined standard uncertainty of the group</p>
+<p>&emsp;&emsp;csu<sub>g</sub> = Combined standard uncertainty of the group</p>
 <p>&emsp;&emsp;∆H = Height difference between the from and to pillars</p>
 <p>
 <b>Offsets</b> = Uncertainty relating to the offsets can be specified in metres (m) or millimetres (mm). All error sources belonging to this group will be combined before the contribution to the total uncertainty of the calibration according to the following formula:</p>
 <div>$$ su_d = csu_g*\frac{∆O}{D}\ \ \ (Eq. 4.22)$$ </div>
 <p>Where:</p>
-<p>&emsp;&emsp;su
-<sub>d</sub> = Standard uncertainty of the distance</p>
+<p>&emsp;&emsp;su<sub>d</sub> = Standard uncertainty of the distance</p>
 <p>&emsp;&emsp;D = Distance</p>
-<p>&emsp;&emsp;csu
-<sub>g</sub> = Combined standard uncertainty of the group</p>
+<p>&emsp;&emsp;csu<sub>g</sub> = Combined standard uncertainty of the group</p>
 <p>&emsp;&emsp;∆O = Difference in offset between from and to pillars</p>
 <br>
 </div>
@@ -1604,9 +1489,7 @@ A rectangular distribution represents an arbitrary outcome that lies between cer
 <p>Otherwise, the null hypothesis is rejected.</p>
 <div id="Chapter_6_1_3"></div>
 <h3>6.1.3 Hypothesis C</h3>
-<p>The null hypothesis states that the zero-point correction, δ, is equal to zero as supplied by the manufacturer (δ = 0)? Or, if prisms with a given zero-point correction, δ
-<sub>0</sub> are used, is δ = δ
-<sub>0</sub>?</p>
+<p>The null hypothesis states that the zero-point correction, δ, is equal to zero as supplied by the manufacturer (δ = 0)? Or, if prisms with a given zero-point correction, δ<sub>0</sub> are used, is δ = δ<sub>0</sub>?</p>
 <p>The null hypothesis is not rejected if the following condition is fulfilled:</p>
 <div>$$ |δ-δ_0 |≤s_δ×t_{1-α/2} (ν)\ \ \ \ (Eq. 6.3) $$</div>
 <p>Otherwise, the null hypothesis is rejected.</p>
@@ -1618,14 +1501,14 @@ A rectangular distribution represents an arbitrary outcome that lies between cer
 <script>
 MathJax = {
 tex: {
-inlineMath: [['$', '$'], ['\\(', '\\)']],
-tags: 'ams'
+	inlineMath: [['$', '$'], ['\\(', '\\)']],
+	tags: 'ams'
 },
 svg: {
-fontCache: 'global',
-displayAlign: 'left',
-displayIndent: '1.0em'
-}
+	fontCache: 'global',
+	displayAlign: 'left',
+	displayIndent: '1.0em'
+	}
 };
 </script>
 <script type="text/javascript" id="MathJax-script" async
