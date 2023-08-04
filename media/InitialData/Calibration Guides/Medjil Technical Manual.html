@@ -77,7 +77,7 @@
 <p>The current version of Medjil portal requires distances to be known for all types of baselines to perform EDMI calibration. This approach is essential for ensuring distance traceability to the national standard. Therefore, EDM baselines must be calibrated using NMI certified instruments to determine the certified distances before proceeding with EDMI calibration. An additional module could potentially be developed to enable EDMI calibration without known distances. However, it is important to note that such calibrations cannot be certified under the NMI Act, and the EDMI distances obtained in this manner are not legally traceable to the national standard. For more information on Medjil development and contribution, please visit the <a href="https://github.com/Landgate/Medjil">GitHub</a> repository.</p>
 <div id="Chapter_1_2"></div>
 <h2>1.2 Mathematical model and observation equations for the calibration of EDM Baseline</h2>
-<p>Two observation equations can be derived to ensure non-negative distances and enhance the flexibility of the EDM Baseline survey:</p>
+<p>By deriving two observation equations, we can ensure that distances remain non-negative and, at the same time, increase the flexibility of the EDM Baseline survey:</p>
 <div>$$ D_{ij}=x_j-x_i-zpc\ \ \ for\ j > i\ \ \ (Eq. 1.1)$$ </div>
 <div>$$ D_{ij}=x_i-x_j-zpc\ \ \ for\ j < i\ \ \ (Eq. 1.2)$$ </div>
 <p>Where:</p>
@@ -87,23 +87,23 @@
 <p>&emsp;&emsp;zpc = Zero point correction (an additive constant of the certified EDMI)</p>
 <div id="Chapter_1_3"></div>
 <h2>1.3 Example: Formation of observation equations</h2>
-<p>Consider the following example Baseline consisting of 4 pillars:</p>
+<p>Consider the following example baseline consisting of 4 pillars:</p>
 <img src="\media\TechnicalManual\tbaseline\Tech manual\Picture_1_1.png" alt="Example basline">
 <br>
 <br>
-<p>As per the Eq. 1.1 and Eq. 1.2 the  following set of linear observation equations can formed:</p>
+<p>The following set of linear observation equations can be formed according to Eq. 1.1 and Eq. 1.2:</p>
 <div>$$ \begin{matrix}D_{12}=&{+X}_2&&&-zpc\\D_{13}=&&{+X}_3&&-zpc\\D_{14}=&&&{+X}_4&-zpc\\D_{21}=&{+X}_2&&&-zpc\\D_{23}=&-X_2&+X_3&&-zpc\\D_{24}=&-X_2&&{+X}_4&-zpc\\D_{31}=&&+X_3&&-zpc\\D_{32}=&-X_2&{+X}_3&&-zpc\\D_{34}=&&-X_3&{+X}_4&-zpc\\D_{41}=&&&+X_4&-zpc\\D_{42}=&-X_2&&+X_4&-zpc\\D_{43}=&&-X_3&+X_4&-zpc\\\end{matrix}\ \ \ (Eq. 1.3)$$ </div>
-<p>The observation equations can be further expressed in a matrix notation as D = AX</p>
+<p>In matrix notation, the observation equations can be represented as as D = AX:</p>
 <div>$$ \left[\begin{matrix}D_{12}\\D_{13}\\D_{14}\\D_{21}\\D_{23}\\D_{24}\\D_{31}\\D_{32}\\D_{34}\\D_{41}\\D_{42}\\D_{43}\\\end{matrix}\right]=\left[\begin{matrix}1&0&0&-1\\0&1&0&-1\\0&0&1&-1\\1&0&0&-1\\-1&1&0&-1\\-1&0&1&-1\\0&1&0&-1\\-1&1&0&-1\\0&-1&1&-1\\0&0&1&-1\\-1&0&1&-1\\0&-1&1&-1\\\end{matrix}\right]\left[\begin{matrix}X_2\\X_3\\X_4\\zpc\\\end{matrix}\right]\ \ \ (Eq. 1.4)$$ </div>
 <p>Where:</p>
 <p>&emsp;&emsp;D<sub>ij</sub> = Measured distance between pillars i and j (vector of the observations)</p>
 <p>&emsp;&emsp;A = The design matrix
 <p>&emsp;&emsp;X = The certified distances and zpc (vector of the unknown output estimates)</p>
-<p>This approach does not require to provide approximate distances between pillars. The observations together with a-priori uncertainties (p) are least squares adjusted as per Section (5) to provides the estimated certified distances d<sub>x</sub> and the zpc with the full VCV matrix.</p>
+<p>This approach eliminates the need to provide approximate distances between pillars. In accordance with Section (5), the observations, along with their a-priori uncertainties (p), undergo a least squares adjustment to obtain the estimated certified distances d<sub>x</sub> and the zpc values, along with the complete VCV matrix.</p>
 <div id="Chapter_1_4"></div>
 <h2>1.4 Inter-pillar distances survey</h2>
 <img src="\media\TechnicalManual\tbaseline\Tech manual\Picture_1_3.png" alt="Inter-pillar distances survey">
-<p>To calibre an EDM baseline a series of the inter-pillar distance measurments (surveys) including atmospheric observations of the conditions during the survey are required. Medjil expects all instrumentation used for this survey to be callibrated with current certificate that states the uncertainty of the instrument readings and the calibration corrections that can be applied. The uncertainty of instrument readings is used for the propagation of uncertainties for the interpillar distance survey.</p>
+<p>To calibrate an EDM baseline, a series of inter-pillar distance measurements (surveys) are necessary, which should include atmospheric observations of the conditions during the survey. Medjil mandates that all instrumentation used in the survey must be calibrated and possess a current certificate stating the uncertainty of the instrument readings and the calibration corrections that can be applied. The uncertainty of instrument readings plays a crucial role in propagating uncertainties for the inter-pillar distance survey.</p>
 <p>The distance observations are assumed to be slope distances that have not been corrected for the height of instrument or height of targets. Applying atmospheric corrections by entering these into the instrument is optional but Medjil requires temperature, pressure and humidity for every distance measurement even if this has been entered into the instrument. These values are used for estimating the propagation of uncertinty as well as the optional applying of atmospheric corrections in case it was not entered into the instrument during the survey.</p>
 <p>It is recommended each distance (bay) d<sub>ij</sub> (where i = from_pillar; j = to_pillar) should be measured four times. However, Medjil allows the number of repeat measurements to vary between bays and between surveys. The pillar survey data is to be provided in an ASCII file and must contain the following fields:</p>
 <ul STYLE="margin:30px">
