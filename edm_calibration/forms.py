@@ -58,16 +58,18 @@ class CalibrateEdmForm(forms.ModelForm):
         model = uPillar_Survey
         fields = '__all__'
         exclude = ('degrees_of_freedom','variance','k',
-                   'uploaded_on', 'modified_on')
+                   'uploaded_on', 'modified_on',
+                    'data_entered_person','data_entered_position','data_entered_date',
+                    'data_checked_person','data_checked_position', 'data_checked_date')
         widgets = {
            'site': forms.Select(attrs={'class': 'page0'}),
            'auto_base_calibration':forms.CheckboxInput(
                attrs={'onclick':'tglCalibBase()'}),
            'calibrated_baseline': forms.Select(attrs={'class':'page0'}),
-           'computation_date': forms.DateInput(format=('%d-%m-%Y'),
-               attrs={'type':'date', 'class': 'page0'}),
-           'survey_date': forms.DateInput(format=('%d-%m-%Y'), 
-               attrs={'type':'date', 'class': 'page0'}),
+           'computation_date': forms.DateInput(
+               attrs={'type':'date', 'input_formats': ['%d-%m-%Y'], 'class': 'page0'}),
+           'survey_date': forms.DateInput(
+               attrs={'type':'date', 'input_formats': ['%d-%m-%Y'], 'class': 'page0'}),
            'observer': forms.TextInput (attrs={'class': 'page0'}),    
            'weather': forms.Select(attrs={'class': 'page0'}),
            'job_number': forms.TextInput (
@@ -149,3 +151,21 @@ class CalibrationParamForm(forms.ModelForm):
     class Meta:
         model = uCalibration_Parameter
         fields = '__all__'
+
+
+class PillarSurveyApprovals(forms.ModelForm):        
+    class Meta:
+        model = uPillar_Survey
+        fields = [
+            'data_entered_person',
+            'data_entered_position',
+            'data_entered_date',
+            'data_checked_person',
+            'data_checked_position', 
+            'data_checked_date']
+        widgets = {
+            'data_entered_date': forms.DateInput(
+                attrs={'type': 'date', 'input_formats': ['%d-%m-%Y']}),
+            'data_checked_date': forms.DateInput(
+                attrs={'type': 'date', 'input_formats': ['%d-%m-%Y']}),
+        }

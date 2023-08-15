@@ -52,6 +52,7 @@ var wrapper = document.querySelector('.wrapper');
 // wrapper.outerHTML = wrapper.innerHTML;
 
 function changeToPrintFormat() {
+  event.preventDefault();
   // Create a new stylesheet for print styles
   var printStyles = document.createElement('style');
   printStyles.setAttribute('media', 'print');

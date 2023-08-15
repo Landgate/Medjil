@@ -123,13 +123,3 @@ def ISO_test_c(zpc, zpc_std_dev, chi_test):
     }
     return test_c
 
-
-def is_evenly_distributed(data):
-    n = len(data)
-    expected_count = n / len(set(data))
-    observed_counts = [data.count(x) for x in set(data)]
-    chi_square = sum([(count - expected_count) ** 2 / expected_count for count in observed_counts])
-    degrees_of_freedom = len(observed_counts) - 1
-    significance_level = 0.05
-    critical_value = chi2.ppf(1 - significance_level, degrees_of_freedom)
-    return chi_square < critical_value

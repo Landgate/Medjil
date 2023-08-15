@@ -1,6 +1,5 @@
 from django.db import models
 from django.core.validators  import MaxValueValidator, MinValueValidator
-from django.conf import settings
 from django.db.models import Q
 from datetime import date
 
@@ -107,7 +106,14 @@ class uPillar_Survey(models.Model):
              help_text="Degrees of freedom of calibration")
    k = models.FloatField(blank = True, null=True,
              verbose_name= 'coverage factor')
-    
+   
+   data_entered_person = models.CharField(max_length=25,null=True, blank=True)
+   data_entered_position = models.CharField(max_length=25,null=True, blank=True)
+   data_entered_date = models.DateField(null=True, blank=True)
+   data_checked_person = models.CharField(max_length=25,null=True, blank=True)
+   data_checked_position = models.CharField(max_length=25,null=True, blank=True)
+   data_checked_date = models.DateField(null=True, blank=True)
+   
    uploaded_on = models.DateTimeField(auto_now_add=True, null=True)
    modified_on = models.DateTimeField(auto_now=True, null=True)
 
