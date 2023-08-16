@@ -280,3 +280,27 @@ td .submit-button {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+/* Signiture lines for approvals on reports*/
+.approvals-form {
+  width: 100%; 
+  border: none; 
+  box-shadow: none;
+  margin: auto auto;
+}
+
+.approvals-form input[type=email],
+.approvals-form input[type=password],
+.approvals-form input[type=text], 
+.approvals-form input[type=number], 
+.approvals-form input[type=date],
+.approvals-form input[type=file] {
+  border-left: none;
+  border-top: none;
+  border-right: none;
+  margin: auto auto;
+}
+
+.approvals-form table {
+  border-collapse: unset;
+}

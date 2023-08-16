@@ -702,32 +702,74 @@
                 {% else %} No data warnings to display. {% endif %}
             </div>
         </div>
-    </div>
-    <form id="Hidden" action="" class="site-form" method="post" enctype="multipart/form-data">
-        <div class="flexbox-container_IB">
-            <div class="flexbox-item_800_IB flexbox-item-button_IB">
-                <a href= "{% url 'edm_calibration:calibrate2' id=pillar_survey.pk %}" class="submit-button bg-green-500 hover:bg-green-400" style="text-align: center">Back</a>
-                {% if pillar_survey.variance is not null %}
-                    <a href= "{% url 'edm_calibration:edm_calibration_home' %}" class="submit-button bg-red-500 hover:bg-green-400" style="text-align: center">Cancel</a>
-                {% else %}
-                    <a href= "{% url 'edm_calibration:pillar_survey_del' id=pillar_survey.pk %}" class="submit-button bg-red-500 hover:bg-green-400" style="text-align: center"> Cancel</a>
-                {% endif %}
-                <button type="submit" class="submit-button bg-green-500 hover:bg-green-400" >Save</button>
+        <h2 style="text-align: center">Approvals</h2>
+        <form class="approvals-form site-form" method="post" enctype="multipart/form-data">
+            <div class="flexbox-item_800_IB flexbox-item-left_IB">
+                <table>
+                    <colgroup>
+                        <col span="1" width="15%">
+                        <col span="1" width="22%">
+                        <col span="1" width="6%">
+                        <col span="1" width="15%">
+                        <col span="1" width="22%">
+                    </colgroup>
+                    <tr>
+                        <td>Data entry by:</td>
+                        <td>{{ pillar_approvals_update.data_entered_person}}</td>
+                        <td style="border:none:"></td>
+                        <td>Data checked by:</td>
+                        <td>{{ pillar_approvals_update.data_checked_person}}</td>
+                    </tr>
+                    <tr>
+                        <td>Position:</td>
+                        <td>{{ pillar_approvals_update.data_entered_position}}</td>
+                        <td style="border:none:"></td>
+                        <td>Position:</td>
+                        <td>{{ pillar_approvals_update.data_checked_position}}</td>
+                    </tr>
+                    <tr>
+                        <td>Signature:</td>
+                        <td> <input type='text' style="background:none;"></td>
+                        <td style="border:none:"></td>
+                        <td>Signature:</td>
+                        <td> <input type='text' style="background:none;"></td>
+                    </tr>    
+                    <tr>
+                        <td>Date:</td>
+                        <td>{{ pillar_approvals_update.data_entered_date}}</td>
+                        <td style="border:none:"></td>
+                        <td>Date:</td>
+                        <td>{{ pillar_approvals_update.data_checked_date}}</td>
+                    </tr>
+                </table>
             </div>
-        </div>
-        <div style="display:None;">
+            {% if edm_observations %}
+            <div class="button-container">
+                <div class="flexbox-item_800_IB flexbox-item-button_IB">
+                    <a href= "{% url 'edm_calibration:calibrate2' id=pillar_survey.pk %}" class="submit-button bg-green-500 hover:bg-green-400" style="text-align: center">Back</a>
+                    {% if pillar_survey.variance is not null %}
+                        <a href= "{% url 'edm_calibration:edm_calibration_home' %}" class="submit-button bg-red-500 hover:bg-green-400" style="text-align: center">Cancel</a>
+                    {% else %}
+                        <a href= "{% url 'edm_calibration:pillar_survey_del' id=pillar_survey.pk %}" class="submit-button bg-red-500 hover:bg-green-400" style="text-align: center"> Cancel</a>
+                    {% endif %}
+                    <button type="submit" class="submit-button bg-green-500 hover:bg-green-400" >Save</button>
+                </div>
+            </div>
+            {% endif %}
+            <div style="display:None;">
                 {% csrf_token %}          
-            {% for form in hidden %}
-                {{ form.management_form }}
-                {% for field in form %}
-                    <p>{{ field }}</p>
-                    {% for error in field.errors %}
-                        <p style="color:Red;">{{ error }}</p>
+                {% for form in hidden %}
+                    {{ form.management_form }}
+                    {% for field in form %}
+                        <p>{{ field }}</p>
+                        {% for error in field.errors %}
+                            <p style="color:Red;">{{ error }}</p>
+                        {% endfor %}
                     {% endfor %}
                 {% endfor %}
-            {% endfor %}
-        </div>
-    </form>
+            </div>
+        </form>
+    </div>
 </article>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
@@ -947,7 +989,7 @@ new Chart("return-phase-angle-Chart", {
 });
 
 </script>
-        <script>
+<script>
 function sortTable(n) {
   var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
   table = document.getElementById("myTable");

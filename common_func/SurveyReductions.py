@@ -375,7 +375,8 @@ def add_surveyed_uc(o, edm_trend, uc_sources, alignment_survey):
                    'std_dev': o['slope_dist']*edm_trend['A'] + edm_trend['B'],
                    'k':t.ppf(1-0.025,df=30),
                    'degrees_of_freedom':30,
-                   'description':'Linear regression on EDM distance standard deviations'})
+                   'description':('Linear regression on EDM distance standard deviations' +
+                                  f' UC = k x ({edm_trend["A"]*1000:.6f} x L + {edm_trend["B"]*1000:.2f}) mm')})
     
     # '10'
     frm_rl= alignment_survey[o['from_pillar']]
@@ -449,6 +450,12 @@ def add_typeA(d, matrix_y, dof):
     if len(matrix_y)==2:
         s_dev = (matrix_y[0]['std_dev']
                  + matrix_y[1]['std_dev']* 10**-6 * d['Reduced_distance'])
+    
+    if len(matrix_y)==4:
+        s_dev = (matrix_y[0]['std_dev']
+                 + matrix_y[1]['std_dev']* 10**-6 * d['Reduced_distance']
+                 + matrix_y[2]['std_dev'] * sin(d['d_term'])
+                 + matrix_y[3]['std_dev'] * cos(d['d_term']))
     
     if len(matrix_y)==6:
         s_dev = (matrix_y[0]['std_dev']

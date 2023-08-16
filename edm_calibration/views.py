@@ -35,7 +35,8 @@ from .forms import (
     ChangeSurveyFiles,
     EDM_ObservationForm,
     PillarSurveyUpdateForm,
-    CalibrationParamForm
+    CalibrationParamForm,
+    PillarSurveyApprovals
     )
 from .models import (
     uPillar_Survey,
@@ -93,8 +94,6 @@ def calibrate1(request, id):
                                                 request.FILES or None)
     else:
         qs = get_object_or_404(uPillar_Survey, id=id)
-        qs.survey_date = qs.survey_date.isoformat()
-        qs.computation_date = qs.computation_date.isoformat()
         pillar_survey = CalibrateEdmForm(request.POST or None,
                                          request.FILES or None,
                                          instance = qs,
@@ -200,9 +199,9 @@ def calibrate2(request,id):
     
     #----------------- Query site, surveys, instruments and calibrations -----------------#
     # Get the pillar_survey in dict like cleaned form data
-    qs = uPillar_Survey.objects.get(id=id)
+    ps_qs = uPillar_Survey.objects.get(id=id)
     query_dict = QueryDict('', mutable=True)
-    query_dict.update(model_to_dict(qs))
+    query_dict.update(model_to_dict(ps_qs))
     pillar_survey_form = CalibrateEdmForm(query_dict, user=request.user)
     pillar_survey_form.is_valid()
     pillar_survey = pillar_survey_form.cleaned_data
@@ -211,7 +210,7 @@ def calibrate2(request,id):
     
     # Create form to hide on report and commit when submitted
     pillar_survey_update = PillarSurveyUpdateForm(request.POST or None)
-    calib_params = formset_factory(CalibrationParamForm, extra=0)  
+    calib_params = formset_factory(CalibrationParamForm, extra=0)
     
     # Get the raw_edm_obs in dict like cleaned form data
     formset = modelformset_factory(uEDM_Observation,
@@ -372,7 +371,8 @@ def calibrate2(request,id):
                 matrix_y, vcv_matrix, chi_test, residuals = LSA(matrix_A, 
                                                                 matrix_x,
                                                                 matrix_P)
-                testing_terms = [t['t_test'] for t in matrix_y[-2:]]
+                if not pillar_survey['test_cyclic']:
+                    testing_terms = [t['t_test'] for t in matrix_y[-2:]]
                 if False in testing_terms:
                     report_notes.append(
                         f'The t-student test has been used to test and determine that the {order_cmt} ' \
@@ -476,7 +476,11 @@ def calibrate2(request,id):
             calib['edmi'][0]['k'] = chi_test['k']
             calib['edmi'][0]['parameters'] = matrix_y
             
+            #create signiture block
+            pillar_approvals_update = PillarSurveyApprovals(instance=ps_qs)
+            
             context = {'pillar_survey':pillar_survey,
+                       'pillar_approvals_update':pillar_approvals_update,
                        'calib':calib,
                        'baseline': baseline,
                        'chi_test': chi_test,
@@ -492,17 +496,26 @@ def calibrate2(request,id):
 
         #----------------------- code for commiting the calibration and returning to home page -----------------------------#        
         calib_params = calib_params(request.POST)
+        pillar_approvals_update = PillarSurveyApprovals(request.POST)
         #check to see if pillar_survey(id) has been saved before and delete these from the database
         delete_cp = uCalibration_Parameter.objects.filter(pillar_survey__pk=id)
         delete_cp.delete()
-        if calib_params.is_valid() and pillar_survey_update.is_valid():
-        #     # this is a POST command asking to commit the hidden calibration 
-        #     # data held on the report page
+        
+        if calib_params.is_valid() and pillar_survey_update.is_valid() and pillar_approvals_update.is_valid():
+             # this is a POST command asking to commit the hidden calibration 
+             # data held on the report page
             ps_update = pillar_survey_update.cleaned_data
+            approvals = pillar_approvals_update.cleaned_data
             pillar_survey = uPillar_Survey.objects.get(id=id)
             pillar_survey.degrees_of_freedom = ps_update['degrees_of_freedom']
             pillar_survey.variance = ps_update['variance']
             pillar_survey.k = ps_update['k']
+            pillar_survey.data_entered_person = approvals['data_entered_person']
+            pillar_survey.data_entered_position = approvals['data_entered_position']
+            pillar_survey.data_entered_date = approvals['data_entered_date']
+            pillar_survey.data_checked_person = approvals['data_checked_person']
+            pillar_survey.data_checked_position = approvals['data_checked_position']
+            pillar_survey.data_checked_date = approvals['data_checked_date']
             pillar_survey.save()
             
             for cp_form in calib_params:
@@ -510,3 +523,20 @@ def calibrate2(request,id):
                 
             return redirect('edm_calibration:edm_calibration_home')
         
+def certificate(request, id):
+    ps_qs = uPillar_Survey.objects.get(id=id)
+    query_dict = QueryDict('', mutable=True)
+    query_dict.update(model_to_dict(ps_qs))
+    pillar_survey_form = CalibrateEdmForm(query_dict, user=request.user)
+    pillar_survey_form.is_valid()
+    pillar_survey = pillar_survey_form.cleaned_data
+    pillar_approvals_update = PillarSurveyApprovals(instance=ps_qs)
+    calib = Calibrations_qry(pillar_survey)
+    baseline = baseline_qry(pillar_survey)
+
+    context = {'pillar_survey':pillar_survey,
+               'pillar_approvals_update':pillar_approvals_update,
+               'calib':calib,
+               'baseline': baseline,
+               }
+    return render(request, 'edm_calibration/calibrate_report.html', context)
