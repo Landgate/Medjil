@@ -59,7 +59,7 @@
 <li>Optics and optical instruments - Field procedures for testing geodetic and surveying instruments ISO 17123-4:2012</li>
 </ul>
 <p>The Draft Verifying Authorities (VA) Handbook 2001 is intended for use by verifying authorities which are appointed under the provisions of Regulation 73 of the National Measurement Regulations 1999 in accordance with the National Measurement Act 1960 to verify reference standards of measurements under the provisions of Regulation 13, 30 and 31. The determination of the a priori standard deviations and the analysis of uncertainties of EDM measurements are based on the general guidelines within this handbook.</p>
-<p>The minimum standards for the uncertainty of an EDMI calibration are described in terms of Recommendation No,8 of the Working Party of the National Standards Commission on the calibration of EDM Equipment of 1 February, 1983. All uncertainties are specified at the 95% confidence level. Users have the flexibility to adopt or modify default uncertainties and associated traceability statements as required.</p>
+<p>The minimum standards for the uncertainty of an EDMI calibration are described in terms of Recommendation No,8 of the Working Party of the National Standards Commission on the calibration of EDM Equipment of 1 February, 1983. All uncertainties are specified at the 95% confidence level. Users have the flexibility to adopt or modify default uncertainties and associated traceability statements as required. For more information on Medjil development and contribution, please visit the <a href="https://github.com/Landgate/Medjil">GitHub</a> repository.</p>
 <br>
 </div>
 <div id="Chapter_1">
@@ -74,7 +74,7 @@
 <li>Hobart Design</li>
 </ul>
 <p>Each of the EDM Baseline designs aims to achieve an equal distribution of measured distances between the shortest and longest lines without any repetitions. They also allow EDMI calibration with or without known distances (certified baseline distances), with the exception of the Hobart design, which requires the distances to be known beforehand. Most baseline designs incorporate a multiple of a basic unit length of EDM instrument. A detailed explanation of baseline design concepts is beyond the scope of this manual. For detailed baseline design information, please refer to the "Electronic Distance Measurement" book by J.M. Rueger.</p>
-<p>The current version of Medjil portal requires distances to be known for all types of baselines to perform EDMI calibration. This approach is essential for ensuring distance traceability to the national standard. Therefore, EDM baselines must be calibrated using NMI certified instruments to determine the certified distances before proceeding with EDMI calibration. An additional module could potentially be developed to enable EDMI calibration without known distances. However, it is important to note that such calibrations cannot be certified under the NMI Act, and the EDMI distances obtained in this manner are not legally traceable to the national standard. For more information on Medjil development and contribution, please visit the <a href="https://github.com/Landgate/Medjil">GitHub</a> repository.</p>
+<p>The current version of Medjil portal requires distances to be known for all types of baselines to perform EDMI calibration. This approach is essential for ensuring distance traceability to the national standard. Therefore, EDM baselines must be calibrated using NMI certified instruments to determine the certified distances before proceeding with EDMI calibration. An additional module could potentially be developed to enable EDMI calibration without known distances. However, it is important to note that such calibrations cannot be certified under the NMI Act, and the EDMI distances obtained in this manner are not legally traceable to the national standard.</p>
 <div id="Chapter_1_2"></div>
 <h2>1.2 Mathematical model and observation equations for the calibration of EDM Baseline</h2>
 <p>By deriving two observation equations, we can ensure that distances remain non-negative and, at the same time, increase the flexibility of the EDM Baseline survey:</p>
@@ -125,10 +125,10 @@
 <p>The pillar offset survey determines offset of each pillar from the alignment of the first (1) and last pillar (n). Medjil performs the required reduction of observations during the EDM Baseline calibration process. Each survey setup is used to automatically calculate the pillar offset providing the survey setup includes measurements to pillar 1 and pillar n.</p>
 <img src="\media\TechnicalManual\tbaseline\Tech manual\Picture_1_2.png" alt="Pillar Offsets">
 <p>For each pillar setup, an arbitrary set of coordinates (E<sub>j</sub>, N<sub>j</sub>) are calculated for all pillars observed according to the formula:</p>
-<div>$$\left[E_j,N_j\right]=\ Polar2Reclangular\left(A_{ij},d_{ij}\right)\ \ \ (Eq. 1.5)$$ </div>
+<div>$$\left[E_j,N_j\right]=\ Polar2Reclangular\left(Hz_{ij},d_{ij}\right)\ \ \ (Eq. 1.5)$$ </div>
 <p>Where:</p>
 <p>&emsp;&emsp;d<sub>ij</sub> = horizontal distance (in metres) corrected for calibration parameters and atmospheric corrections between pillars i and j</p>
-<p>&emsp;&emsp;Hz<sub>ij</sub> = direction observed at pillar i to pillar j</p>
+<p>&emsp;&emsp;Hz<sub>ij</sub> = angular direction observed at pillar i to pillar j</p>
 <p>&emsp;&emsp;[E<sub>j</sub>,N<sub>j</sub>] = set of arbitrary coordinates (Easting and Northing) of pillar j</p>
 <p>Then the offset of pillar j is calculated according to:</p>
 <div>$$O_j=d_{j}sin\left(A_{1n}-A_{j}\right)\ \ \ (Eq. 1.6)$$ </div>
@@ -152,16 +152,16 @@
 <h1>2 EDM Instrumentation calibration</h1>
 <div id="Chapter_2_1"></div>
 <h2>2.1 Systematic errors in EDM instruments</h2>
-<p>There are three distinct systematic errors which may occur in EDM instruments. The calibration of an instrument on a certified baseline allows to determine the specific instrument - prism correction that can elimination of the following errors:</p>
+<p>There are three distinct systematic errors which may occur in EDM instruments. The calibration of an instrument on a certified baseline allows to determine the specific instrument - prism correction that can eliminate of the following errors:</p>
 <div id="Chapter_2_1_1"></div>
 <h3>2.1.1 Zero Point Correction (zpc)</h3>
-<p>All distances measured by a particular EDM instrument and reflector combination are subject to a constant error caused by three factors:</p>
+<p>All distances measured by a particular EDM instrument and reflector combination (EDMI) are subject to a constant error caused by the following factors:</p>
 <ul STYLE="margin:30px">
 <li>Electrical delays, geometrical detours and eccentricities in the instruments</li>
 <li>Differences between the electronic centre and the mechanical centre of the instrument</li>
 <li>Differences between the optical and mechanical centres of the reflector (prism)</li>
-<li>This error may vary with changes of reflector, or after jolts, or with different instrument mountings. It is an algebraic constant to be applied directly to every measurement</li>
 </ul>
+<p>This errors may vary with changes of reflector, or after jolts, or with different instrument mountings. Zpc is an algebraic constant applied directly to every measurement.<p>
 <div id="Chapter_2_1_2"></div>
 <h3>2.1.2 Scale Correction Factor (scf)</h3>
 <p>Scale Correction Factor is proportional to the length of the distance measured and is caused by:</p>
@@ -183,7 +183,7 @@
 <p>&emsp;&emsp;scf = Scale Correction Factor (1:x)</p>
 <p>&emsp;&emsp;U = Instrument Unit Length (m) - wavelength/2</p>
 <p>&emsp;&emsp;1C, 2C, 3C and 4C = Cyclic (short periodic) parameters</p>
-<p>By default Medjil solution estimates zpc and scf for EDMI only. However Medjil is also capable of solving for a cyclic error parameter (C) which is depends on wavelength cycle errors. Solving for cyclic error however, is optional as the ability to detect this error reliably depends on the baseline design.
+<p>By default Medjil estimates only zpc and scf. However, Medjil is also capable of solving for cyclic error parameters (1C,2C,3C,4C) which are depend on wavelength cycle errors. Solving for cyclic error however, is optional as the ability to detect this error reliably depends on the baseline design.
 User should perform additional calibration on "cyclic error" testline if the instrument callibration was performed on Aarau baseline design or Heerbrugg or Hobart design, which was not designed for the unit length of the distance meter being callibrated or the accuracy of the cyclic errors determined on Heerbrugg or Hobart type baselines is not sufficient.</p>
 <div id="Chapter_2_3"></div>
 <h2>2.3 Observation equations</h2>
