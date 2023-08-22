@@ -224,8 +224,7 @@ def calibrate2(request,id):
         dct['to_pillar'] = o.to_pillar.name
         raw_edm_obs[str(o.id)] = dct
 
-    if request.method == 'GET':
-        # Display the EDM raw data form to select / deselect observations
+    if request.method == 'GET':        
         formset = zip(edm_obs_formset, raw_edm_obs.values())
         
         return render(request, 'edm_calibration/edm_rawdata.html', 
@@ -498,11 +497,11 @@ def calibrate2(request,id):
         #----------------------- code for commiting the calibration and returning to home page -----------------------------#        
         calib_params = calib_params(request.POST)
         pillar_approvals_update = PillarSurveyApprovals(request.POST)
+        #check to see if pillar_survey(id) has been saved before and delete these from the database
+        delete_cp = uCalibration_Parameter.objects.filter(pillar_survey__pk=id)
+        delete_cp.delete()
         
         if calib_params.is_valid() and pillar_survey_update.is_valid() and pillar_approvals_update.is_valid():
-            #check to see if pillar_survey(id) has been saved before and delete these from the database
-            delete_cp = uCalibration_Parameter.objects.filter(pillar_survey__pk=id)
-            delete_cp.delete()
              # this is a POST command asking to commit the hidden calibration 
              # data held on the report page
             ps_update = pillar_survey_update.cleaned_data
