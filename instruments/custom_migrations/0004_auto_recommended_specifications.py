@@ -37,15 +37,20 @@ def add_landgate_instruments(apps, schema_editor):
             model = spec['model'],
             edm_type = spec['edm_type'],
             manu_unc_const = safe_float(spec['manu_unc_const']),
+            units_manu_unc_const = spec['units_manu_unc_const'],
             manu_unc_ppm = safe_float(spec['manu_unc_ppm']),
+            units_manu_unc_ppm = spec['units_manu_unc_ppm'],
             manu_unc_k = safe_float(spec['manu_unc_k']),
             unit_length = safe_float(spec['unit_length']),
+            units_unit_length = spec['units_unit_length'],
             frequency = safe_float(spec['frequency']),
+            units_frequency = spec['units_frequency'],
             carrier_wavelength = safe_float(spec['carrier_wavelength']),
+            units_carrier_wavelength = spec['units_carrier_wavelength'],
             manu_ref_refrac_index = safe_float(spec['manu_ref_refrac_index']),
             c_term = safe_float(spec['c_term']),
             d_term = safe_float(spec['d_term']),
-            remark = safe_float(spec['remark'])
+            remark = spec['remark']
             )
 
 def reverse_func(apps, schema_editor):

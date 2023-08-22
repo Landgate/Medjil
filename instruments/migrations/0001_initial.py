@@ -671,7 +671,7 @@ class Migration(migrations.Migration):
                 (
                     "manu_unc_const",
                     models.FloatField(
-                        help_text="Accuracy = 1mm ± 1.5ppm, Uncertainty Constant = 1",
+                        help_text="Accuracy = A mm ± B ppm, Uncertainty Constant = A",
                         validators=[
                             django.core.validators.MinValueValidator(0.0),
                             django.core.validators.MaxValueValidator(10.0),
@@ -682,7 +682,7 @@ class Migration(migrations.Migration):
                 (
                     "manu_unc_ppm",
                     models.FloatField(
-                        help_text="Accuracy = 1mm ± 1.5ppm, Uncertainty ppm = 1.5",
+                        help_text="Accuracy = A mm ± B ppm, Uncertainty ppm = B",
                         validators=[
                             django.core.validators.MinValueValidator(0.0),
                             django.core.validators.MaxValueValidator(10.0),
@@ -960,8 +960,8 @@ class Migration(migrations.Migration):
                     "source_ref",
                     models.CharField(max_length=265, verbose_name="Source reference"),
                 ),
-                ("manufacturer", models.CharField(max_length=25)),
-                ("model", models.CharField(max_length=25)),
+                ("manufacturer", models.CharField(max_length=25, verbose_name="Manufacturer")),
+                ("model", models.CharField(max_length=25, verbose_name="Model")),
                 (
                     "edm_type",
                     models.CharField(
@@ -978,7 +978,7 @@ class Migration(migrations.Migration):
                     "manu_unc_const",
                     models.FloatField(
                         blank=True,
-                        help_text="Accuracy = 1mm ± 1.5ppm, Uncertainty Constant = 1",
+                        help_text="Accuracy = A mm ± B ppm, Uncertainty Constant = A",
                         null=True,
                         validators=[
                             django.core.validators.MinValueValidator(0.0),
@@ -991,7 +991,7 @@ class Migration(migrations.Migration):
                     "manu_unc_ppm",
                     models.FloatField(
                         blank=True,
-                        help_text="Accuracy = 1mm ± 1.5ppm, Uncertainty ppm = 1.5",
+                        help_text="Accuracy = A mm ± B ppm, Uncertainty ppm = B",
                         null=True,
                         validators=[
                             django.core.validators.MinValueValidator(0.0),
@@ -1024,6 +1024,7 @@ class Migration(migrations.Migration):
                             django.core.validators.MinValueValidator(0.0),
                             django.core.validators.MaxValueValidator(10000.0),
                         ],
+                        verbose_name="Unit Length",
                     ),
                 ),
                 (
@@ -1036,6 +1037,7 @@ class Migration(migrations.Migration):
                             django.core.validators.MinValueValidator(1),
                             django.core.validators.MaxValueValidator(100000000),
                         ],
+                        verbose_name="Frequency",
                     ),
                 ),
                 (
@@ -1048,6 +1050,7 @@ class Migration(migrations.Migration):
                             django.core.validators.MinValueValidator(0),
                             django.core.validators.MaxValueValidator(1000),
                         ],
+                        verbose_name="Carrier wavelength",
                     ),
                 ),
                 (
@@ -1071,6 +1074,7 @@ class Migration(migrations.Migration):
                         help_text="Coefficients C for first velocity correction eg 281.8",
                         max_digits=6,
                         null=True,
+                        verbose_name="C term",
                     ),
                 ),
                 (
@@ -1081,9 +1085,10 @@ class Migration(migrations.Migration):
                         help_text="Coefficients D for first velocity correction eg 79.39",
                         max_digits=5,
                         null=True,
+                        verbose_name="D term",
                     ),
                 ),
-                ("remark", models.CharField(blank=True, max_length=265, null=True)),
+                ("remark", models.CharField(blank=True, max_length=265, null=True, verbose_name="Remark")),
                 (
                     "units_carrier_wavelength",
                     models.CharField(
