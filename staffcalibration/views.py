@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.views import generic
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
+from django.contrib.auth.mixins import LoginRequiredMixin
 # from formtools.wizard.views import SessionWizardView, NamedUrlSessionWizardView
 # from django.urls import reverse
 
@@ -25,13 +26,17 @@ from staffcalibration.forms import (StaffCalibrationRecordForm,
 
 ################################################################################
 # Home View
-class HomeView(generic.ListView):
+class HomeView(generic.ListView, LoginRequiredMixin):
     model = StaffCalibrationRecord
     paginate_by = 25
     template_name = 'staffcalibration/staff_calibration_home.html'
 
     ordering = ['-calibration_date']
-
+    def get_queryset(self):
+        if not self.request.user.is_staff:
+            return StaffCalibrationRecord.objects.filter(inst_staff__staff_owner = self.request.user.company)
+        else:
+            return StaffCalibrationRecord.objects.all()
 
 @login_required(login_url="/accounts/login")
 def user_staff_registry(request):

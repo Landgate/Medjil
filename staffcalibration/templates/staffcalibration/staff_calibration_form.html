@@ -45,7 +45,7 @@
                         </td>
                         <td width="5%">
                             {% if field.name == 'inst_staff' %}
-									<a href="/instruments/inst_staff_create" target="_blank" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" onclick="return showAddPopup(this);" id="add_country">&#43;</a>
+									<a href="/instruments/inst_staff_create_popup" target="_blank" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" onclick="return showAddPopup(this);" id="add_country">&#43;</a>
 									<!-- <a href="{% url 'instruments:inst_staff_create' %}?next={{request.path}}" class="px-2 py-1 add-button bg-blue-300 hover:bg-blue-200 "><span class="icon-plus">&#43;</span>Add</a> -->
 								{% elif field.name == 'inst_level' %}
 									<a href="/instruments/inst_level_create_popup" target="_blank" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" onclick="return showAddPopup(this);" id="add_country">&#43;</a>

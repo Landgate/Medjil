@@ -16,6 +16,9 @@ staff_creation_wizard = views.StaffCreationWizard.as_view(STAFFFORM,
                             condition_dict={'inst_staff_record_form': views.show_calibrated_form_condition},
                             url_name = 'instruments:sstep')
 
+staff_creation_wizard_popup = views.StaffCreationWizardPopUp.as_view(STAFFFORM, 
+                            condition_dict={'inst_staff_record_form': views.show_calibrated_form_condition},
+                            url_name = 'instruments:sstep')
 
 urlpatterns = [
     # Global Settings
@@ -41,6 +44,9 @@ urlpatterns = [
     path('inst_staff_create/', staff_creation_wizard, name='inst_staff_create'),
     path('inst_staff/<id>/update', views.inst_staff_update, name = 'inst_staff_update'),
     path('inst_staff/<id>/delete/', views.inst_staff_delete, name = 'inst_staff_delete' ),
+    # popup staff
+    re_path(r'^inst_staff_create_popup/(?P<step>.+)/$', staff_creation_wizard_popup, name='sstep'),
+    path('inst_staff_create_popup/', staff_creation_wizard_popup, name='inst_staff_create_popup'),
 
     path('<id>/inst_model_update/', views.inst_model_update, name = 'inst_model_update'),
     path('<id>/inst_model_delete/', views.inst_model_delete, name = 'inst_model_delete'),

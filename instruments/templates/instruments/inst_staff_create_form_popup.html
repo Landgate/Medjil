@@ -1,0 +1,172 @@
+{% extends 'base_popup.html' %}
+{% load i18n %}
+{% load static %}
+
+
+{% block content %} 
+
+<article class="post">
+    <!-- <div class="post-header mt-10 text-center mb-3">
+        <h1>Welcome to Landgate's Survey Instrument Calibration website.</h1>
+        <p>You can now easily calibrate your Digital Levelling Staves and Electronic Distance Measurements using this web application.</p>
+        <p>
+			<u> Step {{ wizard.steps.step1 }} of  {{ wizard.steps.count }} </u>
+		</p>
+    </div> -->
+
+    <div class="post-content">
+        <div class="mt-5 mb-3">
+            {% if form.errors or form.non_field_errors %}
+                <!-- {{ form.errors }} -->
+                {% for error in form.non_field_errors %} 
+                    <p class="error error-danger">** {{ error }}</p>
+                {% endfor %}
+		    {% endif %}
+        </div>
+        
+        <form action="" class="site-form" method="post">
+            {% csrf_token %}
+            <div class="mb-5 site-form-header bg-indigo-300 rounded px-2">
+                <h2 class="text-center">Create a Barcoded Levelling Staff</h2>
+            </div>
+            <div class="mb-3 px-2 site-form-header">
+                <p class="text-center text-lg"><u>Step {{ wizard.steps.step1 }} of  {{ wizard.steps.count }}</u></p>
+            </div>
+            <table>
+                {{ wizard.management_form }}
+                {% if wizard.form.forms %}
+                    {{ wizard.form.management_form }}
+                    {% for form in wizard.form.forms %}
+                        {{ form }}
+                    {% endfor %}
+                {% else %}
+                    {% for field in wizard.form %}
+                    <tr>
+                        <td width="25%"><strong>{{ field.label_tag }}</strong></td>
+                        <td width="70%"> {{ field }} 
+                            <!-- Errors -->
+                            {% for error in field.errors %}
+                                <p class="error error-danger">{{ error }}</p>
+                            {% endfor %}
+                            <!-- Help text -->
+                            {% if not field.field.widget.attrs.placeholder and field.help_text %}
+                                <p class="helptext">{{ field.help_text }}</p>
+                                {% if field.name == 'thermal_coefficient' %}
+                                    <p id="replace-warning" class="helptext">Replace the values, if not correct!</p>
+                                {% endif %}
+                            {% endif %}
+                        </td>
+                        <td width="5%">
+                                {% if 'model' in field.name %}
+                                   <a href="/instruments/inst_model_createby_inst_type/staff" target="_blank" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" onclick="return showAddPopup(this);" id="add_staff">&#43;</a>
+                                {% elif 'coefficient' in field.name %}
+                                    <span>ppm</span>
+                                {% elif 'length' in field.name %}
+                                    <span>m</span>
+                                {% endif %}
+                                
+                        </td>
+                    </tr>
+                    {% endfor %}               
+                {% endif %}
+            </table>
+
+            {% if request.GET.next %}
+                <input type="hidden" name="next" value="{{ request.GET.next }}">
+            {% endif %}
+            <!-- <div class="button-container">
+                <button class="submit-button bg-green-500 hover:bg-green-400" type="submit" >Submit</button>
+            </div> -->
+            <div class="wizard-button-container">
+				{% if wizard.steps.prev %}
+					<button class="next-button bg-indigo-400 hover:bg-indigo-300 text-base" name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}" formnovalidate> {% trans "<span>&#171;</span> Previous" %}</button>
+                    <!-- <button class="next-button bg-green-500 hover:bg-green-300" name="wizard_goto_step" type="submit" value="{{ wizard.steps.first }}" formnovalidate>{% trans "First" %}</button> -->
+                {% endif %}
+
+				{% if wizard.steps.next %}
+					<button class="next-button bg-green-500 hover:bg-green-400 text-base" type="submit">Next</button>
+				{% else %}
+					<button class="next-button bg-green-500 hover:bg-green-400 text-base" type="submit">Save</button>
+				{% endif %}
+				{% if request.GET.next %}
+    				<a href= {{ request.GET.next }} class="cancelbtn bg-red-500 hover:bg-red-300 text-center">Cancel</a>
+				{% else %}
+    				<!-- <a href="{% url 'instruments:home' inst_disp='staff' %}" class="cancelbtn bg-red-500 hover:bg-red-300 text-center">Cancel</a> -->
+                    <button onclick="closeWin()" class="cancelbtn bg-red-500 hover:bg-red-300 text-center" type="submit">Cancel</button>
+        {% endif %}
+			</div>
+        </form>
+    </div>
+</article>
+
+<script>
+    function showAddPopup(triggeringLink) {
+        var name = triggeringLink.id.replace(/^add_/, '');
+        href = triggeringLink.href;
+        var win = window.open(href, name, "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=850,width=500,height=400");
+        win.focus();
+        return false;
+    }
+
+    modelOptions = document.querySelector("#id_inst_staff_form-staff_model")
+    function closePopup(win, newID, newRepr) {
+        window.sessionStorage.setItem('new_model',  newID);
+        win.close();
+    }
+    
+
+    let newModelValue = sessionStorage.getItem('new_model');
+    if (newModelValue) {
+        for(var i = 0;i < modelOptions.options.length;i++){
+                if(modelOptions.options[i].value == newModelValue ){
+                    modelOptions.options[i].selected = true;
+                }
+            }
+        
+        window.sessionStorage.removeItem('new_model');
+    }
+
+    var staffCoefficients = {
+        'invar': 0.81,
+        'fiberglass': 10.00,
+        'wood': 3.00,
+        'aluminium': 23.00,
+        'steel': 11.00,
+        'epoxy' : 2.11,
+        'e_glass': 5.00,
+        's2_glass': 2.90,
+    }
+
+    replaceWarning = document.getElementById('replace-warning')
+    replaceWarning.style.display = 'none'
+    staffCoefficient = document.getElementById('id_inst_staff_form-thermal_coefficient')
+    staffTypeOptions = document.getElementById('id_inst_staff_form-staff_type')
+    staffTypeOptions.addEventListener('change', (e) =>{
+        const staffType = e.target.value;
+        if (staffType) {
+            var coeffValue = staffCoefficients[staffType].toFixed(2)
+            staffCoefficient.value = coeffValue
+            staffCoefficient.style.color = 'red'
+
+            replaceWarning.style.display = 'block'
+            replaceWarning.style.color = 'red'
+        }
+    })
+
+
+    
+    function refreshParent() 
+        {
+            window.opener.location.reload(true);
+        }
+
+    function closeWin() {
+        window.close();
+    }
+
+</script>
+
+<body onunload="javascript:refreshParent()">
+
+
+{% endblock %}
