@@ -352,8 +352,8 @@ def instrument_register(request, inst_disp):
         if not request.user.is_staff:
             tabs['insts_list'] = tabs['insts_list'].filter(
                 staff_owner = request.user.company)
-            tabs['certificates_list'] = tabs['certificates_list'].filter(
-                staff_owner = request.user.company)
+            #tabs['certificates_list'] = tabs['certificates_list'].filter(
+            #    staff_owner = request.user.company)
             
     ################ METS TAB #################
     if (inst_disp == 'baro' or inst_disp == 'thermo' 
@@ -585,7 +585,85 @@ class StaffCreationWizard(LoginRequiredMixin, NamedUrlSessionWizardView):
                 calibration_report = calibration_report,
             )
         return redirect ('instruments:home', inst_disp='staff')
+#########################################################################
+STAFF_TEMPLATES_POPUP  = {
+                    "inst_staff_form": "instruments/inst_staff_create_form_popup.html",
+                    "inst_staff_record_form": "staffcalibration/staff_calibration_record_form_popup.html",
+                    }
 
+
+class StaffCreationWizardPopUp(LoginRequiredMixin, NamedUrlSessionWizardView):
+    # get the template names and their steps
+    def get_template_names(self):                
+        return [STAFF_TEMPLATES_POPUP[self.steps.current]]
+
+    # directory to store the ascii files
+    file_storage = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'media')) #
+    # get the user
+    def get_form_kwargs(self, step=1):
+        kwargs = super(StaffCreationWizardPopUp, self).get_form_kwargs(step)
+        kwargs['user'] = self.request.user
+        # if step == 'inst_model_form':
+        #     kwargs['inst_type'] = 'staff'
+        return kwargs
+
+    def done(self, form_list, **kwargs):
+        data = {k: v for form in form_list for k, v in form.cleaned_data.items()}
+        inst_number = data['staff_number']
+        inst_owner = data['staff_owner']
+        inst_model = data['staff_model']
+        
+        # Other parameters
+        staff_type = data['staff_type']
+        staff_length = data['staff_length']
+        thermal_coefficient = data['thermal_coefficient']
+        # Is it calibrated?
+        calibrated = data['calibrated']
+
+        # Create Staff
+        if not calibrated:
+            inst_staff = Staff.objects.create(
+                    staff_owner = inst_owner,
+                    staff_number = inst_number,
+                    staff_model = inst_model,
+                    staff_type = staff_type,
+                    staff_length = staff_length,
+                    thermal_coefficient = thermal_coefficient,
+                    )
+        else:
+            site_id = data['site_id']
+            job_number = data['job_number']
+            inst_level = data['inst_level']
+            scale_factor = data['scale_factor']
+            grad_uncertainty = data['grad_uncertainty']
+            standard_temperature = data['standard_temperature']
+            observed_temperature = data['observed_temperature']
+            calibration_date = data['calibration_date']
+            calibration_report = data['calibration_report']
+            
+            # enter staff details
+            inst_staff = Staff.objects.create(
+                    staff_owner = inst_owner,
+                    staff_number = inst_number,
+                    staff_model = inst_model,
+                    staff_type = staff_type,
+                    staff_length = staff_length,
+                    thermal_coefficient = thermal_coefficient,
+                    )
+            instrument_calib = StaffCalibrationRecord.objects.create(
+                site_id = site_id,
+                job_number = job_number,
+                inst_staff = inst_staff,
+                inst_level = inst_level,
+                scale_factor = scale_factor,
+                grad_uncertainty = grad_uncertainty,
+                standard_temperature = standard_temperature,
+                observed_temperature = observed_temperature,
+                calibration_date = calibration_date,
+                calibration_report = calibration_report,
+            )
+        return HttpResponse('<script type="text/javascript">window.close()</script>') 
+################################################################
 
 @login_required(login_url="/accounts/login") 
 def inst_staff_update(request, id):
