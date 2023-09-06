@@ -113,13 +113,16 @@
         sessionStorage.removeItem("currentTab");
     }
     {% for field in form %}
-        {% if field.errors %}
-            currentTab = parseInt('{{ field.field.widget.attrs.class }}'.replace('page',''));
-        {% endif %}
-        {% if forloop.last %}
-            const lastTab = parseInt('{{ field.field.widget.attrs.class }}'.replace('page',''));
-        {% endif %}
+        {% with field_class=field.field.widget.attrs.class %}
+            {% if field.errors %}
+                currentTab = parseInt('{{ field_class }}'.replace('page',''));
+            {% endif %}
+            {% if forloop.last %}
+                const lastTab = parseInt('{{ field_class }}'.replace('page',''));
+            {% endif %}
+        {% endwith %}
     {% endfor %}
+
     showTab(currentTab); // Display the current tab
     tglCalibBase();
     tglEdmFile();

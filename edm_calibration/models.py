@@ -3,43 +3,48 @@ from django.core.validators  import MaxValueValidator, MinValueValidator
 from django.db.models import Q
 from datetime import date
 
-from baseline_calibration.models import (Uncertainty_Budget,
-                                    Pillar_Survey)
-from instruments.models import (EDM_Inst, 
-                                Prism_Inst, Mets_Inst)
-from calibrationsites.models import (CalibrationSite, 
-                            Pillar)
+from baseline_calibration.models import (
+    Uncertainty_Budget,
+    Pillar_Survey)
+from instruments.models import (
+    EDM_Inst,
+    Prism_Inst,
+    Mets_Inst, 
+    EDMI_certificate)
+from calibrationsites.models import (
+    CalibrationSite,
+    Pillar)
 
 # Create your models here.
 def get_upload_to_location(instance, filename):
     creation_date = date.today().strftime('%Y-%m-%d')
-    return '%s/%s/%s/%s/%s' % ('edmi_calibration', 
-                            instance.site.state.statecode.capitalize(),
-                            instance.site.site_name, 
-                            instance.edm.edm_specs.edm_owner.company_abbrev, 
-                            creation_date+'-'+ filename)
+    return '%s/%s/%s/%s/%s' % (
+        'edmi_calibration', 
+        instance.site.state.statecode.capitalize(),
+        instance.site.site_name, 
+        instance.edm.edm_specs.edm_owner.company_abbrev, 
+        creation_date+'-'+ filename)
 
 class uPillar_Survey(models.Model):
-   site = models.ForeignKey(CalibrationSite, on_delete = models.PROTECT, null = True, blank = True,
-             help_text="Baseline certified distances")   
+   site = models.ForeignKey(
+       CalibrationSite, on_delete = models.PROTECT, null = True, blank = True,
+       help_text="Baseline certified distances")   
    auto_base_calibration = models.BooleanField(default=True)
-   calibrated_baseline = models.ForeignKey(Pillar_Survey, on_delete = models.PROTECT, null = True,
-             help_text="Baseline certified distances")
+   calibrated_baseline = models.ForeignKey(
+       Pillar_Survey, on_delete = models.PROTECT, null = True,
+       help_text="Baseline certified distances")
    survey_date = models.DateField(null=False, blank=False)
    computation_date = models.DateField(null=False, blank=False)
-   observer = models.CharField(max_length=25,
-             null = True,
-             blank = True,
-             )
+   observer = models.CharField(max_length=25, null = True, blank = True)
    weather_type = (
-             ('Sunny/Clear','Sunny/Clear'),
-             ('Partially cloudy','Partially cloudy'),
-             ('Cloudy', 'Cloudy'),
-             ('Overcast', 'Overcast'),
-             ('Drizzle','Drizzle'),
-             ('Raining','Raining'),
-             ('Stormy','Stormy'),
-             )
+       ('Sunny/Clear','Sunny/Clear'),
+       ('Partially cloudy','Partially cloudy'),
+       ('Cloudy', 'Cloudy'),
+       ('Overcast', 'Overcast'),
+       ('Drizzle','Drizzle'),
+       ('Raining','Raining'),
+       ('Stormy','Stormy'),
+       )
    weather = models.CharField(max_length=25,
              choices=weather_type,
              help_text="Weather conditions",
@@ -99,13 +104,9 @@ class uPillar_Survey(models.Model):
              null=True,
              blank=True, 
              verbose_name= 'Scanned fieldnotes')
-   variance = models.FloatField(blank = True, null=True,
-             help_text="Variance of least squares adjustment of the calibration")
-   degrees_of_freedom = models.IntegerField(blank = True, null=True,
-             validators = [MinValueValidator(0), MaxValueValidator(500)],
-             help_text="Degrees of freedom of calibration")
-   k = models.FloatField(blank = True, null=True,
-             verbose_name= 'coverage factor')
+   
+   certificate = models.ForeignKey(
+        EDMI_certificate, on_delete = models.SET_NULL , null = True, blank=True)
    
    data_entered_person = models.CharField(max_length=25,null=True, blank=True)
    data_entered_position = models.CharField(max_length=25,null=True, blank=True)
@@ -120,76 +121,52 @@ class uPillar_Survey(models.Model):
    class Meta:
       ordering = ['edm','survey_date']
       constraints = [
-            models.CheckConstraint(
-                check=Q(site__isnull=False) | Q(calibrated_baseline__isnull=False),
-                name='Both site and calibrated basline fields can not be null'
-            )
-        ]
+          models.CheckConstraint(
+              check=Q(site__isnull=False) | Q(calibrated_baseline__isnull=False),
+              name='Both site and calibrated basline fields can not be null')
+          ]
 
    def __str__(self):
       return f'{self.job_number} - {self.edm} ({self.survey_date})'
 
 
 class uEDM_Observation(models.Model):
-    pillar_survey = models.ForeignKey(uPillar_Survey, on_delete = models.CASCADE, null = False)
+    pillar_survey = models.ForeignKey(
+        uPillar_Survey, on_delete = models.CASCADE, null = False)
     
-    from_pillar = models.ForeignKey(Pillar, on_delete = models.CASCADE, null = False)
-    to_pillar = models.ForeignKey(Pillar, on_delete = models.CASCADE, null = False,
-              related_name='+')
+    from_pillar = models.ForeignKey(
+        Pillar, on_delete = models.CASCADE, null = False)
+    to_pillar = models.ForeignKey(
+        Pillar, on_delete = models.CASCADE, null = False, related_name='+')
     
     inst_ht = models.DecimalField(
-              max_digits=4, decimal_places=3,
-              verbose_name= 'Instrument height')
+        max_digits=4, decimal_places=3,
+        verbose_name= 'Instrument height')
     tgt_ht = models.DecimalField(
-              max_digits=4, decimal_places=3,
-              verbose_name= 'Target height')
+        max_digits=4, decimal_places=3,
+        verbose_name= 'Target height')
     
     raw_slope_dist = models.DecimalField(
-              max_digits=9, decimal_places=5,
-              validators=[MinValueValidator(1), MaxValueValidator(1000)],
-              verbose_name= 'slope distance')
+        max_digits=9, decimal_places=5,
+        validators=[MinValueValidator(1), MaxValueValidator(1000)],
+        verbose_name= 'slope distance')
     
     raw_temperature = models.FloatField(
-              validators = [MinValueValidator(0), MaxValueValidator(50.0)],
-              null = True, blank = True)
+        validators = [MinValueValidator(0), MaxValueValidator(50.0)],
+        null = True, blank = True)
     raw_pressure = models.FloatField(
-              validators = [MinValueValidator(0), MaxValueValidator(1500.0)],
-              null = True, blank = True)
+        validators = [MinValueValidator(0), MaxValueValidator(1500.0)],
+        null = True, blank = True)
     raw_humidity = models.FloatField(
-              validators = [MinValueValidator(0), MaxValueValidator(100.0)],
-              null = True, blank = True)
-    use_for_distance = models.BooleanField(default=True,
-                 verbose_name= 'Use for surveying the certified distances',
-                 help_text="This observation (will) / (will not) be used for determining the calibration of the edmi.")
+        validators = [MinValueValidator(0), MaxValueValidator(100.0)],
+        null = True, blank = True)
+    use_for_distance = models.BooleanField(
+        default=True,
+        verbose_name= 'Use for surveying the certified distances',
+        help_text="This observation (will) / (will not) be used for determining the calibration of the edmi.")
     
     class Meta:
        ordering = ['pillar_survey','from_pillar','to_pillar']
     
     def __str__(self):
        return f'({self.pillar_survey}): {self.from_pillar} → {self.to_pillar})'
-
-
-class uCalibration_Parameter(models.Model):
-    pillar_survey = models.ForeignKey(uPillar_Survey, on_delete = models.CASCADE, null = False)
-    terms = (
-             ('zpc','zero point correction'),
-             ('scf','scale correction factor'),
-             ('1C', '1 - Cyclic'),
-             ('2C', '2 - Cyclic'),
-             ('3C','3 - Cyclic'),
-             ('4C','4 - Cyclic'),
-              )
-    term = models.CharField(max_length=3,
-              choices=terms
-              )
-    value = models.FloatField(
-                  verbose_name= 'parameter Value')
-    standard_deviation = models.FloatField(
-                  verbose_name= 'standard deviation of this parameter')
-    
-    class Meta:
-       ordering = ['pillar_survey','term']
-       unique_together = ('pillar_survey','term')
-    
-    def __str__(self):
-       return f'({self.pillar_survey}): {self.term}'

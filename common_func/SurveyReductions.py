@@ -1,6 +1,6 @@
 import numpy as np
 from common_func.Convert import *
-from math import sqrt, sin, cos, radians
+from math import sqrt, sin, cos, radians, pi
 from datetime import date
 from statistics import mean
 from scipy.stats import t
@@ -108,14 +108,23 @@ def adjust_alignment_survey(raw_edm_obs, pillars):
     #-------------------------------------------------------------------------------#
     #-------------------------- Functions for CORRECTIONS --------------------------#
     #-------------------------------------------------------------------------------#
-def apply_calib(obs, applied, calib=[],scf=1,zpc=0):
+def apply_calib(obs, applied, calib=[],scf=1,zpc=0,
+                c1=0, c2=0, c3=0, c4=0, unit_length=1):
     obs0 = float(obs)
     if applied  == True:
         obs1 = obs0
     else:
         if hasattr(calib,'scale_correction_factor'): scf=calib.scale_correction_factor
         if hasattr(calib,'zero_point_correction'): zpc=calib.zero_point_correction
-        obs1 = obs0*scf + zpc
+        if hasattr(calib,'c1'): c1=calib.cyclic_one
+        if hasattr(calib,'c2'): c3=calib.cyclic_two
+        if hasattr(calib,'c3'): c3=calib.cyclic_three
+        if hasattr(calib,'c4'): c4=calib.cyclic_four
+        obs1 = (zpc + obs0*scf
+                + c1 * sin(2*pi*obs0/unit_length) 
+                + c2 * cos(2*pi*obs0/unit_length)
+                + c3 * sin(4*pi*obs0/unit_length)
+                + c4 * cos(4*pi*obs0/unit_length))
     correction = obs1 - obs0
     
     return obs1, correction
@@ -449,17 +458,17 @@ def add_typeA(d, matrix_y, dof):
     # '08 calculate uncertainty of instrument correction
     if len(matrix_y)==2:
         s_dev = (matrix_y[0]['std_dev']
-                 + matrix_y[1]['std_dev']* 10**-6 * d['Reduced_distance'])
+                 + matrix_y[1]['std_dev'] * d['Reduced_distance'])
     
     if len(matrix_y)==4:
         s_dev = (matrix_y[0]['std_dev']
-                 + matrix_y[1]['std_dev']* 10**-6 * d['Reduced_distance']
+                 + matrix_y[1]['std_dev'] * d['Reduced_distance']
                  + matrix_y[2]['std_dev'] * sin(d['d_term'])
                  + matrix_y[3]['std_dev'] * cos(d['d_term']))
     
     if len(matrix_y)==6:
         s_dev = (matrix_y[0]['std_dev']
-                 + matrix_y[1]['std_dev']* 10**-6 * d['Reduced_distance']
+                 + matrix_y[1]['std_dev'] * d['Reduced_distance']
                  + matrix_y[2]['std_dev'] * sin(d['d_term'])
                  + matrix_y[3]['std_dev'] * cos(d['d_term'])
                  + matrix_y[4]['std_dev'] * sin(2*d['d_term'])
@@ -505,14 +514,15 @@ def add_calib_uc(uc_sources, calib, insts):
         d2=insts['survey_date']
         calib_edmi = calib['edmi'][0]
      
-        uc_sources.append({'group': '01',
-                           'ab_type':'B',
-                           'distribution':'N',
-                           'units': 'x:1',
-                           'std_dev': calib_edmi.scf_std_dev,
-                           'degrees_of_freedom':calib_edmi.degrees_of_freedom,
-                           'k':calib_edmi.scf_coverage_factor,
-                           'description':'EDMI Reg13 Scale correction factor'})
+        uc_sources.append(
+            {'group': '01',
+             'ab_type':'B',
+             'distribution':'N',
+             'units': 'x:1',
+             'std_dev': calib_edmi.scf_std_dev,
+             'degrees_of_freedom':calib_edmi.degrees_of_freedom,
+             'k':calib_edmi.scf_coverage_factor,
+             'description':'EDMI Reg13 Scale correction factor'})
         
         # calculate the linear trend for edmi calibration history #
         calib_dates=[]

@@ -93,7 +93,12 @@ class EDMI_certificateAdmin(admin.ModelAdmin):
               'calibration_date',
               ('scale_correction_factor', 'scf_uncertainty','scf_coverage_factor','scf_std_dev'),
               ('zero_point_correction', 'zpc_uncertainty','zpc_coverage_factor','zpc_std_dev'),
-              ('standard_deviation', 'degrees_of_freedom'),
+              ('has_cyclic_corrections'),
+              ('cyclic_one', 'cyc_1_uncertainty','cyc_1_coverage_factor','cyc_1_std_dev'),
+              ('cyclic_two', 'cyc_2_uncertainty','cyc_2_coverage_factor','cyc_2_std_dev'),
+              ('cyclic_three', 'cyc_3_uncertainty','cyc_3_coverage_factor','cyc_3_std_dev'),
+              ('cyclic_four', 'cyc_4_uncertainty','cyc_4_coverage_factor','cyc_4_std_dev'),
+              ('standard_deviation', 'html_report'),
               'certificate_upload']
 
 @admin.register(Mets_certificate)

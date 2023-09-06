@@ -927,7 +927,7 @@ p.error {
   -webkit-transition: 0.3s box-shadow ease;
   transition: 0.3s box-shadow ease;
   border-radius: 6px;
-  max-width: 95%;
+  max-width: 97%;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;

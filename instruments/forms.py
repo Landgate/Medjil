@@ -298,9 +298,6 @@ class EDMI_certificateForm(forms.ModelForm):
             self.fields['edm'].queryset = EDM_Inst.objects.all()
             self.fields['prism'].queryset = Prism_Inst.objects.all()
         
-        self.base_fields['units_zpc'].initial = 'm'
-        self.base_fields['units_zpc_uc'].initial = 'm'
-        self.base_fields['units_stdev'].initial = 'm'
         self.fields['edm'].empty_label = '--- Select one ---'
         self.fields['prism'].empty_label = '--- Select one ---'
 
@@ -308,26 +305,34 @@ class EDMI_certificateForm(forms.ModelForm):
         model = EDMI_certificate
         fields = '__all__'
         exclude = ('created_on', 'modified_on',
-                   'scf_std_dev', 'zpc_std_dev')
+                   'scf_std_dev', 'zpc_std_dev',
+                   'cyc_1_std_dev','cyc_2_std_dev','cyc_3_std_dev','cyc_4_std_dev',
+                   'html_report')
 
         widgets = {
             'calibration_date': forms.DateInput(format=('%d-%m-%Y'),
                 attrs={'type':'date'}),
             'certificate_upload' : CustomClearableFileInput(
                 attrs={'accept' : '.pdf, .jpg, .jpeg, .png, .tif',
-                       'required': False})
+                       'required': False}),
+            'has_cyclic_corrections': forms.CheckboxInput(
+                attrs={'onclick': 'toggleCyclic();'})
            }
         
     units_scf = forms.CharField(
-        widget=forms.Select(choices=scalar_units))
-    units_scf_uc = forms.CharField(
-        widget=forms.Select(choices=scalar_units))
+        widget=forms.Select(choices=ini_units))
     units_zpc = forms.CharField(
-        widget=forms.Select(choices=length_units))
-    units_zpc_uc = forms.CharField(
-        widget=forms.Select(choices=length_units))
+        widget=forms.Select(choices=ini_units))
+    units_cyc_1 = forms.CharField(
+        widget=forms.Select(choices=ini_units))
+    units_cyc_2 = forms.CharField(
+        widget=forms.Select(choices=ini_units))
+    units_cyc_3 = forms.CharField(
+        widget=forms.Select(choices=ini_units))
+    units_cyc_4 = forms.CharField(
+        widget=forms.Select(choices=ini_units))
     units_stdev = forms.CharField(
-        widget=forms.Select(choices=length_units))
+        widget=forms.Select(choices=ini_units))
 
 
 class Mets_certificateForm(forms.ModelForm):

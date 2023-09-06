@@ -2,12 +2,14 @@
 from django.db import models
 from django.db.models import Q
 from django.urls import reverse
-from django.core.validators  import MaxValueValidator, MinValueValidator, MinLengthValidator
+from django.core.validators  import (
+    MaxValueValidator, MinValueValidator, MinLengthValidator)
 from django.conf import settings
 # Create your models here.
 User = settings.AUTH_USER_MODEL
-from accounts.models import CustomUser
-from accounts.models import Company
+from accounts.models import (
+    CustomUser,
+    Company)
 from datetime import date
 
 length_units = (
@@ -534,7 +536,7 @@ class EDMI_certificate (models.Model):
                 
     zero_point_correction = models.FloatField(
         validators = [MinValueValidator(-5.00000), MaxValueValidator(5.00000)],
-        help_text="If: Instrument Correction (m) = 1.00000013.L + 0.0003, Zero Point Correction = 0.0003m")
+        help_text="If: Instrument Correction (m) = 1.00000013.L + 0.0003, Zero Point Correction = 0.0003m",)
     zpc_uncertainty = models.FloatField(
         validators = [MinValueValidator(0.00000), MaxValueValidator(5.00000)],
         help_text="Uncertainty of the zero point correction (m) at 95% Confidence Level",
@@ -549,6 +551,110 @@ class EDMI_certificate (models.Model):
         help_text="Standard deviation of the zero point correction",
         verbose_name= 'Zero point correction standard deviation',
         null=True,blank = True)
+    
+    has_cyclic_corrections = models.BooleanField(default=False,
+        verbose_name= 'Enter cyclic error parameters',
+        help_text="Click to toggle the input of cyclic error correction parameters")
+
+    cyclic_one = models.FloatField(
+        validators = [MinValueValidator(-5.00000), MaxValueValidator(5.00000)],
+        default = 0,
+        help_text="The first order cyclic error parameter associated with the SIN() function",
+        verbose_name= 'Cyclic error parameter 1',
+        null=True, blank = True)
+    cyc_1_uncertainty = models.FloatField(
+        validators = [MinValueValidator(0.00000), MaxValueValidator(5.00000)],
+        default = 0,
+        help_text="Uncertainty of the cyclic error parameter 1 at 95% Confidence Level",
+        verbose_name= 'Cyclic error parameter 1 uncertainty',
+        null=True, blank = True)
+    cyc_1_coverage_factor = models.FloatField(
+        validators = [MinValueValidator(1.00), MaxValueValidator(5.00)],
+        default = 2.0,
+        help_text="Coverage factor at 95% Confidence Level eg. 2.0",
+        verbose_name= 'Cyclic error parameter 1 coverage factor',
+        null=True, blank = True)
+    cyc_1_std_dev = models.FloatField(
+        validators = [MinValueValidator(0.00000000), MaxValueValidator(10.00000000)],
+        default = 0,
+        help_text="Standard deviation of the Cyclic error parameter 1",
+        verbose_name= 'Cyclic error parameter 1 standard deviation',
+        null=True, blank = True)
+
+    cyclic_two = models.FloatField(
+        validators = [MinValueValidator(-5.00000), MaxValueValidator(5.00000)],
+        default = 0,
+        help_text="The first order cyclic error parameter associated with the COS() function",
+        verbose_name= 'Cyclic error parameter 2',
+        null=True, blank = True)
+    cyc_2_uncertainty = models.FloatField(
+        validators = [MinValueValidator(0.00000), MaxValueValidator(5.00000)],
+        default = 0,
+        help_text="Uncertainty of the cyclic error parameter 2 at 95% Confidence Level",
+        verbose_name= 'Cyclic error parameter 2 uncertainty',
+        null=True, blank = True)
+    cyc_2_coverage_factor = models.FloatField(
+        validators = [MinValueValidator(1.00), MaxValueValidator(5.00)],
+        default = 2.0,
+        help_text="Coverage factor at 95% Confidence Level eg. 2.0",
+        verbose_name= 'Cyclic error parameter 2 coverage factor',
+        null=True, blank = True)
+    cyc_2_std_dev = models.FloatField(
+        validators = [MinValueValidator(0.00000000), MaxValueValidator(10.00000000)],
+        default = 0,
+        help_text="Standard deviation of the Cyclic error parameter 1",
+        verbose_name= 'Cyclic error parameter 2 standard deviation',
+        null=True, blank = True)
+
+    cyclic_three = models.FloatField(
+        validators = [MinValueValidator(-5.00000), MaxValueValidator(5.00000)],
+        default = 0,
+        help_text="The second order cyclic error parameter associated with the SIN() function",
+        verbose_name= 'Cyclic error parameter 3',
+        null=True, blank = True)
+    cyc_3_uncertainty = models.FloatField(
+        validators = [MinValueValidator(0.00000), MaxValueValidator(5.00000)],
+        default = 0,
+        help_text="Uncertainty of the cyclic error parameter 3 at 95% Confidence Level",
+        verbose_name= 'Cyclic error parameter 3 uncertainty',
+        null=True, blank = True)
+    cyc_3_coverage_factor = models.FloatField(
+        validators = [MinValueValidator(1.00), MaxValueValidator(5.00)],
+        default = 2.0,
+        help_text="Coverage factor at 95% Confidence Level eg. 2.0",
+        verbose_name= 'Cyclic error parameter 3 coverage factor',
+        null=True, blank = True)
+    cyc_3_std_dev = models.FloatField(
+        validators = [MinValueValidator(0.00000000), MaxValueValidator(10.00000000)],
+        default = 0,
+        help_text="Standard deviation of the Cyclic error parameter 1",
+        verbose_name= 'Cyclic error parameter 3 standard deviation',
+        null=True, blank = True)
+
+    cyclic_four = models.FloatField(
+        validators = [MinValueValidator(-5.00000), MaxValueValidator(5.00000)],
+        default = 0,
+        help_text="The second order cyclic error parameter associated with the COS() function",
+        verbose_name= 'Cyclic error parameter 4',
+        null=True, blank = True)
+    cyc_4_uncertainty = models.FloatField(
+        validators = [MinValueValidator(0.00000), MaxValueValidator(5.00000)],
+        default = 0,
+        help_text="Uncertainty of the cyclic error parameter 4 at 95% Confidence Level",
+        verbose_name= 'Cyclic error parameter 4 uncertainty',
+        null=True, blank = True)
+    cyc_4_coverage_factor = models.FloatField(
+        validators = [MinValueValidator(1.00), MaxValueValidator(5.00)],
+        default = 2.0,
+        help_text="Coverage factor at 95% Confidence Level eg. 2.0",
+        verbose_name= 'Cyclic error parameter 4 coverage factor',
+        null=True, blank = True)
+    cyc_4_std_dev = models.FloatField(
+        validators = [MinValueValidator(0.00000000), MaxValueValidator(10.00000000)],
+        default = 0,
+        help_text="Standard deviation of the Cyclic error parameter 1",
+        verbose_name= 'Cyclic error parameter 4 standard deviation',
+        null=True, blank = True)
         
     standard_deviation = models.FloatField(
         validators = [MinValueValidator(0.00000), MaxValueValidator(10.00000)],
@@ -562,6 +668,8 @@ class EDMI_certificate (models.Model):
         null=True,
         blank=True, 
         verbose_name= 'Calibration Record')
+    html_report = models.TextField(blank=True, null=True)
+    
     created_on = models.DateTimeField(auto_now_add=True, null=True)
     modified_on = models.DateTimeField(auto_now=True, null=True)
     
@@ -571,6 +679,25 @@ class EDMI_certificate (models.Model):
     def save(self, *args, **kwargs):
           self.scf_std_dev = self.scf_uncertainty / self.scf_coverage_factor
           self.zpc_std_dev = self.zpc_uncertainty / self.zpc_coverage_factor
+          self.cyc_1_std_dev = self.cyc_1_uncertainty / self.cyc_1_coverage_factor
+          self.cyc_2_std_dev = self.cyc_2_uncertainty / self.cyc_2_coverage_factor
+          self.cyc_3_std_dev = self.cyc_3_uncertainty / self.cyc_3_coverage_factor
+          self.cyc_4_std_dev = self.cyc_4_uncertainty / self.cyc_4_coverage_factor
+          
+          if self.has_cyclic_corrections == False:
+              self.cyc_1_std_dev = 0
+              self.cyc_2_std_dev = 0
+              self.cyc_3_std_dev = 0
+              self.cyc_4_std_dev = 0
+              self.cyc_1_uncertainty = 0
+              self.cyc_2_uncertainty = 0
+              self.cyc_3_uncertainty = 0
+              self.cyc_4_uncertainty = 0
+              self.cyc_1_coverage_factor = 2
+              self.cyc_2_coverage_factor = 2
+              self.cyc_3_coverage_factor = 2
+              self.cyc_4_coverage_factor = 2
+              
           super(EDMI_certificate, self).save(*args, **kwargs)
          
     def get_absolute_url(self):
@@ -615,10 +742,10 @@ class Mets_certificate (models.Model):
     degrees_of_freedom = models.IntegerField(
         validators = [MinValueValidator(0), MaxValueValidator(500)],
         help_text="Degrees of freedom of calibration " +
-                            "For a Type B estimate use the following as a guide: "
-                            " 3 for not very confident, "
-                            "10 for moderate confidence, "
-                            "30 for very confident.",
+                  "For a Type B estimate use the following as a guide: "
+                  " 3 for not very confident, "
+                  "10 for moderate confidence, "
+                  "30 for very confident.",
         default = 30)
     certificate_upload = models.FileField(
         upload_to=get_upload_to_mets_certificate,

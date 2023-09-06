@@ -26,53 +26,91 @@
                 {% endif %}
             </div>
             <div class="flexbox-item_1600_IB">
-                <table>
+                <table id='form_table'>
                     <colgroup>
-                        <col span="1" width="35%">
-                        <col span="1" width="55%">
+                        <col span="1" width="30%">
+                        <col span="1" width="20%">
+                        <col span="1" width="20%">
+                        <col span="1" width="20%">
                         <col span="1" width="10%">
                     </colgroup>
                     {% for field in form %}
                         <tr title="{{ field.help_text }}">
-                            {% if not 'units_' in field.name %}
-                                {% if field.field.is_checkbox %}
-                                    <td>{{ field }}</td>
-                                    <td>{{ field.label|title }}</td>
-                                    <td></td>
+                            {% if 'units_' not in field.name and '_uncertainty' not in field.name and '_coverage_factor' not in field.name %}
+                                <td>{{ field.label_tag|title }}</td>
+                                {% if 'zero_point_correction' == field.name %}
+                                    <td title="{{ field.help_text }}">{{ field }}</td>
+                                    <td title="{{ form.zpc_uncertainty.help_text }}">{{ form.zpc_uncertainty }}</td>
+                                    <td title="{{ form.zpc_coverage_factor.help_text }}">{{ form.zpc_coverage_factor }}</td>
+                                    <td>{{ form.units_zpc }}</td>
+                                {% elif 'scale_correction_factor' == field.name %}
+                                    <td title="{{ field.help_text }}">{{ field }}</td>
+                                    <td title="{{ form.scf_uncertainty.help_text }}">{{ form.scf_uncertainty }}</td>
+                                    <td title="{{ form.scf_coverage_factor.help_text }}">{{ form.scf_coverage_factor }}</td>
+                                    <td>{{ form.units_scf }}</td>
+                                {% elif 'cyclic_one' == field.name %}
+                                    <td title="{{ field.help_text }}">{{ field }}</td>
+                                    <td title="{{ form.cyc_1_uncertainty.help_text }}">{{ form.cyc_1_uncertainty }}</td>
+                                    <td title="{{ form.cyc_1_coverage_factor.help_text }}">{{ form.cyc_1_coverage_factor }}</td>
+                                    <td>{{ form.units_cyc_1 }}</td>
+                                {% elif 'cyclic_two' == field.name %}
+                                    <td title="{{ field.help_text }}">{{ field }}</td>
+                                    <td title="{{ form.cyc_2_uncertainty.help_text }}">{{ form.cyc_2_uncertainty }}</td>
+                                    <td title="{{ form.cyc_2_coverage_factor.help_text }}">{{ form.cyc_2_coverage_factor }}</td>
+                                    <td>{{ form.units_cyc_2 }}</td>
+                                {% elif 'cyclic_three' == field.name %}
+                                    <td title="{{ field.help_text }}">{{ field }}</td>
+                                    <td title="{{ form.cyc_3_uncertainty.help_text }}">{{ form.cyc_3_uncertainty }}</td>
+                                    <td title="{{ form.cyc_3_coverage_factor.help_text }}">{{ form.cyc_3_coverage_factor }}</td>
+                                    <td>{{ form.units_cyc_3 }}</td>
+                                {% elif 'cyclic_four' == field.name %}
+                                    <td title="{{ field.help_text }}">{{ field }}</td>
+                                    <td title="{{ form.cyc_4_uncertainty.help_text }}">{{ form.cyc_4_uncertainty }}</td>
+                                    <td title="{{ form.cyc_4_coverage_factor.help_text }}">{{ form.cyc_4_coverage_factor }}</td>
+                                    <td>{{ form.units_cyc_4 }}</td>
+                                {% elif 'standard_deviation' == field.name %}
+                                    <td title="{{ field.help_text }}">{{ field }}</td>
+                                    <td></td><td></td>
+                                    <td>{{ form.units_stdev }}</td>
                                 {% else %}
-                                    <td>{{ field.label_tag|title }}</td>
-                                    <td>{{ field }}</td>
-                                    {% if 'zero_point_correction' == field.name %}
-                                        <td>{{ form.units_zpc }}</td>
-                                    {% elif 'zpc_uncertainty' == field.name %}
-                                        <td>{{ form.units_zpc_uc }}</td>
-                                    {% elif 'scale_correction_factor' == field.name %}
-                                        <td>{{ form.units_scf }}</td>
-                                    {% elif 'scf_uncertainty' == field.name %}
-                                        <td>{{ form.units_scf_uc }}</td>
-                                    {% elif 'standard_deviation' == field.name %}
-                                        <td>{{ form.units_stdev }}</td>
-                                    {% else %}
-                                        <td></td>
-                                    {% endif %}
+                                    <td colspan="3" title="{{ field.help_text }}">{{ field }}</td>
+                                    <td></td>
                                 {% endif %}
                             {% endif %}
                         </tr>
                         {% for error in field.errors %}
                             <tr>
                                 <td></td>
-                                <td>
+                                {% if '_uncertainty' in field.name %}
+                                    <td></td>
+                                    <td>
+                                {% elif '_coverage_factor' in field.name %}
+                                    <td></td>
+                                    <td></td>
+                                    <td>
+                                {% else %}
+                                    <td colspan="3">
+                                {% endif %}
                                     <p style="color:Red;">{{ error }}</p>
                                 </td>
                                 <td></td>
                             </tr>
-                        {% endfor %}                            
+                        {% endfor %}
+                        {% if 'date' in field.name %}
+                            <tr>
+                                <td></td>
+                                <th>Value</th>
+                                <th>Uncertainty</th>
+                                <th>k</th>
+                                <th>Units</th>
+                            </tr>
+                        {% endif %}
                     {% endfor %}
                 </table>
             </div>
             <div class="flexbox-item_1600_IB flexbox-item-button_IB">
                 <a href= "{{ request.GET.next }}" class="submit-button bg-red-500 hover:bg-green-400" style="text-align: center">Cancel</a>
-                <button class="submit-button bg-green-500 hover:bg-green-400" type="submit">Save</button>
+                <button class="submit-button bg-green-500 hover:bg-green-400" type="submit" onclick="convertUnits()">Save</button>
             </div>
         </form>
     </div>
@@ -80,50 +118,164 @@
 
 
 <script>
-  document.addEventListener("DOMContentLoaded", function() {
-    const units = [{typ:"temp", u:"°C"},
-                   {typ:"temp", u:"°F"},
-                   {typ:"pres", u:"hPa"},
-                   {typ:"pres", u:"mBar"},
-                   {typ:"pres", u:"mmHg"},
-                   {typ:"pres", u:"inHg"},
-                   {typ:"humi", u:"%"}];
+const instType = "{{ inst_type }}"; 
+const unitsElements = document.querySelectorAll('select[id*="id_units_"]');
 
-    const  unit_slt = document.getElementById("id_units_zpc")
-    const  uc_units_slt = document.getElementById("id_units_zpc_uc")
+//This function initialises the dropdown selections with correct units
+function setUnits() {
+    const all_units = [
+        { typ: "temp", u: "°C" },
+        { typ: "temp", u: "°F" },
+        { typ: "pres", u: "mBar" },
+        { typ: "pres", u: "hPa" },
+        { typ: "pres", u: "mmHg" },
+        { typ: "pres", u: "inHg" },
+        { typ: "humi", u: "%" },
+        { typ: "leng", u: "m" },
+        { typ: "leng", u: "mm" },
+        { typ: "leng", u: "nm" },
+        { typ: "scal", u: "x:1" },
+        { typ: "scal", u: "1:x" },
+        { typ: "scal", u: "ppm" },
+        { typ: "freq", u: "Hz" },
+        { typ: "freq", u: "MHz" }
+    ];
+
+    const filterUnits = (type) => {
+        return all_units.filter(unit => unit.typ === type);
+    };
+
+    let units = [];
+
+    if (instType === 'thermo' || instType === 'psy') {
+        units = filterUnits("temp");
+    } else if (instType === 'baro') {
+        units = filterUnits("pres");
+    } else if (instType === 'hygro') {
+        units = filterUnits("humi");
+    } else if (instType === 'edm') {
+        units = filterUnits("leng");
+    }
     
-{% if inst_type == 'thermo' or inst_type == 'psy' %}
-    let uLen = units.length;
-    for (let i = 0; i < uLen; i++) {
-      if (units[i].typ.includes("temp")) {
-          let newOption = new Option(units[i].u, units[i].u);
-          unit_slt.add(newOption, undefined);
-          let nextOption = new Option(units[i].u, units[i].u);
-          uc_units_slt.add(nextOption, undefined);
-          }
+    unitsElements.forEach(inputElement => {
+        const isScf = inputElement.id.includes("scf");
+        const filteredUnits = isScf ? filterUnits("scal") : units;
+        
+        filteredUnits.forEach(unit => {
+            let newOption = new Option(unit.u, unit.u);
+            inputElement.appendChild(newOption);
+        });
+    });
+};
+
+
+// Function to handle the checkbox state
+function toggleCyclic() {
+    // Get references to the has_cyclic_corrections checkbox and the table
+    const checkBox = document.getElementById('id_has_cyclic_corrections');
+    const table = document.getElementById('form_table');
+    
+    // Loop through the rows and hide/show based on checkbox state
+    const rows = table.getElementsByTagName('tr');
+    for (let i = 0; i < rows.length; i++) {
+        const row = rows[i];
+        const cells = row.getElementsByTagName('td');
+
+        if (cells.length >= 2) { // Make sure there are at least two cells
+            const inputCell = cells[1]; // Get the second <td> cell
+            const input = inputCell.querySelector('input'); // Get the input element
+
+            if (input) {
+                const inputId = input.getAttribute('id');
+                if (inputId && inputId.startsWith('id_cyclic_')) {
+                    row.style.display = checkBox.checked ? 'table-row' : 'none';
+                }
+            }
+        }
     }
-{% elif inst_type == 'baro' %}
-    let uLen = units.length;
-    for (let i = 0; i < uLen; i++) {
-      if (units[i].typ.includes("pres")) {
-          let newOption = new Option(units[i].u, units[i].u);
-          unit_slt.add(newOption, undefined);
-          let nextOption = new Option(units[i].u, units[i].u);
-          uc_units_slt.add(nextOption, undefined);
-          }
-    }
-{% elif inst_type == 'hygro' %}
-    let uLen = units.length;
-    for (let i = 0; i < uLen; i++) {
-      if (units[i].typ.includes("humi")) {
-          let newOption = new Option(units[i].u, units[i].u);
-          unit_slt.add(newOption, undefined);
-          let nextOption = new Option(units[i].u, units[i].u);
-          uc_units_slt.add(nextOption, undefined);
-          }
-    }
-{% endif %}
-  });
+}
+
+
+// Function to convert units to database standards
+function convertUnits() {
+    const unitConversions = {
+        'm': 1,
+        'mm': 1e-3, // Conversion to m
+        'nm': 1e-9, // Conversion to m
+        'x:1': 1,
+        '1:x': 'inv', // Conversion to x:1
+        'ppm': 'inv1e6', // Conversion to x:1
+        'mBar': 1,
+        'hPa': 1, // Conversion to mBar
+        'mmHg': 1.33322, // Conversion to mBar
+        'inHg': 33.8639, // Conversion to mBar
+        '°C': 1,
+        '°F': 5/9, // Conversion to Celsius
+        '%': 1, // Conversion to percent
+    };
+
+    unitsElements.forEach(select => {
+        const row = select.closest('tr'); // Find the parent table row
+        const cells = row.getElementsByTagName('td');
+    
+        if (cells.length >= 3) { // Make sure there are at least three cells
+            const valueCell = cells[1]; // Get the second <td> cell
+            const ucCell = cells[2]; // Get the third <td> cell
+            const inputValue = valueCell.querySelector('input');
+            const ucValue = ucCell.querySelector('input');
+    
+            if (inputValue) {
+                const selectedUnit = select.value;
+                const conversionFactor = unitConversions[selectedUnit] || 1; // Default to 1 if not found in mapping
+    
+                // Conversion logic here
+                let convertedValue, uc;
+    
+                if (conversionFactor === "inv") {
+                    convertedValue = 1 / inputValue.value;
+                    uc = ucValue ? 1 / ucValue.value : undefined;
+                } else if (conversionFactor === "inv1e6") {
+                    convertedValue = 1e6 / inputValue.value;
+                    uc = ucValue ? 1 + (ucValue.value / 1e6) : undefined;
+                } else {
+                    convertedValue = inputValue.value * conversionFactor;
+                    uc = ucValue ? ucValue.value * conversionFactor : undefined;
+                }
+    
+                // Update the values
+                inputValue.value = convertedValue;
+                console.log(uc);
+    
+                // Update ucValue if it exists
+                if (ucValue) {
+                    ucValue.value = uc;
+                }
+    
+                // Set select value based on selected unit
+                if (conversionFactor != 1) {
+                    if (selectedUnit === 'mBar' || selectedUnit === 'mmHg' || selectedUnit === 'inHg') {
+                        select.value = 'hPa';
+                    } else if (selectedUnit === 'ppm' || selectedUnit === '1:x') {
+                        select.value = 'x:1';
+                    } else if (selectedUnit === '°C') {
+                        select.value = '°C';
+                    } else if (selectedUnit === '%') {
+                        select.value = '%';
+                    } else {
+                        select.value = 'm';
+                    }
+                }
+            }
+        }
+    });
+
+}
+
+    
+// Trigger events on page load
+toggleCyclic();
+setUnits();
+
 </script>
 
                

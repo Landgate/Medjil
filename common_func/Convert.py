@@ -20,9 +20,6 @@ from baseline_calibration.models import (
     Certified_Distance,
     Pillar_Survey,
     Std_Deviation_Matrix)
-from edm_calibration.models import(
-    uCalibration_Parameter,
-    uPillar_Survey)
 from geodepy.geodesy import grid2geo, rho
 
 
@@ -33,7 +30,7 @@ def db_std_units(orig_val, orig_unit):
     new_unit = orig_unit
     
     if orig_unit == 'ppm': new_val = round(orig_val / 1e6, 20)
-    if orig_unit == '1:x': new_val = round(1 / orig_val, 15)
+    if orig_unit == '1:x': new_val = orig_val - 1
     if orig_unit == '%': new_val = orig_val / 100
     if orig_unit == 'nm': new_val = round(orig_val / 1e9, 20)
     if orig_unit == 'µm': new_val = round(orig_val / 1e6, 20)
@@ -225,30 +222,33 @@ def Calibrations_qry(frm_data):
             edm__pk = frm_data['edm'].pk, prism__pk = frm_data['prism'].pk
             ).order_by('-calibration_date')
         calib['staff'] = StaffCalibrationRecord.objects.filter(
-                    calibration_date__lte = frm_data['survey_date'] ,
-                    inst_staff__pk = frm_data['staff'].pk
-                    ).order_by('-calibration_date').first()
+            calibration_date__lte = frm_data['survey_date'] ,
+            inst_staff__pk = frm_data['staff'].pk
+            ).order_by('-calibration_date').first()
     else:
-        cp = uCalibration_Parameter.objects.select_related().filter(
-            pillar_survey__survey_date__lte = frm_data['survey_date'],
-            pillar_survey__edm__pk = frm_data['edm'].pk, 
-            pillar_survey__prism__pk = frm_data['prism'].pk
-            ).order_by('-pillar_survey__survey_date', '-term')
-        cp = group_list(cp.values(),
-                        group_by = 'pillar_survey_id')
-        
-        calib['edmi'] = uPillar_Survey.objects.filter(
-            survey_date__lte = frm_data['survey_date'],
+        calib['edmi'] = EDMI_certificate.objects.filter(
+            calibration_date__lte = frm_data['survey_date'],
             edm__pk = frm_data['edm'].pk, 
             prism__pk = frm_data['prism'].pk
-            ).order_by('-survey_date').values()
-        
-        for ps in calib['edmi']:
-            if ps['id'] in cp.keys():
-                ps['parameters'] = cp[ps['id']]['grp_pillar_survey_id']
-            else:
-                ps['parameters'] = []
-    
+            ).order_by(
+                '-calibration_date').select_related(
+                    'certificate').values(                                
+                        'calibration_date',
+                        'scale_correction_factor',
+                        'scf_uncertainty',
+                        'zero_point_correction',
+                        'zpc_uncertainty',
+                        'cyclic_one',
+                        'cyc_1_uncertainty',
+                        'cyclic_two',
+                        'cyc_2_uncertainty',
+                        'cyclic_three',
+                        'cyc_3_uncertainty',
+                        'cyclic_four',
+                        'cyc_4_uncertainty',
+                        'standard_deviation',
+                        'degrees_of_freedom')
+                    
     calib['them'] = Mets_certificate.objects.filter(
                 calibration_date__lte = frm_data['survey_date'] ,
                 instrument__pk = frm_data['thermometer'].pk

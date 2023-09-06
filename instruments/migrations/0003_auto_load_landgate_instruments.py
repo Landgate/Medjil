@@ -65,7 +65,7 @@ lg_edmi_certs = [
     'zpc_uncertainty':0.00017,
     'zpc_coverage_factor':2.1,
     'zpc_std_dev':0.000080952380952381,
-    'standard_deviation':0.15,
+    'standard_deviation':0.00015,
     'degrees_of_freedom':14,
     'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate Instruments/EDMIs/364182/2013_TS30_Calibration_Report.pdf'),
     'edm_number':364182,

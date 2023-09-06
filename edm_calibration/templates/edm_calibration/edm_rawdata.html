@@ -57,10 +57,10 @@
             </div>
             <div class="button-container">
                 <a href= "{% url 'edm_calibration:calibrate1' id=id %}" class="submit-button bg-green-500 hover:bg-green-400" style="text-align: center">Back</button>
-                    {% if pillar_survey.variance is not null %}
-                        <a href= "{% url 'edm_calibration:edm_calibration_home' %}" class="submit-button bg-red-500 hover:bg-green-400" style="text-align: center">Cancel</a>
-                    {% else %}
+                    {% if pillar_survey.certificate %}
                         <a href= "{% url 'edm_calibration:pillar_survey_del' id=pillar_survey.pk %}" class="submit-button bg-red-500 hover:bg-green-400" style="text-align: center"> Cancel</a>
+                    {% else %}
+                        <a href= "{% url 'edm_calibration:edm_calibration_home' %}" class="submit-button bg-red-500 hover:bg-green-400" style="text-align: center">Cancel</a>
                     {% endif %}
                     <button type="button" class="submit-button bg-green-500 hover:bg-green-400" onclick="submit_it()">Next</button>
             </div>

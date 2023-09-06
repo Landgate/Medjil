@@ -309,9 +309,11 @@ def calibrate2(request,id):
         o['Humid'],c = apply_calib(o['raw_humidity'],
                                     pillar_survey['hygro_calib_applied'],
                                     calib['hygro'])
-        c, o['Calibration_Correction'] = apply_calib(o['raw_slope_dist'],
-                                    pillar_survey['edmi_calib_applied'],
-                                    calib['edmi'][0])
+        c, o['Calibration_Correction'] = apply_calib(
+            o['raw_slope_dist'],
+            pillar_survey['edmi_calib_applied'],
+            calib['edmi'][0],
+            unit_length = pillar_survey['edm'].edm_specs.unit_length)
         o = edm_mets_correction(o, 
                                 pillar_survey['edm'],
                                 pillar_survey['mets_applied'],

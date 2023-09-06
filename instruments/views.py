@@ -191,7 +191,7 @@ def register_edit(request, inst_disp, tab, id):
                 
             if 'units_manu_unc_ppm' in frm.keys():
                 instance.manu_unc_ppm = db_std_units(
-                    frm['manu_unc_ppm'], frm['units_manu_unc_ppm'])[0] * 1e6
+                    frm['manu_unc_ppm'], (frm['units_manu_unc_ppm'])[0] -1) * 1e6
             if 'units_frequency' in frm.keys(): 
                 instance.frequency = db_std_units(frm['frequency'],frm['units_frequency'])[0]
             if 'units_unit_length' in frm.keys():
@@ -203,22 +203,6 @@ def register_edit(request, inst_disp, tab, id):
             if 'units_measurement_inc' in frm.keys():
                 instance.measurement_increments = db_std_units(
                     frm['measurement_increments'], frm['units_measurement_inc'])[0]
-                
-            if 'units_scf' in frm.keys():
-                instance.scale_correction_factor = db_std_units(
-                    frm['scale_correction_factor'],frm['units_scf'])[0]
-            if 'units_scf_uc' in frm.keys():
-                instance.scf_uncertainty = db_std_units(
-                    frm['scf_uncertainty'], frm['units_scf_uc'])[0]
-            if 'units_zpc' in frm.keys():
-                instance.zero_point_correction = db_std_units(
-                    frm['zero_point_correction'],frm['units_zpc'])[0]
-            if 'units_zpc_uc' in frm.keys():
-                instance.zpc_uncertainty = db_std_units(
-                    frm['zpc_uncertainty'],frm['units_zpc_uc'])[0]
-            if 'units_stdev' in frm.keys():
-                instance.standard_deviation = db_std_units(
-                    frm['standard_deviation'],frm['units_stdev'])[0]
     
         if request.user.company and not request.user.is_staff:
             if inst_disp == 'edm': instance.edm_owner = request.user.company
@@ -270,8 +254,9 @@ def register_delete(request, inst_disp, tab, id):
             delete_obj.delete()
             messages.success(request, "You have successfully deleted: " + delete_obj)
         except:
-            messages.error(request, 
-                           "This action cannot be performed! This record has a dependant record.")
+            messages.error(
+                request, 
+                "This action cannot be performed! This record has a dependant record.")
     else:
         messages.error(request, "The record does not exists!")
     
@@ -299,7 +284,8 @@ def instrument_register(request, inst_disp):
             .order_by('edm__edm_number', '-calibration_date')
             .values('pk', 'edm__edm_number', 'prism__prism_number',
                     'calibration_date',
-                    'scale_correction_factor', 'zero_point_correction'))
+                    'scale_correction_factor', 'zero_point_correction',
+                    'html_report'))
         
         table_headings['certificates']= ['EDM Number',
                                          'Prism Number',
@@ -352,8 +338,8 @@ def instrument_register(request, inst_disp):
         if not request.user.is_staff:
             tabs['insts_list'] = tabs['insts_list'].filter(
                 staff_owner = request.user.company)
-            #tabs['certificates_list'] = tabs['certificates_list'].filter(
-            #    staff_owner = request.user.company)
+            # tabs['certificates_list'] = tabs['certificates_list'].filter(
+            #     staff_owner = request.user.company)
             
     ################ METS TAB #################
     if (inst_disp == 'baro' or inst_disp == 'thermo' 
@@ -612,7 +598,7 @@ class StaffCreationWizardPopUp(LoginRequiredMixin, NamedUrlSessionWizardView):
         inst_number = data['staff_number']
         inst_owner = data['staff_owner']
         inst_model = data['staff_model']
-        
+
         # Other parameters
         staff_type = data['staff_type']
         staff_length = data['staff_length']
@@ -640,7 +626,7 @@ class StaffCreationWizardPopUp(LoginRequiredMixin, NamedUrlSessionWizardView):
             observed_temperature = data['observed_temperature']
             calibration_date = data['calibration_date']
             calibration_report = data['calibration_report']
-            
+
             # enter staff details
             inst_staff = Staff.objects.create(
                     staff_owner = inst_owner,

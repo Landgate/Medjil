@@ -1,21 +1,20 @@
 from django import forms
 from datetime import date
 from django.db.models import Q
-from django.core.validators import MaxValueValidator, MinValueValidator
 
 # import Models
-from .models import (uPillar_Survey,
-                     uEDM_Observation,
-                     uCalibration_Parameter)
+from .models import (
+    uPillar_Survey,
+    uEDM_Observation)
 
 from baseline_calibration.models import Uncertainty_Budget
-from instruments.models import (EDM_Inst, 
-                                Prism_Inst, 
-                                Mets_Inst, 
-                                DigitalLevel, 
-                                Staff)
-from calibrationsites.models import (CalibrationSite, 
-                                     Pillar)
+from instruments.models import (
+    EDM_Inst,
+    Prism_Inst, 
+    Mets_Inst,
+    EDMI_certificate)
+
+from calibrationsites.models import (CalibrationSite)
 
 # make your forms
 class CalibrateEdmForm(forms.ModelForm):
@@ -57,7 +56,7 @@ class CalibrateEdmForm(forms.ModelForm):
     class Meta:
         model = uPillar_Survey
         fields = '__all__'
-        exclude = ('degrees_of_freedom','variance','k',
+        exclude = ('certificate',
                    'uploaded_on', 'modified_on',
                     'data_entered_person','data_entered_position','data_entered_date',
                     'data_checked_person','data_checked_position', 'data_checked_date')
@@ -139,19 +138,13 @@ class EDM_ObservationForm(forms.ModelForm):
         model = uEDM_Observation
         fields = ['use_for_distance']
         labels = {'id': 'Obs #',}
-    
 
-class PillarSurveyUpdateForm(forms.ModelForm):
+
+class EDMI_certificateForm(forms.ModelForm):
     class Meta:
-        model = uPillar_Survey
-        fields = ['degrees_of_freedom','variance','k']
-
-
-class CalibrationParamForm(forms.ModelForm):
-    class Meta:
-        model = uCalibration_Parameter
+        model = EDMI_certificate
         fields = '__all__'
-
+        
 
 class PillarSurveyApprovals(forms.ModelForm):        
     class Meta:
