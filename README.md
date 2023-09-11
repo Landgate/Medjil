@@ -4,8 +4,8 @@ Individual states and territories have regulations that require the Surveyor-Gen
 
 
 
-Medjil is the proposed name for an on-line instrument calibration portal that allows for rigorous calibration of baselines (the standard) and survey equipment (e.g. EDM Instrumentation or levelling staff).
-This code is a Django-based open-source web application developed by Landgate 
+Medjil is an on-line instrument calibration portal that allows for rigorous calibration of baselines (the standard) and survey equipment (e.g. EDM Instrumentation or levelling staff).
+This code is a Django-based open-source web application developed by Landgate. 
 
 ### Requirements
 Python 3.8 or higher plus see requirements.txt
@@ -40,25 +40,12 @@ If you are not familiar with a git client, download the zip file and extract the
 cd Medjil-main
 pip install -r requirements.txt
 ```
-<!--- ### Django Migration
+<!--- ### Django Migration and load initial data
 ```
-python manage.py makemigrations
-python manage.py migrate
-```
-
-### Load initial data using custom migrations
-```
-copy accounts\custom_migrations\*.py accounts\migrations
-copy baseline_calibration\custom_migrations\*.py baseline_calibration\migrations
-copy calibrationsites\custom_migrations\*.py calibrationsites\migrations
-copy instruments\custom_migrations\*.py instruments\migrations
-copy rangecalibration\custom_migration\*.py rangecalibration\migrations
-copy calibrationguide\custom_migrations\*.py calibrationguide\migrations
 set EMAIL_HOST_USER=admin@admin.com
 set EMAIL_HOST_PASSWORD=admin
 
 python manage.py migrate
-python manage.py runserver
 ```
 --->
 ### Run a local server
