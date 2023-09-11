@@ -40,14 +40,14 @@ If you are not familiar with a git client, download the zip file and extract the
 cd Medjil-main
 pip install -r requirements.txt
 ```
-<!--- ### Django Migration and load initial data
+### Django Migration and load initial data
 ```
 set EMAIL_HOST_USER=admin@admin.com
 set EMAIL_HOST_PASSWORD=admin
 
 python manage.py migrate
 ```
---->
+
 ### Run a local server
 ```
 python manage.py runserver
