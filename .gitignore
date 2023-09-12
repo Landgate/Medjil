@@ -17,3 +17,10 @@
 # Static
 ###################
 staticfiles
+
+# Media
+###################
+media/CalibrationSite
+media/media
+media/RangeCalibration
+media/StaffCalibration

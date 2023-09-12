@@ -3,14 +3,18 @@ from django.db import models
 from django.db.models import Q
 from django.urls import reverse
 from django.core.validators  import (
-    MaxValueValidator, MinValueValidator, MinLengthValidator)
+    MaxValueValidator, 
+    MinValueValidator, 
+    MinLengthValidator)
 from django.conf import settings
-# Create your models here.
-User = settings.AUTH_USER_MODEL
 from accounts.models import (
     CustomUser,
     Company)
+from common_func.validators import validate_profanity
 from datetime import date
+
+
+User = settings.AUTH_USER_MODEL
 
 length_units = (
     ('µm','µm'),
@@ -28,18 +32,18 @@ edm_types = (
     ('ph','Phase'),
     ('pu','Pulse'),
 )
-
+        
 class InstrumentMake(models.Model):
     make = models.CharField(
         max_length=25,
-        validators=[MinLengthValidator(4)],
+        validators=[MinLengthValidator(4), validate_profanity],
         help_text="e.g., LEICA, TRIMBLE, SOKKIA",
         unique=True
     )
     make_abbrev = models.CharField(
         max_length=4,
-        validators=[MinLengthValidator(3)],
-        help_text="e.g., LEI, TRIM, SOKK",
+        validators=[MinLengthValidator(3), validate_profanity],
+        help_text="Specify a 3 to 4 letter abbreviation",
         unique=True,
         verbose_name='Abbreviation'
     )
@@ -71,7 +75,7 @@ class InstrumentModel(models.Model):
     make = models.ForeignKey(InstrumentMake, on_delete=models.CASCADE, null=True)
     model = models.CharField(
         max_length=25,
-        validators=[MinLengthValidator(3)],
+        validators=[MinLengthValidator(2), validate_profanity],
         help_text="e.g., LS15, DNA03, TS30, S9, SX12, GT-1200/600"
     )
 
@@ -87,7 +91,7 @@ class DigitalLevel(models.Model):
     level_owner = models.ForeignKey(Company, on_delete=models.SET_NULL, null=True)
     level_number = models.CharField(
         max_length=15,
-        validators=[MinLengthValidator(4)],
+        validators=[MinLengthValidator(4), validate_profanity],
         help_text="Enter the instrument number"
     )
     level_model = models.ForeignKey(
@@ -120,6 +124,7 @@ class Staff(models.Model):
     staff_owner = models.ForeignKey(Company, on_delete=models.SET_NULL, null=True)
     staff_number = models.CharField(
         max_length=15,
+        validators=[validate_profanity],
         help_text="Enter the instrument number"
     )
     staff_types = (
@@ -267,6 +272,7 @@ def get_upload_to_edm_photos(instance, filename):
 class EDM_Inst(models.Model):
     edm_number = models.CharField(
         max_length=15,
+        validators=[validate_profanity],
         help_text="Enter the instrument serial number / unique ID",
         verbose_name='EDM Number'
     )
@@ -284,7 +290,10 @@ class EDM_Inst(models.Model):
         blank=True,
         verbose_name='Instrument Photo'
     )
-    comment = models.CharField(max_length=265, null=True, blank=True)
+    comment = models.CharField(
+        validators=[validate_profanity],
+        max_length=265, 
+        null=True, blank=True)
     edm_specs = models.ForeignKey(
         EDM_Specification,
         on_delete=models.PROTECT,
@@ -356,6 +365,7 @@ def get_upload_to_prism_photos(instance, filename):
 
 class Prism_Inst(models.Model):
     prism_number = models.CharField(
+        validators=[validate_profanity],
         max_length=15,
         help_text="Enter the instrument serial number / unique ID",
         verbose_name='Prism Number'
@@ -374,7 +384,10 @@ class Prism_Inst(models.Model):
         blank=True,
         verbose_name='Instrument Photo'
     )
-    comment = models.CharField(max_length=265, null=True, blank=True)
+    comment = models.CharField(
+        validators=[validate_profanity],
+        max_length=265, 
+        null=True, blank=True)
     prism_specs = models.ForeignKey(
         Prism_Specification,
         on_delete=models.PROTECT,
@@ -462,6 +475,7 @@ class Mets_Inst(models.Model):
     )
     mets_number = models.CharField(
         max_length=15,
+        validators=[validate_profanity],
         help_text="Enter the instrument serial number / unique ID",
         verbose_name='instrument number'
     )
@@ -473,7 +487,10 @@ class Mets_Inst(models.Model):
         help_text="Name of instrument custodian",
         verbose_name='instrument custodian'
     )
-    comment = models.CharField(max_length=265, null=True, blank=True)
+    comment = models.CharField(
+        validators=[validate_profanity],
+        max_length=265, 
+        null=True, blank=True)
     photo = models.FileField(
         upload_to=get_upload_to_mets_photos,
         null=True,

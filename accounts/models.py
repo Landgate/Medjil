@@ -2,11 +2,16 @@ from django.db import models
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
+from common_func.validators import validate_profanity
 
 # Create your models here.
 class Company(models.Model):
-    company_name = models.CharField(max_length=200, unique=True)
-    company_abbrev = models.CharField(max_length=20)
+    company_name = models.CharField(
+        validators=[validate_profanity],
+        max_length=200, unique=True)
+    company_abbrev = models.CharField(
+        validators=[validate_profanity],
+        max_length=20)
 
     class Meta:
         ordering = ['company_name']

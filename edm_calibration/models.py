@@ -6,6 +6,7 @@ from datetime import date
 from baseline_calibration.models import (
     Uncertainty_Budget,
     Pillar_Survey)
+from common_func.validators import validate_profanity
 from instruments.models import (
     EDM_Inst,
     Prism_Inst,
@@ -35,7 +36,8 @@ class uPillar_Survey(models.Model):
        help_text="Baseline certified distances")
    survey_date = models.DateField(null=False, blank=False)
    computation_date = models.DateField(null=False, blank=False)
-   observer = models.CharField(max_length=25, null = True, blank = True)
+   observer = models.CharField(
+        validators=[validate_profanity],max_length=25, null = True, blank = True)
    weather_type = (
        ('Sunny/Clear','Sunny/Clear'),
        ('Partially cloudy','Partially cloudy'),
@@ -52,6 +54,7 @@ class uPillar_Survey(models.Model):
              )
    job_number = models.CharField(max_length=25,
              help_text="Job reference eg., JN 20212216",
+             validators=[validate_profanity],
              unique=False,
              blank=True, null = True,
              verbose_name= 'Job Number/Reference'
@@ -108,11 +111,15 @@ class uPillar_Survey(models.Model):
    certificate = models.ForeignKey(
         EDMI_certificate, on_delete = models.SET_NULL , null = True, blank=True)
    
-   data_entered_person = models.CharField(max_length=25,null=True, blank=True)
-   data_entered_position = models.CharField(max_length=25,null=True, blank=True)
+   data_entered_person = models.CharField(
+       validators=[validate_profanity],max_length=25,null=True, blank=True)
+   data_entered_position = models.CharField(
+       validators=[validate_profanity],max_length=25,null=True, blank=True)
    data_entered_date = models.DateField(null=True, blank=True)
-   data_checked_person = models.CharField(max_length=25,null=True, blank=True)
-   data_checked_position = models.CharField(max_length=25,null=True, blank=True)
+   data_checked_person = models.CharField(
+       validators=[validate_profanity],max_length=25,null=True, blank=True)
+   data_checked_position = models.CharField(
+       validators=[validate_profanity],max_length=25,null=True, blank=True)
    data_checked_date = models.DateField(null=True, blank=True)
    
    uploaded_on = models.DateTimeField(auto_now_add=True, null=True)
