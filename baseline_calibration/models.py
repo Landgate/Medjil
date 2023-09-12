@@ -88,10 +88,9 @@ class Uncertainty_Budget_Source(models.Model):
     description = models.CharField(max_length=256,
                  unique=False,)
     units_list = (
-                 ('x:1','Scalar (x:1)'),
+                 ('a.x','Scalar (a.x)'),
                  ('ppm','ppm'),
                  ('%','%'),
-                 ('1:x','Ratio (1:x)'),
                  ('mm','mm'),
                  ('m','m'),
                  ('°C','°C'),

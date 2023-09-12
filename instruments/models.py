@@ -25,8 +25,8 @@ freq_units = (
     ('Hz','Hz'),
     ('MHz','MHz'),)
 scalar_units = (
-    ('x:1','x:1'),
-    ('1:x','1:x'),
+    ('A.x','A.x'),
+    ('a.x','a.x'),
     ('ppm','ppm'),)
 edm_types = (
     ('ph','Phase'),
@@ -529,13 +529,18 @@ def get_upload_to_edmi_certificate(instance, filename):
     )
 
 class EDMI_certificate (models.Model):
-    edm = models.ForeignKey(EDM_Inst, on_delete = models.PROTECT)
+    edm = models.ForeignKey(EDM_Inst, on_delete = models.PROTECT, verbose_name="EDM")
     prism = models.ForeignKey(Prism_Inst, on_delete = models.PROTECT)
-    calibration_date = models.DateField(null=True, blank=True)
+    calibration_date = models.DateField(null=True, blank=True, verbose_name="Calibration Date")
 
     scale_correction_factor = models.FloatField(
         validators = [MinValueValidator(0.00000000), MaxValueValidator(2.00000000)],
-        help_text="If: Instrument Correction = 1.00000013.L + 0.0003, Scale Correction Factor = 1.00000013")
+        help_text=(
+            "eg. &#010" +
+            "Corrected Reading = scf.d + zpc, Scale Correction Factor = scf (A.x) &#010" +
+            "Instrument Correction  = scf.d + zpc, Scale Correction Factor = scf (a.x) &#010" +
+            "Instrument Correction  = scf.d.1e-6 + zpc, Scale Correction Factor = scf (ppm)"),
+        verbose_name= 'Scale Correction Factor (scf)')
     scf_uncertainty = models.FloatField(
         validators = [MinValueValidator(0.00000000), MaxValueValidator(10.00000000)],
         help_text="Uncertainty of the scale correction factor at 95% Confidence Level",
@@ -553,7 +558,8 @@ class EDMI_certificate (models.Model):
                 
     zero_point_correction = models.FloatField(
         validators = [MinValueValidator(-5.00000), MaxValueValidator(5.00000)],
-        help_text="If: Instrument Correction (m) = 1.00000013.L + 0.0003, Zero Point Correction = 0.0003m",)
+        help_text="eg. Instrument Correction (m) = scf.d + zpc, Zero Point Correction = zpc",
+        verbose_name= 'Zero Point Correction (zpc)')
     zpc_uncertainty = models.FloatField(
         validators = [MinValueValidator(0.00000), MaxValueValidator(5.00000)],
         help_text="Uncertainty of the zero point correction (m) at 95% Confidence Level",
@@ -570,7 +576,7 @@ class EDMI_certificate (models.Model):
         null=True,blank = True)
     
     has_cyclic_corrections = models.BooleanField(default=False,
-        verbose_name= 'Enter cyclic error parameters',
+        verbose_name= 'Enter Cyclic Error Parameter',
         help_text="Click to toggle the input of cyclic error correction parameters")
 
     cyclic_one = models.FloatField(
@@ -675,10 +681,12 @@ class EDMI_certificate (models.Model):
         
     standard_deviation = models.FloatField(
         validators = [MinValueValidator(0.00000), MaxValueValidator(10.00000)],
-        help_text="Results of measurement standard deviation (m)")
+        help_text="Results of measurement standard deviation (m)",
+        verbose_name="Standard Deviation")
     degrees_of_freedom = models.IntegerField(
         validators = [MinValueValidator(0), MaxValueValidator(500)],
-        help_text="Degrees of freedom of calibration")
+        help_text="Degrees of freedom of calibration",
+        verbose_name="Degrees of Freedom")
 
     certificate_upload = models.FileField(
         upload_to=get_upload_to_edmi_certificate,
@@ -740,7 +748,7 @@ class Mets_certificate (models.Model):
 
     zero_point_correction = models.FloatField(
         validators = [MinValueValidator(-10.00), MaxValueValidator(10.00)],
-        help_text="If: Correction to readings = Reading + 0.12°C, Zero point correction = 0.12")
+        help_text="eg. Correction to readings = Reading + 0.12°C, Zero point correction = 0.12")
     zpc_uncertainty = models.FloatField(
         validators = [MinValueValidator(0.00), MaxValueValidator(10.00)],
         help_text="Uncertainty of the zero point correction (m) at 95% Confidence Level",

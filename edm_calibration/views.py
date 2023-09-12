@@ -285,11 +285,18 @@ def calibrate2(request,id):
             pillar_survey.save()
                 
             return redirect('edm_calibration:edm_calibration_home')
+        else:
+            context = edm_report_context(
+                request, pillar_survey, raw_edm_obs, ps_qs)
+            pillar_approvals_update = PillarSurveyApprovals(request.POST)
+            context['pillar_approvals_update'] = pillar_approvals_update
+            return render(request, 'edm_calibration/calibrate_report.html', context)
         
 def certificate(request, id):
     
     certificate_qs = get_object_or_404(EDMI_certificate, id=id)
     html_content = certificate_qs.html_report
+    html_content = html_content.replace('// certificate()', 'certificate()')
     return HttpResponse(html_content, content_type='text/html')
 
 
@@ -561,11 +568,7 @@ def edm_report_context(request, pillar_survey, raw_edm_obs, ps_qs):
                            'std_residual': o['std_residual']})
         if o['Reduced_distance'] > first_to_last['Reduced_distance']:
             first_to_last = o
-    
-    #Add current pillar survey to history table
-    # calib['edmi'][0]['k'] = chi_test['k']
-    # calib['edmi'][0]['parameters'] = matrix_y
-    
+        
     #create signiture block
     pillar_approvals_update = PillarSurveyApprovals(instance=ps_qs)
     

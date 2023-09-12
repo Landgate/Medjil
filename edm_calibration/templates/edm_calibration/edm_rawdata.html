@@ -21,7 +21,7 @@
             </div>
             <div class="flexbox-container_IB flexbox-item_IB" style="min-width: 600px;">
                 {% csrf_token %}
-                <table id="obsTable">
+                <table id="myTable">
                     {{ edm_obs_formset.management_form }}
                     {% for form, raw in formset %}
                         {% if forloop.first %}
@@ -79,10 +79,12 @@ function submit_it() {
     document.getElementById("edm-rawDataForm").submit();
 }
 
-
+</script>
+<script>
+// function for sorting tables called 'myTable'
 function sortTable(n) {
   var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-  table = document.getElementById("obsTable");
+  table = document.getElementById("myTable");
   switching = true;
   //Set the sorting direction to ascending:
   dir = "asc"; 
@@ -94,8 +96,8 @@ function sortTable(n) {
     rows = table.rows;
     /*Loop through all table rows (except the
     first, which contains table headers):*/
-    for (i = 1; i 
-                < (rows.length - 1); i++) {
+    for (i = 2; i 
+            < (rows.length - 1); i++) {
       //start by saying there should be no switching:
       shouldSwitch = false;
       /*Get the two elements you want to compare,
@@ -112,7 +114,7 @@ function sortTable(n) {
         }
       } else if (dir == "desc") {
         if (x.innerHTML.toLowerCase() 
-                    < y.innerHTML.toLowerCase()) {
+                < y.innerHTML.toLowerCase()) {
           //if so, mark as a switch and break the loop:
           shouldSwitch = true;
           break;

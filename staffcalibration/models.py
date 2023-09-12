@@ -37,11 +37,6 @@ class StaffCalibrationRecord(models.Model):
                                     help_text = "Enter a job number, e.g., JN20222511",
                                     # unique = True,
                                     verbose_name = 'Job Number')   
-    # job_number = models.CharField(max_length=10, 
-    #                                 validators = [RegexValidator(r'^[A-Z]{2}[0-9]{8}$', 'Ten characters starting with two alphabets and ending with eight numbers are allowed.')],
-    #                                 help_text = "Enter a job number, e.g., JN20222511",
-    #                                 # unique = True,
-    #                                 verbose_name = 'Job Number')    
     inst_staff = models.ForeignKey(Staff, 
                                     null=True,
                                     on_delete = models.RESTRICT, 

@@ -17,7 +17,6 @@ Default_budget = {
     }
 
 sources = [
-    {'group' : '01', 'description': 'The EDM scale factor affected by temperature. (Type B)', 'units': 'x:1', 'ab_type': 'B', 'distribution': 'R', 'std_dev': 0.000000115, 'uc95': 0.0000002, 'k': 3**0.5, 'degrees_of_freedom': 30},
     {'group' : '04', 'description': 'Expected variation along measured dist', 'units':  '°C', 'ab_type':  'B', 'distribution':  'N', 'std_dev': 0.5, 'uc95': 1, 'k': 2, 'degrees_of_freedom': 10},
     {'group' : '05', 'description': 'Expected variation along measured dist.', 'units':  'hPa', 'ab_type':  'B', 'distribution':  'N', 'std_dev': 0.5, 'uc95': 1, 'k': 2, 'degrees_of_freedom': 10},
     {'group' : '09', 'description': 'Instrument Centring', 'units':  'm', 'ab_type':  'B', 'distribution':  'N', 'std_dev': 0.0002, 'uc95': 0.0004, 'k': 2, 'degrees_of_freedom': 30},

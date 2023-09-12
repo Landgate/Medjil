@@ -48,9 +48,11 @@
                 <hr>
             </div>
         </div>
+        <div class="text-center">
+            <h2>Accreditation</h2>
+        </div>
         <div class="flexbox-container_IB">
             <div class="flexbox-item_400_IB flexbox-item-left_IB">
-                <br>
                 <B>Accredited Agency: </B>{{ pillar_survey.accreditation.accredited_company }}
                 <br>
                 <B>Date of Accreditation: </B>{{ pillar_survey.accreditation.valid_from_date }}
@@ -58,7 +60,6 @@
                 <B>Accreditation Valid Until: </B>{{ pillar_survey.accreditation.valid_to_date }}
             </div>
             <div class="flexbox-item_400_IB  flexbox-item-right_IB">
-                <br>
                 <B>Least Uncertainty of Measurement: </B>{{ pillar_survey.accreditation.LUM_constant }}mm &plusmn {{ pillar_survey.accreditation.LUM_ppm }}ppm
                 {% if pillar_survey.accreditation.certificate_upload %}
                     <br>

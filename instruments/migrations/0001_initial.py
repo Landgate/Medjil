@@ -232,7 +232,7 @@ class Migration(migrations.Migration):
                     "units_manu_unc_ppm",
                     models.CharField(
                         blank=True,
-                        choices=[("x:1", "x:1"), ("1:x", "1:x"), ("ppm", "ppm")],
+                        choices=[("A.x", "A.x"), ("a.x", "a.x"), ("ppm", "ppm")],
                         max_length=3,
                         null=True,
                     ),
@@ -632,7 +632,7 @@ class Migration(migrations.Migration):
                 (
                     "zero_point_correction",
                     models.FloatField(
-                        help_text="If: Correction to readings = Reading + 0.12°C, Zero point correction = 0.12",
+                        help_text="eg. Correction to readings = Reading + 0.12°C, Zero point correction = 0.12",
                         validators=[
                             django.core.validators.MinValueValidator(-10.0),
                             django.core.validators.MaxValueValidator(10.0),
@@ -721,15 +721,21 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
-                ("calibration_date", models.DateField(blank=True, null=True)),
+                ("calibration_date", models.DateField(
+                    blank=True, null=True, verbose_name="Calibration Date")),
                 (
                     "scale_correction_factor",
                     models.FloatField(
-                        help_text="If: Instrument Correction = 1.00000013.L + 0.0003, Scale Correction Factor = 1.00000013",
+                        help_text=(
+                            "eg. &#010" +
+                            "Corrected Reading = scf.d + zpc, Scale Correction Factor = scf (A.x) &#010" +
+                            "Instrument Correction  = scf.d + zpc, Scale Correction Factor = scf (a.x) &#010" +
+                            "Instrument Correction  = scf.d.1e-6 + zpc, Scale Correction Factor = scf (ppm)"),
                         validators=[
                             django.core.validators.MinValueValidator(0.0),
                             django.core.validators.MaxValueValidator(2.0),
                         ],
+                        verbose_name="Scale Correction Factor (scf)",
                     ),
                 ),
                 (
@@ -771,11 +777,12 @@ class Migration(migrations.Migration):
                 (
                     "zero_point_correction",
                     models.FloatField(
-                        help_text="If: Instrument Correction (m) = 1.00000013.L + 0.0003, Zero Point Correction = 0.0003m",
+                        help_text="eg. Instrument Correction (m) = scf.d + zpc, Zero Point Correction = zpc",
                         validators=[
                             django.core.validators.MinValueValidator(-5.0),
                             django.core.validators.MaxValueValidator(5.0),
                         ],
+                        verbose_name="Zero Point Correction (zpc)",
                     ),
                 ),
                 (
@@ -818,8 +825,8 @@ class Migration(migrations.Migration):
                     "has_cyclic_corrections",
                     models.BooleanField(
                         default=False,
+                            verbose_name= 'Enter Cyclic Error Parameter',
                         help_text="Click to toggle the input of cyclic error correction parameters",
-                        verbose_name="Enter cyclic error parameters",
                     ),
                 ),
                 (
@@ -1054,6 +1061,7 @@ class Migration(migrations.Migration):
                             django.core.validators.MinValueValidator(0.0),
                             django.core.validators.MaxValueValidator(10.0),
                         ],
+                        verbose_name="Standard Deviation",
                     ),
                 ),
                 (
@@ -1064,6 +1072,7 @@ class Migration(migrations.Migration):
                             django.core.validators.MinValueValidator(0),
                             django.core.validators.MaxValueValidator(500),
                         ],
+                        verbose_name="Degrees of Freedom",
                     ),
                 ),
                 (
@@ -1089,6 +1098,7 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.PROTECT,
                         to="instruments.edm_inst",
+                        verbose_name="EDM",
                     ),
                 ),
                 (

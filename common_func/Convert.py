@@ -25,7 +25,6 @@ from geodepy.geodesy import grid2geo, rho
 
 def db_std_units(orig_val, orig_unit):
     # function converts all values to scalar, m, Hz, °C or hPa
-    # if a distance is specified, scalar standard deviations are converted to m
     new_val = orig_val
     new_unit = orig_unit
     
@@ -49,7 +48,7 @@ def db_std_units(orig_val, orig_unit):
     if any([orig_unit == 'nm', orig_unit == 'mm', orig_unit == 'µm']): 
         new_unit = 'm'
     if any([orig_unit == 'ppm', orig_unit == '1:x', orig_unit == '%']):
-        new_unit = 'x:1'
+        new_unit = 'a.x'
     if any([orig_unit == 'inHg', orig_unit == 'mmHg']):
         new_unit = 'hPa'
 

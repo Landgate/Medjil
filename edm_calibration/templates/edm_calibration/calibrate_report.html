@@ -773,6 +773,22 @@
                             <td>Data checked by:</td>
                             <td>{{ pillar_approvals_update.data_checked_person}}</td>
                         </tr>
+                        {% if pillar_approvals_update.data_entered_person.errors or pillar_approvals_update.data_checked_person.errors  %}                        
+                            <tr>
+                                <td></td>
+                                <td>
+                                {% for error in pillar_approvals_update.data_entered_person.errors %}
+                                    <p class="error error-danger">{{ error }}</p>
+                                {% endfor %}
+                                </td>
+                                <td></td>
+                                <td>
+                                {% for error in pillar_approvals_update.data_checked_person.errors %}
+                                    <p class="error error-danger">{{ error }}</p>
+                                {% endfor %}
+                                </td>
+                            </tr>
+                        {% endif %}                        
                         <tr>
                             <td>Position:</td>
                             <td>{{ pillar_approvals_update.data_entered_position}}</td>
@@ -780,13 +796,29 @@
                             <td>Position:</td>
                             <td>{{ pillar_approvals_update.data_checked_position}}</td>
                         </tr>
+                        {% if pillar_approvals_update.data_entered_position.errors or pillar_approvals_update.data_checked_position.errors  %}
+                            <tr>
+                                <td></td>
+                                <td>
+                                {% for error in pillar_approvals_update.data_entered_position.errors %}
+                                    <p class="error error-danger">{{ error }}</p>
+                                {% endfor %}
+                                </td>
+                                <td></td>
+                                <td>
+                                {% for error in pillar_approvals_update.data_checked_position.errors %}
+                                    <p class="error error-danger">{{ error }}</p>
+                                {% endfor %}
+                                </td>
+                            </tr>
+                        {% endif %}
                         <tr>
                             <td>Signature:</td>
                             <td> <input type='text' style="background:none;"></td>
                             <td style="border:none:"></td>
                             <td>Signature:</td>
                             <td> <input type='text' style="background:none;"></td>
-                        </tr>    
+                        </tr>
                         <tr>
                             <td>Date:</td>
                             <td>{{ pillar_approvals_update.data_entered_date}}</td>
@@ -1044,6 +1076,7 @@ new Chart("return-phase-angle-Chart", {
 
 </script>
 <script>
+// function for sorting tables called 'myTable'
 function sortTable(n) {
   var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
   table = document.getElementById("myTable");
@@ -1100,14 +1133,60 @@ function sortTable(n) {
     }
   }
 }
-
 </script>
 <script>
 {% if archive %}
 document.addEventListener("DOMContentLoaded", function() {
-    certificate()
+    // hide elements
+    var nav = document.querySelector("nav");
+    if (nav) {
+        nav.style.display = "none";
+    }
+    var mainHeader = document.getElementById("header-toggle");
+    if (mainHeader) {
+      mainHeader.style.display = "none";
+    }   
+    var headerLogoLink = document.querySelector(".header-logo");
+    if (headerLogoLink) {
+      headerLogoLink.removeAttribute("href");
+    }
+    // certificate()
     });
 {% endif %}
+
+// Function to change an EDMI report to a certificate
+function certificate(){
+    // Script to switch between Report and certificate
+    hide_heading = [
+        "Calibration Distance Observations",
+        "Uncertainty Budget - Uncertainty Sources",
+        "Combined Uncertainty Budget - Total Distance Uncertainty",
+        "Uncertainty Groups Contribution to Certified Distances",
+        "Table of Observations, Corrections, Uncertainties and Residuals",
+        "Residuals From Least Squares Fit of The Baseline Measurements",
+        "Comparison of Raw Observations to Certified Slope Distances",
+        "Return Phase Angle of Observed Distances"];
+    
+    // Get all <h> elements
+    var h2Elements = document.querySelectorAll("h2");
+    var h1Elements = document.querySelectorAll("h1");
+    
+    h1Elements[0].innerHTML = "<B>EDMI Calibration Certificate</B>";
+
+    // Check if the content of the <h2> element is in the array of headers
+    h2Elements.forEach(function(h2Element) {
+        if (hide_heading.includes(h2Element.textContent.trim())) {
+            var parentElement = h2Element.parentNode;
+
+            // Hide the parent element
+            parentElement.style.display = "none";
+        }
+    })
+    var inputFields = document.querySelectorAll("input");
+    inputFields.forEach(function(inputField) {
+        inputField.disabled = true;
+    });
+}
 </script>
 
 {% endblock content %}
