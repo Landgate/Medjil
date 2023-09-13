@@ -44,6 +44,7 @@ pip install -r requirements.txt
 ```
 set EMAIL_HOST_USER=admin@admin.com
 set EMAIL_HOST_PASSWORD=admin
+set DEBUG=1
 
 python manage.py migrate
 ```
