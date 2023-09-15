@@ -65,7 +65,7 @@ from common_func.SurveyReductions import (
     sum_uc_budget,
     get_delta_os,
     add_typeB)
-from instrument_calibrations.settings import *
+from medjil.settings import *
 from common_func.LeastSquares import (
     LSA,
     ISO_test_b,

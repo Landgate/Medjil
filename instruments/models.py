@@ -726,7 +726,7 @@ class EDMI_certificate (models.Model):
           super(EDMI_certificate, self).save(*args, **kwargs)
          
     def get_absolute_url(self):
-        return reverse('instrument_calibrations:EDMI-Certificate-detail', args=[str(self.id)])
+        return reverse('medjil:EDMI-Certificate-detail', args=[str(self.id)])
 
     def __str__(self):
         return f'{self.edm} ({self.calibration_date.strftime("%Y-%m-%d")})'
@@ -788,7 +788,7 @@ class Mets_certificate (models.Model):
          super(Mets_certificate, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse('instrument_calibrations:Mets-Certificate-detail', args=[str(self.id)])
+        return reverse('medjil:Mets-Certificate-detail', args=[str(self.id)])
 
     def __str__(self):
         return f'{self.instrument} ({self.calibration_date.strftime("%Y-%m-%d")})'

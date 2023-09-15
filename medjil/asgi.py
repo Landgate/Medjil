@@ -1,5 +1,5 @@
 """
-ASGI config for InstrumentCalibration project.
+ASGI config for Medjil project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'instrument_calibrations.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'medjil.settings')
 
 application = get_asgi_application()
