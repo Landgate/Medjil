@@ -10,6 +10,7 @@ from django.views import generic
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.utils.decorators import method_decorator
 # from formtools.wizard.views import SessionWizardView, NamedUrlSessionWizardView
 # from django.urls import reverse
 
@@ -26,6 +27,7 @@ from staffcalibration.forms import (StaffCalibrationRecordForm,
 
 ################################################################################
 # Home View
+@method_decorator(login_required(login_url="/accounts/login"), name='dispatch')
 class HomeView(generic.ListView, LoginRequiredMixin):
     model = StaffCalibrationRecord
     paginate_by = 25

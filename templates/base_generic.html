@@ -8,9 +8,9 @@
     <title>Medjil The Survey Instrumentation Calibration Portal</title>
     <link rel="icon" type="ico" href="{% static 'favicon.ico' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />    <!-- <link rel="stylesheet" href="https://code.cdn.mozilla.net/fonts/fira.css"> -->
-    <link rel="stylesheet" href="{% static 'main.css' %}">
-    <link rel="stylesheet" href="{% static 'fonts/stylesheet.css' %}">
-    <link rel="stylesheet" href="{% static 'style_ib.css' %}">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'css/fonts/stylesheet.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style_ib.css' %}">
 </head>
 <body>
     <div class="page-wrap">
@@ -206,22 +206,14 @@
         </div>
     </main>
     <hr>
+    <div id="termsBanner" class="acknowledge-TCs hidden">
+        <div class="acknowledge-TCs-content">
+            <h2>Terms and Conditions</h2>
+            <p>Welcome to Medjil. By using this website, you agree to our <a href="/terms">Terms and Conditions</a> and <a href="/terms">Privacy Policy</a>.</p>
+            <button id="acceptTCButton">Accept</button>
+        </div>
+    </div>
     <footer class="page-footer">
-     <!--   <div class="footer-row; text-center">
-            <div class="wrapper">
-                <div class="footer-row1">
-                    <div class="subscription">
-                        <div class="social-media;text-center">
-                            <a href="https://confirmsubscription.com/h/i/EFA065D8DEDDF0DF"><span>Subscribe to our geodetic newletter</span> <i class="fas fa-globe"></i></a>
-                            <a href="https://twitter.com/landgate"><span>Follow Landgate on twitter</span> <i class="fab fa-twitter-square"></i></a>
-                            <a href="https://au.linkedin.com/company/landgate-wa"><span>Follow Landgate on Linkedin</span> <i class="fab fa-linkedin"></i></a>
-                            <a href="https://www.youtube.com/channel/UC7Cur-7a1eaIS-YqDkLJGWg"><span>Follow us on Youtube</span> <i class="fab fa-youtube"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        <hr>
-        </div> -->
         <div class="wrapper">
             <div class="footer-row3">
                 <div class="policy-col-1">
@@ -237,11 +229,9 @@
         </div>
     </footer>
     
-    <!-- <div class="current_time"></div> -->   
-    <!-- <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script> -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/js/all.min.js" integrity="sha512-naukR7I+Nk6gp7p5TMA4ycgfxaZBJ7MO5iC3Fp6ySQyKFHOGfpkSZkYVWV5R7u7cfAicxanwYQ5D1e17EfJcMA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>    
-    <script src="{% static 'script.js' %}"></script>
+    <script src="{% static 'js/script.js' %}"></script>
 
     
     <script type="text/javascript">

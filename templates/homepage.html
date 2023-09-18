@@ -1,23 +1,6 @@
 {% extends 'base_generic.html' %}
 {% load static %}
 
-{% block slideshow %}
-    <div class="slideshow-container">
-        <div class="homeSlides fade">
-            <img src="{% static 'banners/Home Background2.png' %}" alt="Calibration Image 1" class="cropped1">
-        </div>
-        <div class="homeSlides fade">
-            <img src="{% static 'banners/Home Background3.png' %}" alt="Calibration Image 2" class="cropped1">
-        </div>
-
-        <div class="homeSlides fade">
-            <img src="{% static 'banners/Home Background4.png' %}" alt="Calibration Image 3" class="cropped1">
-        </div>
-        <a class="slideshow-prev" onclick="plusSlides(-1)">&#10094;</a>
-        <a class="slideshow-next" onclick="plusSlides(1)">&#10095;</a>
-    </div>
-{% endblock slideshow %}
-
 {% block content %}
 
 <article class="post mt-8 mb-5">
@@ -53,41 +36,6 @@
 
     </div>
 </article>
-
-<script>
-    let slideIndex = 1;
-    showSlides(slideIndex);
-
-    function plusSlides(n) {
-        showSlides(slideIndex += n);
-    }
-
-    function currentSlide(n) {
-        showSlides(slideIndex = n);
-    }
-
-    function showSlides(n) {
-        let i;
-        let slides = document.getElementsByClassName("homeSlides");
-        // let dots = document.getElementsByClassName("dot");
-        if (n > slides.length) {slideIndex = 1}
-        if (n < 1) {slideIndex = slides.length}
-        for (i = 0; i < slides.length; i++) {
-            slides[i].style.display = "none";
-        }
-        // for (i = 0; i < dots.length; i++) {
-        //     dots[i].className = dots[i].className.replace(" active", "");
-        // }
-        slides[slideIndex-1].style.display = "block";
-    // dots[slideIndex-1].className += " active";
-    }
-
-    const edmClick = document.getElementById('edm-click')
-
-    edmClick.addEventListener('click', () => {
-        edmClick.style.display = "block";
-    })
-</script>
 
  {% endblock content %}
 
