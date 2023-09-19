@@ -253,7 +253,6 @@ def calibrate2(request,id):
 
         #----------------------- code for commiting the calibration and returning to home page -----------------------------#        
         pillar_approvals_update = PillarSurveyApprovals(request.POST)
-        EDMI_certificate = EDMI_certificateForm(request.POST)
         if ps_qs.certificate:
             EDMI_certificate = EDMI_certificateForm(request.POST, instance=ps_qs.certificate)
         else:

@@ -10,6 +10,7 @@ from datetime import date
 User = settings.AUTH_USER_MODEL
 from instruments.models import EDM_Inst, Prism_Inst, Mets_Inst, DigitalLevel, Staff
 from calibrationsites.models import CalibrationSite, Pillar
+from common_func.validators import validate_profanity
 from accounts.models import Company
 
 class Accreditation(models.Model):
@@ -314,7 +315,20 @@ class Pillar_Survey(models.Model):
     degrees_of_freedom = models.IntegerField(blank = True, null=True,
                  validators = [MinValueValidator(0), MaxValueValidator(500)],
                  help_text="Degrees of freedom of calibration")
+   
+    data_entered_person = models.CharField(
+        validators=[validate_profanity],max_length=25,null=True, blank=True)
+    data_entered_position = models.CharField(
+        validators=[validate_profanity],max_length=25,null=True, blank=True)
+    data_entered_date = models.DateField(null=True, blank=True)
+    data_checked_person = models.CharField(
+        validators=[validate_profanity],max_length=25,null=True, blank=True)
+    data_checked_position = models.CharField(
+        validators=[validate_profanity],max_length=25,null=True, blank=True)
+    data_checked_date = models.DateField(null=True, blank=True)
     
+    html_report = models.TextField(blank=True, null=True)
+   
     uploaded_on = models.DateTimeField(auto_now_add=True, null=True)
     modified_on = models.DateTimeField(auto_now=True, null=True)
     

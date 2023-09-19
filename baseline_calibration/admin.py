@@ -61,6 +61,13 @@ class Pillar_SurveyAdmin(admin.ModelAdmin):
               'fields': (
               ('zero_point_correction','zpc_uncertainty'),
               'degrees_of_freedom', 'variance')
+              }),
+              ('Approavals', { 
+              'fields': (
+              ('data_entered_person','data_checked_person'),
+              ('data_entered_position','data_checked_position'),
+              ('data_entered_date','data_checked_date')
+              )
               }))
 
     # inlines = [EDM_ObservationInline, Level_ObservationInline, Certified_DistanceInline,Std_Deviation_MatrixInline]

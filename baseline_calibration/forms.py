@@ -61,10 +61,14 @@ class PillarSurveyForm(forms.ModelForm):
     class Meta:
         model = Pillar_Survey
         fields = '__all__'
-        exclude = ('psychrometer', 'psy_calib_applied',
-                   'zero_point_correction','zpc_uncertainty',
-                   'variance','degrees_of_freedom',
-                   'uploaded_on', 'modified_on')
+        exclude = (
+            'psychrometer', 'psy_calib_applied',
+            'zero_point_correction','zpc_uncertainty',
+            'variance','degrees_of_freedom',
+            'uploaded_on', 'modified_on',
+            'html_report',
+            'data_entered_person','data_entered_position','data_entered_date',
+            'data_checked_person','data_checked_position', 'data_checked_date')
         widgets = {
            'baseline': forms.Select(attrs={'class': 'page0'}),
            'computation_date': forms.DateInput(format=('%d-%m-%Y'),
@@ -176,8 +180,27 @@ class Certified_DistanceForm(forms.ModelForm):
 class PillarSurveyUpdateForm(forms.ModelForm):                
     class Meta:
         model = Pillar_Survey
-        fields = ['zero_point_correction','zpc_uncertainty','variance','degrees_of_freedom']      
+        fields = ['zero_point_correction','zpc_uncertainty',
+                  'variance','degrees_of_freedom',
+                  'html_report']      
 
+
+class PillarSurveyApprovalsForm(forms.ModelForm):                
+    class Meta:
+        model = Pillar_Survey
+        fields = [
+            'data_entered_person',
+            'data_entered_position',
+            'data_entered_date',
+            'data_checked_person',
+            'data_checked_position', 
+            'data_checked_date']   
+        widgets = {
+            'data_entered_date': forms.DateInput(
+                attrs={'type': 'date', 'input_formats': ['%d-%m-%Y']}),
+            'data_checked_date': forms.DateInput(
+                attrs={'type': 'date', 'input_formats': ['%d-%m-%Y']}),
+        }
     
 class Std_Deviation_MatrixForm(forms.ModelForm):                
     class Meta:
