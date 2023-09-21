@@ -1,0 +1,145 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+{% load custom_filter_tags %}
+
+
+{% block content %}
+{{ html_report|safe }}
+<article class="post">
+    <div class="post-content">
+        <form class="approvals-form site-form" method="post" enctype="multipart/form-data">
+            {% csrf_token %}   
+            <div class="text-center">
+                <h2>Approvals</h2>
+                <div class="flexbox-item_800_IB flexbox-item-left_IB">
+                    <table>
+                        <colgroup>
+                            <col span="1" width="15%">
+                            <col span="1" width="22%">
+                            <col span="1" width="6%">
+                            <col span="1" width="15%">
+                            <col span="1" width="22%">
+                        </colgroup>
+                        <tr>
+                            <td>Data entry by:</td>
+                            <td>{{ ps_approvals.data_entered_person}}</td>
+                            <td style="border:none:"></td>
+                            <td>Data checked by:</td>
+                            <td>{{ ps_approvals.data_checked_person}}</td>
+                        </tr>
+                        {% if ps_approvals.data_entered_person.errors or ps_approvals.data_checked_person.errors  %}                        
+                            <tr>
+                                <td></td>
+                                <td>
+                                {% for error in ps_approvals.data_entered_person.errors %}
+                                    <p class="error error-danger">{{ error }}</p>
+                                {% endfor %}
+                                </td>
+                                <td></td>
+                                <td>
+                                {% for error in ps_approvals.data_checked_person.errors %}
+                                    <p class="error error-danger">{{ error }}</p>
+                                {% endfor %}
+                                </td>
+                            </tr>
+                        {% endif %}                        
+                        <tr>
+                            <td>Position:</td>
+                            <td>{{ ps_approvals.data_entered_position}}</td>
+                            <td style="border:none:"></td>
+                            <td>Position:</td>
+                            <td>{{ ps_approvals.data_checked_position}}</td>
+                        </tr>
+                        {% if ps_approvals.data_entered_position.errors or ps_approvals.data_checked_position.errors  %}
+                            <tr>
+                                <td></td>
+                                <td>
+                                {% for error in ps_approvals.data_entered_position.errors %}
+                                    <p class="error error-danger">{{ error }}</p>
+                                {% endfor %}
+                                </td>
+                                <td></td>
+                                <td>
+                                {% for error in ps_approvals.data_checked_position.errors %}
+                                    <p class="error error-danger">{{ error }}</p>
+                                {% endfor %}
+                                </td>
+                            </tr>
+                        {% endif %}
+                        <tr>
+                            <td>Signature:</td>
+                            <td> <input type='text' style="background:none;" readonly></td>
+                            <td style="border:none:"></td>
+                            <td>Signature:</td>
+                            <td> <input type='text' style="background:none;" readonly></td>
+                        </tr>
+                        <tr>
+                            <td>Date:</td>
+                            <td>{{ ps_approvals.data_entered_date}}</td>
+                            <td style="border:none:"></td>
+                            <td>Date:</td>
+                            <td>{{ ps_approvals.data_checked_date}}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="button-container">
+                <div class="flexbox-item_800_IB flexbox-item-button_IB">
+                    {% if pillar_survey %}
+                        <a href= "{% url 'edm_calibration:calibrate2' id=pillar_survey.pk %}" class="submit-button bg-green-500 hover:bg-green-400" style="text-align: center">Back</a>
+                        {% if pillar_survey.certificate %}
+                            <a href= "{% url 'edm_calibration:pillar_survey_del' id=pillar_survey.pk %}" class="submit-button bg-red-500 hover:bg-green-400" style="text-align: center"> Cancel</a>
+                        {% else %}
+                            <a href= "{% url 'edm_calibration:edm_calibration_home' %}" class="submit-button bg-red-500 hover:bg-green-400" style="text-align: center">Cancel</a>
+                        {% endif %}
+                    {% else %}
+                        <a href= "{% url 'edm_calibration:edm_calibration_home' %}" class="submit-button bg-red-500 hover:bg-green-400" style="text-align: center">Cancel</a>
+                    {% endif %}
+                    <button type="submit" class="submit-button bg-green-500 hover:bg-green-400" >Save</button>
+                </div>
+            </div>
+            <div style="display:None;">       
+                {% for form in hidden %}
+                    {{ form.management_form }}
+                    {% for field in form %}
+                        <p>{{ field }}</p>
+                        {% for error in field.errors %}
+                            <p style="color:Red;">{{ error }}</p>
+                        {% endfor %}
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        </form>
+    </div>
+</article>
+<script>
+// Function to update the date input with today's date
+function updateDateInput(inputId) {
+    var today = new Date();
+    var year = today.getFullYear();
+    var month = String(today.getMonth() + 1).padStart(2, '0');
+    var day = String(today.getDate()).padStart(2, '0');
+    var formattedDate = year + '-' + month + '-' + day;
+    
+    document.getElementById(inputId).value = formattedDate;
+}
+
+// Add event listeners to the input fields above the date inputs
+document.getElementById("id_data_entered_person").addEventListener("input", function() {
+    updateDateInput("id_data_entered_date");
+});
+
+document.getElementById("id_data_checked_person").addEventListener("input", function() {
+    updateDateInput("id_data_checked_date");
+});
+
+document.getElementById("id_data_entered_position").addEventListener("input", function() {
+    updateDateInput("id_data_entered_date");
+});
+
+document.getElementById("id_data_checked_position").addEventListener("input", function() {
+    updateDateInput("id_data_checked_date");
+});
+
+</script>
+{% endblock content %}

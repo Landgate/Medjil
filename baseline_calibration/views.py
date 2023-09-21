@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.forms import formset_factory, modelformset_factory
 from django.forms.models import model_to_dict
-from django.http import QueryDict, HttpResponse
+from django.http import QueryDict
 from django.template.loader import render_to_string
 from collections import OrderedDict
 from django.db.models import Q
@@ -274,7 +274,7 @@ def calibrate2(request,id):
     sdev_mat_formset = formset_factory(Std_Deviation_MatrixForm, extra=0)
     pillar_survey_update = PillarSurveyUpdateForm(
         request.POST or None, instance=ps_qs)
-    pillar_approvals_update = PillarSurveyApprovalsForm(
+    ps_approvals = PillarSurveyApprovalsForm(
         request.POST or None, instance=ps_qs)
     
     calib = {}
@@ -341,10 +341,9 @@ def calibrate2(request,id):
                        'formset': formset})
     else:
         # This is a POST request
-        #and recalulate averages and offsets
         if edm_obs_formset.is_valid():
             # create signiture block
-            pillar_approvals_update = PillarSurveyApprovalsForm(instance=ps_qs)
+            ps_approvals = PillarSurveyApprovalsForm(instance=ps_qs)
             # Apply a mask to the raw observations
             # - calculate, check errors and render report
             edm_obs_formset.save()
@@ -362,7 +361,7 @@ def calibrate2(request,id):
            return render(request, 'baseline_calibration/errors_report.html', 
                          {'Check_Errors':Check_Errors})
            
-        if edm_obs_formset.is_valid() or not pillar_approvals_update.is_valid():
+        if edm_obs_formset.is_valid() or not ps_approvals.is_valid():
             #----------------- Query related data -----------------#
             report_notes = report_notes_qry(
                 company=request.user.company, report_type='B')                
@@ -629,9 +628,10 @@ def calibrate2(request,id):
                        'report_notes': report_notes,
                        'Check_Errors':Check_Errors}
                         
-            # create update for pillar survey processing
             html_report = render_to_string(
                 'baseline_calibration/calibrate_report.html', context)
+            
+            # create update for pillar survey processing
             ini_data=[]
             n = len(matrix_y)-1
             ini_data = {'zero_point_correction': matrix_y[n]['value'],
@@ -646,7 +646,7 @@ def calibrate2(request,id):
             
             context = {'pillar_survey': pillar_survey,
                        'html_report': html_report,
-                       'pillar_approvals_update':pillar_approvals_update,
+                       'ps_approvals':ps_approvals,
                        'hidden':[cd_formset,
                                  sdev_mat_formset,
                                  pillar_survey_update]}
@@ -663,10 +663,10 @@ def calibrate2(request,id):
         if (cd_formset.is_valid() and
             sdev_mat_formset.is_valid() and
             pillar_survey_update.is_valid() and
-            pillar_approvals_update.is_valid()):
+            ps_approvals.is_valid()):
             
             pillar_survey_update.save()
-            pillar_approvals_update.save()
+            ps_approvals.save()
             
             for cd_form in cd_formset:
                 cd_form.save()
@@ -681,7 +681,7 @@ def calibrate2(request,id):
                 print(e)
             context = {'pillar_survey': pillar_survey,
                        'html_report': html_report,
-                       'pillar_approvals_update':pillar_approvals_update,
+                       'ps_approvals':ps_approvals,
                        'hidden':[cd_formset,
                                  sdev_mat_formset,
                                  pillar_survey_update]}
@@ -689,13 +689,19 @@ def calibrate2(request,id):
             return render(request, 'baseline_calibration/display_report.html', context)
 
 
+@login_required(login_url="/accounts/login") 
 def report(request, id):    
-    pillar_survey = get_object_or_404(Pillar_Survey, id=id)
-    pillar_approvals_update = PillarSurveyApprovalsForm(
-        request.POST or None, instance=pillar_survey)
-    context = {'pillar_survey': pillar_survey,
-               'pillar_approvals_update':pillar_approvals_update,
-               'html_report': pillar_survey.html_report}
+    # This uses the html report saved to the database to popluate the report
+    # It also loads the approvals form that can be edited and saved.
+    pillar_survey_qs = get_object_or_404(Pillar_Survey, id=id)
+    ps_approvals = PillarSurveyApprovalsForm(
+        request.POST or None, instance=pillar_survey_qs)
+    if ps_approvals.is_valid():
+        ps_approvals.save()
+        return redirect('baseline_calibration:calibration_home')
+    
+    context = {'ps_approvals':ps_approvals,
+               'html_report': pillar_survey_qs.html_report}
     return render(request, 'baseline_calibration/display_report.html', context)
 
 

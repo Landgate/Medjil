@@ -1,9 +1,6 @@
-{% extends 'base_generic.html' %}
 {% load static %}
 {% load custom_filter_tags %}
 
-
-{% block content %} 
 
 <article class="post">
     <div class="post-content">
@@ -753,114 +750,14 @@
                 </div>
             </div>
         </div>
-        <form class="approvals-form site-form" method="post" enctype="multipart/form-data">
-            {% csrf_token %}   
-            <div class="text-center">
-                <h2>Approvals</h2>
-                <div class="flexbox-item_800_IB flexbox-item-left_IB">
-                    <table>
-                        <colgroup>
-                            <col span="1" width="15%">
-                            <col span="1" width="22%">
-                            <col span="1" width="6%">
-                            <col span="1" width="15%">
-                            <col span="1" width="22%">
-                        </colgroup>
-                        <tr>
-                            <td>Data entry by:</td>
-                            <td>{{ pillar_approvals_update.data_entered_person}}</td>
-                            <td style="border:none:"></td>
-                            <td>Data checked by:</td>
-                            <td>{{ pillar_approvals_update.data_checked_person}}</td>
-                        </tr>
-                        {% if pillar_approvals_update.data_entered_person.errors or pillar_approvals_update.data_checked_person.errors  %}                        
-                            <tr>
-                                <td></td>
-                                <td>
-                                {% for error in pillar_approvals_update.data_entered_person.errors %}
-                                    <p class="error error-danger">{{ error }}</p>
-                                {% endfor %}
-                                </td>
-                                <td></td>
-                                <td>
-                                {% for error in pillar_approvals_update.data_checked_person.errors %}
-                                    <p class="error error-danger">{{ error }}</p>
-                                {% endfor %}
-                                </td>
-                            </tr>
-                        {% endif %}                        
-                        <tr>
-                            <td>Position:</td>
-                            <td>{{ pillar_approvals_update.data_entered_position}}</td>
-                            <td style="border:none:"></td>
-                            <td>Position:</td>
-                            <td>{{ pillar_approvals_update.data_checked_position}}</td>
-                        </tr>
-                        {% if pillar_approvals_update.data_entered_position.errors or pillar_approvals_update.data_checked_position.errors  %}
-                            <tr>
-                                <td></td>
-                                <td>
-                                {% for error in pillar_approvals_update.data_entered_position.errors %}
-                                    <p class="error error-danger">{{ error }}</p>
-                                {% endfor %}
-                                </td>
-                                <td></td>
-                                <td>
-                                {% for error in pillar_approvals_update.data_checked_position.errors %}
-                                    <p class="error error-danger">{{ error }}</p>
-                                {% endfor %}
-                                </td>
-                            </tr>
-                        {% endif %}
-                        <tr>
-                            <td>Signature:</td>
-                            <td> <input type='text' style="background:none;"></td>
-                            <td style="border:none:"></td>
-                            <td>Signature:</td>
-                            <td> <input type='text' style="background:none;"></td>
-                        </tr>
-                        <tr>
-                            <td>Date:</td>
-                            <td>{{ pillar_approvals_update.data_entered_date}}</td>
-                            <td style="border:none:"></td>
-                            <td>Date:</td>
-                            <td>{{ pillar_approvals_update.data_checked_date}}</td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-            {% if not archive %}
-                <div class="button-container">
-                    <div class="flexbox-item_800_IB flexbox-item-button_IB">
-                        <a href= "{% url 'edm_calibration:calibrate2' id=pillar_survey.pk %}" class="submit-button bg-green-500 hover:bg-green-400" style="text-align: center">Back</a>
-                        {% if pillar_survey.certificate %}
-                            <a href= "{% url 'edm_calibration:pillar_survey_del' id=pillar_survey.pk %}" class="submit-button bg-red-500 hover:bg-green-400" style="text-align: center"> Cancel</a>
-                        {% else %}
-                            <a href= "{% url 'edm_calibration:edm_calibration_home' %}" class="submit-button bg-red-500 hover:bg-green-400" style="text-align: center">Cancel</a>
-                        {% endif %}
-                        <button type="submit" class="submit-button bg-green-500 hover:bg-green-400" >Save</button>
-                    </div>
-                </div>
-                <div style="display:None;">       
-                    {% for form in hidden %}
-                        {{ form.management_form }}
-                        {% for field in form %}
-                            <p>{{ field }}</p>
-                            {% for error in field.errors %}
-                                <p style="color:Red;">{{ error }}</p>
-                            {% endfor %}
-                        {% endfor %}
-                    {% endfor %}
-            </div>
-            {% endif %}
-        </form>
     </div>
 </article>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@0.1.2"></script>
-<script>
 
+
+<script>
 // "Populate the javascript lists and arrays for all the charts"
 let dColour = [];
 let lbls0 = [];
@@ -872,7 +769,7 @@ let Data2 =[];
 let distances = [];
 let lbls3 = [];
 let bay = "";
-    {% for o in edm_observations %}
+{% for o in edm_observations %}
     //"Residual Chart"
     bay = "({{ o.from_pillar }} - {{ o.to_pillar }})";
     if (Math.abs({{ o.std_residual }}) > {{pillar_survey.outlier_criterion}}) {
@@ -903,7 +800,7 @@ let bay = "";
     distances.push({{ o.slope_dist }});
     lbls3.push(bay + " " + {{ o.Reduced_distance }}.toFixed(4) + "m");
 
-    {% endfor %}
+{% endfor %}
 </script>
 <script>
 // "Script to generate the Residuals scatter plot"
@@ -1134,24 +1031,9 @@ function sortTable(n) {
 }
 </script>
 <script>
-{% if archive %}
 document.addEventListener("DOMContentLoaded", function() {
-    // hide elements
-    var nav = document.querySelector("nav");
-    if (nav) {
-        nav.style.display = "none";
-    }
-    var mainHeader = document.getElementById("header-toggle");
-    if (mainHeader) {
-      mainHeader.style.display = "none";
-    }   
-    var headerLogoLink = document.querySelector(".header-logo");
-    if (headerLogoLink) {
-      headerLogoLink.removeAttribute("href");
-    }
     // certificate()
     });
-{% endif %}
 
 // Function to change an EDMI report to a certificate
 function certificate(){
@@ -1181,12 +1063,5 @@ function certificate(){
             parentElement.style.display = "none";
         }
     })
-    var inputFields = document.querySelectorAll("input");
-    inputFields.forEach(function(inputField) {
-        inputField.disabled = true;
-    });
 }
 </script>
-
-{% endblock content %}
-
