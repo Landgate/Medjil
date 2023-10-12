@@ -29,7 +29,6 @@ def db_std_units(orig_val, orig_unit):
     new_unit = orig_unit
     
     if orig_unit == 'ppm': new_val = round(orig_val / 1e6, 20)
-    if orig_unit == '1:x': new_val = orig_val - 1
     if orig_unit == '%': new_val = orig_val / 100
     if orig_unit == 'nm': new_val = round(orig_val / 1e9, 20)
     if orig_unit == 'µm': new_val = round(orig_val / 1e6, 20)
@@ -47,7 +46,7 @@ def db_std_units(orig_val, orig_unit):
         
     if any([orig_unit == 'nm', orig_unit == 'mm', orig_unit == 'µm']): 
         new_unit = 'm'
-    if any([orig_unit == 'ppm', orig_unit == '1:x', orig_unit == '%']):
+    if any([orig_unit == 'ppm', orig_unit == '%']):
         new_unit = 'a.x'
     if any([orig_unit == 'inHg', orig_unit == 'mmHg']):
         new_unit = 'hPa'

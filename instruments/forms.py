@@ -29,9 +29,9 @@ freq_units = (
         ('Hz','Hz'),
         ('MHz','MHz'),)
 scalar_units = (
-        ('x:1','x:1'),
-        ('1:x','1:x'),
-        ('ppm','ppm'),)   
+        ('A.x','A.x'),
+        ('ppm','ppm'),
+        ('%','%'),)   
 ini_units = ()
 
 # Prepare forms

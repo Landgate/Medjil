@@ -184,25 +184,27 @@ def register_edit(request, inst_disp, tab, id):
         # Convert input to database standard units
         if inst_disp != 'hygro':
             if 'units_manu_unc_const' in frm.keys():
-                instance.manu_unc_const = db_std_units(
-                    frm['manu_unc_const'],frm['units_manu_unc_const'])[0]
+                instance.manu_unc_const, _ = db_std_units(
+                    frm['manu_unc_const'],frm['units_manu_unc_const'])
                 if inst_disp == 'edm' or inst_disp == 'prism':
                     instance.manu_unc_const =instance.manu_unc_const * 1000
                 
             if 'units_manu_unc_ppm' in frm.keys():
-                instance.manu_unc_ppm = db_std_units(
-                    frm['manu_unc_ppm'], (frm['units_manu_unc_ppm'])[0] -1) * 1e6
+                manu_ppm, _ = db_std_units(
+                    frm['manu_unc_ppm'], frm['units_manu_unc_ppm'])
+                instance.manu_unc_ppm = manu_ppm * 1e6
             if 'units_frequency' in frm.keys(): 
-                instance.frequency = db_std_units(frm['frequency'],frm['units_frequency'])[0]
+                instance.frequency, _ = db_std_units(frm['frequency'],frm['units_frequency'])
             if 'units_unit_length' in frm.keys():
-                instance.unit_length = db_std_units(
-                    frm['unit_length'],frm['units_unit_length'])[0]
+                instance.unit_length, _ = db_std_units(
+                    frm['unit_length'],frm['units_unit_length'])
             if 'units_carrier_wavelength' in frm.keys():
-                instance.carrier_wavelength = db_std_units(
-                    frm['carrier_wavelength'], frm['units_carrier_wavelength'])[0] * 1e9
+                c_wave, _ = db_std_units(
+                    frm['carrier_wavelength'], frm['units_carrier_wavelength'])
+                instance.carrier_wavelength = c_wave * 1e9
             if 'units_measurement_inc' in frm.keys():
-                instance.measurement_increments = db_std_units(
-                    frm['measurement_increments'], frm['units_measurement_inc'])[0]
+                instance.measurement_increments, _ = db_std_units(
+                    frm['measurement_increments'], frm['units_measurement_inc'])
     
         if request.user.company and not request.user.is_staff:
             if inst_disp == 'edm': instance.edm_owner = request.user.company
