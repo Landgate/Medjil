@@ -64,14 +64,13 @@
                         </td>
                         {% if field.name == 'make' %}
                             <td width="10%"> 
-                                <a onclick="NewMake()" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" >&#43;</a>
+                                <a id="NewMakeBtn" onclick="NewMake()" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" >&#43;</a>
                             </td>                        
                         {% endif %}
                     </tr>
                 {% endif %}
             {% endfor %}
         </table>
-        <!-- {{form.as_table}} -->
 
         {% if request.GET.next %}
             <input type="hidden" name="next" value="{{ request.GET.next }}">
@@ -85,62 +84,59 @@
 
 <script>
      // Make Option 
-     defaultMakeOptions = document.getElementById("id_make")
+     defaultMakeOptions = document.getElementById("id_make");
 
     // New Make and Abbrev Container
-    const newMakeName = document.getElementById("id_make_name")
-    const newAbbrName = document.getElementById("id_make_abbrev")
+    const newMakeName = document.getElementById("id_make_name");
+    const newAbbrName = document.getElementById("id_make_abbrev");
+    const toggleButton = document.getElementById("NewMakeBtn"); 
 
     // Dont display the make/abbrev container 
-    newMakeName.style.display = "none"
-    newAbbrName.style.display = "none"
+    newMakeName.style.display = "none";
+    newAbbrName.style.display = "none";
 
-    function NewMake(){
-        newMakeName.style.display = "table-row"; 
-        document.getElementById('id_inst_make').required = true;
-        newAbbrName.style.display = "table-row"; 
-        document.getElementById('id_inst_abbrev').required = true;
+    function NewMake(){   
+        const idInstMake = document.getElementById("id_inst_make");
+        const idInstAbbrev = document.getElementById("id_inst_abbrev");
         
-        window.resizeTo(600, 660);
-        
-        let oLen = defaultMakeOptions.length;
-        for (let i = 0; i < oLen; i++) {
-            if(defaultMakeOptions[i].text.includes("OTHERS")){
-                defaultMakeOptions.value = i;
-                }
-            }
+        if (toggleButton.innerText === "-") {
+            newMakeName.style.display = "none";
+            idInstMake.required = false;
+            idInstMake.value = "";
+            newAbbrName.style.display = "none";
+            idInstAbbrev.required = false;
+            idInstAbbrev.value = "";
+            toggleButton.innerText = "+"; // Set the button text to "+"
+
+            defaultMakeOptions.selectedIndex = 0;
+        } else {
+            newMakeName.style.display = "table-row";
+            idInstMake.required = true;
+            newAbbrName.style.display = "table-row";
+            idInstAbbrev.required = true;
+            toggleButton.innerText = "-"; // Set the button text to "-"
+            
+            //Let oLen = defaultMakeOptions.options.length;
+            defaultMakeOptions.selectedIndex = defaultMakeOptions.options.length - 1;
         }
-    
+        adjustWindowHeight();
+    }
     
     // On dropdown change - if others - extend table row to Make Form
     defaultMakeOptions.addEventListener(`change`, (e) => {
-        // log(`e.target`, e.target);
         const select = e.target;
         const value = select.value;
         const desc = select.options[select.selectedIndex].text;
 
         if (desc.includes("OTHERS")) {
-            newMakeName.style.display = "table-row"; 
-            document.getElementById('id_inst_make').required = true;
-            newAbbrName.style.display = "table-row"; 
-            document.getElementById('id_inst_abbrev').required = true;
-            window.resizeTo(600, 650);
+            toggleButton.innerText = "+";
+            NewMake();
         } else {
-            newMakeName.style.display = "none"; 
-            document.getElementById('id_inst_make').required = false;
-            newAbbrName.style.display = "none"; 
-            document.getElementById('id_inst_abbrev').required = false;
-            window.resizeTo(600, 500);
+            toggleButton.innerText = "-";
+            NewMake();
         }
+        adjustWindowHeight();
     });
-        
-    const newModelName = document.getElementById("id_inst_model")
-    newModelName.value = newModelName.value ? newModelName.value.trim() : ''
-
-    // newModelName.addEventListener('input', () => {
-    //     newModelName.value = newModelName.value ? newModelName.value.trim() : '' 
-    // })
-    
     
     //  Refresh Parent Function
     function refreshParent() 

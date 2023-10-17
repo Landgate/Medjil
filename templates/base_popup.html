@@ -24,23 +24,23 @@
 <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js" integrity="sha384-SlE991lGASHoBfWbelyBPLsUlwY1GwNDJo3jSJO04KZ33K2bwfV9YBauFfnzvynJ" crossorigin="anonymous"></script>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-  // Use a query selector to find the first form element on the page
+    adjustWindowHeight();
+});
+
+function adjustWindowHeight() {
+  // Adjust the window size to fit the form
   const form = document.querySelector('form');
 
   if (form) {
-    // Get the height of the form and add some padding
-    const formHeight = form.offsetHeight + 200; // Adjust the padding as needed
-
-    // Get the current window width
-    const windowWidth = window.innerWidth;
-
-    // Set the minimum window height
-    const minHeight = 600;
+    const formHeight = form.offsetHeight + 200;// Adjust the padding as needed
+    const windowWidth = window.outerWidth;
+    const minHeight = 400;
 
     // Set the window size to ensure the form is fully visible, keep the width unchanged
     window.resizeTo(windowWidth, Math.max(minHeight, formHeight));
+    console.log(windowWidth, Math.max(minHeight, formHeight));
   }
-});
+}
 
 </script>
 </body>
