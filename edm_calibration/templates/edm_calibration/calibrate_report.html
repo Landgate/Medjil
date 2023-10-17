@@ -463,6 +463,7 @@
                 <tr>
                     <th>Group</th>
                     <th>Description</th>
+                    <th>Apriori</th>
                     <th>Type</th>
                     <th>Distrubution</th>
                     <th>Uncertainty</th>
@@ -474,6 +475,7 @@
                     <tr>
                         <td class="text-left">{{ s.group_verbose }}</td>
                         <td class="text-left">{{ s.description }}</td>
+                        <td>{% if s.apriori == False %}No{% else %}Yes{% endif %}</td>
                         <td>{{ s.ab_type }}</td>
                         <td>{{ s.distribution }}</td>
                         {% if not s.units == 'm' %}
@@ -488,6 +490,11 @@
                     </tr>
                 {% endfor %}
             </table>
+            <div class="flexbox-container_IB">
+                <div class="flexbox-item_800_IB flexbox-item-right_IB">
+                    <i> Note apriori uncertainties have been used to weight observations in the least squares adjustment.</i>
+                </div>
+            </div>
         </div>
         <div class="text-center">
             <h2>Combined Uncertainty Budget - Total Distance Uncertainty</h2>

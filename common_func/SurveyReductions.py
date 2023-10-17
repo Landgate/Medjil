@@ -482,6 +482,7 @@ def add_typeA(d, matrix_y, dof):
                     'std_dev': s_dev,
                     'degrees_of_freedom':dof,
                     'k':t.ppf(1-0.025,df=dof),
+                    'apriori': False,
                     'description':'Uncertainty of LSA EDMI correction'})
     
     return type_a
@@ -496,6 +497,7 @@ def add_typeB(uc_sources, d, matrix_y, dof):
                     'std_dev': matrix_y[-1]['std_dev'],
                     'degrees_of_freedom':dof,
                     'k':t.ppf(1-0.025,df=dof),
+                    'apriori': False,
                     'description':'ZPC uncertainty'})
     
     # '07 LSA type A uncertainty
@@ -506,6 +508,7 @@ def add_typeB(uc_sources, d, matrix_y, dof):
                     'std_dev': d['std_dev'],
                     'degrees_of_freedom':dof,
                     'k':t.ppf(1-0.025,df=dof),
+                    'apriori': False,
                     'description':'LSA uncertainty'})
     return type_b
 
