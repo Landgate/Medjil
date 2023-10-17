@@ -149,7 +149,8 @@ def edm_mets_correction(o, edm, mets_applied, co2_content=None):
     if not mets_applied:
         o['Mets_Correction'] = first_vel_corrn(
             dist = float(o['raw_slope_dist']),
-            first_vel_param = (edm.edm_specs.c_term, edm.edm_specs.d_term),
+            first_vel_param = (float(edm.edm_specs.c_term),
+                               float(edm.edm_specs.d_term)),
             temp = o['Temp'],
             pressure = o['Pres'],
             rel_humidity = o['Humid'],
