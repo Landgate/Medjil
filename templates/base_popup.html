@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Landgate Survey Instrumentation</title>
+    <title>Medjil Form</title>
     <link rel="icon" type="ico" href="{% static 'favicon.ico' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- <link rel="stylesheet" href="https://code.cdn.mozilla.net/fonts/fira.css"> -->
@@ -22,6 +22,27 @@
 
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js" integrity="sha384-SlE991lGASHoBfWbelyBPLsUlwY1GwNDJo3jSJO04KZ33K2bwfV9YBauFfnzvynJ" crossorigin="anonymous"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  // Use a query selector to find the first form element on the page
+  const form = document.querySelector('form');
+
+  if (form) {
+    // Get the height of the form and add some padding
+    const formHeight = form.offsetHeight + 200; // Adjust the padding as needed
+
+    // Get the current window width
+    const windowWidth = window.innerWidth;
+
+    // Set the minimum window height
+    const minHeight = 600;
+
+    // Set the window size to ensure the form is fully visible, keep the width unchanged
+    window.resizeTo(windowWidth, Math.max(minHeight, formHeight));
+  }
+});
+
+</script>
 </body>
 </html>
 

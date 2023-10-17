@@ -232,6 +232,7 @@
                     <th class="text-center">k</th>
                     <th class="text-center">Offset (m)</th>
                     <th class="text-center">Uncertainty (m)</th>
+                    <th class="text-center">k</th>
                 </tr>
                 {% for c in certified_dists %}
                     <tr>
@@ -243,6 +244,7 @@
                         <td>{{c.uc_combined.k|floatformat:2}}</td>
                         <td>{{c.delta_os|floatformat:3}}</td>
                         <td>{{c.uc_budget.11.std_dev|multiply:c.uc_budget.11.k|sigfigs:2}}</td>
+                        <td>{{c.uc_budget.11.k|floatformat:2}}</td>
                     </tr>
                 {% endfor %}
             </table>

@@ -184,34 +184,30 @@ def calibrate1(request, id):
                 from_pillar_id = baseline['pillars'].get(name=o['from_pillar'])
                 to_pillar_id = baseline['pillars'].get(name=o['to_pillar'])
         
-                EDM_Observation.objects.get_or_create(
+                EDM_Observation.objects.create(
                     pillar_survey=ps_instance,
                     from_pillar=from_pillar_id,
                     to_pillar=to_pillar_id,
-                    defaults={
-                        'inst_ht': o['inst_ht'],
-                        'tgt_ht': o['tgt_ht'],
-                        'hz_direction': o['hz_direction'],
-                        'raw_slope_dist': o['raw_slope_dist'],
-                        'raw_temperature': o['raw_temperature'],
-                        'raw_pressure': o['raw_pressure'],
-                        'raw_humidity': o['raw_humidity'],
-                        'use_for_alignment': o['use_for_alignment'],
-                        'use_for_distance': o['use_for_distance'],
-                    }
+                    inst_ht=o['inst_ht'],
+                    tgt_ht=o['tgt_ht'],
+                    hz_direction=o['hz_direction'],
+                    raw_slope_dist=o['raw_slope_dist'],
+                    raw_temperature=o['raw_temperature'],
+                    raw_pressure=o['raw_pressure'],
+                    raw_humidity=o['raw_humidity'],
+                    use_for_alignment=o['use_for_alignment'],
+                    use_for_distance=o['use_for_distance'],
                 )
-
         # Commit all the reduced levels
         if survey_files['lvl_file']:
             for l in raw_lvl_obs.values():
                 pillar_id = baseline['pillars'].get(name=l['pillar'])
-                Level_Observation.objects.get_or_create(
+
+                Level_Observation.objects.create(
                     pillar_survey=ps_instance,
                     pillar=pillar_id,
-                    defaults={
-                        'reduced_level': l['reduced_level'],
-                        'rl_standard_deviation': l['std_dev']
-                    }
+                    reduced_level=l['reduced_level'],
+                    rl_standard_deviation=l['std_dev']
                 )
         
         return redirect('baseline_calibration:calibrate2', id=ps_instance.pk)
@@ -302,7 +298,7 @@ def calibrate2(request,id):
         c, o['Calibration_Correction'] = apply_calib(
             o['raw_slope_dist'],
             pillar_survey['edmi_calib_applied'],
-            calib['edmi'][0],
+            calib['edmi'].first,
             unit_length = pillar_survey['edm'].edm_specs.unit_length)
         o = edm_mets_correction(o, 
                                 pillar_survey['edm'],
@@ -627,7 +623,7 @@ def calibrate2(request,id):
                        'edm_observations': edm_observations,
                        'report_notes': report_notes,
                        'Check_Errors':Check_Errors}
-                        
+            
             html_report = render_to_string(
                 'baseline_calibration/calibrate_report.html', context)
             

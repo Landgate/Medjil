@@ -40,13 +40,13 @@
 <div id="Chapter_0">
 <!-- INTRO -->
 <h1>Introduction</h1>
-<p>The Medjil portal was developed by the Department of Land Information of Western Australia (LANDGATE) in collaboration with other jurisdictions. The portal allows the calibration of</p>
+<p>The Medjil portal was developed by the Western Australian Land Information Authority (LANDGATE) in collaboration with other jurisdictions. The portal allows the calibration of</p>
 <ul STYLE="margin:30px">
 <li>EDM Baselines using standardised instrument</li>
-<li>EDM Instrumentation using standardised EDM Baseline</li>
+<li>EDM Instrumentation using a standardised EDM Baseline</li>
 </ul>
-<p>The purpose of calibrating the EDM Instrumentation (EDMI) is to establish the legal traceability of a user's instrument to the national standard of length provided by the National Measurment Institute (NMI). This is accomplished by determining the Instrument Correction and its expanded uncertainty (at 95% confidence level) through a survey procedure conducted at a certified EDM Baseline. The verifying authorities of the States and Territories maintain the certification of EDM Baselines.</p>
-<p>The certification (calibration) of EDM baselines establishes updated or improved distances between its pillars. EDM Baslines and EDMI calibration should be conducted on regular basis. The calibration of an EDMI provides instrument specific distance correction to be applied to measurements taken by this instrument.</p>
+<p>The purpose of calibrating the EDM Instrumentation (EDMI) is to establish the legal traceability of a user's instrument to the national standard of length provided by the National Measurment Institute (NMI). This is accomplished by determining the Instrument Correction and its expanded uncertainty (at 95% confidence level) through a survey procedure conducted at a certified EDM Baseline. The certification of EDM Baselines are maintained by individual States and Territories.</p>
+<p>The certification (calibration) of EDM baselines establishes updated or improved distances between its pillars. EDM Baslines and EDMI calibration should be conducted on a regular basis. The calibration of an EDMI provides distance correction specific to that instrumentation that are to be applied to measurements taken using that instrumentation.</p>
 <p>The Medjil portal offers tools and reports for both EDM Baseline and EDMI calibrations. Please refer to the specific guides that provide field calibration instructions.</p>
 <p>This document contains reference information, including mathematical equations, procedures, algorithms, and computations adopted by the portal. The calibration procedures are based on the following resources:</p>
 <ul STYLE="margin:30px">
@@ -59,7 +59,7 @@
 <li>Review of the Western Australian BASELINE Calibration Software for Electronic Distance Measuring (EDM) Instruments Prepared for the Surveyor General of New South WalesJ.M.Rüeger 2019</li>
 </ul>
 <p>The Draft Verifying Authorities (VA) Handbook 2001 is intended for use by verifying authorities which are appointed under the provisions of Regulation 73 of the National Measurement Regulations 1999 in accordance with the National Measurement Act 1960 to verify reference standards of measurements under the provisions of Regulation 13, 30 and 31. The determination of the a priori standard deviations and the analysis of uncertainties of EDM measurements are based on the general guidelines within this handbook.</p>
-<p>The minimum standards for the uncertainty of an EDMI calibration are described in terms of Recommendation No,8 of the Working Party of the National Standards Commission on the calibration of EDM Equipment of 1 February, 1983. All uncertainties are specified at the 95% confidence level. Users have the flexibility to adopt or modify default uncertainties and associated traceability statements as required. For more information on Medjil development and contribution, please visit the <a href="https://github.com/Landgate/Medjil">GitHub</a> repository.</p>
+<p>All uncertainties are specified at the 95% confidence level. Users have the flexibility to adopt or modify default uncertainties and associated traceability statements as required. For more information on Medjil development and contribution, please visit the <a href="https://github.com/Landgate/Medjil">GitHub</a> repository.</p>
 <br>
 </div>
 <div id="Chapter_1">
@@ -73,7 +73,7 @@
 <li>Aarau Design</li>
 <li>Hobart Design</li>
 </ul>
-<p>Each of the EDM Baseline designs aims to achieve an equal distribution of measured distances between the shortest and longest lines without any repetitions. They also allow EDMI calibration with or without known distances (certified baseline distances), with the exception of the Hobart design, which requires the distances to be known beforehand. Most baseline designs incorporate a multiple of a basic unit length of EDM instrument. A detailed explanation of baseline design concepts is beyond the scope of this manual. For detailed baseline design information, please refer to the "Electronic Distance Measurement" book by J.M. Rueger.</p>
+<p>Each of the EDM Baseline designs aims to achieve an equal distribution of measured distances between the shortest and longest lines without any repetitions. They also allow EDMI calibration with or without known distances (certified baseline distances), with the exception of the Hobart design, which requires the distances to be known beforehand. Most baseline designs aim to accomodate a variety of EDM instruments with different unit lenths. A detailed explanation of baseline design concepts is beyond the scope of this manual. For detailed baseline design information, please refer to the "Electronic Distance Measurement" book by J.M. Rueger.</p>
 <p>The current version of Medjil portal requires distances to be known for all types of baselines to perform EDMI calibration. This approach is essential for ensuring distance traceability to the national standard. Therefore, EDM baselines must be calibrated using NMI certified instruments to determine the certified distances before proceeding with EDMI calibration. An additional module could potentially be developed to enable EDMI calibration without known distances. However, it is important to note that such calibrations cannot be certified under the NMI Act, and the EDMI distances obtained in this manner are not legally traceable to the national standard.</p>
 <div id="Chapter_1_2"></div>
 <h2>1.2 Mathematical model and observation equations for the calibration of EDM Baseline</h2>
@@ -82,8 +82,8 @@
 <div>$$ D_{ij}=x_i-x_j-zpc\ \ \ for\ j < i\ \ \ (Eq. 1.2)$$ </div>
 <p>Where:</p>
 <p>&emsp;&emsp;D<sub>ij</sub> = Measured distance between pillars i and j (the observation)</p>
-<p>&emsp;&emsp;x<sub>i</sub> = Distance from the first pillar to pillar 'i'. Distance corrected for the pillar ofsets and reduced to baseline reference height</p>
-<p>&emsp;&emsp;x<sub>j</sub> = Distance from the first pillar to pillar 'j'. Distance corrected for the pillar ofsets and reduced to baseline reference height</p>
+<p>&emsp;&emsp;x<sub>i</sub> = Distance from the first pillar to pillar 'i'. Distance corrected for the pillar offsets and reduced to baseline reference height</p>
+<p>&emsp;&emsp;x<sub>j</sub> = Distance from the first pillar to pillar 'j'. Distance corrected for the pillar offsets and reduced to baseline reference height</p>
 <p>&emsp;&emsp;zpc = Zero point correction (an additive constant of the certified EDMI)</p>
 <div id="Chapter_1_3"></div>
 <h2>1.3 Example: Formation of observation equations</h2>
@@ -99,12 +99,12 @@
 <p>&emsp;&emsp;D<sub>ij</sub> = Measured distance between pillars i and j (vector of the observations)</p>
 <p>&emsp;&emsp;A = The design matrix
 <p>&emsp;&emsp;X = The certified distances and zpc (vector of the unknown output estimates)</p>
-<p>This approach eliminates the need to provide approximate distances between pillars. In accordance with Section (5), the observations, along with their a-priori uncertainties (p), undergo a least squares adjustment to obtain the estimated certified distances d<sub>x</sub> and the zpc values, along with the complete VCV matrix.</p>
+<p>This approach eliminates the need to provide approximate distances between pillars. In accordance with Section (5), the observations, along with their a-priori uncertainties (P), undergo a least squares adjustment to obtain the estimated certified distances d<sub>x</sub>, the zpc value, and the complete VCV matrix.</p>
 <div id="Chapter_1_4"></div>
 <h2>1.4 Inter-pillar distances survey</h2>
 <img src="\media\TechnicalManual\tbaseline\Tech manual\Picture_1_3.png" alt="Inter-pillar distances survey">
-<p>To calibrate an EDM baseline, a series of inter-pillar distance measurements (surveys) are necessary, which should include atmospheric observations of the conditions during the survey. Medjil mandates that all instrumentation used in the survey must be calibrated and possess a current certificate stating the uncertainty of the instrument readings and the calibration corrections that can be applied. The uncertainty of instrument readings plays a crucial role in propagating uncertainties for the inter-pillar distance survey.</p>
-<p>The distance observations are assumed to be slope distances that have not been corrected for the height of instrument or height of targets. Applying atmospheric corrections by entering these into the instrument is optional but Medjil requires temperature, pressure and humidity for every distance measurement even if this has been entered into the instrument. These values are used for estimating the propagation of uncertinty as well as the optional applying of atmospheric corrections in case it was not entered into the instrument during the survey.</p>
+<p>To calibrate an EDM baseline, a series of inter-pillar distance measurements (surveys) are necessary, which should include atmospheric observations of the conditions during the during measuring of each survey distance. Medjil mandates that all instrumentation used in the survey must be calibrated and possess a current certificate stating the uncertainty of the instrument readings and the calibration corrections that can be applied. The uncertainty of instrument readings plays a crucial role in propagating uncertainties for the inter-pillar distance survey.</p>
+<p>The distance observations are assumed to be slope distances that have not been corrected for the height of instrument or height of targets. Applying atmospheric corrections by entering these into the instrument is optional but Medjil requires temperature, pressure and humidity for every distance measurement even if this has been entered into the instrument. These values are used for estimating the propagation of uncertinty as well as the optional applying of atmospheric corrections when no correction was applied by the instrument during the survey.</p>
 <p>It is recommended each distance (bay) d<sub>ij</sub> (where i = from_pillar; j = to_pillar) should be measured four times. However, Medjil allows the number of repeat measurements to vary between bays and between surveys. The pillar survey data is to be provided in an ASCII file and must contain the following fields:</p>
 <ul STYLE="margin:30px">
 <li>from_pillar: Pillar name as defined in Medjil calibration sites</li>
@@ -122,7 +122,7 @@
 <p>Baseline measurements must be performed in accordance with the ISO17123-4:2012 Optics and optical instruments – Field procedures for testing geodetic and surveying instruments – Part 4: Electro-optical distance meters (EDM measurements to reflectors).</p>
 <div id="Chapter_1_5"></div>
 <h2>1.5 Pillar offsets survey</h2>
-<p>The pillar offset survey determines offset of each pillar from the alignment of the first (1) and last pillar (n). Medjil performs the required reduction of observations during the EDM Baseline calibration process. Each survey setup is used to automatically calculate the pillar offset providing the survey setup includes measurements to pillar 1 and pillar n.</p>
+<p>The pillar offset survey determines the offset of each pillar from the alignment of the first (1) and last pillar (n). Medjil performs the required reduction of observations during the EDM Baseline calibration process. Distances observed from every pillar of the baseline can be included in the calculation of the pillar offset if the survey setup includes measurements to pillar 1 and pillar n.</p>
 <img src="\media\TechnicalManual\tbaseline\Tech manual\Picture_1_2.png" alt="Pillar Offsets">
 <p>For each pillar setup, an arbitrary set of coordinates (E<sub>j</sub>, N<sub>j</sub>) are calculated for all pillars observed according to the formula:</p>
 <div>$$\left[E_j,N_j\right]=\ Polar2Reclangular\left(Hz_{ij},d_{ij}\right)\ \ \ (Eq. 1.5)$$ </div>
@@ -136,12 +136,12 @@
 <p>&emsp;&emsp;d<sub>j</sub> = horizontal distance between pillars i and j</p>
 <p>&emsp;&emsp;A<sub>j</sub> = derived bearing using coordinates of pillars: E<sub>1</sub>,N<sub>1</sub> and E<sub>j</sub>,N<sub>j</sub>
 </p>
-<p>As the instrument moves between pillars, pillar 1 and pillar n are observed in each setup. This allows the orientation of all setups in the survey and computation of an offset for each pillar from every pillar setup that included observations to pillar 1 and pillar n. Medjil automatically computes the average pillar offset and standard deviation values from the distance survey data. Table 4.4 demonstrates an example set of pillar offsets.</p>
+<p>As the instrument moves between pillars, pillar 1 and pillar n are observed in each setup. This allows the orientation of all setups in the survey and computation of an offset for each pillar from every pillar setup that included observations to pillar 1 and pillar n. Medjil computes the average pillar offset and standard deviation redundancy of observations measured from multiple pillars. These are used for a-priori estimation of uncertainties and the reduction of EDM measured distances to the reference alignment and height. Table 4.4 demonstrates an example set of pillar offsets.</p>
 <div id="Chapter_1_6"></div>
 <h2>1.6 Pillar heights survey</h2>
-<p>Pillar heights (H<sub>j</sub>) are to be determined as orthometric heights (eg. AHD) using spirit levelling survey or other suitable method and provided with standard deviations preferably derived from redundant observations. Level data is to be provided in an ASCII file. Refer to this 
+<p>Pillar heights (H<sub>j</sub>) are to be determined as orthometric heights (eg. AHD71) and provided with standard deviations. The standard deviations should preferably be derived from redundant observations. Data for the height of pillars is to be provided in an ASCII file. Refer to this 
 <a href = "\media\TechnicalManual\tbaseline\Tech manual\BUSS_ baseline_calibration_level_observations.csv" target = "_self">sample dataset</a> for the required data format.</p>
-<p>Pillar coordinates and heights are required and used to determine the baseline location in order to derive geometric correction to the distances. Medjil uses an average value of the supplied pillar coordinates to calculate the geometric corrections for surveys. (See section 3.3)</p>
+<p>Pillar coordinates are required and used to determine the baseline location in order to derive geometric correction to the distances. Medjil uses an average latitude of the supplied pillar coordinates to calculate the geometric corrections of surveyed distances. (See section 3.3)</p>
 <div id="Chapter_1_7"></div>
 <h2>1.7 Interlaboratory comparison</h2>
 <p>Should we explain mechanism of comparing different baselines?</p>
@@ -264,8 +264,60 @@ User should perform additional calibration on "cyclic error" testline if the ins
 <div id="Chapter_3_2_3"></div>
 <h3>3.2.3  Group refractive Index of light in the atmosphere</h3>
 <p>In electro-optical EDM, the refractive index is dependent on the wavelength of the visible or infrared radiation. Different frequencies have the same propagation velocity in a vacuum, but not in air because of the interference occurrence between the different frequencies. The signal resulting from the sum of all frequencies will have the so-called group velocity, which is always smaller than the phase velocities of its individual frequencies.</p>
-<p>The International Association of Geodesy (IAG) resolved in 1999 at its XXIIth General Assembly in Birmingham that the refractive index in electronic distance measurements (nL) can be calculated using the computer procedure published by Ciddor & Hill in Applied Optics(1999, Vol.38, N0.9, 1663-1667) and Ciddor in Applied Optics (1996, Vol.35, No.9, 1566-1573).</p>
-<p>The following closed formulae can be adopted for the computation of the group refractive index in air for electronic distance measurements to within 1 ppm with visible and near infrared waves in the atmosphere:</p>
+<p>Resolution 3 from the International Association of Geodesy (IAG) in 1999 at its XXIIth General Assembly in Birmingham, made the following recommendations.</p>
+<ol>
+    <li>Subparagraphs (a) and (b) of Resolution No. 1 of the 13th General Assembly of IUGG (Berkeley 1963) be canceled</li>
+    <li>The group refractive index in air for electronic distance measurement to better than one part per million (ppm) with visible and near-infrared waves in the atmosphere be computed using the computer procedure published by Ciddor & Hill in Applied Optics (1999, Vol. 38, No. 9, 1663-1667) and Ciddor in Applied Optics (1996, Vol. 35, No. 9, 1566-1573)</li>
+    <li>The following closed formulae be adopted for the computation of the group refractive index in air for electronic distance measurement (EDM) to within 1 ppm with visible and near-infrared waves in the atmosphere:</li>
+</ol>
+<p>Recommendation 2 and 3 have been applied in the Medjil software where atmospheric corrections have not been applied to the uploaded EDM observation data. The formulae for recommendation 2 are used for calibrating a baseline. The formulae for recomendation 3 are used for calibrating EDM Instrumentation.
+<!--<p>The following constants and formulae relates to recomendation 2 and is the procedure published by Ciddor & Hill in Applied Optics(1999, Vol.38, N0.9, 1663-1667) and Ciddor in Applied Optics (1996, Vol.35, No.9, 1566-1573):</p>
+<p>The constants for standard phase and group refractivities of dry air are as follows (E.P. Peck and K. Reeder, 1972, Dispersion of Air, Journal of the Optical Society of America, 62(8): 958-962.):</p>
+<p>&emsp;&emsp;k<sub>0</sub> = 238.0185 µm<sup>-2</sup></p>
+<p>&emsp;&emsp;k<sub>1</sub> = 5792105 µm<sup>-2</sup></p>
+<p>&emsp;&emsp;k<sub>2</sub> = 57.362 µm<sup>-2</sup></p>
+<p>&emsp;&emsp;k<sub>3</sub> = 167917 µm<sup>-2</sup></p>
+<p>The constants for standard phase and group refractivities of water vapor are as follows (J.C. Owens, 1967, Optical Refractive Index of Air: Dependence on Pressure, Temperature and Composition, Applied Optics, 6(1): 51-59):</p>
+<p>&emsp;&emsp;w<sub>0</sub> = 295.235 µm<sup>-2</sup></p>
+<p>&emsp;&emsp;w<sub>1</sub> = 2.6422 µm<sup>-2</sup></p>
+<p>&emsp;&emsp;w<sub>2</sub> = -0.032380 µm<sup>-2</sup></p>
+<p>&emsp;&emsp;w<sub>3</sub> = 0.004028 µm<sup>-2</sup></p>
+<p>The saturation vapor pressure of water<sup>24</sup> uses the following:</p>
+<p>&emsp;&emsp;A = 1.2378847 x 10<sup>-5</sup></p>
+<p>&emsp;&emsp;B = -1.9121316 x 10<sup>-2</sup></p>
+<p>&emsp;&emsp;C = 33.93711047</p>
+<p>&emsp;&emsp;D = -6.3431645 x 10<sup>3</sup></p>
+<p>The enhancement factor of water vapor<sup>23.24</sup> uses the following (R.S. Davies, 1992, Equations for Determination of the Density of Moist Air (1981/91), Metrologia, 29: 67-70.):</p>
+<p>&emsp;&emsp;&alpha; = 1.00062</p>
+<p>&emsp;&emsp;&beta; = 3.14 x 10<sup>-8</sup></p>
+<p>&emsp;&emsp;&gamma; = 5.6 x 10<sup>-7</sup></p>
+<p>The compressibility<sup>24</sup> uses the following (R.S. Davies, 1992, Equations for Determination of the Density of Moist Air (1981/91), Metrologia, 29: 67-70.):</p>
+<div>$$ Z = 1 - \left(\frac{p}{T}\right) [a_0 + a_1 t + a_2 t^2 + (b_0 +b_1 t)x_w + (c_0 + c_1 t)x_w ^2] + \left(\frac{p}{T}\right)^2 (d + ex_w ^2)$$</div>
+<p>where:</p>
+<p>&emsp;&emsp;a<sub>0</sub> = 1.58123 x 10<sup>-6</sup> K Pa<sup>-1</sup></p>
+<p>&emsp;&emsp;a<sub>1</sub> = -2.9331 x 10<sup>-8</sup> Pa<sup>-1</sup></p>
+<p>&emsp;&emsp;a<sub>2</sub> = 1.1043 x 10<sup>-10</sup> K<sup>-1</sup>Pa<sup>-1</sup></p>
+<p>&emsp;&emsp;b<sub>0</sub> = 5.707 x 10<sup>-6</sup> K Pa<sup>-1</sup></p>
+<p>&emsp;&emsp;b<sub>1</sub> = -2.051 x 10<sup>-8</sup> Pa<sup>-1</sup></p>
+<p>&emsp;&emsp;c<sub>0</sub> = 1.9898 x 10<sup>-4</sup> K Pa<sup>-1</sup></p>
+<p>&emsp;&emsp;c<sub>1</sub> = -2.376 x 10<sup>-6</sup> Pa<sup>-1</sup></p>
+<p>&emsp;&emsp;d = 1.83 x 10<sup>-11</sup> K<sup>2</sup>Pa<sup>-2</sup></p>
+<p>&emsp;&emsp;e = -0.765 x 10<sup>-8</sup> K<sup>2</sup>Pa<sup>-2</sup></p>
+
+<p>The equation for the refractivity of standard air at 15 °C, 101,325 Pa, and 0% humidity, with x<sub>c</sub> ppm of CO<sub>2</sub> (n<sub>axs</sub>)</p>
+<div> $$ 10^8(n_{gasx} - 1 ) = \left( \frac{k_1(k_0 + \sigma^2)}{(k_0 -\sigma^2)^2} + \frac{k_3}{(k_2 -\sigma^2)} \right) \times [1 + 0.534 \times 10^-{6}(x_c - 450)]$$</div>
+<p>where:</p>
+<p>$$ \sigma = \frac{1}\lambda $$ </p>
+<p>$$ \lambda = wavelength \,(&mu;m)$$ </p>
+<p>$$ x_c = CO_2 \,(ppm) $$</p>
+<p>The equation for the refractive index of water vapor at standard conditions</p>
+<div> $$ 10^8(n_{gws} - 1 ) = cf(w_0 + 3w_1\sigma^2 +5 w_2\sigma^4 + 7w_3\sigma^6) $$</div>
+<p>where:<p>
+<div>$$ cf = 1.022 $$</div>
+<p>The equations for the molar mass (kg/mol) of dry air containing x<sub> c</sub> ppm of CO<sub>2</sub></p>
+<div> $$ M_a = [28.9635 + 12.011 \times 10^{-6}(x_c - 400)] \times 10^{-3} $$</div>-->
+
+<p>The following closed formulae relates to recomendation 3 for the computation of the group refractive index in air for electronic distance measurements:</p>
 <div>$$ N_L=\left(n_L-1\right)\mathrm{\mathrm{.1}}0^6=\left(\frac{\mathrm{273.15\ }}{1013.25}.\frac{N_Gp}{(273.15+t)}\right)\mathrm{\mathrm{-}}\left(\frac{1\mathrm{1.27e}}{\left(\mathrm{273.15}+t\right)}\right)\ \ \ \ (Eq. 3.6)$$ </div>
 <p>Where:</p>
 <p>&emsp;&emsp;N<sub>L</sub> = Group refractivity of visible and near infrared waves in ambient moist air. Valid for atmospheric conditions described by t, p and e</p>
@@ -278,7 +330,7 @@ User should perform additional calibration on "cyclic error" testline if the ins
 <p>Where:</p>
 <p>&emsp;&emsp;&#955 = carrier wavelength in micrometres (&#956;m) in a vacuum
 <p>These closed formulae (Eq. 3.6 and 3.7) deviate less than 0.25 ppm from the accurate formulae between -30 C and +45 C, at 1000 hPa pressure, 100% relative humidity (without condensation) and for wavelengths between 650 nm and 850 nm. 
-The 1.0 ppm stated before makes some allowance for anomalous refractivity and the uncertainty in the determination of the atmospheric parameters. The equations were recommended by the International Association of Geodesy (IAG) at its XXIIth General Assembly in Birmingham, 1999 and have been used in the software.</p>
+The 1.0 ppm stated in recommendation 3 of resolution 3 makes some allowance for anomalous refractivity and the uncertainty in the determination of the atmospheric parameters.</p>
 <div id="Chapter_3_3"></div>
 <h2>3.3 Geometric Corrections</h2>
 <p>All certified distances on a calibrated baseline are on the same horizontal plane at a specified reference height and on the same vertical plane running through the first and last pillars.</p>
@@ -1495,7 +1547,7 @@ A rectangular distribution represents an arbitrary outcome that lies between cer
 <br>
 <h2>6.2 Endnotes</h2>
 <div id="Chapter_6_2"></div>
-<p>The calibration reports displayes a set of predefined endnotes. These notes can be specified for both EDMI and Baseline calibration and may be either mandatory or company's specific:</p>
+<p>The calibration reports displays a set of predefined endnotes. These notes can be specified for both EDMI and Baseline calibration and may be either mandatory or company's specific:</p>
 <img src="\media\TechnicalManual\tbaseline\Tech manual\Picture_6_2.png" alt="End notes">
 </div>
 <p>End of manual</p>

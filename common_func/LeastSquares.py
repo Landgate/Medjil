@@ -61,17 +61,21 @@ def LSA(A, x, P):
 
 
 def ISO_test_a(Insts, chi_test, Rnge=[{'distance': 100}]):
-    ppm = float(Insts['edm'].edm_specs.manu_unc_ppm)
-    c = float(Insts['edm'].edm_specs.manu_unc_const)
+    k0 = float(Insts['edm'].edm_specs.manu_unc_k)
+    ppm = float(Insts['edm'].edm_specs.manu_unc_ppm) / k0
+    c0 = float(Insts['edm'].edm_specs.manu_unc_const) / k0
+    k1 = float(Insts['prism'].prism_specs.manu_unc_k)
+    c1 = float(Insts['prism'].prism_specs.manu_unc_const) / k1
     dof = chi_test['dof']
     exp_std_dev = sqrt(chi_test['Variance'])
     for d in Rnge:
-        d['Manu_Spec'] = (c + d['distance'] * ppm / 1000) / 1000
+        d['Manu_Spec'] = (
+            sqrt( c1**2 + (c0 + d['distance'] * ppm / 1000)**2)) / 1000
         d['test_value'] = (chi2.ppf(0.95, dof) / dof) * d['Manu_Spec']
         d['accept'] = exp_std_dev < d['test_value']
     test_a = {
         'test': 'A',
-        'hypothesis': 'The experimental standard deviation, s, is smaller than or equal to the manufacturers specifications',
+        'hypothesis': 'The experimental standard deviation, s, is smaller than or equal to the manufacturers specifications for the Instrument and prism combination.',
         'test_ranges': Rnge,
         'accept': False not in [a['accept'] for a in Rnge]
     }

@@ -8,7 +8,7 @@ from django.conf import settings
 import os
 # Start migration
 lg_prism_specs = [
-    {'manu_unc_const':0.3,
+    {'manu_unc_const':0.6,
     'manu_unc_k':2,
     'prism_model':'GPH1P',
     'prism_owner':'Landgate'}
@@ -22,8 +22,8 @@ lg_prisms = [
     ]
 lg_edms_specs = [
     {'edm_type':'ph',
-    'manu_unc_const':1,
-    'manu_unc_ppm':1.5,
+    'manu_unc_const':2,
+    'manu_unc_ppm':3,
     'manu_unc_k':2,
     'unit_length':1.5,
     'frequency':100,
@@ -33,8 +33,8 @@ lg_edms_specs = [
     'edm_model':'TS 16',
     'edm_owner':'Landgate'},
     {'edm_type':'ph',
-    'manu_unc_const':0.6,
-    'manu_unc_ppm':1,
+    'manu_unc_const':1.2,
+    'manu_unc_ppm':2,
     'manu_unc_k':2,
     'unit_length':1.5,
     'frequency':100,
