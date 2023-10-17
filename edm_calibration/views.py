@@ -389,13 +389,13 @@ def calibrate2(request,id):
         
                 if pillar_survey['test_cyclic']:
                     testing_terms = [t['t_test'] for t in matrix_y[-2:]]
-                    if len(matrix_A[0])==6: order_cmt = 'second'
-                    if len(matrix_A[0])==4: order_cmt = 'first'
+                    if len(matrix_A[0])==6: order_cmt = 'second order cyclic errors (3C, 4C)'
+                    if len(matrix_A[0])==4: order_cmt = 'first order cyclic errors (1C, 2C)'
                     if len(matrix_A[0])!= 2:
                         if False in testing_terms:
                             report_notes.append(
                                 f'The t-student test has been used to test and determine that the {order_cmt} ' \
-                                f'order cyclic errors are statistically significant in this calibration data.')
+                                f' are statistically significant in this calibration data.')
                         else:
                             notes_tbl = []
                             for y in matrix_y:
@@ -407,7 +407,7 @@ def calibrate2(request,id):
                                      'Insignificant':y['t_test']})
                             notes_tbl = dict_2_html_table(notes_tbl)
                             report_notes.append(
-                                f'The t-student test has been used to test the significance of the {order_cmt} order cyclic errors.' \
+                                f'The t-student test has been used to test the significance of the {order_cmt}.' \
                                 f' This has determined that these cyclic errors are statistically insignificant in this calibration data.' \
                                 f'{notes_tbl}')
                                 
