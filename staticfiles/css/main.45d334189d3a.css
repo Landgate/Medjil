@@ -3059,23 +3059,25 @@ canvas {
   border-radius: 0.25rem;
 }
 
-.acknowledge_TCs {
+.acknowledge-TCs {
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 100; /* Adjust the z-index as needed */
+    background-color: rgba(0, 0, 0, 0.9);
+    color: white;
+    z-index: 1000;
+    text-align: center;
+    padding: 10px 20px;
+    box-shadow: 0px -10px 10px rgba(0, 0, 0, 0.5); 
 }
 
-.acknowledge_TCs-content {
+.acknowledge-TCs-content {
     background-color: white;
-    padding: 20px;
-    border-radius: 5px;
+    padding: 10px 20px;
     text-align: center;
+    border-radius: 10px;
+	color: black;
 }
 
 /* Hide the popup by default */
