@@ -87,6 +87,9 @@ figure > img {
         /* vertical-align: text-top; */
         vertical-align: middle;
       }
+    table th:not(:last-child) {
+      border-right: 1px solid #e1e1e1;
+    }
     table tr:not(:last-child) {
       border-bottom: 1px solid #e0e0e1; }
       table tr {
