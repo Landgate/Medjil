@@ -15,19 +15,21 @@
    limitations under the License.
 
 '''
-from django.shortcuts import render, redirect, get_object_or_404
+from collections import OrderedDict
+from datetime import date
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Q, ProtectedError
 from django.forms import formset_factory, modelformset_factory
 from django.forms.models import model_to_dict
 from django.http import QueryDict
+from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
-from collections import OrderedDict
-from django.db.models import Q
-
-from datetime import date
 from math import sqrt
-import numpy as np
 from statistics import mean
+import numpy as np
+
 
 from .forms import (
     PillarSurveyForm,
@@ -77,6 +79,7 @@ from common_func.LeastSquares import (
     LSA,
     ISO_test_b,
     ISO_test_c)
+from common_func.validators import find_dependent_records
 
 
 @login_required(login_url="/accounts/login") 
@@ -111,7 +114,18 @@ def calibration_home(request):
 @login_required(login_url="/accounts/login") 
 def pillar_survey_del(request, id):
     delete_pillar_survey = Pillar_Survey.objects.get(id=id)
-    delete_pillar_survey.delete()
+    try:
+        delete_pillar_survey.delete()
+        messages.success(
+            request, "You have successfully deleted: " + f"{delete_pillar_survey}")
+    except ObjectDoesNotExist:
+        messages.warning(request, "No record to delete.")
+    except ProtectedError:
+        dependent_models = find_dependent_records(delete_pillar_survey)
+        messages.error(
+            request, 
+            "This action cannot be performed! This record has a dependant record." 
+            + dependent_models['protected_html'])
     
     return redirect('baseline_calibration:calibration_home')
 
@@ -744,6 +758,7 @@ def uc_budget_edit(request, id=None):
                             uncertainty_budget = id)
     formset = uc_sources(request.POST or None, queryset=qs)
     
+    # Edit the database according to submitted valid form.
     if all([uc_budget.is_valid(), formset.is_valid()]):
         uc_budget.save()
         new_sources_id=[]
@@ -753,6 +768,7 @@ def uc_budget_edit(request, id=None):
             source.uncertainty_budget = uc_budget.instance
         formset.save()
         
+        # Delete uc_source if it has been removed
         for orig_source in qs:
             if not orig_source.id in new_sources_id:
                 orig_source.delete()
@@ -820,8 +836,19 @@ def uc_budget_delete(request, id):
         delete_budget = Uncertainty_Budget.objects.get(
             id=id,
             accredited_company = request.user.company)
-    delete_budget.delete()
-    
+    try:
+        delete_budget.delete()
+        messages.success(
+            request, "You have successfully deleted: " + f"{delete_budget}")
+    except ObjectDoesNotExist:
+        messages.warning(request, "No record to delete.")
+    except ProtectedError:
+        dependent_models = find_dependent_records(delete_budget)
+        messages.error(
+            request, 
+            "This action cannot be performed! This record has a dependant record." 
+            + dependent_models['protected_html'])
+        
     return redirect('baseline_calibration:uc_budgets')
 
 
@@ -881,7 +908,18 @@ def accreditation_delete(request, id):
         accreditation = Accreditation.objects.get(
             id=id,
             accredited_company = request.user.company)
-    accreditation.delete()
+    try:
+        accreditation.delete()
+        messages.success(
+            request, "You have successfully deleted: " + f"{accreditation}")
+    except ObjectDoesNotExist:
+        messages.warning(request, "No record to delete.")
+    except ProtectedError:
+        dependent_models = find_dependent_records(accreditation)
+        messages.error(
+            request, 
+            "This action cannot be performed! This record has a dependant record." 
+            + dependent_models['protected_html'])
     
     return redirect('baseline_calibration:accreditations')
 

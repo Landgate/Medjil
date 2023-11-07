@@ -21,7 +21,15 @@
 
 {% block content %}
 <article>
-	<br>
+    {% if messages %}
+    <ul class="message-list">
+        {% for message in messages %}
+            <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    <br>
+    {% endif %}
+   <br>
    <h2 class="text-center">The Company Survey Instrumentation Register</h2>
    <p><i>Select instrument type on the left menu to display available instruments</i></p>
   <hr>  
