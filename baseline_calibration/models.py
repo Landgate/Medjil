@@ -229,7 +229,8 @@ class Pillar_Survey(models.Model):
                  help_text="Baseline under survey")
     survey_date = models.DateField(null=False, blank=False)
     computation_date = models.DateField(null=False, blank=False)
-    accreditation = models.ForeignKey(Accreditation, on_delete = models.SET_NULL, null = True,
+    accreditation = models.ForeignKey(Accreditation, on_delete = models.SET_NULL, 
+                 null = True, blank=True,
                  help_text="corresponding certification survey.")
     apply_lum = models.BooleanField(default=True,
                  verbose_name= 'Apply LUM to uncertainties')

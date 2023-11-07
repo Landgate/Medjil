@@ -84,7 +84,7 @@ class Migration(migrations.Migration):
                 ('data_checked_position',models.CharField(validators=[common_func.validators.validate_profanity], blank=True, max_length=25, null=True),),
                 ('data_checked_date', models.DateField(blank=True, null=True)),
                 ('html_report', models.TextField(blank=True, null=True)),
-                ('accreditation', models.ForeignKey(help_text='corresponding certification survey.', null=True, on_delete=django.db.models.deletion.SET_NULL, to='baseline_calibration.accreditation')),
+                ('accreditation', models.ForeignKey(help_text='corresponding certification survey.', null=True, blank=True, on_delete=django.db.models.deletion.SET_NULL, to='baseline_calibration.accreditation')),
                 ('barometer', models.ForeignKey(help_text='Barometer used for survey', limit_choices_to={'mets_specs__mets_model__inst_type': 'baro'}, on_delete=django.db.models.deletion.PROTECT, related_name='field_barometer', to='instruments.mets_inst')),
                 ('baseline', models.ForeignKey(help_text='Baseline under survey', on_delete=django.db.models.deletion.CASCADE, to='calibrationsites.calibrationsite', verbose_name='Site')),
                 ('edm', models.ForeignKey(help_text='EDM used for survey', on_delete=django.db.models.deletion.PROTECT, to='instruments.edm_inst', verbose_name="EDM")),
