@@ -1357,6 +1357,24 @@ td .add-button {
   margin: 0.5rem 0 0.5rem 0;
 }
 
+.message-list ul {
+  padding-left: 0.5rem;
+}
+
+.message-list ul li {
+  list-style-type: square;
+  list-style-position: inside;
+}
+
+.message-list ul > ul li {
+  list-style-type: decimal;
+  list-style-position: inside;
+}
+
+/* .message-list li > ul > li{
+  padding-left: 10px;
+} */
+
 .message-info .error {
   color: #fff;
   background-color: #17a2b8;
