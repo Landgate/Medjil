@@ -26,6 +26,9 @@ from django.views import generic
 from formtools.wizard.views import NamedUrlSessionWizardView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
+from django.db.models import ProtectedError
+from django.core.exceptions import ObjectDoesNotExist
+from common_func.validators import find_dependent_records
 # from django.forms import formset_factory
 from .forms import (InstrumentModelCreateForm,
                     InstrumentModelCreateByInstTypeForm,
@@ -452,14 +455,32 @@ def inst_model_update(request, id):
     return render(request, 'instruments/inst_model_create_form.html', context)
 
 
+# @login_required(login_url="/accounts/login") 
+# def inst_model_delete(request, id):
+#     this_model = InstrumentModel.objects.get(id=id)
+#     if this_model:
+#         this_model.delete()
+#         messages.success(request, "You have successfully deleted: " + this_model.model)
+#     else:
+#         messages.error(request, "This action cannot be performed!")
+#     return redirect ('instruments:inst_settings')
+
 @login_required(login_url="/accounts/login") 
 def inst_model_delete(request, id):
     this_model = InstrumentModel.objects.get(id=id)
-    if this_model:
+    try:
         this_model.delete()
-        messages.success(request, "You have successfully deleted: " + this_model.model)
-    else:
-        messages.error(request, "This action cannot be performed!")
+        messages.success(
+            request, "You have successfully deleted: " + f"{this_model}")
+    except ObjectDoesNotExist:
+        messages.warning(request, "No record to delete.")
+    except ProtectedError:
+        dependent_models = find_dependent_records(this_model)
+        messages.error(
+            request, 
+            "This action cannot be performed! This record has a dependant record." 
+            + dependent_models['protected_html'])
+ 
     return redirect ('instruments:inst_settings')
 
 
@@ -482,7 +503,6 @@ def inst_level_create_popup(request):
         form = DigitalLevelCreateForm(user= request.user)
     return render(request, 'instruments/inst_level_create_popup_form.html', {'form':form})
 
-
 #####################################################################################
 class DigitalLevelCreateView(LoginRequiredMixin, generic.CreateView):
     def get_form_kwargs(self, *args, **kwargs):
@@ -502,7 +522,6 @@ class DigitalLevelCreateView(LoginRequiredMixin, generic.CreateView):
             return redirect ('instruments:home', inst_disp='level')
         
         return render(request, 'instruments/inst_level_create_form.html', {'form': form})
-    
     
 #######################################################################
 ######################## STAFF CREATE #################################
