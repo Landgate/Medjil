@@ -455,16 +455,6 @@ def inst_model_update(request, id):
     return render(request, 'instruments/inst_model_create_form.html', context)
 
 
-# @login_required(login_url="/accounts/login") 
-# def inst_model_delete(request, id):
-#     this_model = InstrumentModel.objects.get(id=id)
-#     if this_model:
-#         this_model.delete()
-#         messages.success(request, "You have successfully deleted: " + this_model.model)
-#     else:
-#         messages.error(request, "This action cannot be performed!")
-#     return redirect ('instruments:inst_settings')
-
 @login_required(login_url="/accounts/login") 
 def inst_model_delete(request, id):
     this_model = InstrumentModel.objects.get(id=id)
