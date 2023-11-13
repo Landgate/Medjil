@@ -255,7 +255,7 @@ def calibrate(request):
                             # check 
                             # if round((((standard_temperature-average_temperature)*coeff*10**-6)+1)*scaleFactor0,7) == scaleFactor1:
                             #     print("Well Done")
-                            messages.success(request, 'Congratulations! You have successfully calibrated you staff.') 
+                            messages.success(request, 'Congratulations! You have successfully calibrated your staff.') 
                         # List of scale factors at various tempertaures
                         temp_correction_factors = compute_factor_corrections(thermal_coefficient, average_temperature, scaleFactor0) 
                         # Temperature at which scale factor is 1 
