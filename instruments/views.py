@@ -605,7 +605,6 @@ STAFF_TEMPLATES_POPUP  = {
                     "inst_staff_record_form": "staffcalibration/staff_calibration_record_form_popup.html",
                     }
 
-
 class StaffCreationWizardPopUp(LoginRequiredMixin, NamedUrlSessionWizardView):
     # get the template names and their steps
     def get_template_names(self):                
