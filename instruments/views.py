@@ -345,18 +345,18 @@ def instrument_register(request, inst_disp):
     
     ################ STAFF TAB #################
     if inst_disp == 'staff':
-        # table_headings['certificates']= ['Staff Number',
-        #                                  'Calibration Date',
-        #                                  'Scale Factor',
-        #                                  'Graduation Uncertainty',
-        #                                  'Action']
+        table_headings['certificates']= ['Staff Number',
+                                         'Calibration Date',
+                                         'Scale Factor',
+                                         'Graduation Uncertainty',
+                                         'Action']
 
         tabs['insts_list'] = Staff.objects.all()
-        # tabs['certificates_list'] = (StaffCalibrationRecord.objects.all()
-        #     .order_by('inst_staff__staff_number', '-calibration_date')
-        #     .values('pk', 'inst_staff__staff_number',
-        #             'calibration_date',
-        #             'scale_factor', 'grad_uncertainty'))
+        tabs['certificates_list'] = (StaffCalibrationRecord.objects.all()
+            .order_by('inst_staff__staff_number', '-calibration_date')
+            .values('pk', 'inst_staff__staff_number',
+                    'calibration_date',
+                    'scale_factor', 'grad_uncertainty'))
         if not request.user.is_staff:
             tabs['insts_list'] = tabs['insts_list'].filter(
                 staff_owner = request.user.company)
