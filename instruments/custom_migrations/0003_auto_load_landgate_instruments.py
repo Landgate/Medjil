@@ -84,7 +84,7 @@ lg_edmi_certs = [
     'zpc_std_dev':0.000080952380952381,
     'standard_deviation':0.15,
     'degrees_of_freedom':14,
-    'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate Instruments/EDMIs/364182/2013_TS30_Calibration_Report.pdf'),
+    'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate/EDMIs/364182/2013_TS30_Calibration_Report.pdf'),
     'edm_number':364182,
     'prism_number':100},
     {'calibration_date':'2015-06-17',
@@ -98,7 +98,7 @@ lg_edmi_certs = [
     'zpc_std_dev':0.00012,
     'standard_deviation':0.00022,
     'degrees_of_freedom':14,
-    'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate Instruments/EDMIs/364182/2015_TS30_Calibration_Report.pdf'),
+    'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate/EDMIs/364182/2015_TS30_Calibration_Report.pdf'),
     'edm_number':364182,
     'prism_number':100},
     {'calibration_date':'2017-06-14',
@@ -112,7 +112,7 @@ lg_edmi_certs = [
     'zpc_std_dev':0.0001,
     'standard_deviation':0.0001,
     'degrees_of_freedom':14,
-    'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate Instruments/EDMIs/364182/2017_TS30_Calibration_Report.pdf'),
+    'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate/EDMIs/364182/2017_TS30_Calibration_Report.pdf'),
     'edm_number':364182,
     'prism_number':100},
     {'calibration_date':'2019-05-16',
@@ -126,7 +126,7 @@ lg_edmi_certs = [
     'zpc_std_dev':0.00017,
     'standard_deviation':0.00032,
     'degrees_of_freedom':14,
-    'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate Instruments/EDMIs/364182/2019_TS30_Calibration_Report.pdf'),
+    'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate/EDMIs/364182/2019_TS30_Calibration_Report.pdf'),
     'edm_number':364182,
     'prism_number':100},
     {'calibration_date':'2021-04-29',
@@ -140,7 +140,7 @@ lg_edmi_certs = [
     'zpc_std_dev':7.61904761904762E-05,
     'standard_deviation':0.0003,
     'degrees_of_freedom':27,
-    'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate Instruments/EDMIs/364182/2021_TS30_Calibration_Report.pdf'),
+    'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate/EDMIs/364182/2021_TS30_Calibration_Report.pdf'),
     'edm_number':364182,
     'prism_number':100}
     ]
@@ -232,7 +232,7 @@ def add_landgate_instruments(apps, schema_editor):
     medjil_mets_certs = apps.get_model('instruments', 'Mets_certificate')
 
     # Add digital levels
-    with open(os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate Instruments/Digital Levels/digital_levels.csv'), 'r') as f:
+    with open(os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate/Digital Levels/digital_levels.csv'), 'r') as f:
         reader = csv.reader(f)
         header = next(reader)
         k = 0
@@ -249,7 +249,7 @@ def add_landgate_instruments(apps, schema_editor):
                     level_number = level_number,
                     )
     # Add bar-coded staves
-    with open(os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate Instruments/Staves/staves.csv'), 'r') as f:
+    with open(os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate/Staves/staves.csv'), 'r') as f:
         reader = csv.reader(f)
         header = next(reader)
         k = 0

@@ -309,7 +309,7 @@ class EDM_Inst(models.Model):
     )
     comment = models.CharField(
         validators=[validate_profanity],
-        max_length=265, 
+        max_length=500, 
         null=True, blank=True)
     edm_specs = models.ForeignKey(
         EDM_Specification,
@@ -819,7 +819,7 @@ class Specifications_Recommendations(models.Model):
         max_length=25,
         verbose_name='Manufacturer')
     model = models.CharField(
-        max_length=25,
+        max_length=256,
         verbose_name='Model')
 
     edm_type = models.CharField(

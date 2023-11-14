@@ -84,7 +84,7 @@ lg_edmi_certs = [
     'zpc_std_dev':0.000080952380952381,
     'standard_deviation':0.00015,
     'degrees_of_freedom':14,
-    'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate Instruments/EDMIs/364182/2013_TS30_Calibration_Report.pdf'),
+    'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate/EDMIs/364182/2013_TS30_Calibration_Report.pdf'),
     'edm_number':364182,
     'prism_number':100},
     {'calibration_date':'2015-06-17',
@@ -98,7 +98,7 @@ lg_edmi_certs = [
     'zpc_std_dev':0.00012,
     'standard_deviation':0.00022,
     'degrees_of_freedom':14,
-    'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate Instruments/EDMIs/364182/2015_TS30_Calibration_Report.pdf'),
+    'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate/EDMIs/364182/2015_TS30_Calibration_Report.pdf'),
     'edm_number':364182,
     'prism_number':100},
     {'calibration_date':'2017-06-14',
@@ -112,7 +112,7 @@ lg_edmi_certs = [
     'zpc_std_dev':0.0001,
     'standard_deviation':0.0001,
     'degrees_of_freedom':14,
-    'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate Instruments/EDMIs/364182/2017_TS30_Calibration_Report.pdf'),
+    'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate/EDMIs/364182/2017_TS30_Calibration_Report.pdf'),
     'edm_number':364182,
     'prism_number':100},
     {'calibration_date':'2019-05-16',
@@ -126,7 +126,7 @@ lg_edmi_certs = [
     'zpc_std_dev':0.00017,
     'standard_deviation':0.00032,
     'degrees_of_freedom':14,
-    'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate Instruments/EDMIs/364182/2019_TS30_Calibration_Report.pdf'),
+    'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate/EDMIs/364182/2019_TS30_Calibration_Report.pdf'),
     'edm_number':364182,
     'prism_number':100},
     {'calibration_date':'2021-04-29',
@@ -140,7 +140,7 @@ lg_edmi_certs = [
     'zpc_std_dev':7.61904761904762E-05,
     'standard_deviation':0.0003,
     'degrees_of_freedom':27,
-    'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate Instruments/EDMIs/364182/2021_TS30_Calibration_Report.pdf'),
+    'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate/EDMIs/364182/2021_TS30_Calibration_Report.pdf'),
     'edm_number':364182,
     'prism_number':100}
     ]
@@ -167,19 +167,19 @@ lg_mets_specs = [
 lg_mets_insts = [
     {'mets_number':74003848,
     'comment':'EDM Baseline Calibration Baro',
-    'photo':os.path.join(settings.MEDIA_ROOT, 'InitialData\Landgate Instruments\Mets Photos\DRUCK_DPI_740.pdf'),
+    'photo':os.path.join(settings.MEDIA_ROOT, 'InitialData\Landgate\Mets Photos\DRUCK_DPI_740.pdf'),
     'mets_custodian_id':'',
     'type':'baro',
     'mets_model':'DPI740'},
     {'mets_number':20013647,
     'comment':'EDM Baseline Calibration Them',
-    'photo':os.path.join(settings.MEDIA_ROOT, 'InitialData\Landgate Instruments\Mets Photos\DELTA_OHM.pdf'),
+    'photo':os.path.join(settings.MEDIA_ROOT, 'InitialData\Landgate\Mets Photos\DELTA_OHM.pdf'),
     'mets_custodian_id':'',
     'type':'thermo',
     'mets_model':'HD 2301.0R - HP472ACR'},
     {'mets_number':20013647,
     'comment':'EDM BaselineExternal Temperature/RH Probe',
-    'photo':os.path.join(settings.MEDIA_ROOT, 'InitialData\Landgate Instruments\Mets Photos\DELTA_OHM.pdf'),
+    'photo':os.path.join(settings.MEDIA_ROOT, 'InitialData\Landgate\Mets Photos\DELTA_OHM.pdf'),
     'mets_custodian_id':'',
     'type':'hygro',
     'mets_model':'HD 2301.0R - HP472ACR'}
@@ -191,7 +191,7 @@ lg_mets_certs = [
     'zpc_coverage_factor':2,
     'zpc_std_dev':0.065,
     'degrees_of_freedom':30,
-    'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData\Landgate Instruments\Mets Certificates\2021_74003848_Barometer_Calibration.pdf'),
+    'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData\Landgate\Mets Certificates\2021_74003848_Barometer_Calibration.pdf'),
     'type':'baro',
     'mets_number':74003848},
     {'calibration_date':'2021-04-14',
@@ -200,7 +200,7 @@ lg_mets_certs = [
     'zpc_coverage_factor':2,
     'zpc_std_dev':0.1,
     'degrees_of_freedom':30,
-    'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData\Landgate Instruments\Mets Certificates\2021_20013647_Temperature_and_Relative_Humidity_Meter.pdf'),
+    'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData\Landgate\Mets Certificates\2021_20013647_Temperature_and_RH.pdf.pdf'),
     'type':'thermo',
     'mets_number':20013647},
     {'calibration_date':'2021-04-14',
@@ -209,7 +209,7 @@ lg_mets_certs = [
     'zpc_coverage_factor':2,
     'zpc_std_dev':1.15,
     'degrees_of_freedom':30,
-    'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData\Landgate Instruments\Mets Certificates\2021_20013647_Temperature_and_Relative_Humidity_Meter.pdf'),
+    'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData\Landgate\Mets Certificates\2021_20013647_Temperature_and_RH.pdf.pdf'),
     'type':'hygro',
     'mets_number':20013647},
     ]
@@ -232,7 +232,7 @@ def add_landgate_instruments(apps, schema_editor):
     medjil_mets_certs = apps.get_model('instruments', 'Mets_certificate')
 
     # Add digital levels
-    with open(os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate Instruments/Digital Levels/digital_levels.csv'), 'r') as f:
+    with open(os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate/Digital Levels/digital_levels.csv'), 'r', encoding='cp1252') as f:
         reader = csv.reader(f)
         header = next(reader)
         k = 0
@@ -249,7 +249,7 @@ def add_landgate_instruments(apps, schema_editor):
                     level_number = level_number,
                     )
     # Add bar-coded staves
-    with open(os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate Instruments/Staves/staves.csv'), 'r') as f:
+    with open(os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate/Staves/staves.csv'), 'r', encoding='cp1252') as f:
         reader = csv.reader(f)
         header = next(reader)
         k = 0

@@ -197,7 +197,7 @@ class Migration(migrations.Migration):
                     "manufacturer",
                     models.CharField(max_length=25, verbose_name="Manufacturer"),
                 ),
-                ("model", models.CharField(max_length=25, verbose_name="Model")),
+                ("model", models.CharField(max_length=256, verbose_name="Model")),
                 (
                     "edm_type",
                     models.CharField(
@@ -372,7 +372,7 @@ class Migration(migrations.Migration):
                 (
                     "remark",
                     models.CharField(
-                        blank=True, max_length=265, null=True, verbose_name="Remark"
+                        blank=True, max_length=500, null=True, verbose_name="Remark"
                     ),
                 ),
             ],
