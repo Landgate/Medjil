@@ -104,7 +104,7 @@
 				<section id="content2">
     				<div class="mt-2 flex justify-center">
         				{% if inst_disp == 'staff' %} 
-            				<a href="{% url 'instruments:inst_staff_create' %}" class="mt-3 px-3 py-2 border border-transparent text-lg leading-4 rounded text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+            				<a href="{% url 'instruments:inst_staff_create' %} target="_blank"  onclick="return showAddPopup(this);" class="mt-3 px-3 py-2 border border-transparent text-lg leading-4 rounded text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
         				{% else %} 
             				<a href="{% url 'instruments:register_edit' inst_disp=inst_disp tab="insts" id=None %}?next={{request.path}}" class="mt-3 px-3 py-2 border border-transparent text-lg leading-4 rounded text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
         				{% endif %}
