@@ -1,6 +1,6 @@
 '''
 
-   © 2023 Western Australian Land Information Authority
+   © 2023 Western Australian Land Information Authority 
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -21,6 +21,10 @@ from instruments.models import Staff, DigitalLevel
 from .models import StaffCalibrationRecord
 from calibrationsites.models import CalibrationSite
 
+# Prepare forms
+class CustomClearableFileInput(forms.ClearableFileInput):
+    template_name = 'custom_widgets/customclearablefileinput.html'
+
 # Create Forms
 class StaffCalibrationRecordForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -37,16 +41,30 @@ class StaffCalibrationRecordForm(forms.ModelForm):
                                 queryset=CalibrationSite.objects.all(),
                                 widget=forms.Select(),
                                 label = 'Calibration Site')
+    level_used = forms.BooleanField(
+        initial=True,
+        required=False, 
+        label = "Level Used", 
+        help_text = "Has a level instrument been used for this certificate?")
+
     class Meta:
         model = StaffCalibrationRecord
         fields = '__all__'
         exclude = ('id','field_file', 'field_book', 'observer_isme', 'observer',)
         widgets = {
             'calibration_date': forms.DateInput(format=('%d-%m-%Y'), attrs={'help_text':'Select a date', 'type':'date'}),
-            'calibration_report' : forms.FileInput(attrs={'accept' : '.pdf, .jpg, .tif'}),
-            'field_book' : forms.FileInput(attrs={'accept' : '.pdf, .jpg, .tif'})
+            # 'calibration_report' : forms.FileInput(attrs={'accept' : '.pdf, .jpg, .tif'}),
+            'calibration_report' :  CustomClearableFileInput(
+                attrs={'accept' : '.pdf, .jpg, .jpeg, .png, .tif',
+                       'required': False})
+            #'field_book' : forms.FileInput(attrs={'accept' : '.pdf, .jpg, .tif'})
         }
+        
+    field_order = ['site_id','job_number','inst_staff', 'level_used', 'inst_level', \
+                    'scale_factor', 'grad_uncertainty', 'standard_temperature', 'observed_temperature', \
+                    'calibration_date', 'calibration_report']
 
+    
 # Calibration Form without Staff Number
 class StaffCalibrationRecordFormOnTheGo(forms.ModelForm):
     def __init__(self, *args, **kwargs):

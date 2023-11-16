@@ -58,7 +58,7 @@ from .models import (InstrumentMake,
                     Mets_certificate,
                     Specifications_Recommendations
                     )
-
+from staffcalibration.forms import StaffCalibrationRecordForm
 from staffcalibration.models import StaffCalibrationRecord
 from common_func.Convert import db_std_units
 
@@ -189,7 +189,25 @@ def register_edit(request, inst_disp, tab, id):
                                             instance = obj, 
                                             user = request.user,
                                             inst_type = inst_disp)
+<<<<<<< Updated upstream
         
+=======
+
+        if inst_disp == 'staff':
+            tmplate = 'staffcalibration/staff_calibration_record_form.html'
+            if id == 'None':
+                form = StaffCalibrationRecordForm(request.POST or None,
+                                            request.FILES or None,
+                                            user = request.user)
+            else:
+                obj = get_object_or_404(StaffCalibrationRecord, id = id)
+                obj.calibration_date = obj.calibration_date.isoformat()
+                form = StaffCalibrationRecordForm(request.POST or None, 
+                                            request.FILES or None, 
+                                            instance = obj, 
+                                            user = request.user)
+    
+>>>>>>> Stashed changes
     if not form.is_valid():
         context = {
             'inst_type' : inst_disp,
@@ -270,6 +288,8 @@ def register_delete(request, inst_disp, tab, id):
             delete_obj = EDMI_certificate.objects.get(id=id)   
         if inst_disp == 'baro' or inst_disp == 'thermo' or inst_disp == 'hygro' or inst_disp == 'psy':
             delete_obj = Mets_certificate.objects.get(id=id)
+        if inst_disp == 'staff':
+            delete_obj = StaffCalibrationRecord.objects.get(id=id) 
             
     if delete_obj:
         try:

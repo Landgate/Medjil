@@ -25,7 +25,7 @@
     <div class="post-content">
         <form action="" class="site-form" method="post" enctype="multipart/form-data">
             <div class="mb-5 site-form-header bg-indigo-300 rounded px-2">
-                <h2 class="text-center">Add new calibration</h2>
+                <h2 class="text-center">Create/Edit Certificate Details</h2>
             </div>
             <div class="mb-3 px-2 site-form-header">
                 <p class="text-center text-lg"><u>Step {{ wizard.steps.step1 }} of  {{ wizard.steps.count }}</u></p>
@@ -116,6 +116,18 @@
         
         window.sessionStorage.clear()
     }
+
+    // Get the id_level_used and switch off level data if no level record is found!
+	var levelUsed = document.getElementById("id_level_used")
+    var instLevelRow = document.querySelector(".inst_level")
+
+	levelUsed.addEventListener('change', () => {
+		if (!levelUsed.checked) {
+			instLevelRow.style.display = "none"
+		} else {
+			instLevelRow.style.display = "table-row";
+		}
+	})
 
 </script>
 
