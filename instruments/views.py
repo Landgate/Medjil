@@ -295,8 +295,7 @@ def register_delete(request, inst_disp, tab, id):
             request, "You have successfully deleted: " + f"{delete_obj}")
     except ObjectDoesNotExist:
         messages.warning(request, "No record to delete.")
-    except ProtectedError as e:
-        print(e)
+    except ProtectedError:
         dependent_models = find_dependent_records(delete_obj)
         messages.error(
             request, 
