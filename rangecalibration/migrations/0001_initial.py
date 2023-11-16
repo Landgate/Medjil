@@ -50,9 +50,9 @@ class Migration(migrations.Migration):
                 ('updated_to', models.BooleanField(default=False, verbose_name='Updated to Range Param')),
                 ('created_on', models.DateTimeField(auto_now_add=True, null=True)),
                 ('modified_on', models.DateTimeField(auto_now=True, null=True)),
-                ('inst_level', models.ForeignKey(null=True, on_delete=django.db.models.deletion.RESTRICT, to='instruments.digitallevel', verbose_name='Level Number')),
-                ('inst_staff', models.ForeignKey(null=True, on_delete=django.db.models.deletion.RESTRICT, to='instruments.staff', verbose_name='Staff Number')),
-                ('site_id', models.ForeignKey(limit_choices_to=models.Q(('site_type', 'staff_range'), ('site_type', 'staff_lab'), _connector='OR'), null=True, on_delete=django.db.models.deletion.RESTRICT, to='calibrationsites.calibrationsite', verbose_name='Site Name')),
+                ('inst_level', models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, to='instruments.digitallevel', verbose_name='Level Number')),
+                ('inst_staff', models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, to='instruments.staff', verbose_name='Staff Number')),
+                ('site_id', models.ForeignKey(limit_choices_to=models.Q(('site_type', 'staff_range'), ('site_type', 'staff_lab'), _connector='OR'), null=True, on_delete=django.db.models.deletion.PROTECT, to='calibrationsites.calibrationsite', verbose_name='Site Name')),
             ],
             options={
                 'ordering': ['inst_staff', 'calibration_date'],
@@ -63,7 +63,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('observation', models.JSONField(null=True)),
-                ('calibration_id', models.ForeignKey(null=True, on_delete=django.db.models.deletion.RESTRICT, to='rangecalibration.rangecalibrationrecord', verbose_name='Calibration Id')),
+                ('calibration_id', models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, to='rangecalibration.rangecalibrationrecord', verbose_name='Calibration Id')),
             ],
         ),
         migrations.CreateModel(
@@ -71,7 +71,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('height_difference', models.JSONField(null=True)),
-                ('calibration_id', models.ForeignKey(null=True, on_delete=django.db.models.deletion.RESTRICT, to='rangecalibration.rangecalibrationrecord', verbose_name='Calibration Id')),
+                ('calibration_id', models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, to='rangecalibration.rangecalibrationrecord', verbose_name='Calibration Id')),
             ],
         ),
         migrations.CreateModel(
@@ -93,7 +93,7 @@ class Migration(migrations.Migration):
                 ('Dec', models.JSONField(blank=True, null=True)),
                 ('created_on', models.DateTimeField(auto_now_add=True, null=True)),
                 ('modified_on', models.DateTimeField(auto_now=True, null=True)),
-                ('site_id', models.ForeignKey(null=True, on_delete=django.db.models.deletion.RESTRICT, to='calibrationsites.calibrationsite', verbose_name='Calibration Site')),
+                ('site_id', models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, to='calibrationsites.calibrationsite', verbose_name='Calibration Site')),
             ],
         ),
         migrations.CreateModel(
@@ -101,7 +101,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('adustment', models.JSONField(null=True)),
-                ('calibration_id', models.ForeignKey(null=True, on_delete=django.db.models.deletion.RESTRICT, to='rangecalibration.rangecalibrationrecord', verbose_name='Calibration Id')),
+                ('calibration_id', models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, to='rangecalibration.rangecalibrationrecord', verbose_name='Calibration Id')),
             ],
         ),
         migrations.AddConstraint(

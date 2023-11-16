@@ -79,7 +79,7 @@ class Migration(migrations.Migration):
                 ('modified_on', models.DateTimeField(auto_now=True, null=True)),
                 ('country', models.ForeignKey(help_text='Add/select a Country', null=True, on_delete=django.db.models.deletion.SET_NULL, to='calibrationsites.country', verbose_name='Country')),
                 ('locality', models.ForeignKey(help_text='Add/select the location of Site', null=True, on_delete=django.db.models.deletion.SET_NULL, to='calibrationsites.locality', verbose_name='Locality/Suburb')),
-                ('operator', models.ForeignKey(blank=True, help_text='Select the site operator', null=True, on_delete=django.db.models.deletion.RESTRICT, to='accounts.company', verbose_name='Authority')),
+                ('operator', models.ForeignKey(blank=True, help_text='Select the site operator', null=True, on_delete=django.db.models.deletion.PROTECT, to='accounts.company', verbose_name='Authority')),
                 ('state', models.ForeignKey(help_text='Add/select a State/Region', null=True, on_delete=django.db.models.deletion.SET_NULL, to='calibrationsites.state', verbose_name='State/Region')),
             ],
         ),

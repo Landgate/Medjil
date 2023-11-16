@@ -30,7 +30,8 @@ from django.db.models import ProtectedError
 from django.core.exceptions import ObjectDoesNotExist
 from common_func.validators import find_dependent_records
 # from django.forms import formset_factory
-from .forms import (InstrumentModelCreateForm,
+from .forms import (
+    InstrumentModelCreateForm,
                     InstrumentModelCreateByInstTypeForm,
                     StaffCreateForm, 
                     DigitalLevelCreateForm,
@@ -61,6 +62,7 @@ from .models import (InstrumentMake,
 from staffcalibration.forms import StaffCalibrationRecordForm
 from staffcalibration.models import StaffCalibrationRecord
 from common_func.Convert import db_std_units
+
 
 # Instrument Settings 
 @login_required(login_url="/accounts/login")
@@ -189,9 +191,6 @@ def register_edit(request, inst_disp, tab, id):
                                             instance = obj, 
                                             user = request.user,
                                             inst_type = inst_disp)
-<<<<<<< Updated upstream
-        
-=======
 
         if inst_disp == 'staff':
             tmplate = 'staffcalibration/staff_calibration_record_form.html'
@@ -207,7 +206,6 @@ def register_edit(request, inst_disp, tab, id):
                                             instance = obj, 
                                             user = request.user)
     
->>>>>>> Stashed changes
     if not form.is_valid():
         context = {
             'inst_type' : inst_disp,
@@ -290,17 +288,20 @@ def register_delete(request, inst_disp, tab, id):
             delete_obj = Mets_certificate.objects.get(id=id)
         if inst_disp == 'staff':
             delete_obj = StaffCalibrationRecord.objects.get(id=id) 
-            
-    if delete_obj:
-        try:
-            delete_obj.delete()
-            messages.success(request, "You have successfully deleted: " + delete_obj)
-        except:
-            messages.error(
-                request, 
-                "This action cannot be performed! This record has a dependant record.")
-    else:
-        messages.error(request, "The record does not exists!")
+    
+    try:
+        delete_obj.delete()
+        messages.success(
+            request, "You have successfully deleted: " + f"{delete_obj}")
+    except ObjectDoesNotExist:
+        messages.warning(request, "No record to delete.")
+    except ProtectedError as e:
+        print(e)
+        dependent_models = find_dependent_records(delete_obj)
+        messages.error(
+            request, 
+            "This action cannot be performed! This record has a dependant record." 
+            + dependent_models['protected_html'])
     
     return redirect ('instruments:home', inst_disp=inst_disp)
     
@@ -713,17 +714,21 @@ def inst_staff_update(request, id):
 
 @login_required(login_url="/accounts/login") 
 def inst_staff_delete(request, id):
-    this_inst = Staff.objects.get(staff_owner=request.user.company, id=id)
-    if this_inst:
-        try:
-            this_inst.delete()
-            messages.success(request, "You have successfully deleted: " + this_inst)
-        except:
-            messages.error(request, "This action cannot be performed! This staff has a calibration record.")
-        return redirect ('instruments:home', inst_disp='staff')
-    else:
-        messages.error(request, "The instrument does not exists!")
-        return redirect ('instruments:home', inst_disp='staff')
+    delete_obj = Staff.objects.get(staff_owner=request.user.company, id=id)
+    try:
+        delete_obj.delete()
+        messages.success(
+            request, "You have successfully deleted: " + f"{delete_obj}")
+    except ObjectDoesNotExist:
+        messages.warning(request, "No record to delete.")
+    except ProtectedError:
+        dependent_models = find_dependent_records(delete_obj)
+        messages.error(
+            request, 
+            "This action cannot be performed! This record has a dependant record." 
+            + dependent_models['protected_html'])
+        
+    return redirect ('instruments:home', inst_disp='staff')
     
     
 # Get instrument model based on makes

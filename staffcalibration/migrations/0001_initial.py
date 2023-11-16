@@ -51,9 +51,9 @@ class Migration(migrations.Migration):
                 ('calibration_report', models.FileField(blank=True, help_text='Calibration report/certificate in pdf/jpg/tif format.', null=True, upload_to=staffcalibration.models.get_upload_to_calibreport, verbose_name='Calibration certificate')),
                 ('created_on', models.DateTimeField(auto_now_add=True, null=True)),
                 ('modified_on', models.DateTimeField(auto_now=True, null=True)),
-                ('inst_level', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.RESTRICT, to='instruments.digitallevel', verbose_name='Level Number')),
-                ('inst_staff', models.ForeignKey(null=True, on_delete=django.db.models.deletion.RESTRICT, to='instruments.staff', verbose_name='Staff Number')),
-                ('site_id', models.ForeignKey(blank=True, limit_choices_to=models.Q(('site_type', 'staff_range'), ('site_type', 'staff_lab'), _connector='OR'), null=True, on_delete=django.db.models.deletion.RESTRICT, to='calibrationsites.calibrationsite', verbose_name='Calibration Site')),
+                ('inst_level', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, to='instruments.digitallevel', verbose_name='Level Number')),
+                ('inst_staff', models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, to='instruments.staff', verbose_name='Staff Number')),
+                ('site_id', models.ForeignKey(blank=True, limit_choices_to=models.Q(('site_type', 'staff_range'), ('site_type', 'staff_lab'), _connector='OR'), null=True, on_delete=django.db.models.deletion.PROTECT, to='calibrationsites.calibrationsite', verbose_name='Calibration Site')),
             ],
             options={
                 'ordering': ['inst_staff', 'calibration_date'],

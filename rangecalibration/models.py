@@ -57,15 +57,15 @@ class RangeCalibrationRecord(models.Model):
     site_id = models.ForeignKey(CalibrationSite,
                                     limit_choices_to=Q(site_type = 'staff_range') | Q(site_type = 'staff_lab'),  
                                     null = True,
-                                    on_delete = models.RESTRICT, 
+                                    on_delete = models.PROTECT, 
                                     verbose_name = 'Site Name')
     inst_staff = models.ForeignKey(Staff, 
                                     null=True,
-                                    on_delete = models.RESTRICT, 
+                                    on_delete = models.PROTECT, 
                                     verbose_name = 'Staff Number')
     inst_level = models.ForeignKey(DigitalLevel, 
                                     null=True,
-                                    on_delete = models.RESTRICT, 
+                                    on_delete = models.PROTECT, 
                                     verbose_name = 'Level Number')
     ave_temperature1 = models.FloatField(help_text = "Average temperature for the first set")
     ave_temperature2 = models.FloatField(help_text = "Average temperature for the second set")
@@ -140,7 +140,7 @@ class RangeCalibrationRecord(models.Model):
 class RawDataModel(models.Model):
     calibration_id = models.ForeignKey(RangeCalibrationRecord, 
                             null = True,
-                            on_delete = models.RESTRICT,
+                            on_delete = models.PROTECT,
                             verbose_name = 'Calibration Id')
     observation = models.JSONField(null=True)
   
@@ -169,7 +169,7 @@ class RawDataModel(models.Model):
 class AdjustedDataModel(models.Model):
     calibration_id = models.ForeignKey(RangeCalibrationRecord, 
                             null = True,
-                            on_delete = models.RESTRICT,
+                            on_delete = models.PROTECT,
                             verbose_name = 'Calibration Id')
     adustment = models.JSONField(null=True)
   
@@ -198,7 +198,7 @@ class AdjustedDataModel(models.Model):
 class HeightDifferenceModel(models.Model):
     calibration_id = models.ForeignKey(RangeCalibrationRecord, 
                             null = True,
-                            on_delete = models.RESTRICT,
+                            on_delete = models.PROTECT,
                             verbose_name = 'Calibration Id')
     height_difference = models.JSONField(null=True)
   
@@ -242,7 +242,7 @@ def get_month_list():
 class BarCodeRangeParam(models.Model):
     site_id = models.ForeignKey(CalibrationSite, 
                                 null = True,
-                                on_delete = models.RESTRICT,
+                                on_delete = models.PROTECT,
                                 verbose_name = 'Calibration Site')
     
     from_to = models.JSONField(null=True, blank=True)

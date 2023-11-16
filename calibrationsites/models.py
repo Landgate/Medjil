@@ -115,7 +115,7 @@ class CalibrationSite(models.Model):
     no_of_pillars = models.IntegerField(null = True, blank=True,
                                         help_text = "Enter the number of pins or baseline pillars, if applicable",
                                         verbose_name = 'Number of Pillars/Pins')
-    operator = models.ForeignKey(Company, on_delete=models.RESTRICT, null=True, blank=True,
+    operator = models.ForeignKey(Company, on_delete=models.PROTECT, null=True, blank=True,
                                     help_text = "Select the site operator",
                                     verbose_name = 'Authority',
                                     )  
