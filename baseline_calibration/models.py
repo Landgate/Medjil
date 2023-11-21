@@ -53,6 +53,7 @@ class Accreditation(models.Model):
     class Meta:
         ordering = ['accredited_company','valid_to_date']
         unique_together = ('accredited_company','valid_from_date','valid_to_date',)
+        verbose_name = "Company Accreditations"
         
     def get_absolute_url(self):
         return reverse('baseline_calibration:EDM_Observation-detail', args=[str(self.id)])
@@ -75,6 +76,7 @@ class Uncertainty_Budget(models.Model):
     class Meta:
         ordering = ['name']
         unique_together = ('name','company')
+        verbose_name = "Uncertainty Budgets"
                  
     def get_absolute_url(self):
         return reverse('baseline_calibration:Uncertainty_Budget-detail', args=[str(self.id)])
@@ -352,6 +354,7 @@ class Pillar_Survey(models.Model):
     
     class Meta:
         ordering = ['baseline','survey_date']
+        verbose_name = "Baseline Calibrations"
                  
     def get_absolute_url(self):
         return reverse('baseline_calibration:Pillar_Survey-detail', args=[str(self.id)])
@@ -462,6 +465,7 @@ class Certified_Distance(models.Model):
     class Meta:
         ordering = ['pillar_survey__survey_date','to_pillar__order']
         unique_together  =('from_pillar','to_pillar','pillar_survey')
+        verbose_name = "Baseline Certified Distances"
 
     def __str__(self):
         return f'({self.pillar_survey}): {self.from_pillar} - {self.to_pillar}'

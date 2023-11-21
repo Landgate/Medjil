@@ -15,27 +15,24 @@
    limitations under the License.
 
 '''
-import os, csv
+import csv
 from math import sqrt
 import numpy as np
 from django.contrib import messages
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, JsonResponse, FileResponse
+from django.http import HttpResponse, FileResponse
 from django.utils.safestring import mark_safe
 from django.contrib.auth.decorators import login_required
 from django.views import generic
 from django.core.exceptions import ObjectDoesNotExist
-from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
-# from formtools.wizard.views import SessionWizardView, NamedUrlSessionWizardView
-# from django.urls import reverse
 
 # Import Models
+from common_func.validators import try_delete_protected
 from calibrationsites.models import (Pillar, 
                                     CalibrationSite)
-from rangecalibration.models import (RangeCalibrationRecord, 
-                                    BarCodeRangeParam)
+from rangecalibration.models import BarCodeRangeParam
 from .models import (StaffCalibrationRecord, 
                     AdjustedDataModel)
 # Import Forms
@@ -385,16 +382,7 @@ def print_report(request, id):
 ###############################################################################
 def delete_record(request, id):
     thisRecord = StaffCalibrationRecord.objects.get(id=id)
-    try:
-        AdjustedDataModel.objects.get(calibration_id=thisRecord)
-        messages.success(request, "Successfully deleted the raw data.")
-    except ObjectDoesNotExist:
-        messages.warning(request, "No raw data to delete. ")
+    try_delete_protected(request, thisRecord)
     
-    try:
-        thisRecord.delete()
-        messages.success(request, "Successfully deleted the calibration record. Please note that the deleted record cannot be retrieved.")
-    except ObjectDoesNotExist:
-        messages.warning(request, "No calibration record to delete.")
     return redirect('staffcalibration:staff_registry')
 ###############################################################################

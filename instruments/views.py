@@ -16,7 +16,6 @@
 
 '''
 import os
-from django.contrib import messages
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.shortcuts import render, redirect, get_object_or_404
@@ -26,39 +25,38 @@ from django.views import generic
 from formtools.wizard.views import NamedUrlSessionWizardView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
-from django.db.models import ProtectedError
-from django.core.exceptions import ObjectDoesNotExist
-from common_func.validators import find_dependent_records
+from common_func.validators import try_delete_protected
 # from django.forms import formset_factory
 from .forms import (
     InstrumentModelCreateForm,
-                    InstrumentModelCreateByInstTypeForm,
-                    StaffCreateForm, 
-                    DigitalLevelCreateForm,
-                    EDM_InstForm,
-                    EDM_SpecificationForm,
-                    Prism_InstForm,
-                    Prism_SpecificationForm,
-                    Mets_InstForm,
-                    Mets_SpecificationForm,
-                    EDMI_certificateForm,
-                    Mets_certificateForm
-                    )
+    InstrumentModelCreateByInstTypeForm,
+    StaffCreateForm, 
+    DigitalLevelCreateForm,
+    EDM_InstForm,
+    EDM_SpecificationForm,
+    Prism_InstForm,
+    Prism_SpecificationForm,
+    Mets_InstForm,
+    Mets_SpecificationForm,
+    EDMI_certificateForm,
+    Mets_certificateForm
+    )
 
-from .models import (InstrumentMake, 
-                    InstrumentModel, 
-                    Staff, 
-                    DigitalLevel,
-                    EDM_Inst,
-                    EDM_Specification,
-                    Prism_Specification,
-                    Mets_Specification,
-                    Prism_Inst,
-                    Mets_Inst,
-                    EDMI_certificate,
-                    Mets_certificate,
-                    Specifications_Recommendations
-                    )
+from .models import (
+    InstrumentMake, 
+    InstrumentModel, 
+    Staff, 
+    DigitalLevel,
+    EDM_Inst,
+    EDM_Specification,
+    Prism_Specification,
+    Mets_Specification,
+    Prism_Inst,
+    Mets_Inst,
+    EDMI_certificate,
+    Mets_certificate,
+    Specifications_Recommendations
+    )
 from staffcalibration.forms import StaffCalibrationRecordForm
 from staffcalibration.models import StaffCalibrationRecord
 from common_func.Convert import db_std_units
@@ -289,18 +287,7 @@ def register_delete(request, inst_disp, tab, id):
         if inst_disp == 'staff':
             delete_obj = StaffCalibrationRecord.objects.get(id=id) 
     
-    try:
-        delete_obj.delete()
-        messages.success(
-            request, "You have successfully deleted: " + f"{delete_obj}")
-    except ObjectDoesNotExist:
-        messages.warning(request, "No record to delete.")
-    except ProtectedError:
-        dependent_models = find_dependent_records(delete_obj)
-        messages.error(
-            request, 
-            "This action cannot be performed! This record has a dependant record." 
-            + dependent_models['protected_html'])
+    try_delete_protected(request, delete_obj)
     
     return redirect ('instruments:home', inst_disp=inst_disp)
     
@@ -477,19 +464,8 @@ def inst_model_update(request, id):
 
 @login_required(login_url="/accounts/login") 
 def inst_model_delete(request, id):
-    this_model = InstrumentModel.objects.get(id=id)
-    try:
-        this_model.delete()
-        messages.success(
-            request, "You have successfully deleted: " + f"{this_model}")
-    except ObjectDoesNotExist:
-        messages.warning(request, "No record to delete.")
-    except ProtectedError:
-        dependent_models = find_dependent_records(this_model)
-        messages.error(
-            request, 
-            "This action cannot be performed! This record has a dependant record." 
-            + dependent_models['protected_html'])
+    delete_obj = InstrumentModel.objects.get(id=id)
+    try_delete_protected(request, delete_obj)
  
     return redirect ('instruments:inst_settings')
 
@@ -714,18 +690,7 @@ def inst_staff_update(request, id):
 @login_required(login_url="/accounts/login") 
 def inst_staff_delete(request, id):
     delete_obj = Staff.objects.get(staff_owner=request.user.company, id=id)
-    try:
-        delete_obj.delete()
-        messages.success(
-            request, "You have successfully deleted: " + f"{delete_obj}")
-    except ObjectDoesNotExist:
-        messages.warning(request, "No record to delete.")
-    except ProtectedError:
-        dependent_models = find_dependent_records(delete_obj)
-        messages.error(
-            request, 
-            "This action cannot be performed! This record has a dependant record." 
-            + dependent_models['protected_html'])
+    try_delete_protected(request, delete_obj)
         
     return redirect ('instruments:home', inst_disp='staff')
     

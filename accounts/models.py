@@ -123,7 +123,7 @@ class Calibration_Report_Notes(models.Model):
         unique=False,
         )
     note_types = (
-        ('M','Manditory'),
+        ('M','All Reports'),
         ('C','Company Specific'),
         )
     note_type = models.CharField(max_length=1,

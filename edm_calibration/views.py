@@ -16,7 +16,6 @@
 
 '''
 from django.contrib.auth.decorators import login_required
-from django.contrib import messages
 from django.forms import modelformset_factory
 from django.forms.models import model_to_dict
 from django.http import QueryDict
@@ -68,6 +67,7 @@ from common_func.LeastSquares import (
     ISO_test_a,
     ISO_test_b,
     ISO_test_c)
+from common_func.validators import try_delete_protected
 from baseline_calibration.models import (
     Uncertainty_Budget_Source)
 
@@ -95,16 +95,9 @@ def clear_cache(request):
 
 @login_required(login_url="/accounts/login") 
 def pillar_survey_del(request, id):
-    try:
-        delete_pillar_survey = uPillar_Survey.objects.get(id=id)
-        if delete_pillar_survey.certificate:
-            delete_pillar_survey.certificate.delete()
-        delete_pillar_survey.delete()
-    except:
-        messages.error(
-            request, 
-            "This action cannot be performed! This record has a dependant record.")
-
+    delete_obj = uPillar_Survey.objects.get(id=id)
+    try_delete_protected(request, delete_obj)
+    
     return redirect('edm_calibration:edm_calibration_home')
 
 
@@ -193,7 +186,7 @@ def calibrate1(request, id):
                     raw_temperature = o['raw_temperature'],
                     raw_pressure = o['raw_pressure'],
                     raw_humidity = o['raw_humidity'],
-                    use_for_distance = o['use_for_distance'])         
+                    use_for_distance = o['use_for_distance'])
                             
         return redirect('edm_calibration:calibrate2', id=id)
 

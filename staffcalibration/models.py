@@ -107,6 +107,7 @@ class StaffCalibrationRecord(models.Model):
     class Meta:
         ordering = ['inst_staff', 'calibration_date']
         unique_together = ['job_number', 'inst_staff', 'calibration_date']
+        verbose_name = "Barcode Staff Calibrations"
 
     def __str__(self):
         return f'{self.inst_staff.staff_number} ({self.calibration_date.strftime("%Y-%m-%d")})'

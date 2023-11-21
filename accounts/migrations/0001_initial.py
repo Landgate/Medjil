@@ -53,7 +53,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('report_type', models.CharField(choices=[('B', 'Baseline Calibration'), ('E', 'EDMI Calibration')], help_text='Report type that the notes will be added to', max_length=1)),
-                ('note_type', models.CharField(choices=[('M', 'Manditory'), ('C', 'Company Specific')], help_text='Notes can be either company specific or appear on all users reports', max_length=1)),
+                ('note_type', models.CharField(choices=[('M', 'All Reports'), ('C', 'Company Specific')], help_text='Notes can be either company specific or appear on all users reports', max_length=1)),
                 ('note', models.TextField(help_text='Notes will be created at the end of each report', verbose_name='Report Note')),
                 ('company', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='accounts.company')),
             ],

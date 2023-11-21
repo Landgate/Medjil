@@ -17,10 +17,8 @@
 '''
 from collections import OrderedDict
 from datetime import date
-from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Q, ProtectedError
+from django.db.models import Q
 from django.forms import formset_factory, modelformset_factory
 from django.forms.models import model_to_dict
 from django.http import QueryDict
@@ -79,7 +77,7 @@ from common_func.LeastSquares import (
     LSA,
     ISO_test_b,
     ISO_test_c)
-from common_func.validators import find_dependent_records
+from common_func.validators import try_delete_protected
 
 
 @login_required(login_url="/accounts/login") 
@@ -113,19 +111,14 @@ def calibration_home(request):
 
 @login_required(login_url="/accounts/login") 
 def pillar_survey_del(request, id):
-    delete_pillar_survey = Pillar_Survey.objects.get(id=id)
-    try:
-        delete_pillar_survey.delete()
-        messages.success(
-            request, "You have successfully deleted: " + f"{delete_pillar_survey}")
-    except ObjectDoesNotExist:
-        messages.warning(request, "No record to delete.")
-    except ProtectedError:
-        dependent_models = find_dependent_records(delete_pillar_survey)
-        messages.error(
-            request, 
-            "This action cannot be performed! This record has a dependant record." 
-            + dependent_models['protected_html'])
+    # unless staff, only allow delete if record belongs to company
+    if request.user.is_staff:
+        delete_obj = Pillar_Survey.objects.get(id=id)
+    else:
+        delete_obj = Pillar_Survey.objects.get(
+            id=id,
+            accreditation__accredited_company = request.user.company)
+    try_delete_protected(request, delete_obj)
     
     return redirect('baseline_calibration:calibration_home')
 
@@ -830,30 +823,21 @@ def uc_budget_create(request):
 
 @login_required(login_url="/accounts/login") 
 def uc_budget_delete(request, id):
+    # unless staff, only allow delete if record belongs to company
     if request.user.is_staff:
-        delete_budget = Uncertainty_Budget.objects.get(id=id)
+        delete_obj = Uncertainty_Budget.objects.get(id=id)
     else:
-        delete_budget = Uncertainty_Budget.objects.get(
+        delete_obj = Uncertainty_Budget.objects.get(
             id=id,
             accredited_company = request.user.company)
-    try:
-        delete_budget.delete()
-        messages.success(
-            request, "You have successfully deleted: " + f"{delete_budget}")
-    except ObjectDoesNotExist:
-        messages.warning(request, "No record to delete.")
-    except ProtectedError:
-        dependent_models = find_dependent_records(delete_budget)
-        messages.error(
-            request, 
-            "This action cannot be performed! This record has a dependant record." 
-            + dependent_models['protected_html'])
-        
+    try_delete_protected(request, delete_obj)
+    
     return redirect('baseline_calibration:uc_budgets')
 
 
 @login_required(login_url="/accounts/login") 
 def accreditations(request):
+    # unless staff, only list records that belong to company
     if request.user.is_staff:
         accreditation_list = Accreditation.objects.all()
     else:
@@ -902,24 +886,15 @@ def accreditation_edit(request, id=None):
 
 @login_required(login_url="/accounts/login") 
 def accreditation_delete(request, id):
+    # unless staff, only allow delete if record belongs to company
     if request.user.is_staff:
-        accreditation = Accreditation.objects.get(id=id)
+        delete_obj = Accreditation.objects.get(id=id)
     else:
-        accreditation = Accreditation.objects.get(
+        delete_obj = Accreditation.objects.get(
             id=id,
             accredited_company = request.user.company)
-    try:
-        accreditation.delete()
-        messages.success(
-            request, "You have successfully deleted: " + f"{accreditation}")
-    except ObjectDoesNotExist:
-        messages.warning(request, "No record to delete.")
-    except ProtectedError:
-        dependent_models = find_dependent_records(accreditation)
-        messages.error(
-            request, 
-            "This action cannot be performed! This record has a dependant record." 
-            + dependent_models['protected_html'])
+
+    try_delete_protected(request, delete_obj)
     
     return redirect('baseline_calibration:accreditations')
 

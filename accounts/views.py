@@ -20,7 +20,7 @@ from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.shortcuts import get_current_site
-from django.utils.encoding import force_bytes, force_str
+from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 from .token_generator import account_activation_token
@@ -29,14 +29,13 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.functions import Lower
-
-# from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import Group
+
+from common_func.validators import try_delete_protected
 from .models import (
     Company, 
     CustomUser, 
     Calibration_Report_Notes)
-from staffcalibration.models import StaffCalibrationRecord
 from .forms import (
     SignupForm, 
     LoginForm, 
@@ -207,12 +206,8 @@ def user_update_for_admin(request, email):
 
 # Delete user - possible by admin/staff only
 def user_delete_for_admin(request, email):
-    try:
-        this_user = get_object_or_404(CustomUser, email=email)
-        this_user.delete()
-        messages.success(request, email + ' has been successfully deleted.')
-    except ObjectDoesNotExist:
-        messages.warning(request, 'This user cannot be deleted.')
+    this_user = get_object_or_404(CustomUser, email=email)
+    try_delete_protected(request, this_user)
 
     return redirect('accounts:user_account')
 
@@ -242,7 +237,7 @@ def company_update(request, id):
 def company_delete(request, id):
     try:
         company = Company.objects.get(id=id)
-        company.delete()
+        try_delete_protected(request, company)
         return redirect('accounts:user_account')
     except ObjectDoesNotExist:
         return redirect('/accounts')
@@ -329,37 +324,7 @@ def calibration_report_notes_edit(request, report_disp, id):
 def calibration_report_notes_delete(request, report_disp, id):
     
     delete_obj = Calibration_Report_Notes.objects.get(id=id)
-            
-    if delete_obj:
-        try:
-            delete_obj.delete()
-            messages.success(request, "You have successfully deleted: " + delete_obj)
-        except:
-            messages.error(request, 
-                           "This action cannot be performed! This record has a dependant record.")
-    else:
-        messages.error(request, "The record does not exists!")
+    try_delete_protected(request, delete_obj)
     
     return redirect ('accounts:calibration_report_notes_list', report_disp=report_disp)
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     

@@ -273,6 +273,7 @@ class EDM_Specification(models.Model):
     class Meta:
         ordering = ['edm_model']
         unique_together = ('edm_model', 'edm_owner')
+        verbose_name = "EDM Models/Specifications"
 
     def __str__(self):
         return f'{self.edm_model.make} {self.edm_model.model} ({self.edm_owner.company_abbrev})'
@@ -315,7 +316,7 @@ class EDM_Inst(models.Model):
         EDM_Specification,
         on_delete=models.PROTECT,
         null=True,
-        verbose_name="EDM Specification"
+        verbose_name="EDM Specifications"
     )
     created_on = models.DateTimeField(auto_now_add=True, null=True)
     modified_on = models.DateTimeField(auto_now=True, null=True)
@@ -323,6 +324,7 @@ class EDM_Inst(models.Model):
     class Meta:
         ordering = ['edm_specs']
         unique_together = ('edm_specs', 'edm_number')
+        verbose_name = "EDM Instruments"
 
     def get_absolute_url(self):
         return reverse('instruments:inst_edm_update', args=[str(self.id)])
@@ -367,6 +369,7 @@ class Prism_Specification(models.Model):
     class Meta:
         ordering = ['prism_model']
         unique_together = ('prism_model', 'prism_owner')
+        verbose_name = "Prism Models/Specifications"
 
     def __str__(self):
         return f'{self.prism_model.make} {self.prism_model.model} ({self.prism_owner.company_abbrev})'
@@ -416,6 +419,7 @@ class Prism_Inst(models.Model):
     class Meta:
         ordering = ['prism_specs']
         unique_together = ('prism_specs', 'prism_number')
+        verbose_name = "Prism Instruments"
 
     def get_absolute_url(self):
         return reverse('instruments:inst_prism_update', args=[str(self.id)])
@@ -468,6 +472,7 @@ class Mets_Specification(models.Model):
     class Meta:
         ordering = ['mets_model']
         unique_together = ('mets_model', 'mets_owner')
+        verbose_name = "Meteorological Instrument Models"
 
     def __str__(self):
         return f'({self.mets_model.inst_type}) {self.mets_model.make} {self.mets_model.model} ({self.mets_owner.company_abbrev})'
@@ -520,6 +525,7 @@ class Mets_Inst(models.Model):
     class Meta:
         ordering = ['mets_specs']
         unique_together = ('mets_specs', 'mets_number')
+        verbose_name = "Meteorological Instruments"
 
     def get_absolute_url(self):
         return reverse('instruments:inst_mets_update', args=[str(self.id)])
@@ -717,6 +723,7 @@ class EDMI_certificate (models.Model):
     
     class Meta:
         ordering = ['edm', 'calibration_date']
+        verbose_name = "EDMI Calibration Certificates"
 
     def save(self, *args, **kwargs):
           self.scf_std_dev = self.scf_uncertainty / self.scf_coverage_factor
@@ -799,6 +806,7 @@ class Mets_certificate (models.Model):
 
     class Meta:
         ordering = ['instrument', 'calibration_date']
+        verbose_name = "Meteorological Calibration Certificates"
 
     def save(self, *args, **kwargs):
          self.zpc_std_dev = self.zpc_uncertainty / self.zpc_coverage_factor

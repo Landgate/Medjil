@@ -20,13 +20,11 @@ from datetime import datetime
 import pandas as pd
 import numpy as np
 from django.utils.safestring import mark_safe
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse
 from django.contrib import messages
-from django.shortcuts import render, redirect, get_object_or_404
-from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
+from django.shortcuts import render, redirect
+from django.core.exceptions import PermissionDenied
 from django.views import generic
-from django.db.models import Avg
-from datetime import date
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.contrib.auth.mixins import LoginRequiredMixin

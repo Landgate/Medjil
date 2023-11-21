@@ -96,6 +96,7 @@ class RangeCalibrationRecord(models.Model):
             ),
         ]
         ordering = ['inst_staff', 'calibration_date']
+        verbose_name = "Staff Range Calibrations"
         # unique_together = ['site_id', 'job_number', 'inst_staff', 'calibration_date']
 
     def __str__(self):
