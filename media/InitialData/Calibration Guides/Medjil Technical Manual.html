@@ -16,11 +16,25 @@
 
 -->
 <!DOCTYPE html>
+<script>
+MathJax = {
+tex: {
+	inlineMath: [['$', '$'], ['\\(', '\\)']],
+	tags: 'ams'
+},
+svg: {
+	fontCache: 'global',
+	displayAlign: 'left',
+	displayIndent: '2.0em'
+	}
+};
+</script>
+<script type="text/javascript" async 
+	src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+</script>
+
 <html>
 <head>
-<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=default'></script>
-<!--<script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script> -->
 </head>
 <body>
 <h1>Medjil v1.0</h1>
@@ -200,8 +214,8 @@
 <p>&emsp;&emsp;scf = Scale Correction Factor (1:x)</p>
 <p>&emsp;&emsp;U = Instrument Unit Length (m) - wavelength/2</p>
 <p>&emsp;&emsp;1C, 2C, 3C and 4C = Cyclic (short periodic) parameters</p>
-<p>By default Medjil estimates only zpc and scf. However, Medjil is also capable of solving for cyclic error parameters (1C,2C,3C,4C) which are depend on wavelength cycle errors. Solving for cyclic error however, is optional as the ability to detect this error reliably depends on the baseline design.
-User should perform additional calibration on "cyclic error" testline if the instrument callibration was performed on Aarau baseline design or Heerbrugg or Hobart design, which was not designed for the unit length of the distance meter being callibrated or the accuracy of the cyclic errors determined on Heerbrugg or Hobart type baselines is not sufficient.</p>
+<p>By default Medjil estimates only zpc and scf. However, Medjil is also capable of solving for cyclic error parameters (1C,2C,3C,4C) which depend on wavelength cycle errors. Solving for cyclic error is optional as the ability to detect this error reliably depends on the baseline design.
+Aarau, Heerbrugg, and Hobart baseline designs are typically tailored for instruments with specific unit lengths. If the instrument calibration was done on a baseline not specifically designed for its unit length, or if the accuracy of cyclic errors are not suitable, the user should consider performing additional calibration on the "cyclic error" testline.</p>
 <div id="Chapter_2_3"></div>
 <h2>2.3 Observation equations</h2>
 <p>For every distance measured on a EDM baseline the following observation equation can be derived:</p>
@@ -442,323 +456,12 @@ The 1.0 ppm stated in recommendation 3 of resolution 3 makes some allowance for 
 <h3>4.2.1 Automatically populated uncertainty sources</h3>
 Medjil automatically populates the uncertainty sources (Table 4.1 and Table 4.2) when processing the calibration of EDM baselines and EDM Instrumentation.</p>
 <br>Table 4.1: Medjil uncertainty budget for calibration of EDM Baseline 
-<table border="1">
-<tr>
-<th align="left">
-<B>Group</B>
-</th>
-<th align="left">
-<B>Description</B>
-</th>
-<th align="left">
-<B>Type</B>
-</th>
-<th align="left">
-<B>Distrubution</B>
-</th>
-<th align="left">
-<B>Uncertainty</B>
-</th>
-<th align="left">
-<B>Units</B>
-</th>
-<th align="left">
-<B>Coverage Factor</B>
-</th>
-<th align="left">
-<B>Degrees of Freedom</B>
-</th>
-</tr>
-<tr>
-<td class="text-left">Certified distances</td>
-<td class="text-left">LSA uncertainty</td>
-<td>A</td>
-<td>N</td>
-<td></td>
-<td>mm</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="text-left">EDM LS zero offset</td>
-<td class="text-left">ZPC uncertainty</td>
-<td>A</td>
-<td>N</td>
-<td></td>
-<td>mm</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="text-left">EDM scale factor</td>
-<td class="text-left">EDMI Reg13 Scale correction factor</td>
-<td>B</td>
-<td>N</td>
-<td></td>
-<td>1:x</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="text-left">EDM scale factor</td>
-<td class="text-left">EDM scale factor (drift over time)</td>
-<td>B</td>
-<td>N</td>
-<td></td>
-<td>1:x</td>
-<td>1.73</td>
-<td>30</td>
-</tr>
-<tr>
-<td class="text-left">EDMI measurement</td>
-<td class="text-left">Distance Instrument Rounding</td>
-<td>B</td>
-<td>R</td>
-<td></td>
-<td>mm</td>
-<td>1.73</td>
-<td>100</td>
-</tr>
-<tr>
-<td class="text-left">EDMI measurement</td>
-<td class="text-left">Linear regression on EDM distance standard deviations</td>
-<td>B</td>
-<td>N</td>
-<td></td>
-<td>mm</td>
-<td>2.04</td>
-<td>30</td>
-</tr>
-<tr>
-<td class="text-left">Heights</td>
-<td class="text-left">Heights</td>
-<td>B</td>
-<td>N</td>
-<td></td>
-<td>mm</td>
-<td>2.04</td>
-<td>30</td>
-</tr>
-<tr>
-<td class="text-left">Humidity</td>
-<td class="text-left">Hygrometer calibrated correction factor</td>
-<td>B</td>
-<td>N</td>
-<td></td>
-<td>%</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="text-left">Humidity</td>
-<td class="text-left">Hygrometer Rounding</td>
-<td>B</td>
-<td>R</td>
-<td></td>
-<td>%</td>
-<td>1.73</td>
-<td>100</td>
-</tr>
-<tr>
-<td class="text-left">Offsets</td>
-<td class="text-left">Offsets</td>
-<td>B</td>
-<td>N</td>
-<td></td>
-<td>mm</td>
-<td>2.04</td>
-<td>30</td>
-</tr>
-<tr>
-<td class="text-left">Pressure</td>
-<td class="text-left">Barometer calibrated correction factor</td>
-<td>B</td>
-<td>N</td>
-<td></td>
-<td>hPa</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="text-left">Pressure</td>
-<td class="text-left">Barometer Rounding</td>
-<td>B</td>
-<td>R</td>
-<td></td>
-<td>hPa</td>
-<td>1.73</td>
-<td>100</td>
-</tr>
-<tr>
-<td class="text-left">Temperature</td>
-<td class="text-left">Thermometer calibrated correction factor</td>
-<td>B</td>
-<td>N</td>
-<td></td>
-<td>°C</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="text-left">Temperature</td>
-<td class="text-left">Thermometer Rounding</td>
-<td>B</td>
-<td>R</td>
-<td></td>
-<td>°C</td>
-<td>1.73</td>
-<td>100</td>
-</tr>
-</table>
+<img src="\media\TechnicalManual\tbaseline\Tech manual\Picture_4_2.png" alt="edjil uncertainty budget for calibration of EDM Baseline ">
+<br>
 <br>Table 4.2: Medjil uncertainty budget for calibration of EDM Instrumentation
-<table border="1">
-<tr>
-<th align="left">
-<B>Group</B>
-</th>
-<th align="left">
-<B>Description</B>
-</th>
-<th align="left">
-<B>Type</B>
-</th>
-<th align="left">
-<B>Distribution</B>
-</th>
-<th align="left">
-<B>Uncertainty</B>
-</th>
-<th align="left">
-<B>Units</B>
-</th>
-<th align="left">
-<B>Coverage Factor</B>
-</th>
-<th align="left">
-<B>Degrees of Freedom</B>
-</th>
-</tr>
-<tr>
-<td class="text-left">Certified distances</td>
-<td class="text-left">Uncertainty of Certified Distance</td>
-<td>A</td>
-<td>N</td>
-<td></td>
-<td>mm</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="text-left">EDMI calibration</td>
-<td class="text-left">Uncertainty of LSA EDMI correction</td>
-<td>A</td>
-<td>N</td>
-<td></td>
-<td>mm</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="text-left">EDMI measurement</td>
-<td class="text-left">Distance Instrument Rounding</td>
-<td>B</td>
-<td>R</td>
-<td></td>
-<td>mm</td>
-<td>1.73</td>
-<td>100</td>
-</tr>
-<tr>
-<td class="text-left">EDMI measurement</td>
-<td class="text-left">Linear regression on EDM distance standard deviations</td>
-<td>B</td>
-<td>N</td>
-<td></td>
-<td>mm</td>
-<td>2.04</td>
-<td>30</td>
-</tr>
-<tr>
-<td class="text-left">Heights</td>
-<td class="text-left">Height Differences</td>
-<td>B</td>
-<td>N</td>
-<td></td>
-<td>mm</td>
-<td>2.04</td>
-<td>30</td>
-</tr>
-<tr>
-<td class="text-left">Humidity</td>
-<td class="text-left">Hygrometer calibrated correction factor</td>
-<td>B</td>
-<td>N</td>
-<td></td>
-<td>%</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="text-left">Humidity</td>
-<td class="text-left">Hygrometer Rounding</td>
-<td>B</td>
-<td>R</td>
-<td></td>
-<td>%</td>
-<td>1.73</td>
-<td>100</td>
-</tr>
-<tr>
-<td class="text-left">Offsets</td>
-<td class="text-left">Offsets</td>
-<td>B</td>
-<td>N</td>
-<td></td>
-<td>mm</td>
-<td>2.04</td>
-<td>30</td>
-</tr>
-<tr>
-<td class="text-left">Pressure</td>
-<td class="text-left">Barometer calibrated correction factor</td>
-<td>B</td>
-<td>N</td>
-<td></td>
-<td>hPa</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="text-left">Pressure</td>
-<td class="text-left">Barometer Rounding</td>
-<td>B</td>
-<td>R</td>
-<td></td>
-<td>hPa</td>
-<td>1.73</td>
-<td>100</td>
-</tr>
-<tr>
-<td class="text-left">Temperature</td>
-<td class="text-left">Thermometer calibrated correction factor</td>
-<td>B</td>
-<td>N</td>
-<td></td>
-<td>°C</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="text-left">Temperature</td>
-<td class="text-left">Thermometer Rounding</td>
-<td>B</td>
-<td>R</td>
-<td></td>
-<td>°C</td>
-<td>1.73</td>
-<td>100</td>
-</tr>
-</table>
+<img src="\media\TechnicalManual\tbaseline\Tech manual\Picture_4_3.png" alt="Medjil uncertainty budget for calibration of EDM Instrumentation">
+<br>
+<br>
 <p>The values for these automatically populated uncertainty sources are derived as follows:</p>
 <ul STYLE="margin:30px">
 <li>Certified distances - Least Squares Adjustment (LSA) uncertainty - The uncertainty of each inter-pillar distance is uniquely assigned from the diagonal elements of the Cofactormatrix derived from the least squares adjustment of the baseline calibration. The degrees of freedom is the equal to the degrees of freedom of the calibration of the baseline and the coverage factor is derived from  t-student distribution at 95% and selected degrees of freedom t<sub>(95%,dof)</sub>
@@ -1571,18 +1274,3 @@ A rectangular distribution represents an arbitrary outcome that lies between cer
 </body>
 </html>
 
-<script>
-MathJax = {
-tex: {
-	inlineMath: [['$', '$'], ['\\(', '\\)']],
-	tags: 'ams'
-},
-svg: {
-	fontCache: 'global',
-	displayAlign: 'left',
-	displayIndent: '1.0em'
-	}
-};
-</script>
-<script type="text/javascript" id="MathJax-script" async
-src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
