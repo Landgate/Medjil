@@ -1,7 +1,7 @@
 <!--
 
    © 2023 Western Australian Land Information Authority
-
+F
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
    You may obtain a copy of the License at
@@ -162,7 +162,7 @@ svg: {
 <p>&emsp;&emsp;Hz<sub>ij</sub> = angular direction observed at pillar i to pillar j</p>
 <p>&emsp;&emsp;[E<sub>j</sub>,N<sub>j</sub>] = set of arbitrary coordinates (Easting and Northing) of pillar j</p>
 <p>Then the offset of pillar j is calculated according to:</p>
-<div>$$O_j=d_{j}sin\left(A_{1n}-A_{j}\right)\ \ \ (Eq. 1.6)$$ </div>
+<div>$$ O_j=d_{j}sin\left(A_{1n}-A_{j}\right)\ \ \ (Eq. 1.6) $$ </div>
 <p>Where:</p>
 <p>&emsp;&emsp;d<sub>j</sub> = horizontal distance between pillars i and j</p>
 <p>&emsp;&emsp;A<sub>j</sub> = derived bearing using coordinates of pillars: E<sub>1</sub>,N<sub>1</sub> and E<sub>j</sub>,N<sub>j</sub>
@@ -175,8 +175,15 @@ svg: {
 <p>Pillar coordinates are required and used to determine the baseline location in order to derive geometric correction to the distances. Medjil uses an average latitude of the supplied pillar coordinates to calculate the geometric corrections of surveyed distances. (See section 3.3)</p>
 <div id="Chapter_1_7"></div>
 <h2>1.7 Interlaboratory comparison</h2>
-<p>Should we explain mechanism of comparing different baselines?</p>
+<p>To assess the appropriateness of EDMI calibration outcomes in accordance with ISO 17025:2017, it is imperative to conduct an interlaboratory comparison. Therfore, the EDMI calibrations needs to be undertaken and compare onto other EDM baselines (labortories).  Use the E<sub>n</sub> ('Error normalised') to evaluate the EDMI calibration results:</p>
+<div>$$ E_n=\frac{(x_{lab}-x_{ref})}{(U_{lab}^2+U_{ref}^2)}\ \ \ (Eq. 1.7) $$ </div>
+<p>Where:</p>
+<p>&emsp;&emsp;x<sub>lab</sub> = xxx</p>
+<p>&emsp;&emsp;x<sub>ref</sub> = xxx</p>
+<p>&emsp;&emsp;U<sub>lab</sub> = uncertainty of the lab (baseleline)</p>
+<p>&emsp;&emsp;U<sub>ref</sub> = uncertainty of the referance (instrumentaion)</p>
 <br>
+<p>If the |E<sub>n</sub>| &#8804; 1 the results are satiscacory (results are comperable between baselines) and if the |E<sub>n</sub>| > 1 the results are unsatisfactor.y</p>
 </div>
 <div id="Chapter_2">
 <!-- CHAPTER 2 -->
@@ -206,7 +213,7 @@ svg: {
 <p>The precision of an EDM instrument dependents on the precision of the internal phase measurements. Unwanted interference through electronic/optical cross talk or multi-path effects of the transmitted signal on to the received signal causes cyclic errors. The major form of the cyclic error is sinusoidal with a wavelength equal to the unit length of the instrument. The unit length is the scale on which the EDM instrument measures the distance and is derived from the fine measuring frequency. Unit length is equal to one half of the modulation wavelength.</p>
 <div id="Chapter_2_2"></div>
 <h2>2.2 Mathematical model of the EDM Instrument Correction (IC)</h2>
-<div>$$ IC=zpc+scf*D+1C\sin{\left(2\pi\frac{D}{U}\right)+2C\cos{\left(2\pi\frac{D}{U}\right)+3C\sin{\left(4\pi\frac{D}{U}\right)+4C\cos{\left(4\pi\frac{D}{U}\right)}}}}\ \ \ (Eq. 2.1)$$ </div>
+<div>$$ IC=zpc+scf*D+1C\sin{\left(2\pi\frac{D}{U}\right)+2C\cos{\left(2\pi\frac{D}{U}\right)+3C\sin{\left(4\pi\frac{D}{U}\right)+4C\cos{\left(4\pi\frac{D}{U}\right)}}}}\ \ \ (Eq. 2.1) $$ </div>
 <p>Where:</p>
 <p>&emsp;&emsp;IC = Instrument Correction</p>
 <p>&emsp;&emsp;D = Distance</p>
@@ -228,10 +235,10 @@ Aarau, Heerbrugg, and Hobart baseline designs are typically tailored for instrum
 <p>Further the n observation equations for all distances measured on a certified baseline can be expressed in a matrix form as</p>
 <div>$$ V = AX + W\ \ \ (Eq. 2.3)$$ </div>
 <p>Where:</p>
-<div>$$ V=\left[\begin{matrix}v_1\\v_2\\...\\v_n\\\end{matrix}\right]\ \ \ (Eq. 2.4)$$ </div>
+<div>$$ V=\left[\begin{matrix}v_1\\v_2\\...\\v_n\\\end{matrix}\right]\ \ \ (Eq. 2.4) $$ </div>
 <div>$$ A=\left[\begin{matrix}1&D_1&\sin{2\pi\frac{D_1}{U}}&\cos{2\pi\frac{D_1}{U}}&\sin{4\pi\frac{D_1}{U}}&\cos{4\pi\frac{D_1}{U}}\\1&D_2&\sin{2\pi\frac{D_2}{U}}&\cos{2\pi\frac{D_2}{U}}&\sin{4\pi\frac{D_2}{U}}&\cos{4\pi\frac{D_2}{U}}\\...&...&...&...&...&...\\1&D_n&\sin{2\pi\frac{D_n}{U}}&\cos{2\pi\frac{D_n}{U}}&\sin{4\pi\frac{D_n}{U}}&\cos{4\pi\frac{D_n}{U}}\\\end{matrix}\right]\ \ \ (Eq. 2.5)$$ </div>
-<div>$$ W=\left[\begin{matrix}D_1^C-D_1\\D_2^C-D_2\\\ldots\\D_n^C-D_n\\\end{matrix}\right]\ \ \ (Eq. 2.6)$$ </div>
-<div>$$ X=\left[\begin{matrix}zpc\\scf\\1C\\2C\\3C\\4C\\\end{matrix}\right]\ \ \ (Eq. 2.7)$$ </div>
+<div>$$ W=\left[\begin{matrix}D_1^C-D_1\\D_2^C-D_2\\\ldots\\D_n^C-D_n\\\end{matrix}\right]\ \ \ (Eq. 2.6) $$ </div>
+<div>$$ X=\left[\begin{matrix}zpc\\scf\\1C\\2C\\3C\\4C\\\end{matrix}\right]\ \ \ (Eq. 2.7) $$ </div>
 <p>A weight matrix can also be determined for the observed distances as:</p>
 <div>$$ p=\left[\begin{matrix}p_1&0&0&0\\0&p_2&0&0\\...&...&...&...\\0&0&0&p_n\\\end{matrix}\right]\ \ \ (Eq. 2.8)$$ </div>
 <p>Where:</p>
@@ -456,7 +463,8 @@ The 1.0 ppm stated in recommendation 3 of resolution 3 makes some allowance for 
 <h3>4.2.1 Automatically populated uncertainty sources</h3>
 Medjil automatically populates the uncertainty sources (Table 4.1 and Table 4.2) when processing the calibration of EDM baselines and EDM Instrumentation.</p>
 <br>Table 4.1: Medjil uncertainty budget for calibration of EDM Baseline 
-<img src="\media\TechnicalManual\tbaseline\Tech manual\Picture_4_2.png" alt="edjil uncertainty budget for calibration of EDM Baseline ">
+<br>
+<img src="\media\TechnicalManual\tbaseline\Tech manual\Picture_4_2.png" alt="Medjil uncertainty budget for calibration of EDM Baseline ">
 <br>
 <br>Table 4.2: Medjil uncertainty budget for calibration of EDM Instrumentation
 <img src="\media\TechnicalManual\tbaseline\Tech manual\Picture_4_3.png" alt="Medjil uncertainty budget for calibration of EDM Instrumentation">
