@@ -37,8 +37,8 @@ svg: {
 <head>
 </head>
 <body>
-<h1>Calibration of EDM Instrumentation and Baseline Technical Manual</h1>
-<h1>LANDGATE</h1>
+<h1>Calibration of Survey Instrumentation Technical Manual</h1>
+<h1>Copyright © 2020-2023 Western Australian Land Information Authority</h1>
 <h1>Last updated November 2023</h1>
 <hr>
 <br>
@@ -71,26 +71,30 @@ svg: {
 <div id="Chapter_0">
 <!-- INTRO -->
 <h1>Introduction</h1>
-<p>The Medjil portal was developed by the Western Australian Land Information Authority (LANDGATE) in collaboration with other jurisdictions. The portal allows the calibration of</p>
+<p>The Medjil portal was developed by <a href="https://www.landgate.wa.gov.au/">Landgate</a> (the Western Australian Land Information Authority) in collaboration with the <a href="https://www.icsm.gov.au"/>Intergovernmental Committee on Surveying and Mapping</a> (ICSM) jurisdictions.</p>
+<p>The portal allows the calibration of the following:</p>
 <ul STYLE="margin:30px">
-<li>EDM Baselines using standardised instrument</li>
-<li>EDM Instrumentation using a standardised EDM Baseline</li>
+<li>EDM Instrumentation using standardised EDM Baselines</li>
+<li>EDM Baselines using standardised instruments</li>
+<li>Levelling staff using staff calibration range facility</li>
 </ul>
-<p>The purpose of calibrating the EDM Instrumentation (EDMI) is to establish the legal traceability of a user's instrument to the national standard of length provided by the National Measurment Institute (NMI). This is accomplished by determining the Instrument Correction and its expanded uncertainty (at 95% confidence level) through a survey procedure conducted at a certified EDM Baseline. The certification of EDM Baselines are maintained by individual States and Territories.</p>
-<p>The certification (calibration) of EDM baselines establishes updated or improved distances between its pillars. EDM Baslines and EDMI calibration should be conducted on a regular basis. The calibration of an EDMI provides distance correction specific to that instrumentation that are to be applied to measurements taken using that instrumentation.</p>
-<p>The Medjil portal offers tools and reports for both EDM Baseline and EDMI calibrations. Please refer to the specific guides that provide field calibration instructions.</p>
-<p>This document contains reference information, including mathematical equations, procedures, algorithms, and computations adopted by the portal. The calibration procedures are based on the following resources:</p>
+<p>The purpose of calibrating the EDM Instrumentation (EDMI) is to establish the legal traceability of a user's instrument to the national standard of length provided by the National Measurement Institute (NMI). This is accomplished by determining the Instrument Correction and its uncertainty through a survey procedure conducted at a certified EDM Baseline. The certification of EDM Baselines are maintained by individual States and Territories.</p>
+<p>The certification (or calibration) of EDM baselines establishes updated (or improved) distances between their pillars. The calibration of an EDMI provides distance correction specific to that instrumentationm which are to be applied to measurements taken using that instrumentation (eg. EDM and prism). EDM Baselines and EDMI calibration should be conducted on a regular basis. Check your legislative requirements in your State and Territory for compliance.</p>
+<p>The Medjil portal provides tools and reports for Levelling Staff, EDM Baseline and EDMI calibration procedures. Please refer to the specific guides that provide field calibration instructions.</p>
+<p>This document includes reference information, encompassing mathematical equations, procedures, algorithms, and computations utilized by the Medjil portal. The calibration procedures are based on the following resources:</p>
 <ul STYLE="margin:30px">
 <li>“Instructions on the Verification of Electronic Distance Meters according to section 10, Weights and Measures (National Standards) Act, 1960” written by Dr. J. M. Rüeger, School of Surveying, University of New South Wales. P.O. Box 1, Kensington, N.S.W. 2033</li>
 <li>“Instructions on the measurements of subsidiary standards of length in the form of EDM calibration baselines using distance meters as prescribed by the National Standards Commission: written by Dr. J.M.Rüeger, School of Surveying, University of New South Wales. P.O. Box 1, Kensington, N.S.W. 2033</li>
 <li>“Electronic Distance Measurements” J.M.Rüeger</li>
 <li>Draft Verifying Authorities Handbook 2001</li>
 <li>IAG resolutions at it’s XXIIth General Assembly in Birmingham, 1999</li>
-<li>Optics and optical instruments - Field procedures for testing geodetic and surveying instruments ISO 17123-4:2012</li>
-<li>Review of the Western Australian BASELINE Calibration Software for Electronic Distance Measuring (EDM) Instruments Prepared for the Surveyor General of New South WalesJ.M.Rüeger 2019</li>
+<li>Optics and optical instruments - Field procedures for testing geodetic and surveying instruments, ISO 17123-4:2012</li>
+<li>Evaluation of measurement data - Guide to the expression of uncertainty in measurement (GUM), JCGM 100:2008 </li>
+<li>Review of the Western Australian BASELINE Calibration Software for Electronic Distance Measuring (EDM) Instruments prepared for the Surveyor General of New South Wales by J.M.Rüeger 2019</li>
 </ul>
-<p>The Draft Verifying Authorities (VA) Handbook 2001 is intended for use by verifying authorities which are appointed under the provisions of Regulation 73 of the National Measurement Regulations 1999 in accordance with the National Measurement Act 1960 to verify reference standards of measurements under the provisions of Regulation 13, 30 and 31. The determination of the a priori standard deviations and the analysis of uncertainties of EDM measurements are based on the general guidelines within this handbook.</p>
-<p>All uncertainties are specified at the 95% confidence level. Users have the flexibility to adopt or modify default uncertainties and associated traceability statements as required. For more information on Medjil development and contribution, please visit the <a href="https://github.com/Landgate/Medjil">GitHub</a> repository.</p>
+<p>The Draft Verifying Authorities (VA) Handbook 2001 is intended for use by verifying authorities which are appointed under the provisions of Regulation 73 of the National Measurement Regulations 1999 in accordance with the National Measurement Act 1960 to verify reference standards of measurements under the provisions of Regulation 13, 30 and 31. The determination of the a priori standard deviations and the analysis of uncertainties of EDM measurements are based on the general guidelines within this handbook, ISO standards and GUM.</p>
+<p>In this manual <b>'uncertainty'</b> means <b>'expanded uncertainty'</b> specified at the 95% confidence level. Standard deviation is specyfied at 68% confidence level. Users have the flexibility to adopt or modify default uncertainties and associated traceability statements as required.</p>
+<p>For information on Medjil development and contribution, please refer to the <a href="https://github.com/Landgate/Medjil">GitHub</a>repository.</p>
 <br>
 </div>
 <div id="Chapter_1">
