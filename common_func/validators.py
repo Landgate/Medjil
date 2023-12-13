@@ -58,5 +58,13 @@ def try_delete_protected(request, delete_obj):
         )
         messages.error(request, error_message)
     
+def validate_file_size(value):
+    filesize= value.size
+    
+    if filesize > 10485760: 
+        # 10 * 1024 * 1024 bytes
+        raise ValidationError("The maximum file size that can be uploaded is 10MB")
+    else:
+        return value
 
 

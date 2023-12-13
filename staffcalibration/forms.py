@@ -71,7 +71,7 @@ class StaffCalibrationRecordFormOnTheGo(forms.ModelForm):
         user = kwargs.pop('user')
         super(StaffCalibrationRecordFormOnTheGo, self).__init__(*args, **kwargs)
          
-        print(Staff.objects.filter(staff_owner=user.company))
+        #print(Staff.objects.filter(staff_owner=user.company))
         if not user.is_staff:
             # self.fields['inst_staff'].queryset = Staff.objects.filter(staff_owner=user.company)
             self.fields['inst_level'].queryset = DigitalLevel.objects.filter(level_owner=user.company)

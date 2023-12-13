@@ -27,7 +27,7 @@ from django.conf import settings
 from accounts.models import (
     CustomUser,
     Company)
-from common_func.validators import validate_profanity
+from common_func.validators import *
 from datetime import date
 
 
