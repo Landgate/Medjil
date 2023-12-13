@@ -42,7 +42,6 @@ def try_delete_protected(request, delete_obj):
         related_records = [obj for obj in e.protected_objects]
         html = ""
         for model in related_models:
-            print(model)
             html += "<ul>"
             html += f"<li>Table: { model._meta.verbose_name }</li>"
             html += "<ul>"
@@ -57,3 +56,12 @@ def try_delete_protected(request, delete_obj):
             + html
         )
         messages.error(request, error_message)
+    
+
+def validate_csv_text(value):
+    numbers = value.split(',')
+    for num in numbers:
+        try:
+            float_num = float(num.strip())
+        except ValueError:
+            raise ValidationError(f'{num} is not a valid number.')
