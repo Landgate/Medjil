@@ -82,9 +82,19 @@ class Migration(migrations.Migration):
                         verbose_name="EDM Custodian",
                     ),
                 ),
+                (
+                    "edm_specs",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="instruments.edm_specification",
+                        verbose_name="EDM Specifications",
+                    ),
+                ),
             ],
             options={
-                "ordering": ["edm_specs"],
+                options={"ordering": ["edm_specs"], "verbose_name": "EDM Instruments"},
             },
         ),
         migrations.CreateModel(
@@ -435,6 +445,7 @@ class Migration(migrations.Migration):
             options={
                 "ordering": ["prism_model"],
                 "unique_together": {("prism_model", "prism_owner")},
+                "verbose_name": "Prism Models/Specifications",
             },
         ),
         migrations.CreateModel(
@@ -497,6 +508,7 @@ class Migration(migrations.Migration):
             options={
                 "ordering": ["prism_specs"],
                 "unique_together": {("prism_specs", "prism_number")},
+                "verbose_name": "Prism Instruments"},
             },
         ),
         migrations.CreateModel(
@@ -569,6 +581,7 @@ class Migration(migrations.Migration):
             options={
                 "ordering": ["mets_model"],
                 "unique_together": {("mets_model", "mets_owner")},
+                "verbose_name": "Meteorological Instrument Models",
             },
         ),
         migrations.CreateModel(
@@ -631,6 +644,7 @@ class Migration(migrations.Migration):
             options={
                 "ordering": ["mets_specs"],
                 "unique_together": {("mets_specs", "mets_number")},
+                "verbose_name": "Meteorological Instruments",
             },
         ),
         migrations.CreateModel(
@@ -724,6 +738,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 "ordering": ["instrument", "calibration_date"],
+                "verbose_name": "Meteorological Calibration Certificates",
             },
         ),
         migrations.CreateModel(
@@ -1128,6 +1143,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 "ordering": ["edm", "calibration_date"],
+                "verbose_name": "EDMI Calibration Certificates",
             },
         ),
         migrations.CreateModel(
@@ -1284,17 +1300,8 @@ class Migration(migrations.Migration):
             options={
                 "ordering": ["edm_model"],
                 "unique_together": {("edm_model", "edm_owner")},
+                "verbose_name": "EDM Models/Specifications",
             },
-        ),
-        migrations.AddField(
-            model_name="edm_inst",
-            name="edm_specs",
-            field=models.ForeignKey(
-                null=True,
-                on_delete=django.db.models.deletion.PROTECT,
-                to="instruments.edm_specification",
-                verbose_name="EDM Specification",
-            ),
         ),
         migrations.CreateModel(
             name="Staff",

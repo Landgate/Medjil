@@ -16,6 +16,7 @@
 
 '''
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.forms import modelformset_factory
 from django.forms.models import model_to_dict
 from django.http import QueryDict
@@ -55,12 +56,14 @@ from .forms import (
     ChangeSurveyFiles,
     EDM_ObservationForm,
     PillarSurveyApprovals,
-    EDMI_certificateForm
+    EDMI_certificateForm,
+    Inter_ComparisonForm,
     )
 from .models import (
     EDMI_certificate,
     uPillar_Survey,
-    uEDM_Observation
+    uEDM_Observation,
+    Inter_Comparison
     )
 from common_func.LeastSquares import (
     LSA,
@@ -615,3 +618,109 @@ def report(request, id):
     context = {'ps_approvals':ps_approvals,
                'html_report': html_content}
     return render(request, 'edm_calibration/display_report.html', context)
+
+
+@login_required(login_url="/accounts/login") 
+def intercomparison_home(request):
+    if request.user.is_superuser:
+        intercomparisons = Inter_Comparison.objects.all()
+    else:        
+        intercomparisons = Inter_Comparison.objects.select_related('edm').filter(
+            edm__edm_specs__edm_owner = request.user.company.id)
+        
+    context = {
+        'intercomparisons': intercomparisons}
+    return render(request, 'edm_calibration/intercomparison_home.html', context)
+    
+
+@login_required(login_url="/accounts/login") 
+def intercomparison_report(request, id):
+    # This uses the html report saved to the database to reload the report
+    comparison = get_object_or_404(Inter_Comparison, pk=id)
+    
+    html_content = comparison.html_report
+    context = {'html_report': html_content}
+    return render(request, 'edm_calibration/intercomparison_report_display.html', context)
+
+
+@login_required(login_url="/accounts/login") 
+def intercomparison_del(request, id):
+    delete_obj = Inter_Comparison.objects.get(id=id)
+    try_delete_protected(request, delete_obj)
+    
+    return redirect('edm_calibration:intercomparison_home')
+
+
+@login_required(login_url="/accounts/login") 
+def intercomparison(request, id=None):
+    # If id is provided, get the existing else create a new one
+    if id=='None':
+        ini_data = {'to_date':date.today().isoformat()}
+        form = Inter_ComparisonForm(
+            request.POST or None,
+            user=request.user,
+            initial=ini_data)
+    else:
+        qs = get_object_or_404(Inter_Comparison, pk=id) 
+        form = Inter_ComparisonForm(
+            request.POST or None,
+            instance = qs,
+            user = request.user)
+    
+    if form.is_valid():
+        # If the form is submitted and valid produce the report
+        distances = [
+            float(d) for d in form.cleaned_data['sample_distances'].split(',')
+            ]
+        distances = sorted(set(distances))
+        comparisons = []
+        certificates = EDMI_certificate.objects.filter(
+            edm=form.cleaned_data['edm'],
+            prism=form.cleaned_data['prism'],
+            calibration_date__gt=form.cleaned_data['from_date'],
+            calibration_date__lt=form.cleaned_data['to_date']
+        )
+        
+        # raise a warning if there are not enough records to complete a comparison
+        if len(certificates) < 2:
+            msg = "Your request must return more than one calibration record for an intercomparison. "
+            if certificates:                
+                msg+= ("Only the following record was returned: " +
+                       f"<ul><li> { certificates[0] }</li></ul>")                
+            messages.warning(request, msg)
+        else:
+            # loop through all records and compare each to every other one.
+            for i, cert1 in enumerate(certificates):
+                for cert2 in certificates[i + 1:]:
+                    comparison = {}
+                    for dist in distances:
+                        (lab, lab_uc) = cert1.apply_calibration(dist)
+                        (ref, ref_uc) = cert2.apply_calibration(dist)
+                        e = ((lab - ref)/
+                             sqrt(lab_uc**2 + ref_uc**2))
+                        comparison[dist] = {
+                            'lab':lab,
+                            'lab_uc':lab_uc,
+                            'ref':ref,
+                            'ref_uc':ref_uc,
+                            'E':e}
+                    comparisons.append(
+                        {'lab': cert1,
+                         'ref': cert2,
+                         'comparison': comparison})
+            context = {'form': form.cleaned_data,
+                       'certificates':certificates,
+                       'comparisons' : comparisons}
+            html_report = render_to_string(
+                'edm_calibration/intercomparison_report.html', context)
+            instance = form.save(commit=False)
+            instance.html_report = html_report
+            instance.save()
+            
+            return render(request, 
+                          'edm_calibration/intercomparison_report_display.html',
+                          {'html_report': html_report})
+                
+        form.save()
+
+    return render(request, 'edm_calibration/intercomparison_edit.html', {'form': form})

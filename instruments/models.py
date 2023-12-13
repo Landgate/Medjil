@@ -29,6 +29,7 @@ from accounts.models import (
     Company)
 from common_func.validators import validate_profanity
 from datetime import date
+from math import sin, cos, pi
 
 
 User = settings.AUTH_USER_MODEL
@@ -310,12 +311,12 @@ class EDM_Inst(models.Model):
     )
     comment = models.CharField(
         validators=[validate_profanity],
-        max_length=500, 
+        max_length=256, 
         null=True, blank=True)
     edm_specs = models.ForeignKey(
         EDM_Specification,
         on_delete=models.PROTECT,
-        null=True,
+        null=True, blank=True,
         verbose_name="EDM Specifications"
     )
     created_on = models.DateTimeField(auto_now_add=True, null=True)
@@ -751,6 +752,24 @@ class EDMI_certificate (models.Model):
          
     def get_absolute_url(self):
         return reverse('medjil:EDMI-Certificate-detail', args=[str(self.id)])
+    
+    def apply_calibration(self, dist):
+        unit_length = self.edm.edm_specs.unit_length
+        uc = (self.zpc_uncertainty +
+            dist * self.scf_uncertainty +            
+            + self.cyc_1_uncertainty * sin(2*pi*dist/unit_length) 
+            + self.cyc_2_uncertainty * cos(2*pi*dist/unit_length)
+            + self.cyc_3_uncertainty * sin(4*pi*dist/unit_length)
+            + self.cyc_4_uncertainty * cos(4*pi*dist/unit_length)
+        )
+        corrected_obs = (self.zpc_uncertainty +
+            dist * self.scf_uncertainty +            
+            + self.cyclic_one * sin(2*pi*dist/unit_length) 
+            + self.cyclic_two * cos(2*pi*dist/unit_length)
+            + self.cyclic_three * sin(4*pi*dist/unit_length)
+            + self.cyclic_four * cos(4*pi*dist/unit_length)
+        )
+        return (corrected_obs, uc)
 
     def __str__(self):
         return f'{self.edm} ({self.calibration_date.strftime("%Y-%m-%d")})'
@@ -907,7 +926,7 @@ class Specifications_Recommendations(models.Model):
         verbose_name='D term',     
         null=True, blank=True)
     
-    remark = models.CharField(max_length=265, null=True, blank=True,
+    remark = models.CharField(max_length=500, null=True, blank=True,
                               verbose_name='Remark')
     
     

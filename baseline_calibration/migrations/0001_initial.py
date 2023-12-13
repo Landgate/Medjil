@@ -49,6 +49,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 'ordering': ['accredited_company', 'valid_to_date'],
+                "verbose_name": "Company Accreditations",
             },
         ),
         migrations.CreateModel(
@@ -97,6 +98,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 'ordering': ['baseline', 'survey_date'],
+                "verbose_name": "Baseline Calibrations",
             },
         ),
         migrations.CreateModel(
@@ -109,6 +111,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 'ordering': ['name'],
+                "verbose_name": "Uncertainty Budgets",
             },
         ),
         migrations.CreateModel(
@@ -202,6 +205,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 'ordering': ['pillar_survey__survey_date', 'to_pillar__order'],
+                "verbose_name": "Baseline Certified Distances",
             },
         ),
         migrations.AddConstraint(

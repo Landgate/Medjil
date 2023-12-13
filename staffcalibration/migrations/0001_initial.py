@@ -58,6 +58,7 @@ class Migration(migrations.Migration):
             options={
                 'ordering': ['inst_staff', 'calibration_date'],
                 'unique_together': {('job_number', 'inst_staff', 'calibration_date')},
+                "verbose_name": "Barcode Staff Calibrations",
             },
         ),
         migrations.CreateModel(

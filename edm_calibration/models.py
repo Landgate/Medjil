@@ -23,7 +23,7 @@ from datetime import date
 from baseline_calibration.models import (
     Uncertainty_Budget,
     Pillar_Survey)
-from common_func.validators import validate_profanity
+from common_func.validators import validate_profanity, validate_csv_text
 from instruments.models import (
     EDM_Inst,
     Prism_Inst,
@@ -125,7 +125,7 @@ class uPillar_Survey(models.Model):
               blank=True, 
               verbose_name= 'Scanned fieldnotes')
     
-    certificate = models.ForeignKey(
+    certificate = models.OneToOneField(
          EDMI_certificate, on_delete = models.SET_NULL , null = True, blank=True)
     
     data_entered_person = models.CharField(
@@ -198,3 +198,48 @@ class uEDM_Observation(models.Model):
     
     def __str__(self):
        return f'({self.pillar_survey}): {self.from_pillar} → {self.to_pillar})'
+   
+    
+class Inter_Comparison(models.Model):
+    edm = models.ForeignKey(
+        EDM_Inst, on_delete = models.CASCADE, 
+        blank=False, null = False,
+        help_text="EDM used for interlaboratory comparison",
+        verbose_name= 'EDM')
+    prism = models.ForeignKey(
+        Prism_Inst, on_delete = models.CASCADE, 
+        blank=False, null = False,
+        help_text="Prism used for interlaboratory comparison",
+        verbose_name= 'Prism')
+    from_date = models.DateField(null=False, blank=False)
+    to_date = models.DateField(null=False, blank=False)
+    job_number = models.CharField(max_length=25,
+              help_text="Job reference eg., JN 20212216",
+              validators=[validate_profanity],
+              unique=False,
+              blank=True, null = True,
+              verbose_name= 'Job Number/Reference'
+              )
+    sample_distances = models.CharField(
+        blank=False, null=False,
+        validators=[validate_csv_text],
+        max_length=255,
+        default="20, 300, 600",
+        help_text="Comma seperated list of distances",
+        verbose_name= 'Sample Distances (m)')
+    html_report = models.TextField(blank=True, null=True)
+    
+    created_on = models.DateTimeField(auto_now_add=True, null=True)
+    modified_on = models.DateTimeField(auto_now=True, null=True)
+    
+    class Meta:
+       ordering = ['edm']
+       constraints = [
+           models.CheckConstraint(
+               check=(models.Q(to_date__gt=models.F('from_date'))),
+               name='The from date must be before the to date'),
+           ]
+       verbose_name= 'Interlaboratory comparison'
+    
+    def __str__(self):
+       return f'{self.edm}'

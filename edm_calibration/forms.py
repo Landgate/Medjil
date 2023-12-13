@@ -22,7 +22,8 @@ from django.db.models import Q
 # import Models
 from .models import (
     uPillar_Survey,
-    uEDM_Observation)
+    uEDM_Observation,
+    Inter_Comparison)
 
 from baseline_calibration.models import Uncertainty_Budget
 from instruments.models import (
@@ -173,9 +174,35 @@ class PillarSurveyApprovals(forms.ModelForm):
             'data_checked_person',
             'data_checked_position', 
             'data_checked_date']
+
         widgets = {
             'data_entered_date': forms.DateInput(
-                attrs={'type': 'date', 'input_formats': ['%d-%m-%Y']}),
+                attrs={'type': 'date', 'format': '%d-%m-%Y'}),
             'data_checked_date': forms.DateInput(
-                attrs={'type': 'date', 'input_formats': ['%d-%m-%Y']}),
+                attrs={'type': 'date', 'format': '%d-%m-%Y'}),
         }
+        
+class Inter_ComparisonForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super(Inter_ComparisonForm, self).__init__(*args, **kwargs)
+        if not user.is_staff:
+            self.fields['edm'].queryset = EDM_Inst.objects.filter(
+                edm_specs__edm_owner = user.company)
+        else:
+            self.fields['edm'].queryset = EDM_Inst.objects.all()
+        self.fields['edm'].queryset = EDM_Inst.objects.all()
+            
+    class Meta:
+        model = Inter_Comparison
+        fields = '__all__'
+        exclude = ('html_report', 'created_on', 'modified_on')
+
+        widgets = {
+            'from_date': forms.DateInput(
+                attrs={'type': 'date', 'format': '%d-%m-%Y'}),
+            'to_date': forms.DateInput(
+                attrs={'type': 'date', 'format': '%d-%m-%Y'}),
+        }
+
+        

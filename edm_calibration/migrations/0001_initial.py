@@ -199,7 +199,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "certificate",
-                    models.ForeignKey(
+                    models.OneToOneField(
                         blank=True,
                         null=True,
                         on_delete=django.db.models.deletion.SET_NULL,
@@ -268,6 +268,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 "ordering": ["edm", "survey_date"],
+                "verbose_name": "EDMI Calibration Surveys",
             },
         ),
         migrations.CreateModel(
@@ -385,4 +386,76 @@ class Migration(migrations.Migration):
                 name="Both site and calibrated basline fields can not be null",
             ),
         ),
+        migrations.CreateModel(
+            name="Inter_Comparison",
+            fields=[
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("from_date", models.DateField()),
+                ("to_date", models.DateField()),
+                (
+                    "job_number",
+                    models.CharField(
+                    blank=True,
+                    help_text="Job reference eg., JN 20212216",
+                    max_length=25,
+                    null=True,
+                    validators=[common_func.validators.validate_profanity],
+                    verbose_name="Job Number/Reference",
+                    ),
+                ),
+                (
+                    "sample_distances",
+                    models.CharField(
+                    blank=False,
+                    default="20, 300, 600",
+                    help_text="Comma seperated list of distances",
+                    max_length=255,
+                    validators=[common_func.validators.validate_csv_text],
+                    null=False,
+                    verbose_name="Sample Distances (m)",
+                    ),
+                ),
+                ('html_report', models.TextField(blank=True, null=True)),
+                ("created_on", models.DateTimeField(auto_now_add=True, null=True)),
+                ("modified_on", models.DateTimeField(auto_now=True, null=True)),
+                (
+                    "edm",
+                    models.ForeignKey(
+                        help_text="EDM used for interlaboratory comparison",
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="instruments.edm_inst",
+                        verbose_name="EDM",
+                    ),
+                ),
+                (
+                    "prism",
+                    models.ForeignKey(
+                        help_text="Prism used for interlaboratory comparison",
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="instruments.prism_inst",
+                        verbose_name="Prism",
+                    ),
+                ),
+            ],
+            options={
+                "verbose_name": "Interlaboratory comparison",
+                "ordering": ["edm"],
+            },
+        ),
+        migrations.AddConstraint(
+            model_name="inter_comparison",
+            constraint=models.CheckConstraint(
+                check=models.Q(("to_date__gt", models.F("from_date"))),
+                name="The from date must be before the to date",
+            ),
+        ),
+        
     ]
