@@ -205,7 +205,7 @@ def calibrate(request):
             
             # Read data and start computing
             staff_reading, message = reading_data(field_file)
-            
+            print(len(staff_reading))
             if len(staff_reading) > 0:
                 # Get the reference data from BarCodeRangeParam
                 if BarCodeRangeParam.objects.filter(site_id = site_id).exists():
