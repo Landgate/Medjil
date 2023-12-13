@@ -82,19 +82,10 @@ class Migration(migrations.Migration):
                         verbose_name="EDM Custodian",
                     ),
                 ),
-                (
-                    "edm_specs",
-                    models.ForeignKey(
-                        blank=True,
-                        null=True,
-                        on_delete=django.db.models.deletion.PROTECT,
-                        to="instruments.edm_specification",
-                        verbose_name="EDM Specifications",
-                    ),
-                ),
             ],
             options={
-                options={"ordering": ["edm_specs"], "verbose_name": "EDM Instruments"},
+                "ordering": ["edm_specs"],
+                "verbose_name": "EDM Instruments",
             },
         ),
         migrations.CreateModel(
@@ -445,7 +436,7 @@ class Migration(migrations.Migration):
             options={
                 "ordering": ["prism_model"],
                 "unique_together": {("prism_model", "prism_owner")},
-                "verbose_name": "Prism Models/Specifications",
+                	"verbose_name": "Prism Models/Specifications",
             },
         ),
         migrations.CreateModel(
@@ -508,7 +499,7 @@ class Migration(migrations.Migration):
             options={
                 "ordering": ["prism_specs"],
                 "unique_together": {("prism_specs", "prism_number")},
-                "verbose_name": "Prism Instruments"},
+                "verbose_name": "Prism Instruments"
             },
         ),
         migrations.CreateModel(
@@ -1300,8 +1291,18 @@ class Migration(migrations.Migration):
             options={
                 "ordering": ["edm_model"],
                 "unique_together": {("edm_model", "edm_owner")},
-                "verbose_name": "EDM Models/Specifications",
+                "verbose_name": "EDM Models/Specifications"
             },
+        ),
+        migrations.AddField(
+            model_name="edm_inst",
+            name="edm_specs",
+            field=models.ForeignKey(
+                null=True, blank=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                to="instruments.edm_specification",
+                verbose_name="EDM Specification",
+            ),
         ),
         migrations.CreateModel(
             name="Staff",
