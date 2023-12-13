@@ -300,11 +300,11 @@
             <div class="flexbox-container_IB">
                 <div class="flexbox-item_800_IB">
                     <p>The estimated instrument correction (IC) is to be added to the slope distances measured by EDMI set of {{ pillar_survey.edm.edm_specs.edm_model.make.make }} {{ pillar_survey.edm.edm_specs.edm_model.model }} EDM instrument (S/N:{{ pillar_survey.edm.edm_number }}) and prism (S/N:{{ pillar_survey.prism.prism_number }}) using the following formula:</p>
-                    {% if calib.edmi.0.parameters|length > 4 %}
+                    {% if pillar_survey.parameters|length > 4 %}
                         <p class="text-center">
                             <B>IC = zpc + scf * D + 1C * Sin(2 * &#8508 * D/U) + 2C * Cos(2 * &#8508 * D/U) + 3C * Sin(4 * &#8508 * D/U) + 4C * Cos(4 * &#8508 * D/U)</B>
                         </p>
-                    {% elif calib.edmi.0.parameters|length > 2 %}
+                    {% elif pillar_survey.parameters|length > 2 %}
                         <p class="text-center">
                             <B>IC = zpc + scf * D + 1C * Sin(2 * &#8508 * D/U) + 2C * Cos(2 * &#8508 * D/U)</B>
                         </p>
@@ -319,11 +319,11 @@
                         <br>D = Distance (m)
                         <br>zpc = Zero Point Correction (m)
                         <br>scf = Scale Correction Factor (a.x)
-                        {% if calib.edmi.0.parameters|length > 2 %}
+                        {% if pillar_survey.parameters|length > 2 %}
                             <br>U = Instrument Unit Length (m)
                             <br>1C = Cyclic error parameter 1 (m)
                             <br>2C = Cyclic error parameter 2 (m)
-                            {% if calib.edmi.0.parameters|length > 4 %}
+                            {% if pillar_survey.parameters|length > 4 %}
                                 <br>3C = Cyclic error parameter 3 (m)
                                 <br>4C = Cyclic error parameter 4 (m)
                             {% endif %}
@@ -360,7 +360,7 @@
                                 <td class="text-center">
                                     <B>{{ parameter.std_dev|multiply:chi_test.k|sigfigs:2 }}</B>
                                 </td>
-                                {% if calib.edmi.0.parameters|length > 2 %}
+                                {% if pillar_survey.parameters|length > 2 %}
                                     <td class="text-center">{{ parameter.hypothesis }}</td>
                                     <td class="text-center">{{ parameter.t_test }}</td>
                                 {% endif %}
