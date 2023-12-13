@@ -23,3 +23,5 @@ from .models import *
 admin.site.register(uPillar_Survey)
 
 admin.site.register(uEDM_Observation)
+
+admin.site.register(Inter_Comparison)

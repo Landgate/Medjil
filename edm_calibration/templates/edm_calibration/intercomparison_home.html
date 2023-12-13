@@ -21,49 +21,45 @@
 <article class="post">
     <div class="post-content">
         {% if messages %}
-            <ul class="message-list">
-              {% for message in messages %}
-                <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|safe }}</li>
-              {% endfor %}
-            </ul>
-            <br>
+          <ul class="message-list">
+            {% for message in messages %}
+              <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|safe }}</li>
+            {% endfor %}
+          </ul>
+          <br>
         {% endif %}
         <br>
-        <h2 class="text-center">List of EDMI Calibration Surveys</h2>
+        <h2 class="text-center">List of EDMI Calibration Interlaboratory Comparisons</h2>
         <div>
             <div class="mt-2 flex justify-center">
-                <a href="{% url 'edm_calibration:calibrate1' id=None %}" class="px-3 py-2 border border-transparent text-lg leading-4 rounded text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
-                    Start new calibration
+                <a href="{% url 'edm_calibration:intercomparison' id=None %}" class="px-3 py-2 border border-transparent text-lg leading-4 rounded text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+                     Start new Intercomparison
                 </a>
             </div>
             <br>
             <hr>
             <br>
-            {% if pillar_surveys %}
+            {% if intercomparisons %}
                 <table>
                     <tr>
+                        <th class="text-left font-semibold text-base text-gray-900">Job Reference</th>
                         <th class="text-left font-semibold text-base text-gray-900">EDM</th>
                         <th class="text-left font-semibold text-base text-gray-900">Prism</th>
-                        <th width="8%" class="text-left font-semibold text-base text-gray-900">Company</th>
-                        <th width="12%" class="text-left font-semibold text-base text-gray-900">Survey Date</th>
-                        <th width="12%" class="text-left font-semibold text-base text-gray-900">Site</th>
-                        <th width="12%" class="text-left font-semibold text-base text-gray-900">Observed By</th>
-                        <th width="12%" class="text-left font-semibold text-base text-gray-900">Job Number</th>
+                        <th width="12%" class="text-left font-semibold text-base text-gray-900">From Date</th>
+                        <th width="12%" class="text-left font-semibold text-base text-gray-900">To Date</th>
                         <th width="5%" class="text-center font-semibold text-base text-gray-900">Action</th>
-                    </tr>            
-                    {% for pillar_survey in pillar_surveys %}
+                    </tr>
+                    {% for intercomparison in intercomparisons %}
                         <tr>
-                            <td>{{ pillar_survey.edm }} </td>
-                            <td>{{ pillar_survey.prism }} </td>
-                            <td>{{ pillar_survey.edm.edm_specs.edm_owner.company_abbrev }}</td>
-                            <td>{{ pillar_survey.survey_date }} </td>
-                            <td>{{ pillar_survey.site }} </td>
-                            <td>{{ pillar_survey.observer }} </td>
-                            <td>{{ pillar_survey.job_number }} </td>
+                            <td>{{ intercomparison.job_number }} </td>
+                            <td>{{ intercomparison.edm }} </td>
+                            <td>{{ intercomparison.prism }} </td>
+                            <td>{{ intercomparison.from_date }} </td>
+                            <td>{{ intercomparison.to_date }} </td>
                             <td>
                                 <span class="flex justify-around items-center text-center">
-                                    {% if pillar_survey.certificate %}
-                                        <a class="px-2" href="{% url 'edm_calibration:report' id=pillar_survey.certificate.pk %}" class="px-3">
+                                    {% if intercomparison.html_report %}
+                                        <a class="px-2" href="{% url 'edm_calibration:intercomparison_report' id=intercomparison.pk %}" class="px-3">
                                             <svg version="1.1" baseProfile="tiny" id="report-view" xmlns:x="&amp;ns_extend;" xmlns:i="&amp;ns_ai;" xmlns:graph="&amp;ns_graphs;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/" x="0px" y="0px" width="16" height="16" viewBox="0 0 42 42" xml:space="preserve">
                                                 <path fill-rule="evenodd" d="M22.5,1.5h-14c-2.55,0-3,0.561-3,3v32c0,2.49,0.55,3,3,3h24c2.5,0,3-0.47,3-3v-22h-13V1.5z M35.5,11.5l-10-10v10H35.5z"></path>
                                             </svg>
@@ -71,12 +67,12 @@
                                     {% else %}
                                         <svg width="32" height="16" viewBox="0 0 42 42" xml:space="preserve"></svg>
                                     {% endif %}
-                                    <a href="{% url 'edm_calibration:calibrate1' id=pillar_survey.pk %}" class="px-3">
+                                    <a href="{% url 'edm_calibration:intercomparison' id=intercomparison.pk %}" class="px-3">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000" class="bi bi-pencil-fill" id = "edit-view" viewBox="0 0 16 16">
                                             <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"></path>
                                         </svg>
                                     </a>
-                                    <a href="{% url 'edm_calibration:pillar_survey_del' id=pillar_survey.pk %}" class="px-2">
+                                    <a href="{% url 'edm_calibration:intercomparison_del' id=intercomparison.pk %}" class="px-2">
                                         <svg width="16" height="16" viewBox="0 0 16 16" fill="red" class="bi bi-trash" onclick="return confirmation()">
                                             <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"></path>
                                             <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"></path>
@@ -88,10 +84,9 @@
                     {% endfor %}
                 </table>
             {% else %}
-                <p>There are currently no EDMI Calibration surveys.</p>
+                <p>There are currently no Interlaboratory Comparisons</p>
             {% endif %}
         </div>
-    </div>
 </article>
 <script>
     function confirmation() {

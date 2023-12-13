@@ -1,0 +1,216 @@
+<!--
+
+   © 2023 Western Australian Land Information Authority
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+-->
+{% load static %}
+{% load custom_filter_tags %}
+
+
+<article class="post">
+    <div class="post-content">
+        {% if messages %}
+            <ul class="message-list">
+                {% for message in messages %}
+                    <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|safe }}</li>
+                {% endfor %}
+            </ul>
+            <br>
+        {% endif %}
+    </div>
+    <div class="post-content">
+        <div class="text-center">
+            <h1>
+                <B>EDMI Calibrations Intercomparison Report</B>
+            </h1>
+        </div>
+        <div class="flexbox-container_IB">
+            <div class="flexbox-item_400_IB flexbox-item-left_IB">
+                <br>
+                <B>From Date: </B>{{ form.from_date }}
+            </div>
+            <div class="flexbox-item_400_IB flexbox-item-right_IB">
+                <br>
+                <B>To Date: </B>{{ form.to_date }}
+            </div>
+        </div>
+        <div class="flexbox-container_IB">
+            <div class="flexbox-item_800_IB  flexbox-item-left_IB">
+                <hr>
+            </div>
+        </div>
+        <div class="text-center">
+            <h2>Instruments' Details</h2>
+            <div class="flexbox-container_IB">
+                <div class="flexbox-item_400_IB flexbox-item-left_IB">
+                    <B>
+                        <u>Electronic Distance Measuring Instrument (EDMI)</u>
+                    </B>
+                    <br>
+                        <B>Make: </B>{{ form.edm.edm_specs.edm_model.make.make }}
+                        <br>
+                        <B>Model: </B>{{ form.edm.edm_specs.edm_model.model }}
+                        <br>
+                        <B>Serial Number: </B>{{ form.edm.edm_number }}
+                        <br>
+                        <B>Unit Length: </B>{{ form.edm.edm_specs.unit_length }}m
+                </div>
+                <div class="flexbox-item_400_IB  flexbox-item-right_IB">
+                    <br>
+                    <B>Manufacturers Uncertainty: </B>{{ form.edm.edm_specs.manu_unc_const }}mm &plusmn {{ form.edm.edm_specs.manu_unc_ppm }}ppm, k={{ form.edm.edm_specs.manu_unc_k }}
+                    <br>
+                    <B>Carrier Wavelength: </B>{{ form.edm.edm_specs.carrier_wavelength }}nm
+                </div>
+            </div>
+            
+            <div class="flexbox-container_IB">
+                <div class="flexbox-item_400_IB flexbox-item-left_IB">
+                    <br>
+                    <B>
+                    <u>Prism</u>
+                    </B>
+                    <br>
+                    <B>Make: </B>{{ form.prism.prism_specs.prism_model.make.make }}
+                    <br>
+                    <B>Model: </B>{{ form.prism.prism_specs.prism_model.model }}
+                    <br>
+                    <B>Serial Number: </B>{{ form.prism.prism_number }}
+                </div>
+                <div class="flexbox-item_400_IB  flexbox-item-right_IB">
+                    <br>
+                    <br>
+                    <B>Manufacturers Uncertainty: </B>{{ form.prism.prism_specs.manu_unc_const }}mm, k={{ form.prism.prism_specs.manu_unc_k }}
+                </div>
+            </div>
+            <div class="flexbox-container_IB">
+                <div class="flexbox-item_800_IB  flexbox-item-left_IB">
+                    <hr>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center">
+            <h2>EDMI Calibration Records</h2>
+            <table style="margin-left:auto;margin-right:auto;font-size:10.0pt;width:800px;">
+                <tr>
+                    <th></th>
+                    <th colspan = 2>Zero Point Correction (m)</th>
+                    <th colspan = 2>Scale Correction Factor (a.x)</th>
+                    <th colspan = 2>1C (m)</th>
+                    <th colspan = 2>2C (m)</th>
+                    <th colspan = 2>3C (m)</th>
+                    <th colspan = 2>4C (m)</th>
+                </tr>
+                <tr>
+                    <th>Date</th>
+                    <th>Value</th>
+                    <th>UC</th>
+                    <th>Value</th>
+                    <th>UC</th>
+                    <th>Value</th>
+                    <th>UC</th>
+                    <th>Value</th>
+                    <th>UC</th>
+                    <th>Value</th>
+                    <th>UC</th>
+                    <th>Value</th>
+                    <th>UC</th>
+                </tr>
+                
+                {% for certificate in certificates %}
+                 <tr class="text-left">
+                    <td>{{ certificate.calibration_date }}</td>
+                    <td>{{ certificate.zero_point_correction|floatformat:5 }}</td>
+                    <td>{{ certificate.zpc_uncertainty|floatformat:5 }}</td>
+                    <td>{{ certificate.scale_correction_factor|floatformat:8 }}</td>
+                    <td>{{ certificate.scf_uncertainty|sigfigs:2 }}</td>
+                    {% if certificate.has_cyclic_corrections %}
+                        <td>{{ certificate.cyclic_one|floatformat:5 }}</td>
+                        <td>{{ certificate.cyc_1_uncertainty|sigfigs:2 }}</td>
+                        <td>{{ certificate.cyclic_two|floatformat:5 }}</td>
+                        <td>{{ certificate.cyc_2_uncertainty|sigfigs:2 }}</td>
+                        <td>{{ certificate.cyclic_three|floatformat:5 }}</td>
+                        <td>{{ certificate.cyc_3_uncertainty|sigfigs:2 }}</td>
+                        <td>{{ certificate.cyclic_four|floatformat:5 }}</td>
+                        <td>{{ certificate.cyc_4_uncertainty|sigfigs:2 }}</td>
+                    {% else %}
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                    {% endif %}
+                 </tr>                
+                {% endfor %}
+            </table>
+            <div class="flexbox-container_IB">
+                <div class="flexbox-item_800_IB  flexbox-item-left_IB">
+                    <hr>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center">
+            <h2>Intercomparisions</h2>
+            {% for comparison in comparisons %}
+                <table style="margin-left:auto;margin-right:auto;font-size:10.0pt;width:800px;">
+                    <tr>
+                        <th class="text-right"><B>Site</B></th>
+                        <td class="text-center" colspan='2'>{{ comparison.lab.upillar_survey.site }}</td>
+                        <td class="text-center" colspan='2'>{{ comparison.ref.upillar_survey.site }}</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th class="text-right"><B>Reference</B></th>
+                        <td class="text-center" colspan='2'>{{ comparison.lab.upillar_survey.job_number }}</td>
+                        <td class="text-center" colspan='2'>{{ comparison.ref.upillar_survey.job_number }}</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th class="text-right"><B>Observer</B></th>
+                        <td class="text-center" colspan='2'>{{ comparison.lab.upillar_survey.observer }}</td>
+                        <td class="text-center" colspan='2'>{{ comparison.ref.upillar_survey.observer }}</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th class="text-right"><B>Date</B></th>
+                        <td class="text-center" colspan='2'>{{ comparison.lab.calibration_date }}</td>
+                        <td class="text-center" colspan='2'>{{ comparison.ref.calibration_date }}</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th class="text-center"><B>Distance (m)</B></th>
+                        <th class="text-center"><B>Lab (m)</B></th>
+                        <th class="text-center"><B>Uncertainty (m)</B></th>
+                        <th class="text-center"><B>Reference (m)</B></th>
+                        <th class="text-center"><B>Uncertainty (m)</B></th>
+                        <th class="text-center"><B>E</B></th>
+                    </tr>
+                    {% for d, rw in comparison.comparison.items %}
+                        <tr>
+                            <th class="text-center">{{d}}</th>
+                            <td>{{rw.lab|floatformat:5}}</td>
+                            <td>{{rw.lab_uc|sigfigs:2}}</td>
+                            <td>{{rw.ref|floatformat:5}}</td>
+                            <td>{{rw.ref_uc|sigfigs:2}}</td>
+                            <td>{{rw.E|floatformat:2}}</td>
+                        </tr>
+                    {% endfor %}
+                </table>      
+            {% endfor %} 
+            <div class="flexbox-container_IB">
+                <div class="flexbox-item_800_IB  flexbox-item-left_IB">
+                    <hr>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>

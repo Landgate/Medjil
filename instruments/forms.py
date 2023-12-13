@@ -16,8 +16,6 @@
 
 '''
 from django import forms
-from django.db.models import Q
-from django.db.utils import OperationalError
 # from django.core.exceptions import NON_FIELD_ERRORS
 from .models import (
     InstrumentMake, 
@@ -63,7 +61,6 @@ class InstrumentMakeCreateForm(forms.ModelForm):
 
 class InstrumentModelCreateForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user')
         super(InstrumentModelCreateForm, self).__init__(*args, **kwargs) 
         self.fields['make'].empty_label = '--- Select one ---'  
 
@@ -85,7 +82,6 @@ class InstrumentModelCreateByInstTypeForm(forms.Form):
                 ('psy','Psychrometer'))
 
     def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user')
         inst_type = kwargs.pop('inst_type')
         super(InstrumentModelCreateByInstTypeForm, self).__init__(*args, **kwargs)
         self.initial['inst_type'] = inst_type
@@ -389,6 +385,4 @@ class Mets_certificateForm(forms.ModelForm):
         widget=forms.Select(choices=ini_units))
     units_zpc_uc = forms.CharField(
         widget=forms.Select(choices=ini_units))
-        
-        
         

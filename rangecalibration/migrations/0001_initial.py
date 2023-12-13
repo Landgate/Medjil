@@ -56,6 +56,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 'ordering': ['inst_staff', 'calibration_date'],
+                "verbose_name": "Staff Range Calibrations",
             },
         ),
         migrations.CreateModel(

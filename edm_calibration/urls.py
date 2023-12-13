@@ -27,6 +27,9 @@ urlpatterns = [
     path('certificate/<int:id>', views.certificate, name = 'certificate'),
     path('report/<int:id>', views.report, name = 'report'),
     path('pillar_survey_del/<int:id>', views.pillar_survey_del, name = 'pillar_survey_del'),
-    path('clear_cache/', views.clear_cache, name='clear_cache'),
+    path('intercomparison_home', views.intercomparison_home, name = 'intercomparison_home'),
+    path('intercomparison/<slug:id>', views.intercomparison, name = 'intercomparison'),
+    path('intercomparison_report/<int:id>', views.intercomparison_report, name = 'intercomparison_report'),
+    path('intercomparison/delete<int:id>', views.intercomparison_del, name = 'intercomparison_del'),
     
 ]
