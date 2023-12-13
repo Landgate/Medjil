@@ -124,9 +124,13 @@ class InstructionImage(models.Model):
             img.save(self.photos.path)
 
 def get_upload_thumbnail_to_manual(instance, filename):
-    return '%s/%s/%s/%s' % ('TechnicalManual', 
+    print('%s/%s/%s/%s' % ('TechnicalManual', 
                                 instance.manual_type, 
                                 instance.title, 
+                                'thumbnail_'+filename))
+    return '%s/%s/%s/%s' % ('TechnicalManual', 
+                                instance.manual_type, 
+                                instance.title.replace(' ', '_'), 
                                 'thumbnail_'+filename)
 
 CHOICES2 = (
