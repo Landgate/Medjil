@@ -525,8 +525,9 @@ def calibrate2(request,id):
                 
                 # apply LUM if neccessary
                 lum = ((pillar_survey['accreditation'].LUM_constant +
-                       pillar_survey['accreditation'].LUM_ppm * d['value'] * 10**-6)
+                       pillar_survey['accreditation'].LUM_ppm * d['value'] * 10**-3)
                        * 0.001 )
+                
                 if pillar_survey['apply_lum'] and cd['uc_combined']['uc95'] < lum:
                     cd['uc_combined']['uc95'] = lum
                     cd['uc_combined']['k'] = 2
