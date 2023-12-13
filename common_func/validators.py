@@ -57,6 +57,3 @@ def try_delete_protected(request, delete_obj):
             + html
         )
         messages.error(request, error_message)
-    
-
-

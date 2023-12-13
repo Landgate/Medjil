@@ -123,7 +123,7 @@ svg: {
 <div id="Chapter_1_3"></div>
 <h2>1.3 Example: Formation of observation equations</h2>
 <p>Let's consider the following example baseline, comprising four pillars:</p>
-<img src="\media\TechnicalManual\tbaseline\Tech manual\Picture_1_1.png" alt="Example of EDM Baseline">
+<img src="\media\TechnicalManual\tbaseline\Medjil_Technical_Manual\Picture_1_1.png" alt="Example of EDM Baseline">
 <br>
 <br>
 <p>A set of linear observation equations can be formulated based on Eq. 1.1 and Eq. 1.2 as follows:</p>
@@ -137,7 +137,7 @@ svg: {
 <p>This approach eliminates the need to provide approximate distances between pillars. In accordance with Section (5), the observations, along with their a-priori uncertainties (P), undergo a least squares adjustment to obtain the estimated certified distances d<sub>x</sub>, the zpc value, and the complete VCV matrix.</p>
 <div id="Chapter_1_4"></div>
 <h2>1.4 Inter-pillar distances survey</h2>
-<img src="\media\TechnicalManual\tbaseline\Tech manual\Picture_1_3.png" alt="Inter-pillar distances survey">
+<img src="\media\TechnicalManual\tbaseline\Medjil_Technical_Manual\Picture_1_3.png" alt="Inter-pillar distances survey">
 <p>To calibrate an EDM baseline, a series of inter-pillar distance measurements (surveys) are necessary, which should include atmospheric observations of the conditions during the during measuring of each survey distance. Medjil mandates that all instrumentation used in the survey must be calibrated and possess a current certificate stating the uncertainty of the instrument readings and the calibration corrections that can be applied. The uncertainty of instrument readings plays a crucial role in propagating uncertainties for the inter-pillar distance survey.</p>
 <p>The distance observations are assumed to be slope distances that have not been corrected for the height of instrument or height of targets. Applying atmospheric corrections by entering these into the instrument is optional but Medjil requires temperature, pressure and humidity for every distance measurement even if this has been entered into the instrument. These values are used for estimating the propagation of uncertainty as well as the optional applying of atmospheric corrections when no correction was applied by the instrument during the survey.</p>
 <p>It is recommended each distance (bay) d<sub>ij</sub> (where i = from_pillar; j = to_pillar) should be measured four times. However, Medjil allows the number of repeat measurements to vary between bays and between surveys. The pillar survey data is to be provided in an ASCII file and must contain the following fields:</p>
@@ -152,13 +152,13 @@ svg: {
 <li>pressure: pressure in Hectopascals or millibars</li>
 <li>humidity: humidity in percentage</li>
 </ul>
-<p>Refer to this <a href = "\media\TechnicalManual\tbaseline\Tech manual\BUSS_baseline_calibration_edm_observations.csv" target = "_self">sample dataset</a> required for an EDM baseline calibration survey data format.</p>
+<p>Refer to this <a href = "\media\TechnicalManual\tbaseline\Medjil_Technical_Manual\BUSS_baseline_calibration_edm_observations.csv" target = "_self">sample dataset</a> required for an EDM baseline calibration survey data format.</p>
 <br>
 <p>Baseline measurements must be performed in accordance with the ISO17123-4:2012 Optics and optical instruments – Field procedures for testing geodetic and surveying instruments – Part 4: Electro-optical distance meters (EDM measurements to reflectors).</p>
 <div id="Chapter_1_5"></div>
 <h2>1.5 Pillar offsets survey</h2>
 <p>The pillar offset survey determines the offset of each pillar from the alignment of the first (1) and last pillar (n). Medjil performs the required reduction of observations during the EDM Baseline calibration process. Distances observed from every pillar of the baseline can be included in the calculation of the pillar offset if the survey setup includes measurements to pillar 1 and pillar n.</p>
-<img src="\media\TechnicalManual\tbaseline\Tech manual\Picture_1_2.png" alt="Pillar Offsets">
+<img src="\media\TechnicalManual\tbaseline\Medjil_Technical_Manual\Picture_1_2.png" alt="Pillar Offsets">
 <p>For each pillar setup, an arbitrary set of coordinates (E<sub>j</sub>, N<sub>j</sub>) are calculated for all pillars observed according to the formula:</p>
 <div>$$\left[E_j,N_j\right]=\ Polar2Reclangular\left(Hz_{ij},d_{ij}\right)\ \ \ (Eq. 1.5)$$ </div>
 <p>Where:</p>
@@ -175,7 +175,7 @@ svg: {
 <div id="Chapter_1_6"></div>
 <h2>1.6 Pillar heights survey</h2>
 <p>Pillar heights (H<sub>j</sub>) are to be determined as orthometric heights (eg. AHD71) and provided with standard deviations. The standard deviations should preferably be derived from redundant observations. Data for the height of pillars is to be provided in an ASCII file. Refer to this 
-<a href = "\media\TechnicalManual\tbaseline\Tech manual\BUSS_ baseline_calibration_level_observations.csv" target = "_self">sample dataset</a> for the required data format.</p>
+<a href = "\media\TechnicalManual\tbaseline\Medjil_Technical_Manual\BUSS_ baseline_calibration_level_observations.csv" target = "_self">sample dataset</a> for the required data format.</p>
 <p>Pillar coordinates are required and used to determine the baseline location in order to derive geometric correction to the distances. Medjil uses an average latitude of the supplied pillar coordinates to calculate the geometric corrections of surveyed distances. (See section 3.3)</p>
 </div>
 <div id="Chapter_2">
@@ -373,7 +373,7 @@ The 1.0 ppm stated in recommendation 3 of resolution 3 makes some allowance for 
 <li>Chord-to-Arc correction</li>
 </ul>
 <p>Pillar coordinates and elevation are required and used to determine the baseline location to derive geometric correction of the distances. Medjil computes an average value of the supplied coordinates.</p>
-<img src="\media\TechnicalManual\tbaseline\Tech manual\Picture_3_1.png" alt="Geometric correction">
+<img src="\media\TechnicalManual\tbaseline\Medjil_Technical_Manual\Picture_3_1.png" alt="Geometric correction">
 <div>$$ d_R\ =\ \sqrt{\frac{\left(d_O\right)^2-\left(O_1-O_2\right)^2-(\Delta H)^2}{\left(1+\left(\frac{H_1-H_{REF}}{R+H_{REF}}\right)\right)\left(1+\left(\frac{H_2-H_{REF}}{R+H_{REF}}\right)\right)}}\ \ \ \ (Eq. 3.8) $$</div>
 <p>Where:</p>
 <p>&emsp;&emsp;d<sub>R</sub> = Certified horizontal distance between two pillars reduced to a reference elevation H<sub>REF</sub>
@@ -457,10 +457,10 @@ The 1.0 ppm stated in recommendation 3 of resolution 3 makes some allowance for 
 Medjil automatically populates the uncertainty sources (Table 4.1 and Table 4.2) when processing the calibration of EDM baselines and EDM Instrumentation.</p>
 <br>Table 4.1: Medjil uncertainty budget for calibration of EDM Baseline 
 <br>
-<img src="\media\TechnicalManual\tbaseline\Tech manual\Picture_4_2.png" alt="Medjil uncertainty budget for calibration of EDM Baseline ">
+<img src="\media\TechnicalManual\tbaseline\Medjil_Technical_Manual\Picture_4_2.png" alt="Medjil uncertainty budget for calibration of EDM Baseline ">
 <br>
 <br>Table 4.2: Medjil uncertainty budget for calibration of EDM Instrumentation
-<img src="\media\TechnicalManual\tbaseline\Tech manual\Picture_4_3.png" alt="Medjil uncertainty budget for calibration of EDM Instrumentation">
+<img src="\media\TechnicalManual\tbaseline\Medjil_Technical_Manual\Picture_4_3.png" alt="Medjil uncertainty budget for calibration of EDM Instrumentation">
 <br>
 <br>
 <p>The values for these automatically populated uncertainty sources are derived as follows:</p>
@@ -1095,7 +1095,7 @@ Medjil automatically populates the uncertainty sources (Table 4.1 and Table 4.2)
 <div id="Chapter_4_2_2"></div>
 <h3>4.2.2 Custom uncertainty budgets</h3>
 <p>Medjil default uncertainty budget is used during the calibration process and it contains typical uncertainty sources and their values. Medjil also allows to setup a user (company) specific uncertainty budget(s) based on the default which is used for calibrations instead of the default one. During the setup process user can delete, modify or add additional error sources.</p>
-<img src="\media\TechnicalManual\tbaseline\Tech manual\Picture_4_1.png" alt="Uncertainty budgets">
+<img src="\media\TechnicalManual\tbaseline\Medjil_Technical_Manual\Picture_4_1.png" alt="Uncertainty budgets">
 <p>Where:</p>
 <p>
 <b>Name</b> = Custom uncertainty budget name. Uncertainty budgets are identified by a name that must be unique</p>
@@ -1269,7 +1269,7 @@ A rectangular distribution represents an arbitrary outcome that lies between cer
 <div id="Chapter_6_2"></div>
 <h2>6.2 Endnotes</h2>
 <p>The calibration reports displays a set of predefined endnotes. These notes can be specified for both EDMI and Baseline calibration and may be either mandatory or company's specific:</p>
-<img src="\media\TechnicalManual\tbaseline\Tech manual\Picture_6_2.png" alt="End notes">
+<img src="\media\TechnicalManual\tbaseline\Medjil_Technical_Manual\Picture_6_2.png" alt="End notes">
 <div id="Chapter_6_3"></div>
 <h2>6.3 Interlaboratory comparison - Baselines</h2>
 <p>To assess the baseline calibration outcome in accordance with ISO 17025:2017, it is imperative to conduct an interlaboratory comparison. Therefore, the current EDM calibrated baseline needs to be compared onto other EDM baseline/s (reference laboratory).  The results can be assessed using the E<sub>n</sub> value ('Error normalised'):</p>

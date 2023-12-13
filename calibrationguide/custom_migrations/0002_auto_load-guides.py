@@ -45,7 +45,7 @@ calibrationguides = [
     'calibration_type':'range'
     },
     {'title' : 'Staff Calibration at Boya', 
-     'thumbnail': 'CalibrationInstruction/Boya/range/Staff Calibration at Boya/thumbnail_Staff_icon_Vs87ZDG.PNG',
+     'thumbnail': 'CalibrationInstruction/Boya/range/Staff Calibration at Boya/thumbnail_Staff_icon.PNG',
      'content': os.path.join(settings.MEDIA_ROOT, 'InitialData/Calibration Guides/Staff Calibration at Boya Guide.html'),
     'site_name':'Boya',
     'calibration_type':'range'
@@ -56,7 +56,7 @@ calibrationguides = [
 tech_manual = {'manual_type':'tbaseline',
                'title': 'Medjil Technical Manual',
                'content': os.path.join(settings.MEDIA_ROOT, 'InitialData/Calibration Guides/Medjil Technical Manual.html'),
-               'thumbnail':'TechnicalManual/tbaseline/Tech manual/thumbnail_Manual_icon_zomwENJ.PNG'
+               'thumbnail':'thumbnail_Manual_icon.PNG'
                }
                                                                                                                                                                                                                                                                                                               
 #######################################################################
@@ -72,7 +72,7 @@ def load_initial_data(apps, schema_editor):
             manual_type  = tech_manual['manual_type'],
             title  = tech_manual['title'],
             content  = file_content,
-            thumbnail  = tech_manual['thumbnail']
+            thumbnail  = os.path.join('TechnicalManual/tbaseline/', tech_manual['title'].replace(' ', '_'), tech_manual['thumbnail'])
             )
 
     for guide in calibrationguides:
