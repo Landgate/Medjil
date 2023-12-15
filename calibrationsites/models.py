@@ -25,6 +25,8 @@ from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from datetime import date
 from accounts.models import Company
+from common_func.validators import validate_file_size
+
 ###################################################################
 ######################## BARCODE RANGE ############################
 ###################################################################
@@ -122,11 +124,13 @@ class CalibrationSite(models.Model):
     description = models.TextField(blank=True, null=True)                                                                   
     site_access = models.FileField(upload_to = get_upload_to_location,
                                         null=True, 
+                                        validators=[validate_file_size],
                                         help_text = "Upload a pdf diagram showing an access to the location",
                                         verbose_name= 'Access Summary')
 
     site_config = models.FileField(upload_to = get_upload_to_location,
                                         null=True,
+                                        validators=[validate_file_size],
                                         help_text = "Upload a pdf diagram showing the location of pins or pillars",
                                         verbose_name= 'Site Configuration')
     # Status - Good, damaged, destroyed, 
