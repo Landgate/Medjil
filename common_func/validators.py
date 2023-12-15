@@ -19,8 +19,8 @@
 from django.db.models import ProtectedError
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.contrib import messages
-
 from profanity_check import predict_prob
+
 
 def validate_profanity(value):
     """
@@ -56,7 +56,8 @@ def try_delete_protected(request, delete_obj):
             + html
         )
         messages.error(request, error_message)
-    
+
+
 def validate_file_size(value):
     filesize= value.size
     
@@ -65,6 +66,7 @@ def validate_file_size(value):
         raise ValidationError("The maximum file size that can be uploaded is 10MB")
     else:
         return value
+
 
 def validate_csv_text(value):
     numbers = value.split(',')

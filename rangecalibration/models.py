@@ -25,9 +25,11 @@ from common_func.validators import validate_file_size
 from accounts.models import CustomUser
 from calibrationsites.models import CalibrationSite
 from instruments.models import (
-                            Staff,
-                            DigitalLevel,
-                            )
+    Staff,
+    DigitalLevel,
+    )            
+    
+    
 ########################################################################
 def get_upload_to_calibreport(instance, filename):
     filename = filename.split('\\')[-1]
@@ -43,6 +45,7 @@ def get_upload_to_fieldbook(instance, filename):
     filename = filename.split('\\')[-1]
     obs_date = instance.calibration_date.strftime('%Y%m%d')
     return 'RangeCalibration/%s/%s/%s/FieldBook/%s' % (instance.site_id.state.statecode, instance.site_id.site_name, obs_date, instance.inst_staff.staff_number + '-' +  filename)
+
 
 # Create your models here.
 class RangeCalibrationRecord(models.Model):
@@ -170,6 +173,7 @@ class RawDataModel(models.Model):
     def calibration_date(self):
         return self.calibration_id.calibration_date
 
+
 # Adjustment data model
 class AdjustedDataModel(models.Model):
     calibration_id = models.ForeignKey(RangeCalibrationRecord, 
@@ -199,6 +203,7 @@ class AdjustedDataModel(models.Model):
     def calibration_date(self):
         return self.calibration_id.calibration_date
 
+
 # Adjusted height difference data model
 class HeightDifferenceModel(models.Model):
     calibration_id = models.ForeignKey(RangeCalibrationRecord, 
@@ -227,7 +232,8 @@ class HeightDifferenceModel(models.Model):
 
     def calibration_date(self):
         return self.calibration_id.calibration_date
-    
+
+
 # Boya Range Parameters
 def get_month_list():
     return {
@@ -244,6 +250,8 @@ def get_month_list():
         '11': 'Nov',
         '12': 'Dec',
     }
+    
+
 class BarCodeRangeParam(models.Model):
     site_id = models.ForeignKey(CalibrationSite, 
                                 null = True,

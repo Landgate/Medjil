@@ -27,7 +27,7 @@ from datetime import date
 User = settings.AUTH_USER_MODEL
 from instruments.models import EDM_Inst, Prism_Inst, Mets_Inst, DigitalLevel, Staff
 from calibrationsites.models import CalibrationSite, Pillar
-from common_func.validators import validate_profanity
+from common_func.validators import validate_profanity, validate_file_size
 from accounts.models import Company
 
 class Accreditation(models.Model):
@@ -48,6 +48,7 @@ class Accreditation(models.Model):
     certificate_upload = models.FileField(upload_to='accreditation_certificates/',
                  null=True,
                  blank=True, 
+                 validators=[validate_file_size],
                  verbose_name= 'Accreditation Certificate')
                  
     class Meta:
@@ -321,6 +322,7 @@ class Pillar_Survey(models.Model):
     fieldnotes_upload = models.FileField(upload_to = get_upload_to_location,
                  null=True,
                  blank=True, 
+                 validators=[validate_file_size],
                  verbose_name= 'Scanned fieldnotes')    
 
     zero_point_correction = models.FloatField(blank = True, null=True,

@@ -23,7 +23,10 @@ from datetime import date
 from baseline_calibration.models import (
     Uncertainty_Budget,
     Pillar_Survey)
-from common_func.validators import validate_profanity, validate_csv_text
+from common_func.validators import (
+    validate_profanity,
+    validate_csv_text,
+    validate_file_size)
 from instruments.models import (
     EDM_Inst,
     Prism_Inst,
@@ -123,6 +126,7 @@ class uPillar_Survey(models.Model):
     fieldnotes_upload = models.FileField(upload_to=get_upload_to_location,
               null=True,
               blank=True, 
+              validators=[validate_file_size],
               verbose_name= 'Scanned fieldnotes')
     
     certificate = models.OneToOneField(

@@ -2,7 +2,7 @@
 
 from django.db import migrations, models
 import staffcalibration.models
-
+from common_func.validators import validate_file_size
 
 class Migration(migrations.Migration):
 
@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='staffcalibrationrecord',
             name='field_book',
-            field=models.FileField(blank=True, help_text='Upload the field book in pdf/jpg/tif format', null=True, upload_to=staffcalibration.models.get_upload_to_fieldbook, verbose_name='Field Book'),
+            field=models.FileField(blank=True, help_text='Upload the field book in pdf/jpg/tif format', null=True, validators=[validate_file_size], upload_to=staffcalibration.models.get_upload_to_fieldbook, verbose_name='Field Book'),
         ),
     ]
