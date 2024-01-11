@@ -161,7 +161,8 @@ def calibrate1(request, id):
         
         # read new files or read raw data from database
         if survey_files['edm_file']:
-            raw_edm_obs = csv2dict(survey_files['edm_file'])
+           EDM_Observation.objects.filter(pillar_survey=ps_instance).delete() 
+           raw_edm_obs = csv2dict(survey_files['edm_file'])
             for v in raw_edm_obs.values():
                 v['use_for_alignment'] = True 
                 v['use_for_distance'] = True
@@ -175,8 +176,9 @@ def calibrate1(request, id):
                 raw_edm_obs[str(o.id)] = dct
         
         if survey_files['lvl_file']:
+            Level_Observation.objects.filter(pillar_survey=ps_instance).delete()
             raw_lvl_obs = csv2dict(survey_files['lvl_file'],key_names=0)
-        else:            
+        else:
             qs = Level_Observation.objects.filter(pillar_survey__pk=id)
             raw_lvl_obs = {}
             for o in qs:
