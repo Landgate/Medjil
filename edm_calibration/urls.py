@@ -30,6 +30,6 @@ urlpatterns = [
     path('intercomparison_home', views.intercomparison_home, name = 'intercomparison_home'),
     path('intercomparison/<slug:id>', views.intercomparison, name = 'intercomparison'),
     path('intercomparison_report/<int:id>', views.intercomparison_report, name = 'intercomparison_report'),
-    path('intercomparison/delete<int:id>', views.intercomparison_del, name = 'intercomparison_del'),
+    path('intercomparison/delete/<int:id>', views.intercomparison_del, name = 'intercomparison_del'),
     
 ]
