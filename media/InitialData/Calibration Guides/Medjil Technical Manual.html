@@ -37,9 +37,9 @@ svg: {
 <head>
 </head>
 <body>
-<h1>Calibration of Survey Instrumentation Technical Manual</h1>
-<h1>Copyright © 2020-2023 Western Australian Land Information Authority</h1>
-<h1>Last updated November 2023</h1>
+<h1>Medjil v1.0</h1>
+<h1>Calibration of EDM Instrumentation and Baseline Technical Manual</h1>
+<h1>LANDGATE July 2023</h1>
 <hr>
 <br>
 <div>
@@ -71,30 +71,26 @@ svg: {
 <div id="Chapter_0">
 <!-- INTRO -->
 <h1>Introduction</h1>
-<p>The Medjil portal was developed by <a href="https://www.landgate.wa.gov.au/">Landgate</a> (the Western Australian Land Information Authority) in collaboration with the <a href="https://www.icsm.gov.au"/>Intergovernmental Committee on Surveying and Mapping</a> (ICSM) jurisdictions.</p>
-<p>The portal allows the calibration of the following:</p>
+<p>The Medjil portal was developed by the Western Australian Land Information Authority (LANDGATE) in collaboration with other jurisdictions. The portal allows the calibration of</p>
 <ul STYLE="margin:30px">
-<li>EDM Instrumentation using standardised EDM Baselines</li>
-<li>EDM Baselines using standardised instruments</li>
-<li>Levelling staff using staff calibration range facility</li>
+<li>EDM Baselines using standardised instrument</li>
+<li>EDM Instrumentation using a standardised EDM Baseline</li>
 </ul>
-<p>The purpose of calibrating the EDM Instrumentation (EDMI) is to establish the legal traceability of a user's instrument to the national standard of length provided by the National Measurement Institute (NMI). This is accomplished by determining the Instrument Correction and its uncertainty through a survey procedure conducted at a certified EDM Baseline. The certification of EDM Baselines are maintained by individual States and Territories.</p>
-<p>The certification (or calibration) of EDM baselines establishes updated (or improved) distances between their pillars. The calibration of an EDMI provides distance correction specific to that instrumentation which are to be applied to measurements taken using that instrumentation (eg. EDM and prism). EDM Baselines and EDMI calibration should be conducted on a regular basis. Check your legislative requirements in your State and Territory for compliance.</p>
-<p>The Medjil portal provides tools and reports for Levelling Staff, EDM Baseline and EDMI calibration procedures. Please refer to the specific guides that provide field calibration instructions.</p>
-<p>This document includes reference information, encompassing mathematical equations, procedures, algorithms, and computations utilized by the Medjil portal. The calibration procedures are based on the following resources:</p>
+<p>The purpose of calibrating the EDM Instrumentation (EDMI) is to establish the legal traceability of a user's instrument to the national standard of length provided by the National Measurment Institute (NMI). This is accomplished by determining the Instrument Correction and its expanded uncertainty (at 95% confidence level) through a survey procedure conducted at a certified EDM Baseline. The certification of EDM Baselines are maintained by individual States and Territories.</p>
+<p>The certification (calibration) of EDM baselines establishes updated or improved distances between its pillars. EDM Baslines and EDMI calibration should be conducted on a regular basis. The calibration of an EDMI provides distance correction specific to that instrumentation that are to be applied to measurements taken using that instrumentation.</p>
+<p>The Medjil portal offers tools and reports for both EDM Baseline and EDMI calibrations. Please refer to the specific guides that provide field calibration instructions.</p>
+<p>This document contains reference information, including mathematical equations, procedures, algorithms, and computations adopted by the portal. The calibration procedures are based on the following resources:</p>
 <ul STYLE="margin:30px">
 <li>“Instructions on the Verification of Electronic Distance Meters according to section 10, Weights and Measures (National Standards) Act, 1960” written by Dr. J. M. Rüeger, School of Surveying, University of New South Wales. P.O. Box 1, Kensington, N.S.W. 2033</li>
 <li>“Instructions on the measurements of subsidiary standards of length in the form of EDM calibration baselines using distance meters as prescribed by the National Standards Commission: written by Dr. J.M.Rüeger, School of Surveying, University of New South Wales. P.O. Box 1, Kensington, N.S.W. 2033</li>
 <li>“Electronic Distance Measurements” J.M.Rüeger</li>
 <li>Draft Verifying Authorities Handbook 2001</li>
 <li>IAG resolutions at it’s XXIIth General Assembly in Birmingham, 1999</li>
-<li>Optics and optical instruments - Field procedures for testing geodetic and surveying instruments, ISO 17123-4:2012</li>
-<li>Evaluation of measurement data - Guide to the expression of uncertainty in measurement (GUM), JCGM 100:2008 </li>
-<li>Review of the Western Australian BASELINE Calibration Software for Electronic Distance Measuring (EDM) Instruments prepared for the Surveyor General of New South Wales by J.M.Rüeger 2019</li>
+<li>Optics and optical instruments - Field procedures for testing geodetic and surveying instruments ISO 17123-4:2012</li>
+<li>Review of the Western Australian BASELINE Calibration Software for Electronic Distance Measuring (EDM) Instruments Prepared for the Surveyor General of New South WalesJ.M.Rüeger 2019</li>
 </ul>
-<p>The Draft Verifying Authorities (VA) Handbook 2001 is intended for use by verifying authorities which are appointed under the provisions of Regulation 73 of the National Measurement Regulations 1999 in accordance with the National Measurement Act 1960 to verify reference standards of measurements under the provisions of Regulation 13, 30 and 31. The determination of the a priori standard deviations and the analysis of uncertainties of EDM measurements are based on the general guidelines within this handbook, ISO standards and GUM.</p>
-<p>In this manual <b>'uncertainty'</b> means <b>'expanded uncertainty'</b> specified at the 95% confidence level. Standard deviation or standard uncertainty is specified at 68% confidence level. Users have the flexibility to adopt or modify default uncertainties and associated traceability statements as required.</p>
-<p>For information on Medjil development and contribution, please refer to the <a href="https://github.com/Landgate/Medjil">GitHub</a>repository.</p>
+<p>The Draft Verifying Authorities (VA) Handbook 2001 is intended for use by verifying authorities which are appointed under the provisions of Regulation 73 of the National Measurement Regulations 1999 in accordance with the National Measurement Act 1960 to verify reference standards of measurements under the provisions of Regulation 13, 30 and 31. The determination of the a priori standard deviations and the analysis of uncertainties of EDM measurements are based on the general guidelines within this handbook.</p>
+<p>All uncertainties are specified at the 95% confidence level. Users have the flexibility to adopt or modify default uncertainties and associated traceability statements as required. For more information on Medjil development and contribution, please visit the <a href="https://github.com/Landgate/Medjil">GitHub</a> repository.</p>
 <br>
 </div>
 <div id="Chapter_1">
@@ -102,17 +98,17 @@ svg: {
 <h1>1 EDM Baseline calibration</h1>
 <div id="Chapter_1_1"></div>
 <h2>1.1 EDM Baseline designs</h2>
-<p>Since their introduction, the use of EDM Baseline has been the preferred calibration method for EDM instrumentation. There are three different EDM Baseline designs:</p>
+<p>Since the introduction of EDM instruments, the EDM Baseline has been the preferred calibration method. There are three different EDM Baseline designs:</p>
 <ul STYLE="margin:30px">
 <li>Heerbrugg Design</li>
 <li>Aarau Design</li>
 <li>Hobart Design</li>
 </ul>
-<p>Each EDM Baseline design aims to achieve an equal distribution of measured distances between the shortest and longest lines without any repetitions. They also allow EDMI calibration, with or without known distances (certified baseline distances), except for the Hobart design, which requires the distances to be known beforehand. Most EDM baseline designs aim to accommodate a variety of EDM instrument unit lengths. A detailed explanation of baseline design concepts is beyond the scope of this manual. For comprehensive information on baseline design, please refer to the book 'Electronic Distance Measurement' by J.M. Rueger.</p>
-<p>The current version of Medjil requires baseline distances to be known for all types of baselines to perform EDMI calibration. This approach is crucial for ensuring distance traceability to the national standard. Therefore, EDM Baselines must first be calibrated using NMI-certified instrument to determine the certified distances before proceeding with EDMI calibration. An additional module could potentially be developed to enable EDMI calibration without known distances. However, it is important to note that such calibrations cannot be certified under the NMI Act, and the EDMI distances obtained in this manner are not legally traceable to the national standard. For Medjil development and contribution, please refer to the <a href="https://github.com/Landgate/Medjil">GitHub</a>repository.</p>
+<p>Each of the EDM Baseline designs aims to achieve an equal distribution of measured distances between the shortest and longest lines without any repetitions. They also allow EDMI calibration with or without known distances (certified baseline distances), with the exception of the Hobart design, which requires the distances to be known beforehand. Most baseline designs aim to accomodate a variety of EDM instruments with different unit lenths. A detailed explanation of baseline design concepts is beyond the scope of this manual. For detailed baseline design information, please refer to the "Electronic Distance Measurement" book by J.M. Rueger.</p>
+<p>The current version of Medjil portal requires distances to be known for all types of baselines to perform EDMI calibration. This approach is essential for ensuring distance traceability to the national standard. Therefore, EDM baselines must be calibrated using NMI certified instruments to determine the certified distances before proceeding with EDMI calibration. An additional module could potentially be developed to enable EDMI calibration without known distances. However, it is important to note that such calibrations cannot be certified under the NMI Act, and the EDMI distances obtained in this manner are not legally traceable to the national standard.</p>
 <div id="Chapter_1_2"></div>
 <h2>1.2 Mathematical model and observation equations for the calibration of EDM Baseline</h2>
-<p>Deriving two observation equations not only ensures that distances remain non-negative but also enhances the flexibility of the EDM Baseline survey:</p>
+<p>By deriving two observation equations, we can ensure that distances remain non-negative and, at the same time, increase the flexibility of the EDM Baseline survey:</p>
 <div>$$ D_{ij}=x_j-x_i-zpc\ \ \ for\ j > i\ \ \ (Eq. 1.1)$$ </div>
 <div>$$ D_{ij}=x_i-x_j-zpc\ \ \ for\ j < i\ \ \ (Eq. 1.2)$$ </div>
 <p>Where:</p>
@@ -122,13 +118,13 @@ svg: {
 <p>&emsp;&emsp;zpc = Zero point correction (an additive constant of the certified EDMI)</p>
 <div id="Chapter_1_3"></div>
 <h2>1.3 Example: Formation of observation equations</h2>
-<p>Let's consider the following example baseline, comprising four pillars:</p>
-<img src="\media\TechnicalManual\tbaseline\Tech manual\Picture_1_1.png" alt="Example of EDM Baseline">
+<p>Consider the following example baseline consisting of 4 pillars:</p>
+<img src="\media\TechnicalManual\tbaseline\Medjil_Technical_Manual\Picture_1_1.png" alt="Example basline">
 <br>
 <br>
-<p>A set of linear observation equations can be formulated based on Eq. 1.1 and Eq. 1.2 as follows:</p>
+<p>The following set of linear observation equations can be formed according to Eq. 1.1 and Eq. 1.2:</p>
 <div>$$ \begin{matrix}D_{12}=&{+X}_2&&&-zpc\\D_{13}=&&{+X}_3&&-zpc\\D_{14}=&&&{+X}_4&-zpc\\D_{21}=&{+X}_2&&&-zpc\\D_{23}=&-X_2&+X_3&&-zpc\\D_{24}=&-X_2&&{+X}_4&-zpc\\D_{31}=&&+X_3&&-zpc\\D_{32}=&-X_2&{+X}_3&&-zpc\\D_{34}=&&-X_3&{+X}_4&-zpc\\D_{41}=&&&+X_4&-zpc\\D_{42}=&-X_2&&+X_4&-zpc\\D_{43}=&&-X_3&+X_4&-zpc\\\end{matrix}\ \ \ (Eq. 1.3)$$ </div>
-<p>In matrix notation, the observation equations can be represented as D = AX:</p>
+<p>In matrix notation, the observation equations can be represented as as D = AX:</p>
 <div>$$ \left[\begin{matrix}D_{12}\\D_{13}\\D_{14}\\D_{21}\\D_{23}\\D_{24}\\D_{31}\\D_{32}\\D_{34}\\D_{41}\\D_{42}\\D_{43}\\\end{matrix}\right]=\left[\begin{matrix}1&0&0&-1\\0&1&0&-1\\0&0&1&-1\\1&0&0&-1\\-1&1&0&-1\\-1&0&1&-1\\0&1&0&-1\\-1&1&0&-1\\0&-1&1&-1\\0&0&1&-1\\-1&0&1&-1\\0&-1&1&-1\\\end{matrix}\right]\left[\begin{matrix}X_2\\X_3\\X_4\\zpc\\\end{matrix}\right]\ \ \ (Eq. 1.4)$$ </div>
 <p>Where:</p>
 <p>&emsp;&emsp;D<sub>ij</sub> = Measured distance between pillars i and j (vector of the observations)</p>
@@ -137,9 +133,9 @@ svg: {
 <p>This approach eliminates the need to provide approximate distances between pillars. In accordance with Section (5), the observations, along with their a-priori uncertainties (P), undergo a least squares adjustment to obtain the estimated certified distances d<sub>x</sub>, the zpc value, and the complete VCV matrix.</p>
 <div id="Chapter_1_4"></div>
 <h2>1.4 Inter-pillar distances survey</h2>
-<img src="\media\TechnicalManual\tbaseline\Tech manual\Picture_1_3.png" alt="Inter-pillar distances survey">
+<img src="\media\TechnicalManual\tbaseline\Medjil_Technical_Manual\Picture_1_3.png" alt="Inter-pillar distances survey">
 <p>To calibrate an EDM baseline, a series of inter-pillar distance measurements (surveys) are necessary, which should include atmospheric observations of the conditions during the during measuring of each survey distance. Medjil mandates that all instrumentation used in the survey must be calibrated and possess a current certificate stating the uncertainty of the instrument readings and the calibration corrections that can be applied. The uncertainty of instrument readings plays a crucial role in propagating uncertainties for the inter-pillar distance survey.</p>
-<p>The distance observations are assumed to be slope distances that have not been corrected for the height of instrument or height of targets. Applying atmospheric corrections by entering these into the instrument is optional but Medjil requires temperature, pressure and humidity for every distance measurement even if this has been entered into the instrument. These values are used for estimating the propagation of uncertainty as well as the optional applying of atmospheric corrections when no correction was applied by the instrument during the survey.</p>
+<p>The distance observations are assumed to be slope distances that have not been corrected for the height of instrument or height of targets. Applying atmospheric corrections by entering these into the instrument is optional but Medjil requires temperature, pressure and humidity for every distance measurement even if this has been entered into the instrument. These values are used for estimating the propagation of uncertinty as well as the optional applying of atmospheric corrections when no correction was applied by the instrument during the survey.</p>
 <p>It is recommended each distance (bay) d<sub>ij</sub> (where i = from_pillar; j = to_pillar) should be measured four times. However, Medjil allows the number of repeat measurements to vary between bays and between surveys. The pillar survey data is to be provided in an ASCII file and must contain the following fields:</p>
 <ul STYLE="margin:30px">
 <li>from_pillar: Pillar name as defined in Medjil calibration sites</li>
@@ -152,13 +148,13 @@ svg: {
 <li>pressure: pressure in Hectopascals or millibars</li>
 <li>humidity: humidity in percentage</li>
 </ul>
-<p>Refer to this <a href = "\media\TechnicalManual\tbaseline\Tech manual\BUSS_baseline_calibration_edm_observations.csv" target = "_self">sample dataset</a> required for an EDM baseline calibration survey data format.</p>
+<p>Refer to this <a href = "\media\TechnicalManual\tbaseline\Medjil_Technical_Manual\BUSS_baseline_calibration_edm_observations.csv" target = "_self">sample dataset</a> required for an EDM baseline calibration survey data format.</p>
 <br>
 <p>Baseline measurements must be performed in accordance with the ISO17123-4:2012 Optics and optical instruments – Field procedures for testing geodetic and surveying instruments – Part 4: Electro-optical distance meters (EDM measurements to reflectors).</p>
 <div id="Chapter_1_5"></div>
 <h2>1.5 Pillar offsets survey</h2>
 <p>The pillar offset survey determines the offset of each pillar from the alignment of the first (1) and last pillar (n). Medjil performs the required reduction of observations during the EDM Baseline calibration process. Distances observed from every pillar of the baseline can be included in the calculation of the pillar offset if the survey setup includes measurements to pillar 1 and pillar n.</p>
-<img src="\media\TechnicalManual\tbaseline\Tech manual\Picture_1_2.png" alt="Pillar Offsets">
+<img src="\media\TechnicalManual\tbaseline\Medjil_Technical_Manual\Picture_1_2.png" alt="Pillar Offsets">
 <p>For each pillar setup, an arbitrary set of coordinates (E<sub>j</sub>, N<sub>j</sub>) are calculated for all pillars observed according to the formula:</p>
 <div>$$\left[E_j,N_j\right]=\ Polar2Reclangular\left(Hz_{ij},d_{ij}\right)\ \ \ (Eq. 1.5)$$ </div>
 <p>Where:</p>
@@ -175,8 +171,19 @@ svg: {
 <div id="Chapter_1_6"></div>
 <h2>1.6 Pillar heights survey</h2>
 <p>Pillar heights (H<sub>j</sub>) are to be determined as orthometric heights (eg. AHD71) and provided with standard deviations. The standard deviations should preferably be derived from redundant observations. Data for the height of pillars is to be provided in an ASCII file. Refer to this 
-<a href = "\media\TechnicalManual\tbaseline\Tech manual\BUSS_ baseline_calibration_level_observations.csv" target = "_self">sample dataset</a> for the required data format.</p>
+<a href = "\media\TechnicalManual\tbaseline\Medjil_Technical_Manual\BUSS_ baseline_calibration_level_observations.csv" target = "_self">sample dataset</a> for the required data format.</p>
 <p>Pillar coordinates are required and used to determine the baseline location in order to derive geometric correction to the distances. Medjil uses an average latitude of the supplied pillar coordinates to calculate the geometric corrections of surveyed distances. (See section 3.3)</p>
+<div id="Chapter_1_7"></div>
+<h2>1.7 Interlaboratory comparison</h2>
+<p>To assess the baseline calibration outcome in accordance with ISO 17025:2017, it is imperative to conduct an interlaboratory comparison. Therfore, the current EDM calibrated baseline needs to be compared onto other EDM baseline/s (reference laboratory).  The resuts can be assesed using the E<sub>n</sub> ('Error normalised'):</p>
+<div>$$ E_n=\frac{(x_{lab}-x_{ref})}{(U_{lab}^2+U_{ref}^2)}\ \ \ (Eq. 1.7) $$ </div>
+<p>Where:</p>
+<p>&emsp;&emsp;x<sub>lab</sub> = corrected distance of the current baseline</p>
+<p>&emsp;&emsp;x<sub>ref</sub> = corrected distance of the reference baseline</p>
+<p>&emsp;&emsp;U<sub>lab</sub> = uncertainty of the current baseleline</p>
+<p>&emsp;&emsp;U<sub>ref</sub> = uncertainty of the referance baseline</p>
+<br>
+<p>If the |E<sub>n</sub>| &#8804; 1 the results are satisfactory (results are comperable between baselines) and if the |E<sub>n</sub>| > 1 the results are unsatisfactory.</p>
 </div>
 <div id="Chapter_2">
 <!-- CHAPTER 2 -->
@@ -221,9 +228,9 @@ Aarau, Heerbrugg, and Hobart baseline designs are typically tailored for instrum
 <p>For every distance measured on a EDM baseline the following observation equation can be derived:</p>
 <div>$$ v_i=zpc+scf*D^C_i+1C\sin{\left(2\pi\frac{D_i}{U}\right)+2C\cos{\left(2\pi\frac{D_i}{U}\right)+3C\sin{\left(4\pi\frac{D_i}{U}\right)+4C\cos{\left(4\pi\frac{D_i}{U}\right)}}}}+(D^C_i-D_i)\ \ \ (Eq. 2.2)$$ </div>
 <p>Where:</p>
-<p>&emsp;&emsp;v<sub>i</sub> = Residual is the difference between certified distance and the adjusted observed distance</p>
+<p>&emsp;&emsp;v<sub>i</sub> = Residual is the difference between cetrtified distance and the adjusted observed distance</p>
 <p>&emsp;&emsp;D<sub>i</sub> = Observed distance</p>
-<div>$$D_i^C\ \ \ = Certified\ baseline\ distance $$ </div>
+<div>$$D_i^C\ \ \ = Certified baseline distance $$ </div>
 <p>The angular values (sin and cos values) are expressed in radians.</p>
 <p>Further the n observation equations for all distances measured on a certified baseline can be expressed in a matrix form as</p>
 <div>$$ V = AX + W\ \ \ (Eq. 2.3)$$ </div>
@@ -297,11 +304,11 @@ Aarau, Heerbrugg, and Hobart baseline designs are typically tailored for instrum
 <p>In electro-optical EDM, the refractive index is dependent on the wavelength of the visible or infrared radiation. Different frequencies have the same propagation velocity in a vacuum, but not in air because of the interference occurrence between the different frequencies. The signal resulting from the sum of all frequencies will have the so-called group velocity, which is always smaller than the phase velocities of its individual frequencies.</p>
 <p>Resolution 3 from the International Association of Geodesy (IAG) in 1999 at its XXIIth General Assembly in Birmingham, made the following recommendations.</p>
 <ol>
-    <li>Subparagraphs (a) and (b) of Resolution No. 1 of the 13th General Assembly of IUGG (Berkeley 1963) be cancelled</li>
+    <li>Subparagraphs (a) and (b) of Resolution No. 1 of the 13th General Assembly of IUGG (Berkeley 1963) be canceled</li>
     <li>The group refractive index in air for electronic distance measurement to better than one part per million (ppm) with visible and near-infrared waves in the atmosphere be computed using the computer procedure published by Ciddor & Hill in Applied Optics (1999, Vol. 38, No. 9, 1663-1667) and Ciddor in Applied Optics (1996, Vol. 35, No. 9, 1566-1573)</li>
     <li>The following closed formulae be adopted for the computation of the group refractive index in air for electronic distance measurement (EDM) to within 1 ppm with visible and near-infrared waves in the atmosphere:</li>
 </ol>
-<!--<p>The following constants and formulae relates to  recommendation two and is the procedure published by Ciddor & Hill in Applied Optics(1999, Vol.38, N0.9, 1663-1667) and Ciddor in Applied Optics (1996, Vol.35, No.9, 1566-1573):</p>
+<!--<p>The following constants and formulae relates to recomendation 2 and is the procedure published by Ciddor & Hill in Applied Optics(1999, Vol.38, N0.9, 1663-1667) and Ciddor in Applied Optics (1996, Vol.35, No.9, 1566-1573):</p>
 <p>The constants for standard phase and group refractivities of dry air are as follows (E.P. Peck and K. Reeder, 1972, Dispersion of Air, Journal of the Optical Society of America, 62(8): 958-962.):</p>
 <p>&emsp;&emsp;k<sub>0</sub> = 238.0185 µm<sup>-2</sup></p>
 <p>&emsp;&emsp;k<sub>1</sub> = 5792105 µm<sup>-2</sup></p>
@@ -347,7 +354,7 @@ Aarau, Heerbrugg, and Hobart baseline designs are typically tailored for instrum
 <p>The equations for the molar mass (kg/mol) of dry air containing x<sub> c</sub> ppm of CO<sub>2</sub></p>
 <div> $$ M_a = [28.9635 + 12.011 \times 10^{-6}(x_c - 400)] \times 10^{-3} $$</div>-->
 
-<p>The following closed formulae relates to recommendation three for the computation of the group refractive index in air for electronic distance measurements:</p>
+<p>The following closed formulae relates to recomendation 3 for the computation of the group refractive index in air for electronic distance measurements:</p>
 <div>$$ N_L=\left(n_L-1\right)\mathrm{\mathrm{.1}}0^6=\left(\frac{\mathrm{273.15\ }}{1013.25}.\frac{N_Gp}{(273.15+t)}\right)\mathrm{\mathrm{-}}\left(\frac{1\mathrm{1.27e}}{\left(\mathrm{273.15}+t\right)}\right)\ \ \ \ (Eq. 3.6)$$ </div>
 <p>Where:</p>
 <p>&emsp;&emsp;N<sub>L</sub> = Group refractivity of visible and near infrared waves in ambient moist air. Valid for atmospheric conditions described by t, p and e</p>
@@ -373,7 +380,7 @@ The 1.0 ppm stated in recommendation 3 of resolution 3 makes some allowance for 
 <li>Chord-to-Arc correction</li>
 </ul>
 <p>Pillar coordinates and elevation are required and used to determine the baseline location to derive geometric correction of the distances. Medjil computes an average value of the supplied coordinates.</p>
-<img src="\media\TechnicalManual\tbaseline\Tech manual\Picture_3_1.png" alt="Geometric correction">
+<img src="\media\TechnicalManual\tbaseline\Medjil_Technical_Manual\Picture_3_1.png" alt="Geometric correction">
 <div>$$ d_R\ =\ \sqrt{\frac{\left(d_O\right)^2-\left(O_1-O_2\right)^2-(\Delta H)^2}{\left(1+\left(\frac{H_1-H_{REF}}{R+H_{REF}}\right)\right)\left(1+\left(\frac{H_2-H_{REF}}{R+H_{REF}}\right)\right)}}\ \ \ \ (Eq. 3.8) $$</div>
 <p>Where:</p>
 <p>&emsp;&emsp;d<sub>R</sub> = Certified horizontal distance between two pillars reduced to a reference elevation H<sub>REF</sub>
@@ -457,17 +464,17 @@ The 1.0 ppm stated in recommendation 3 of resolution 3 makes some allowance for 
 Medjil automatically populates the uncertainty sources (Table 4.1 and Table 4.2) when processing the calibration of EDM baselines and EDM Instrumentation.</p>
 <br>Table 4.1: Medjil uncertainty budget for calibration of EDM Baseline 
 <br>
-<img src="\media\TechnicalManual\tbaseline\Tech manual\Picture_4_2.png" alt="Medjil uncertainty budget for calibration of EDM Baseline ">
+<img src="\media\TechnicalManual\tbaseline\Medjil_Technical_Manual\Picture_4_2.png" alt="Medjil uncertainty budget for calibration of EDM Baseline ">
 <br>
 <br>Table 4.2: Medjil uncertainty budget for calibration of EDM Instrumentation
-<img src="\media\TechnicalManual\tbaseline\Tech manual\Picture_4_3.png" alt="Medjil uncertainty budget for calibration of EDM Instrumentation">
+<img src="\media\TechnicalManual\tbaseline\Medjil_Technical_Manual\Picture_4_3.png" alt="Medjil uncertainty budget for calibration of EDM Instrumentation">
 <br>
 <br>
 <p>The values for these automatically populated uncertainty sources are derived as follows:</p>
 <ul STYLE="margin:30px">
-<li>Certified distances - Least Squares Adjustment (LSA) uncertainty - The uncertainty of each inter-pillar distance is uniquely assigned from the diagonal elements of the CoFactorMatrix derived from the least squares adjustment of the baseline calibration. The degrees of freedom is the equal to the degrees of freedom of the calibration of the baseline and the coverage factor is derived from  t-student distribution at 95% and selected degrees of freedom t<sub>(95%,dof)</sub>
+<li>Certified distances - Least Squares Adjustment (LSA) uncertainty - The uncertainty of each inter-pillar distance is uniquely assigned from the diagonal elements of the Cofactormatrix derived from the least squares adjustment of the baseline calibration. The degrees of freedom is the equal to the degrees of freedom of the calibration of the baseline and the coverage factor is derived from  t-student distribution at 95% and selected degrees of freedom t<sub>(95%,dof)</sub>
 </li>
-<li>EDM LS zero offset - Zero Point Correction (ZPC) uncertainty - The uncertainty of the zero point correction is assigned from last element of the CoFactorMatrix derived from the least squares adjustment of the baseline calibration.  The degrees of freedom is the equal to the degrees of freedom of the calibration of the baseline and the coverage factor is the t-student at 95% and selected degrees of freedom (t<sub>(95%,dof)</sub>)</li>
+<li>EDM LS zero offset - Zero Point Correction (ZPC) uncertainty - The uncertainty of the zero point correction is assigned from last element of the Cofactormatrix derived from the least squares adjustment of the baseline calibration.  The degrees of freedom is the equal to the degrees of freedom of the calibration of the baseline and the coverage factor is the t-student at 95% and selected degrees of freedom (t<sub>(95%,dof)</sub>)</li>
 <li>EDM scale factor - EDMI Reg13 Scale correction factor - The uncertainty, degrees of freedom and coverage factor is assigned from the values specified in the register of calibration certificates of EDM instrument (EDMI). The selected values correspond to the most current certificate (at the time of survey) of the EDMI used for the calibration of the EDM Baseline</li>
 <li>EDM scale factor - EDM scale factor (drift over time) - The uncertainty is derived using linear regression of the scale factors from all available calibration certificates of the same EDM Baseline (certified distances). The scale factor is extrapolated at the time of calibration survey and the difference between this value and the last computed value (as per the most current certificate) is adopted as the uncertainty. This uncertainty source is assigned 30 degrees of freedom and a coverage factor of √3</li>
 <li>EDMI measurement - Distance Instrument Rounding - The uncertainty is equivalent to half of the instrument measurement increment reading. This uncertainty source is assigned 100 degrees of freedom and a coverage factor of √3.</li>
@@ -513,7 +520,7 @@ Medjil automatically populates the uncertainty sources (Table 4.1 and Table 4.2)
 <p>&emsp;&emsp;k = Coverage factor of a baseline calibration determined by the t-student at 95% and LSA derived degree of freedom (dof) t<sub>(95%,dof)</sub>
 </p>
 <p>&emsp;&emsp;S<sub>ij</sub> = Standard uncertainty of a distance between pillar i and pillar j</p>
-<li>EDM Calibration - Uncertainty of LSA EDMI Correction - This is a type A uncertainty output by the least squares adjustment used to determine calibration parameters for the calibration of EDM Instrumentation. The uncertainty of the parameters are equivalent to the diagonal elements of the CoFactorMatrix. The ‘Uncertainty of (LSA) EDMI Correction’ is calculated according to the following conditions:</li>
+<li>EDM Calibration - Uncertainty of LSA EDMI Correction - This is a type A uncertainty output by the least squares adjustment used to determine calibration parameters for the calibration of EDM Instrumentation. The uncertainty of the parameters are equivalent to the diagonal elements of the Cofactormatrix. The ‘Uncertainty of (LSA) EDMI Correction’ is calculated according to the following conditions:</li>
 <p>(a) if the calibration of the EDMI has tested for cyclic errors and found them to be significant:</p>
 <div>$$ S_{IC}=S_{zpc}+S_{scf}D+S_1\sin{\left(2\pi\frac{D}{U}\right)+S_2\cos{\left(2\pi\frac{D}{U}\right)+S_3\sin{\left(4\pi\frac{D}{U}\right)+S_4\cos{\left(4\pi\frac{D}{U}\right)}}}}\ \ \ (Eq. 4.9)$$ </div>
 <p>Where:</p>
@@ -1095,7 +1102,7 @@ Medjil automatically populates the uncertainty sources (Table 4.1 and Table 4.2)
 <div id="Chapter_4_2_2"></div>
 <h3>4.2.2 Custom uncertainty budgets</h3>
 <p>Medjil default uncertainty budget is used during the calibration process and it contains typical uncertainty sources and their values. Medjil also allows to setup a user (company) specific uncertainty budget(s) based on the default which is used for calibrations instead of the default one. During the setup process user can delete, modify or add additional error sources.</p>
-<img src="\media\TechnicalManual\tbaseline\Tech manual\Picture_4_1.png" alt="Uncertainty budgets">
+<img src="\media\TechnicalManual\tbaseline\Medjil_Technical_Manual\Picture_4_1.png" alt="Uncertainty budgets">
 <p>Where:</p>
 <p>
 <b>Name</b> = Custom uncertainty budget name. Uncertainty budgets are identified by a name that must be unique</p>
@@ -1156,7 +1163,7 @@ A rectangular distribution represents an arbitrary outcome that lies between cer
 <p>&emsp;&emsp;E = Saturation water vapour [hPa] at the dry bulb temperature</p>
 <p>&emsp;&emsp;h = Relative humidity [%]</p>
 <p>
-<b>Pressure</b> = Uncertainty related to the pressure can be specified in millibars (mBar), hectopascals (hPa) or millimetres of mercury (mmHg). All error sources belonging to this group will be combined before the contribution to the total uncertainty of the calibration according to the following formula:</p>
+<b>Pressure</b> = Uncertainty related to the presure can be specified in millibars (mBar), hectopascals (hPa) or millimetres of mercury (mmHg). All error sources belonging to this group will be combined before the contribution to the total uncertainty of the calibration according to the following formula:</p>
 <div>$$ su_d = D*L*csu_g*10^{-6}\ \ \ (Eq. 4.17)$$ </div>
 <p>Where:</p>
 <p>&emsp;&emsp;su<sub>d</sub> = Standard uncertainty of the distance</p>
@@ -1266,21 +1273,12 @@ A rectangular distribution represents an arbitrary outcome that lies between cer
 <div>$$ |δ-δ_0 |≤s_δ×t_{1-α/2} (ν)\ \ \ \ (Eq. 6.3) $$</div>
 <p>Otherwise, the null hypothesis is rejected.</p>
 <br>
-<div id="Chapter_6_2"></div>
 <h2>6.2 Endnotes</h2>
+<div id="Chapter_6_2"></div>
 <p>The calibration reports displays a set of predefined endnotes. These notes can be specified for both EDMI and Baseline calibration and may be either mandatory or company's specific:</p>
-<img src="\media\TechnicalManual\tbaseline\Tech manual\Picture_6_2.png" alt="End notes">
-<div id="Chapter_6_3"></div>
-<h2>6.3 Interlaboratory comparison - Baselines</h2>
-<p>To assess the baseline calibration outcome in accordance with ISO 17025:2017, it is imperative to conduct an interlaboratory comparison. Therefore, the current EDM calibrated baseline needs to be compared onto other EDM baseline/s (reference laboratory).  The results can be assessed using the E<sub>n</sub> value ('Error normalised'):</p>
-<div>$$ E_n=\frac{(x_{lab}-x_{ref})}{(U_{lab}^2+U_{ref}^2)}\ \ \ (Eq. 6.4) $$ </div>
-<p>Where:</p>
-<p>&emsp;&emsp;x<sub>lab</sub> = corrected distance of the current baseline</p>
-<p>&emsp;&emsp;x<sub>ref</sub> = corrected distance of the reference baseline</p>
-<p>&emsp;&emsp;U<sub>lab</sub> = uncertainty of the distance at the current baseline</p>
-<p>&emsp;&emsp;U<sub>ref</sub> = uncertainty of the distance at the reference baseline</p>
-<br>
-<p>If the |E<sub>n</sub>| &#8804; 1 the results are satisfactory (results are comperable between baselines) and if the |E<sub>n</sub>| > 1 the results are unsatisfactory.</p></div>
+<img src="\media\TechnicalManual\tbaseline\Medjil_Technical_Manual\Picture_6_2.png" alt="End notes">
+</div>
 <p>End of manual</p>
 </body>
 </html>
+
