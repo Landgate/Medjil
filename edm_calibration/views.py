@@ -677,8 +677,8 @@ def intercomparison(request, id=None):
         certificates = EDMI_certificate.objects.filter(
             edm=form.cleaned_data['edm'],
             prism=form.cleaned_data['prism'],
-            calibration_date__gt=form.cleaned_data['from_date'],
-            calibration_date__lt=form.cleaned_data['to_date']
+            calibration_date__gte=form.cleaned_data['from_date'],
+            calibration_date__lte=form.cleaned_data['to_date']
         )
         
         # raise a warning if there are not enough records to complete a comparison
