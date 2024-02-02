@@ -166,8 +166,9 @@ def calibrate1(request, id):
                 v['use_for_alignment'] = True 
                 v['use_for_distance'] = True
         else:
+            qs = EDM_Observation.objects.filter(pillar_survey__pk=id)
             raw_edm_obs = {}
-            for o in current_obs:
+            for o in qs:
                 dct = model_to_dict(o)
                 dct['from_pillar'] = o.from_pillar.name
                 dct['to_pillar'] = o.to_pillar.name
