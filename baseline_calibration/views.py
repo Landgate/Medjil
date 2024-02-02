@@ -161,22 +161,19 @@ def calibrate1(request, id):
         
         # read new files or read raw data from database
         if survey_files['edm_file']:
-            EDM_Observation.objects.filter(pillar_survey=ps_instance).delete() 
             raw_edm_obs = csv2dict(survey_files['edm_file'])
             for v in raw_edm_obs.values():
                 v['use_for_alignment'] = True 
                 v['use_for_distance'] = True
         else:
-            qs = EDM_Observation.objects.filter(pillar_survey__pk=id)
             raw_edm_obs = {}
-            for o in qs:
+            for o in current_obs:
                 dct = model_to_dict(o)
                 dct['from_pillar'] = o.from_pillar.name
                 dct['to_pillar'] = o.to_pillar.name
                 raw_edm_obs[str(o.id)] = dct
         
         if survey_files['lvl_file']:
-            Level_Observation.objects.filter(pillar_survey=ps_instance).delete()
             raw_lvl_obs = csv2dict(survey_files['lvl_file'],key_names=0)
         else:
             qs = Level_Observation.objects.filter(pillar_survey__pk=id)
@@ -204,8 +201,11 @@ def calibrate1(request, id):
                               {'Check_Errors':Check_Errors})
         
         ps_instance = pillar_survey.save()
+        id = ps_instance.pk
         # Commit all the edm raw observations
         if survey_files['edm_file']:
+            delete_edm_obs = EDM_Observation.objects.filter(pillar_survey=id)
+            delete_edm_obs.delete()
             for o in raw_edm_obs.values():
                 from_pillar_id = baseline['pillars'].get(name=o['from_pillar'])
                 to_pillar_id = baseline['pillars'].get(name=o['to_pillar'])
@@ -226,6 +226,8 @@ def calibrate1(request, id):
                 )
         # Commit all the reduced levels
         if survey_files['lvl_file']:
+            delete_lvl_obs = Level_Observation.objects.filter(pillar_survey=id)
+            delete_lvl_obs.delete()
             for l in raw_lvl_obs.values():
                 pillar_id = baseline['pillars'].get(name=l['pillar'])
 
@@ -236,7 +238,7 @@ def calibrate1(request, id):
                     rl_standard_deviation=l['std_dev']
                 )
         
-        return redirect('baseline_calibration:calibrate2', id=ps_instance.pk)
+        return redirect('baseline_calibration:calibrate2', id=id)
             
     headers = {'page0':'Calibrate the Baseline',
                 'page1': 'Instrumentation',
