@@ -653,7 +653,7 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
-                ("calibration_date", models.DateField(blank=True, null=True)),
+                ("calibration_date", models.DateField(blank=False, null=False)),
                 (
                     "zero_point_correction",
                     models.FloatField(
@@ -749,7 +749,7 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 ("calibration_date", models.DateField(
-                    blank=True, null=True, verbose_name="Calibration Date")),
+                    blank=False, null=False, verbose_name="Calibration Date")),
                 (
                     "scale_correction_factor",
                     models.FloatField(

@@ -558,7 +558,7 @@ def get_upload_to_edmi_certificate(instance, filename):
 class EDMI_certificate (models.Model):
     edm = models.ForeignKey(EDM_Inst, on_delete = models.PROTECT, verbose_name="EDM")
     prism = models.ForeignKey(Prism_Inst, on_delete = models.PROTECT)
-    calibration_date = models.DateField(null=True, blank=True, verbose_name="Calibration Date")
+    calibration_date = models.DateField(null=False, blank=False, verbose_name="Calibration Date")
 
     scale_correction_factor = models.FloatField(
         validators = [MinValueValidator(0.00000000), MaxValueValidator(2.00000000)],
@@ -791,7 +791,7 @@ def get_upload_to_mets_certificate(instance, filename):
 
 class Mets_certificate (models.Model):
     instrument = models.ForeignKey(Mets_Inst, on_delete = models.PROTECT)
-    calibration_date = models.DateField(null=True, blank=True)
+    calibration_date = models.DateField(null=False, blank=False)
 
     zero_point_correction = models.FloatField(
         validators = [MinValueValidator(-10.00), MaxValueValidator(10.00)],

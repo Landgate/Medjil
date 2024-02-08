@@ -383,6 +383,4 @@ class Mets_certificateForm(forms.ModelForm):
 
     units_zpc = forms.CharField(
         widget=forms.Select(choices=ini_units))
-    units_zpc_uc = forms.CharField(
-        widget=forms.Select(choices=ini_units))
         

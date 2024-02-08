@@ -108,12 +108,12 @@
                                 {% else %}
                                     <td colspan="3">
                                 {% endif %}
-                                    <p style="color:Red;">{{ error }}</p>
+                                    <p style="color:Red;">{{ field.name }} {{ error }}</p>
                                 </td>
                                 <td></td>
                             </tr>
                         {% endfor %}
-                        {% if 'date' in field.name %}
+                        {% if 'date' in field.name %}<!--After the Date field the form is changed to 5 columns -->
                             <tr>
                                 <td></td>
                                 <th>Value</th>
