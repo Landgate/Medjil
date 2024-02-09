@@ -208,9 +208,67 @@
             {% endfor %} 
             <div class="flexbox-container_IB">
                 <div class="flexbox-item_800_IB  flexbox-item-left_IB">
+                    <canvas id="myChart"></canvas>
                     <hr>
                 </div>
             </div>
         </div>
     </div>
 </article>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+<script>
+// Script to produce the Instrument Corrections Graph
+
+let cht_datasets = [];
+
+for (let d = 0; d <= distances.length-1; d++) {
+    Inter = Number.parseInt(distances[d] / {{ pillar_survey.edm.edm_specs.unit_length }},10);
+    fract = distances[d] - (Inter*{{ pillar_survey.edm.edm_specs.unit_length }});
+    fract_prop = fract / {{ pillar_survey.edm.edm_specs.unit_length }};
+    return_phase_ang = fract_prop * 360;
+    cht_datasets.push({
+      label: lbls3[d],
+      pointRadius: 1.5,
+      borderColor: 'black',
+      borderWidth: 1,
+      data: [{x:return_phase_ang, y:-1},{x:return_phase_ang, y:1}],
+      showLine: true,
+      fill: false,
+      tension: 0
+    });
+};
+
+new Chart("return-phase-angle-Chart", {
+  type: "scatter",
+  data: {
+    datasets: cht_datasets
+  },
+  options: {
+    legend: {display: true},
+    tooltips: {
+           callbacks: {
+              label: function(tooltipItem) {
+                 var label = lbls3[tooltipItem.datasetIndex-1];
+                 return label;
+              }
+           }
+        },
+    scales: {
+      xAxes: [{
+          scaleLabel: {display: true,
+            labelString: 'Phase Angle (°)'},
+         ticks: {
+            stepSize: 45,
+            max: 360,}
+      }],
+      yAxes: [{
+          scaleLabel: {display: true,
+             labelString: 'Amplitude'}
+      }],
+    }
+  }
+});
+
+</script>
+

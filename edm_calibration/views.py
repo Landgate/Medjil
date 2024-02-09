@@ -708,6 +708,18 @@ def intercomparison(request, id=None):
                         {'lab': cert1,
                          'ref': cert2,
                          'comparison': comparison})
+            
+            # Calculate data for graph
+            apply_calibration_plot = {}
+            for certificate in certificates:
+                dist = min(distances)
+                while dist <= max(distances):
+                    print(certificate.apply_calibration)
+                    apply_calibration_plot[str(certificate)] = {
+                        'x': dist,
+                        'y':certificate.apply_calibration(dist)[1] - dist}
+                    dist +=1
+            print(apply_calibration_plot)
             context = {'form': form.cleaned_data,
                        'certificates':certificates,
                        'comparisons' : comparisons}
