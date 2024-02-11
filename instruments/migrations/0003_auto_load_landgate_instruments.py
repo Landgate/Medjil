@@ -200,7 +200,7 @@ lg_mets_certs = [
     'zpc_coverage_factor':2,
     'zpc_std_dev':0.1,
     'degrees_of_freedom':30,
-    'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate/Mets Certificates/2021_20013647_Temperature_and_RH.pdf.pdf'),
+    'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate/Mets Certificates/2021_20013647_Temperature_and_RH.pdf'),
     'type':'thermo',
     'mets_number':20013647},
     {'calibration_date':'2021-04-14',
@@ -209,7 +209,7 @@ lg_mets_certs = [
     'zpc_coverage_factor':2,
     'zpc_std_dev':1.15,
     'degrees_of_freedom':30,
-    'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate/Mets Certificates/2021_20013647_Temperature_and_RH.pdf.pdf'),
+    'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate/Mets Certificates/2021_20013647_Temperature_and_RH.pdf'),
     'type':'hygro',
     'mets_number':20013647},
     ]
