@@ -31,7 +31,8 @@ from instruments.models import (
 from baseline_calibration.models import (
     Accreditation, Certified_Distance,
     Pillar_Survey, Std_Deviation_Matrix,
-    Uncertainty_Budget, EDM_Observation
+    Uncertainty_Budget, EDM_Observation,
+    Level_Observation
 )
 from edm_calibration.models import uPillar_Survey, uEDM_Observation
 from common_func.SurveyReductions import float_or_null
@@ -445,7 +446,7 @@ def import_dli(request):
                 medjil_baseline, medjil_pillars = match_baseline(
                     pillars, medjil_baselines)
                 pillars = dict(zip([p['pk'] for p in pillars], pillars))
-                    
+                
                 if not medjil_pillars:
                     commit_error.append(
                         f"No Medjil baseline matched for job: {job['name']}")
@@ -526,6 +527,7 @@ def import_dli(request):
                             float(UC_formula['UncertaintyScale'])*10**-6 * pillar['certified_distance']
                             + float(UC_formula['UncertaintyConstant']) * 0.001)
                         
+                        # Store certified distances
                         medjil_cert_dist, created = Certified_Distance.objects.get_or_create(
                             pillar_survey = medjil_baseline_calibration,
                             from_pillar = first_pillar,
@@ -538,6 +540,13 @@ def import_dli(request):
                                 rx['UncertaintyBaseline']['Pillar offset']['Default']) / 1000,
                             reduced_level = float(pillar['height']),
                             rl_uncertainty = float(pillar['HtStdDev'])
+                            )
+                        #Store level observations
+                        medjil_lvl_obs, created = Level_Observation.objects.get_or_create(
+                            pillar_survey = medjil_baseline_calibration,
+                            pillar = medjil_pillar,
+                            reduced_level = float(pillar['height']),
+                            rl_standard_deviation =float(pillar['HtStdDev'])
                             )
 
                     # Store observations used for calibration
