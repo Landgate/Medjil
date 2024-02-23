@@ -42,38 +42,37 @@
                     </p>
                 </a>                
                 <div class="header-userinfo">
-                        <div> 
-                        <!-- <div> -->
-                            <span>Welcome</span>
-                                {% if user.is_authenticated %}
-                                    {% if not user.first_name %}
-                                        <span><strong> {{ user.email }}</strong></span>
-                                    {% else %}
-                                        <span><strong>{{ user.first_name }}</strong></span>
-                                    {% endif %}
-                                {% endif %}
-                                <span>
-                                    <a href="#" id="header-toggle"><i class="fas fa-angle-down rotate" aria-hidden="true"></i></a>
-                                </span>
-                        </div>
-                        <ul class="header-sublinks">
+                    <div class="inline-flex items-center">
+                        <span class="pxr-2">Welcome</span> 
+                        <button class="dropdown-btn" data-dropdown="dropdown1" aria-haspopup="true" aria-expanded="false" aria-label="discover"> 
                             {% if user.is_authenticated %}
-                                <li class="sub-item">
-                                    <a href="{% url 'accounts:user_account'%}"> <i class="fa-solid fa-users-gear"></i> <span class="pxl-2">Profile</span></a>
-                                </li>
-                                <li class="sub-item">
-                                    <a href="{% url 'instruments:inst_settings' %}"> <i class="fa-solid fa-gear"></i> <span class="pxl-2">Settings</span></a>
-                                </li>
-                                <li class="sub-item">
-                                    <a href="{% url 'accounts:logout'%}"><i class="fa-solid fa-right-from-bracket"></i> <span class="pxl-2">Logout</span></a>
-                                </li>
+                                {% if not user.first_name %}
+                                    <span class="primary-link pxr-2"><strong> {{ user.email }}</strong></span>
+                                {% else %}
+                                    <span class="primary-link pxr-2"><strong>{{ user.first_name }}</strong></span>
+                                {% endif %}
                             {% else %}
-                                <li class="sub-item"><a href="{% url 'accounts:login' %}">Login</a></li>
-                                <li class="sub-item"><a href="{% url 'accounts:signup' %}">Sign up</a></li>
-                            {% endif %}                            
-                        </ul>
-                    
-                    <!-- </div> -->
+                                <span class="primary-link pxr-2"><strong>Signup or Login</strong></span>
+                            {% endif %}
+                            <i class="fas fa-angle-down rotate" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <ul id="dropdown1" class="dropdown">
+                        {% if user.is_authenticated %}
+                            <li class="sub-item">
+                                <a href="{% url 'accounts:user_account'%}"> <i class="fa-solid fa-users-gear"></i> <span class="pxl-2">User Profile</span></a>
+                            </li>
+                            <li class="sub-item">
+                                <a href="{% url 'instruments:inst_settings' %}"> <i class="fa-solid fa-gear"></i> <span class="pxl-2">Settings</span></a>
+                            </li>
+                            <li class="sub-item">
+                                <a href="{% url 'accounts:logout'%}"><i class="fa-solid fa-right-from-bracket"></i> <span class="pxl-2">Logout</span></a>
+                            </li>
+                        {% else %}
+                            <li class="sub-item"><a href="{% url 'accounts:login' %}">Login</a></li>
+                            <li class="sub-item"><a href="{% url 'accounts:signup' %}">Sign up</a></li>
+                        {% endif %}   
+                    </ul>
                 </div>
             </div>
         </div>
@@ -260,18 +259,89 @@
         var today = new Date();
         document.getElementById('current_time').innerHTML=today.toLocaleString('en-AU');
         
-        const headerMenu = document.querySelector(".header-sublinks")
-        const headToggleMenu = document.getElementById("header-toggle")
+        const links = document.querySelectorAll('.nav-item.has-subnav');
+        const dropdown = document.querySelectorAll(".dropdown");
+        const iconsChevron = document.querySelectorAll(".fa-angle-down.rotate")
 
-        headToggleMenu.addEventListener('click', () => {
-            if (headerMenu.style.display == 'none' || headerMenu.style.display=="") {
-                headerMenu.style.display = 'block'
-                headToggleMenu.firstChild.classList.add('down')
-            } else {
-                headerMenu.style.display = 'none'
-                headToggleMenu.firstChild.classList.remove('down')
-            }   
-        })
+        function closeDropdownMenu() {
+            dropdown.forEach((drop) => {
+                drop.classList.remove("active");
+                drop.addEventListener("click", (e) => e.stopPropagation());
+            });
+        }
+
+        function setAriaExpandedFalse() {
+            dropdownBtn.forEach((btn) => btn.setAttribute("aria-expanded", "false"));
+        }
+
+        const dropdownBtn = document.querySelectorAll(".dropdown-btn");
+        dropdownBtn.forEach((btn) => {
+            btn.addEventListener("click", function (e) {
+                const chevronLink = e.currentTarget.firstElementChild.nextElementSibling;
+                const dropdownIndex = e.currentTarget.dataset.dropdown;
+                const dropdownElement = document.getElementById(dropdownIndex);
+
+                dropdownElement.classList.toggle("active");
+                chevronLink.classList.toggle("down");
+
+                dropdown.forEach((drop) => {
+                if (drop.id !== btn.dataset["dropdown"]) {
+                    drop.classList.remove("active");
+                }
+                });
+
+                // Unrotate if clicked on a different dropdown link
+                iconsChevron.forEach((icons) => {
+                    // console.log(btn.firstElementChild.nextElementSibling)
+                    if (icons.classList !== btn.firstElementChild.nextElementSibling.classList){
+                        icons.classList.remove("down");
+                    }        
+                });
+
+                e.stopPropagation();
+                btn.setAttribute(
+                    "aria-expanded",
+                    btn.getAttribute("aria-expanded") === "false" ? "true" : "false"
+                );
+            });
+        });
+
+        // close dropdown menu when the dropdown links are clicked
+        links.forEach((link) =>
+            link.addEventListener("click", () => {
+                closeDropdownMenu();
+                setAriaExpandedFalse();
+                document.querySelectorAll(".fa-angle-down.rotate").forEach((icons) => {
+                    if (icons.classList.contains("down")) {
+                        icons.classList.remove("down")
+                    }
+                })
+            })
+        );
+
+        // close dropdown menu when you click on the document body
+        document.documentElement.addEventListener("click", () => {
+            closeDropdownMenu();
+            setAriaExpandedFalse();
+            document.querySelectorAll(".fa-angle-down.rotate").forEach((icons) => {
+                if (icons.classList.contains("down")) {
+                    icons.classList.remove("down")
+                }
+            })
+        });
+
+        // close dropdown when the escape key is pressed
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") {
+                closeDropdownMenu();
+                setAriaExpandedFalse();
+                document.querySelectorAll(".fa-angle-down.rotate").forEach((icons) => {
+                    if (icons.classList.contains("down")) {
+                        icons.classList.remove("down")
+                    }
+                })
+            }
+        });
     </script>
 
 </body>
