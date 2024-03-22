@@ -18,6 +18,8 @@
 from django.forms import ModelForm
 from django import forms
 from django.contrib.auth import password_validation
+from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth import authenticate
 from django.contrib.auth.forms import ReadOnlyPasswordHashField, UserCreationForm, UserChangeForm
 
 
@@ -63,23 +65,36 @@ class CustomUserChangeForm(ModelForm):
     # def clean_password(self):
     #     return self.initial["password"]
 
-class LoginForm(forms.Form): 
+class LoginForm(forms.ModelForm):
+    '''
+    Form for logging users
+    '''
     email = forms.EmailField(widget=forms.TextInput(
         attrs={'class': 'form-control','type':'text','name': 'email','placeholder':'Email address'}), 
         label='Email Address')
     password = forms.CharField(widget=forms.PasswordInput(
         attrs={'class':'form-control','type':'password', 'name': 'password','placeholder':'Password'}),
         label='Password')
-
-    class Meta:
-        fields = ['email', 'password']
-        # widgets = {
-        #     'password': forms.PasswordInput(attrs={'placeholder':'********','autocomplete': 'off','data-toggle': 'password'}), 
-        # }
     
-    def clean_email(self):
-        return self.cleaned_data.get('email').lower()
+    class Meta:
+        model = CustomUser
+        fields = ['email', 'password']
 
+    def __init__(self, *args, **kwargs):
+        """
+          specifying styles to fields 
+        """
+        super(LoginForm, self).__init__(*args, **kwargs)
+        for field in (self.fields['email'],self.fields['password']):
+            field.widget.attrs.update({'class': 'form-control '})
+
+    def clean(self):
+        if self.is_valid():
+            email = self.cleaned_data.get('email').lower()
+            password = self.cleaned_data.get('password')
+            if not authenticate(email=email, password=password):
+                raise forms.ValidationError('The username and/or password you have entered is incorrect. Please check and try again!')
+    
 class CompanyForm(forms.ModelForm):
     class Meta:
         model = Company

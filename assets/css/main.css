@@ -1397,10 +1397,10 @@ td .add-button {
   padding-left: 0.5rem;
 }
 
-.message-list ul li {
+/* .message-list ul li {
   list-style-type: square;
   list-style-position: inside;
-}
+} */
 
 .message-list ul > ul li {
   list-style-type: decimal;

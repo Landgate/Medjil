@@ -23,6 +23,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
+from django.views.decorators.csrf import csrf_exempt
 from .token_generator import account_activation_token
 from django.core.mail import EmailMessage
 from django.contrib import messages
@@ -146,6 +147,7 @@ def user_login(request):
             # print(email)
             password = form.cleaned_data.get('password')
             user = authenticate(email = email, password=password)
+            print(user)
             if user is not None:
                 if user.is_active:
                     login(request, user)
@@ -167,8 +169,7 @@ def user_login(request):
                     email.send()
                     return redirect('accounts:activation_sent')
             else:
-                return redirect('/')
-            return redirect('/')
+                messages.error(request, "Please check the login details.")
     else:
         form = LoginForm()
     return render(request, 'accounts/login.html', {'login_form': form})

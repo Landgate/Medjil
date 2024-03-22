@@ -15,62 +15,81 @@
    limitations under the License.
 
 -->
-{% extends 'base_generic.html' %}
-{% load static %}
-
-{% block content %}
-
-<article class="post">
-    <header class="post-header mt-12 text-center mb-3">
-        <h1>Welcome to Medjil the Survey Instrumentation Calibration Portal!</h1>
-        <p>Your gateway to rigorous calibration of survey instrumentation.</p>
-    </header>
-
-    <div class="post-content">
-        <form action="{% url 'accounts:login' %}" class="site-form" method="post">
-            <div class="mb-5 site-form-header bg-indigo-300 rounded px-2">
-                <h2 class="text-center">Login</h2>
-            </div>
-
-            <div class="form-container">
-                {% csrf_token %}
-                <table>
-                    {% for field in login_form %}
-                        <tr>
-                            <td width="20%">{{ field.label_tag }}</td>
-                            <td width="50"> 
-                                {{ field }}
-                                 <!-- Errors -->
-                                {% for error in field.errors %}
-                                    <p class="error error-danger">{{ error }}</p>
-                                {% endfor %}
-                                <!-- Help text -->
-                                {% if not field.field.widget.attrs.placeholder and field.help_text %}
-                                    <p class="helptext">{{ field.help_text }}</p>
-                                {% endif %}
-                            </td>
-                            <td width="20%"></td>
-                        </tr>
+ {% extends 'base_generic.html' %}
+ {% load static %}
+ 
+ {% block content %}
+ 
+ <article class="post">
+     <header class="post-header mt-12 text-center mb-3">
+         <h1>Welcome to Medjil the Survey Instrumentation Calibration Portal!</h1>
+         <p>Your gateway to rigorous calibration of survey instrumentation.</p>
+     </header>
+ 
+     <div class="post-content">
+         <!-- <p> hello </p> -->
+         {% if messages %}
+             <ul class="message-list">
+                 {% for message in messages %}
+                     <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|safe }}</li>
+                 {% endfor %}
+             </ul>
+             <br>
+         {% endif %}
+ 
+         <form action="{% url 'accounts:login' %}" class="site-form" method="post">
+            {% csrf_token %}
+             <div class="mb-5 site-form-header bg-indigo-300 rounded px-2">
+                 <h2 class="text-center">Login</h2>
+             </div>
+             
+             {% if login_form.non_field_errors %}
+                <ul class="message-list" style="padding: 0.5rem 1.5rem">
+                    {% for error in login_form.non_field_errors %}
+                        <li class="error-danger"><strong>{{ error }}</strong></li>
                     {% endfor %}
-                </table>
-                
-                <!-- {{ login_form }} -->
+                </ul>
+            {% endif %}
 
-                <!--  redirect -->
-                {% if request.GET.next %}
-                    <input type="hidden" name="next" value="{{ request.GET.next }}">
-                {% endif %}
-              
-            </div>                
-            <div class="button-container">
-            		<a href="{% url 'home' %}" class="submit-button bg-red-500 hover:bg-red-400 text-base text-center" type="submit">Cancel</a>
-                <div class="registerbtn-container">
-                    <span>Forgot your <a href="{% url 'accounts:password_reset' %}" class="text-blue-500">password</a>?</span>
-                    <a href="{% url 'accounts:signup' %}" class="submit-button bg-blue-500 hover:bg-blue-400  text-base text-center" type="submit">Sign up</a>
-                </div>
-                <button href="{% url 'accounts:login' %}"  class="submit-button bg-green-500 hover:bg-green-400 text-base text-center" type="submit">Login</button>
-            </div>            
-        </form>
-    </div>
-</article>
-{% endblock %}
+             <div class="form-container">
+                 <table>
+                     {% for field in login_form %}
+                         <tr>
+                             <td width="20%">{{ field.label_tag }}</td>
+                             <td width="50"> 
+                                 {{ field }}
+                                 <!-- Errors -->
+                                 {% for error in field.errors %}
+                                     <p class="error error-danger">{{ error }}</p>
+                                 {% endfor %}
+                                 <!-- Help text -->
+                                 {% if not field.field.widget.attrs.placeholder and field.help_text %}
+                                     <p class="helptext">{{ field.help_text }}</p>
+                                 {% endif %}
+                             </td>
+                             <td width="20%"></td>
+                         </tr>
+                     {% endfor %}
+ 
+                 </table>
+                 
+                 <!-- {{ login_form }} -->
+ 
+                 <!--  redirect -->
+                 {% if request.GET.next %}
+                     <input type="hidden" name="next" value="{{ request.GET.next }}">
+                 {% endif %}
+               
+             </div>                
+             <div class="button-container">
+                     <a href="{% url 'home' %}" class="submit-button bg-red-500 hover:bg-red-400 text-base text-center" type="submit">Cancel</a>
+                 <div class="registerbtn-container">
+                     <span>Forgot your <a href="{% url 'accounts:password_reset' %}" class="text-blue-500">password</a>?</span>
+                     <a href="{% url 'accounts:signup' %}" class="submit-button bg-blue-500 hover:bg-blue-400  text-base text-center" type="submit">Sign up</a>
+                 </div>
+                 <button href="{% url 'accounts:login' %}"  class="submit-button bg-green-500 hover:bg-green-400 text-base text-center" type="submit">Login</button>
+             </div>            
+         </form>
+     </div>
+ </article>
+ {% endblock %}
