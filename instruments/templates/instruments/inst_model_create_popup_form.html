@@ -133,7 +133,6 @@
             idInstAbbrev.required = true;
             toggleButton.innerText = "-"; // Set the button text to "-"
             
-            //Let oLen = defaultMakeOptions.options.length;
             defaultMakeOptions.selectedIndex = defaultMakeOptions.options.length - 1;
         }
         adjustWindowHeight();
@@ -151,6 +150,7 @@
         } else {
             toggleButton.innerText = "-";
             NewMake();
+            defaultMakeOptions.selectedIndex = value;
         }
         adjustWindowHeight();
     });

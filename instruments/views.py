@@ -416,7 +416,7 @@ instrument_types = [
 @login_required(login_url="/accounts/login") 
 def inst_model_createby_inst_type(request, inst_type):
     if request.method=="POST":
-        form = InstrumentModelCreateByInstTypeForm(request.POST, user=request.user, inst_type = inst_type)
+        form = InstrumentModelCreateByInstTypeForm(request.POST, inst_type = inst_type)
         if form.is_valid():
             inst_type = form.cleaned_data['inst_type']
             inst_make = form.cleaned_data['make']
@@ -442,7 +442,7 @@ def inst_model_createby_inst_type(request, inst_type):
                 return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_author");</script>' % (instance.pk, instance))
                 # return redirect ('instruments:home')
     else:
-        form = InstrumentModelCreateByInstTypeForm(user=request.user, inst_type = inst_type)
+        form = InstrumentModelCreateByInstTypeForm(inst_type = inst_type)
     return render(request, 'instruments/inst_model_create_popup_form.html', {'form': form})
 
 
