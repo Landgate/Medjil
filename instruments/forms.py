@@ -68,6 +68,11 @@ class InstrumentModelCreateForm(forms.ModelForm):
         model = InstrumentModel
         fields = '__all__'
         
+    inst_make = forms.CharField(
+        max_length=25, min_length=4, required=False)
+    inst_abbrev = forms.CharField(
+        max_length=4, min_length=3, required=False)
+    
         
 class InstrumentModelCreateByInstTypeForm(forms.Form):
     inst_types = (

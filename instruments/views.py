@@ -450,12 +450,12 @@ def inst_model_createby_inst_type(request, inst_type):
 def inst_model_update(request, id):
     this_model = get_object_or_404(InstrumentModel, id = id)
     form = InstrumentModelCreateForm(request.POST or None, 
-                                     instance = this_model, user=request.user)
+                                     instance = this_model)
     if form.is_valid():
         form.save()
         return redirect ('instruments:inst_settings')
     else:
-        form = InstrumentModelCreateForm(instance = this_model, user=request.user)
+        form = InstrumentModelCreateForm(instance = this_model)
     context = {
         'form': form
         }

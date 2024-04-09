@@ -78,6 +78,7 @@
                                 {% endif %}
                             </td>
                         </tr>
+                    {% elif field.name == 'model' %}
                     {% else %}
                         <tr>
                             <td width="30%">{{ field.label_tag }}</td>
@@ -95,6 +96,20 @@
                         </tr>
                     {% endif %}
                 {% endfor %}
+                <tr>
+                    <td width="30%">{{ form.model.label_tag }}</td>
+                    <td width="70%"> {{ form.model }} 
+                        {% for error in form.model.errors %}
+                            <p class="error error-danger">{{ error }}</p>
+                        {% endfor %}
+                        {% for error in form.form.non_field_errors %}
+                            <p class="error error-danger">*** {{ error }} ***</p>
+                        {% endfor %}
+                        {% if not form.model.field.widget.attrs.placeholder and form.model.help_text %}
+                            <p class="helptext">{{ field.help_text }}</p>
+                        {% endif %}
+                    </td>
+                </tr>
             </table>
 
             {% if request.GET.next %}
