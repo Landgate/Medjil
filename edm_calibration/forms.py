@@ -47,7 +47,6 @@ class CalibrateEdmForm(forms.ModelForm):
         self.fields['auto_base_calibration'].required = False
         self.fields['calibrated_baseline'].required = False
         if user.is_staff:
-            self.fields['auto_base_calibration'].widget.attrs['class'] = 'show'
             self.fields['edm'].queryset = EDM_Inst.objects.all()
             self.fields['prism'].queryset = Prism_Inst.objects.all()
             self.fields['thermometer'].queryset = Mets_Inst.objects.filter(

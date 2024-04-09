@@ -51,7 +51,7 @@
                                     <td>{{ field.label_tag|title }}</td>
                                 {% endif %} 
                                 <td> {{ field }}
-                                    {% if field.name == "site" and form.auto_base_calibration.field.widget.attrs.class == "show" %}
+                                    {% if field.name == "site" %}
                                         <label for="id_site">{{ form.auto_base_calibration }} {{ form.auto_base_calibration.label }} </label>
                                     {% endif %}                       
                                     {% if field.name == "fieldnotes_upload" and qs.fieldnotes_upload.file != none %}
