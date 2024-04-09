@@ -364,11 +364,13 @@ def instrument_register(request, inst_disp):
             .values('pk', 'inst_staff__staff_number',
                     'calibration_date',
                     'scale_factor', 'grad_uncertainty'))
+
         if not request.user.is_staff:
             tabs['insts_list'] = tabs['insts_list'].filter(
                 staff_owner = request.user.company)
-            # tabs['certificates_list'] = tabs['certificates_list'].filter(
-            #     staff_owner = request.user.company)
+            tabs['certificates_list'] = tabs['certificates_list'].filter(
+                inst_staff__staff_owner = request.user.company)
+
             
     ################ METS TAB #################
     if (inst_disp == 'baro' or inst_disp == 'thermo' 

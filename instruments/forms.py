@@ -162,7 +162,9 @@ class EDM_InstForm(forms.ModelForm):
         super(EDM_InstForm, self).__init__(*args, **kwargs)
         if not user.is_staff:
             self.fields['edm_custodian'].queryset = CustomUser.objects.filter(
-                company__company_name = user.company.company_name) 
+                company = user.company) 
+            self.fields['edm_specs'].queryset = EDM_Specification.objects.filter(
+                edm_owner = user.company)
         self.fields['edm_custodian'].empty_label = '--- Select one ---'
         self.fields['edm_specs'].empty_label = '--- Select one ---'
 
@@ -217,7 +219,9 @@ class Prism_InstForm(forms.ModelForm):
         super(Prism_InstForm, self).__init__(*args, **kwargs)
         if not user.is_staff:
             self.fields['prism_custodian'].queryset = CustomUser.objects.filter(
-                company__company_name = user.company.company_name) 
+                company = user.company) 
+            self.fields['prism_specs'].queryset = Prism_Specification.objects.filter(
+                prism_owner = user.company)
         self.fields['prism_custodian'].empty_label = '--- Select one ---'
         self.fields['prism_specs'].empty_label = '--- Select one ---'
 
@@ -259,7 +263,10 @@ class Mets_InstForm(forms.ModelForm):
         if not user.is_staff:
             self.fields['mets_custodian'].queryset = CustomUser.objects.filter(
                 company__company_name = user.company.company_name)
-        if inst_type:
+            self.fields['mets_specs'].queryset = Mets_Specification.objects.filter(
+                mets_owner__company_name = user.company.company_name,
+                mets_model__inst_type = inst_type)
+        else:
             self.fields['mets_specs'].queryset = (Mets_Specification.objects
                 .filter(mets_model__inst_type = inst_type))
         self.fields['mets_custodian'].empty_label = '--- Select one ---'
