@@ -90,7 +90,7 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(help_text='e.g., 1', max_length=25, verbose_name='Pillar/Pin No')),
                 ('order', models.CharField(max_length=25, verbose_name='formatted name')),
-                ('easting', models.DecimalField(blank=True, decimal_places=3, help_text='MGA2020- e.g., 395006.085', max_digits=9, null=True, validators=[django.core.validators.MinValueValidator(300000), django.core.validators.MaxValueValidator(900000)], verbose_name='Easting [m]')),
+                ('easting', models.DecimalField(blank=True, decimal_places=3, help_text='MGA2020- e.g., 395006.085', max_digits=9, null=True, validators=[django.core.validators.MinValueValidator(160000), django.core.validators.MaxValueValidator(900000)], verbose_name='Easting [m]')),
                 ('northing', models.DecimalField(blank=True, decimal_places=3, help_text='MGA2020- e.g., 6458541.334', max_digits=10, null=True, validators=[django.core.validators.MinValueValidator(3000000), django.core.validators.MaxValueValidator(10000000)], verbose_name='Northing [m]')),
                 ('zone', models.PositiveSmallIntegerField(blank=True, help_text='Grid Zone', null=True, validators=[django.core.validators.MinValueValidator(1), django.core.validators.MaxValueValidator(60)])),
                 ('site_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='calibrationsites.calibrationsite', verbose_name='Site Name')),
