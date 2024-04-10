@@ -17,6 +17,7 @@
 '''
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.core.serializers.json import DjangoJSONEncoder
 from django.forms import modelformset_factory
 from django.forms.models import model_to_dict
 from django.http import QueryDict
@@ -24,9 +25,11 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
 from django.urls import reverse
 
+
 from collections import OrderedDict
 from math import pi, sin, cos, sqrt
 from datetime import date
+import json
 from common_func.Convert import (
     baseline_qry,
     Calibrations_qry,
@@ -710,19 +713,39 @@ def intercomparison(request, id=None):
                          'comparison': comparison})
             
             # Calculate data for graph
-            apply_calibration_plot = {}
-            for certificate in certificates:
+            back_colours = ['#FF0000', '#800000', '#FFFF00', '#808000', 
+                            '#00FF00', '#008000', '#00FFFF', '#008080', 
+                            '#0000FF', '#000080', '#FF00FF', '#800080']
+            graph1_datasets = []
+            i=0
+            for certificate in (certificates):
+                dataset = {
+                    'backColor': back_colours[i],
+                    'borderWidth': 1,
+                    'data':[],
+                    'fill': False,
+                    'label': certificate.calibration_date.strftime('%d-%b-%Y'),
+                    'pointRadius': 0,
+                    'showLine': True,
+                    'tension': 0
+                    }
+                i+=1
+                if i > len(back_colours) : i=0
                 dist = min(distances)
                 while dist <= max(distances):
-                    print(certificate.apply_calibration)
-                    apply_calibration_plot[str(certificate)] = {
+                    dataset['data'].append({
                         'x': dist,
-                        'y':certificate.apply_calibration(dist)[1] - dist}
-                    dist +=1
-            print(apply_calibration_plot)
+                        'y':certificate.apply_calibration(dist)[1]
+                        })
+                    dist+= form.cleaned_data['edm'].edm_specs.unit_length / 4
+                graph1_datasets.append(dataset)
+            #convert from python to json
+            graph1_datasets = json.dumps(graph1_datasets, cls=DjangoJSONEncoder)
+            
             context = {'form': form.cleaned_data,
                        'certificates':certificates,
-                       'comparisons' : comparisons}
+                       'comparisons' : comparisons,
+                       'graph1_datasets':graph1_datasets}
             html_report = render_to_string(
                 'edm_calibration/intercomparison_report.html', context)
             instance = form.save(commit=False)
