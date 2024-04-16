@@ -883,23 +883,28 @@ new Chart("edm-drift-Chart", {
       tension: 0
     }]
   },
-  options: {
-    legend: {display: false},
-    scales: {
-      xAxes: [{
-          type: 'time',
-          time: {format:'YYYY-MM-DD',
-            unitStepSize: 1,
-            tooltipFormat: 'll'},
-          scaleLabel: {display: true,
-            labelString: 'Date'}
-      }],
-      yAxes: [{
-          scaleLabel: {display: true,
-             labelString: 'Scale Factor'}
-      }],
-    }
-  }
+	options: {
+	  legend: {display: false},
+	  scales: {
+	    xAxes: [{
+	        type: 'time',
+	        time: {
+	          parser:'YYYY-MM-DD',
+	          tooltipFormat: 'll'
+	        },
+	        scaleLabel: {
+	          display: true,
+	          labelString: 'Date'
+	        }
+	    }],
+	    yAxes: [{
+	        scaleLabel: {
+	          display: true,
+	          labelString: 'Scale Factor'
+	        }
+	    }],
+	  }
+	}
 });
 
 </script>
