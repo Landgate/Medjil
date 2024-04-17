@@ -395,15 +395,16 @@ def sum_uc_budget(uc_budget):
 def add_surveyed_uc(o, edm_trend, uc_sources, alignment_survey):
     # '02'
     surveyed_uc = deepcopy(uc_sources)
-    surveyed_uc.append({'group': '02',
-                   'ab_type':'B',
-                   'distribution':'N',
-                   'units': 'm',
-                   'std_dev': o['slope_dist']*edm_trend['A'] + edm_trend['B'],
-                   'k':t.ppf(1-0.025,df=30),
-                   'degrees_of_freedom':30,
-                   'description':('Linear regression on EDM distance standard deviations' +
-                                  f' UC = k x ({edm_trend["A"]*1000:.6f} x L + {edm_trend["B"]*1000:.2f}) mm')})
+    surveyed_uc.append(
+        {'group': '02',
+        'ab_type':'B',
+        'distribution':'N',
+        'units': 'm',
+        'std_dev': o['slope_dist']*edm_trend['A'] + edm_trend['B'],
+        'k':t.ppf(1-0.025,df=30),
+        'degrees_of_freedom':30,
+        'description':('Linear regression on EDM distance standard deviations' +
+                       f' UC = k x ({edm_trend["A"]*1000:.6f} x L + {edm_trend["B"]*1000:.2f}) mm')})
     
     # '10'
     frm_rl= alignment_survey[o['from_pillar']]
@@ -530,20 +531,22 @@ def add_typeB(uc_sources, d, matrix_y, dof):
     return type_b
 
 
-def add_calib_uc(uc_sources, calib, insts):
-    if len(calib['edmi'])>0 and 'calibrated_baseline' not in insts.keys():
-        d2=insts['survey_date']
+def add_calib_uc(uc_sources, calib, pillar_survey):
+
+    if len(calib['edmi'])>0 and 'calibrated_baseline' not in pillar_survey.keys():
+        d2=pillar_survey['survey_date']
         calib_edmi = calib['edmi'][0]
      
-        uc_sources.append(
-            {'group': '01',
-             'ab_type':'B',
-             'distribution':'N',
-             'units': 'x:1',
-             'std_dev': calib_edmi.scf_std_dev,
-             'degrees_of_freedom':calib_edmi.degrees_of_freedom,
-             'k':calib_edmi.scf_coverage_factor,
-             'description':'EDMI Reg13 Scale correction factor'})
+        if pillar_survey['uncertainty_budget'].auto_EDMI_scf:
+            uc_sources.append(
+                {'group': '01',
+                 'ab_type':'B',
+                 'distribution':'N',
+                 'units': 'x:1',
+                 'std_dev': calib_edmi.scf_std_dev,
+                 'degrees_of_freedom':calib_edmi.degrees_of_freedom,
+                 'k':calib_edmi.scf_coverage_factor,
+                 'description':'EDMI Reg13 Scale correction factor'})
         
         # calculate the linear trend for edmi calibration history #
         calib_dates=[]
@@ -568,84 +571,98 @@ def add_calib_uc(uc_sources, calib, insts):
                 ]
         calib['edmi_drift'] = {'A':A,'B':B, 'xyTrend':xyTrend}
         
-        uc_sources.append({'group': '01',
-                           'ab_type':'B',
-                           'distribution':'N',
-                           'units': 'x:1',
-                           'std_dev': abs(scf_d2-calib_edmi.scale_correction_factor),
-                           'degrees_of_freedom':30,
-                           'k':sqrt(3),
-                           'description':'EDM scale factor (drift over time)'})
+        if pillar_survey['uncertainty_budget'].auto_EDMI_scf_drift:
+            uc_sources.append(
+                {'group': '01',
+                'ab_type':'B',
+                'distribution':'N',
+                'units': 'x:1',
+                'std_dev': abs(scf_d2-calib_edmi.scale_correction_factor),
+                'degrees_of_freedom':30,
+                'k':sqrt(3),
+                'description':'EDM scale factor (drift over time)'})
     
-    if calib['them']:
-        uc_sources.append({'group': '04',
-                           'ab_type':'B',
-                           'distribution':'N',
-                           'units': '°C',
-                           'std_dev': calib['them'].zpc_std_dev,
-                           'degrees_of_freedom':calib['them'].degrees_of_freedom,
-                           'k':calib['them'].zpc_coverage_factor,
-                           'description':'Thermometer calibrated correction factor'})
+    if pillar_survey['uncertainty_budget'].auto_EDMI_round:
+        uc_sources.append(
+            {'group': '02',
+            'ab_type':'B',
+            'distribution':'R',
+            'units': 'm',
+            'std_dev': (float(pillar_survey['edm'].edm_specs.measurement_increments)/2)
+                        /sqrt(3),
+            'degrees_of_freedom':100,
+            'k':sqrt(3),
+            'description':'Distance Instrument Rounding'})
     
-        uc_sources.append({'group': '04',
-                           'ab_type':'B',
-                           'distribution':'R',
-                           'units': '°C',
-                           'std_dev': (float(insts['thermometer'].mets_specs.measurement_increments)/2)
-                                       /sqrt(3),
-                           'degrees_of_freedom':100,
-                           'k':sqrt(3),
-                           'description':'Thermometer Rounding'})
+    if calib['them'] and pillar_survey['uncertainty_budget'].auto_temp_zpc:
+        uc_sources.append(
+            {'group': '04',
+            'ab_type':'B',
+            'distribution':'N',
+            'units': '°C',
+            'std_dev': calib['them'].zpc_std_dev,
+            'degrees_of_freedom':calib['them'].degrees_of_freedom,
+            'k':calib['them'].zpc_coverage_factor,
+            'description':'Thermometer calibrated correction factor'})
+ 
+    if pillar_survey['uncertainty_budget'].auto_temp_rounding:
+        uc_sources.append(
+            {'group': '04',
+            'ab_type':'B',
+            'distribution':'R',
+            'units': '°C',
+            'std_dev': (float(pillar_survey['thermometer'].mets_specs.measurement_increments)/2)
+                        /sqrt(3),
+            'degrees_of_freedom':100,
+            'k':sqrt(3),
+            'description':'Thermometer Rounding'})
+
         
-    if calib['baro']:    
-        uc_sources.append({'group': '05',
-                           'ab_type':'B',
-                           'distribution':'N',
-                           'units': 'hPa',
-                           'std_dev': calib['baro'].zpc_std_dev,
-                           'degrees_of_freedom':calib['baro'].degrees_of_freedom,
-                           'k':calib['baro'].zpc_coverage_factor,
-                           'description':'Barometer calibrated correction factor'})
+    if calib['baro'] and pillar_survey['uncertainty_budget'].auto_pressure_zpc:
+        uc_sources.append(
+            {'group': '05',
+            'ab_type':'B',
+            'distribution':'N',
+            'units': 'hPa',
+            'std_dev': calib['baro'].zpc_std_dev,
+            'degrees_of_freedom':calib['baro'].degrees_of_freedom,
+            'k':calib['baro'].zpc_coverage_factor,
+            'description':'Barometer calibrated correction factor'})
 
-        uc_sources.append({'group': '05',
-                           'ab_type':'B',
-                           'distribution':'R',
-                           'units': 'hPa',
-                           'std_dev': (float(insts['barometer'].mets_specs.measurement_increments)/2)
-                                       /sqrt(3),
-                           'degrees_of_freedom':100,
-                           'k':sqrt(3),
-                           'description':'Barometer Rounding'})
+    if pillar_survey['uncertainty_budget'].auto_pressure_rounding:
+        uc_sources.append(
+            {'group': '05',
+            'ab_type':'B',
+            'distribution':'R',
+            'units': 'hPa',
+            'std_dev': (float(pillar_survey['barometer'].mets_specs.measurement_increments)/2)
+                        /sqrt(3),
+            'degrees_of_freedom':100,
+            'k':sqrt(3),
+            'description':'Barometer Rounding'})
     
-    if calib['hygro']:
-        uc_sources.append({'group': '06',
-                           'ab_type':'B',
-                           'distribution':'N',
-                           'units': '%',
-                           'std_dev': calib['hygro'].zpc_std_dev,
-                           'degrees_of_freedom':calib['hygro'].degrees_of_freedom,
-                           'k':calib['hygro'].zpc_coverage_factor,
-                           'description':'Hygrometer calibrated correction factor'})
+    if calib['hygro'] and pillar_survey['uncertainty_budget'].auto_humi_zpc:
+        uc_sources.append(
+            {'group': '06',
+            'ab_type':'B',
+            'distribution':'N',
+            'units': '%',
+            'std_dev': calib['hygro'].zpc_std_dev,
+            'degrees_of_freedom':calib['hygro'].degrees_of_freedom,
+            'k':calib['hygro'].zpc_coverage_factor,
+            'description':'Hygrometer calibrated correction factor'})
     
-        uc_sources.append({'group': '06',
-                           'ab_type':'B',
-                           'distribution':'R',
-                           'units': '%',
-                           'std_dev': (float(insts['hygrometer'].mets_specs.measurement_increments)/2)
-                                       /sqrt(3),
-                           'degrees_of_freedom':100,
-                           'k':sqrt(3),
-                           'description':'Hygrometer Rounding'})
-
-        uc_sources.append({'group': '02',
-                           'ab_type':'B',
-                           'distribution':'R',
-                           'units': 'm',
-                           'std_dev': (float(insts['edm'].edm_specs.measurement_increments)/2)
-                                       /sqrt(3),
-                           'degrees_of_freedom':100,
-                           'k':sqrt(3),
-                           'description':'Distance Instrument Rounding'})
+    if pillar_survey['uncertainty_budget'].auto_humi_rounding:
+        uc_sources.append(
+            {'group': '06',
+            'ab_type':'B',
+            'distribution':'R',
+            'units': '%',
+            'std_dev': (float(pillar_survey['hygrometer'].mets_specs.measurement_increments)/2)
+                        /sqrt(3),
+            'degrees_of_freedom':100,
+            'k':sqrt(3),
+            'description':'Hygrometer Rounding'})
     
     return uc_sources
 
@@ -696,34 +713,44 @@ def validate_survey(pillar_survey, baseline=None, calibrations=None,
                 + ' when your EDMI calibration survey was observed.')
     
     # Instrumentation Selection Errors
+    ucb = pillar_survey['uncertainty_budget']
     if calibrations:
         if calibration_type =='B':
-            if (len(calibrations['edmi']) == 0 
-                or calibrations['them'] is None 
-                or calibrations['baro'] is None 
-                or calibrations['hygro'] is None):
-                Errs.append('Instrument calibrations are required for the propagation of uncertainty.')
-                Errs.append('These calibration certificates need to be current for the date of survey:'
-                            + pillar_survey['survey_date'].strftime("%d %b, %Y"))
-        
-            if len(calibrations['edmi']) == 0 : 
-                Errs.append('There are no calibration records for ' +
-                           str(pillar_survey['edm']) + ' with prism ' + str(pillar_survey['prism']))
+            if ucb.auto_EDMI_scf or ucb.auto_EDMI_scf_drift:
+                if len(calibrations['edmi']) == 0:    
+                       Errs.append('Uncertainty budget sources that are dependant on EDMI calibration certificates have been selected in the uncertainty budget.')
+                       Errs.append('There are no calibration records for ' +
+                                   str(pillar_survey['edm']) + ' with prism ' + str(pillar_survey['prism']))
+                       Errs.append('EDMI calibration certificates need to be current for the date of survey:'
+                                   + pillar_survey['survey_date'].strftime("%d %b, %Y"))
             if calibrations['staff'] is None: 
                 Wrns.append('There is no calibration records for ' + str(pillar_survey['staff']))
-            if calibrations['them'] is None: 
-                Errs.append('There is no calibration records for ' + str(pillar_survey['thermometer']))
-            if calibrations['baro'] is None: 
-                Errs.append('There is no calibration records for ' + str(pillar_survey['barometer']))
-            if calibrations['hygro'] is None: 
-                Errs.append('There is no calibration records for ' + str(pillar_survey['hygrometer']))
-        else:
-            if calibrations['them'] is None: 
-                Wrns.append('There is no calibration records for ' + str(pillar_survey['thermometer']))
-            if calibrations['baro'] is None: 
-                Wrns.append('There is no calibration records for ' + str(pillar_survey['barometer']))
-            if calibrations['hygro'] is None: 
-                Wrns.append('There is no calibration records for ' + str(pillar_survey['hygrometer']))
+                
+        if calibrations['hygro'] is None and ucb.auto_humi_zpc:
+               Errs.append('Uncertainty budget sources that are dependant on hygrometer calibration certificates have been selected in the uncertainty budget.')
+               Errs.append('There is no calibration records for ' + str(pillar_survey['hygrometer']))
+               Errs.append('Hygrometer calibration certificates need to be current for the date of survey:'
+                           + pillar_survey['survey_date'].strftime("%d %b, %Y"))
+
+        if calibrations['baro'] is None and ucb.auto_pressure_zpc:
+               Errs.append('Uncertainty budget sources that are dependant on barometer calibration certificates have been selected in the uncertainty budget.')
+               Errs.append('There is no calibration records for ' + str(pillar_survey['barometer']))
+               Errs.append('Barometer calibration certificates need to be current for the date of survey:'
+                           + pillar_survey['survey_date'].strftime("%d %b, %Y"))
+
+        if calibrations['them'] is None and ucb.auto_temp_zpc:
+               Errs.append('Uncertainty budget sources that are dependant on thermometer calibration certificates have been selected in the uncertainty budget.')
+               Errs.append('There is no calibration records for ' + str(pillar_survey['thermometer']))
+               Errs.append('Thermometer calibration certificates need to be current for the date of survey:'
+                           + pillar_survey['survey_date'].strftime("%d %b, %Y"))
+        
+        
+        if calibrations['them'] is None: 
+            Wrns.append('There is no calibration records for ' + str(pillar_survey['thermometer']))
+        if calibrations['baro'] is None: 
+            Wrns.append('There is no calibration records for ' + str(pillar_survey['barometer']))
+        if calibrations['hygro'] is None: 
+            Wrns.append('There is no calibration records for ' + str(pillar_survey['hygrometer']))
                 
     if raw_edm_obs:
         # check all the upload file headings are correct

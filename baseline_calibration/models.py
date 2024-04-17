@@ -69,11 +69,43 @@ class Accreditation(models.Model):
 class Uncertainty_Budget(models.Model):
     name = models.CharField(max_length=30, unique= False)
     company = models.ForeignKey(Company, on_delete = models.PROTECT, null=False)
-    std_dev_of_zero_adjustment = models.DecimalField(max_digits=5, decimal_places=4,
-                 validators = [MinValueValidator(0.00005)],
-                 help_text="Standard deviation applied to set of observations when all"
-                           " measured distances in set of observations are the same. (m)")
-
+    std_dev_of_zero_adjustment = models.DecimalField(
+        max_digits=5, decimal_places=4,
+        validators = [MinValueValidator(0.00005)],
+        help_text = "Standard deviation applied to set of observations when all"
+                    " measured distances in set of observations are the same. (m)")
+    
+    # boolean fields to opt for auto populating uncertainty sources from register.
+    auto_EDMI_scf = models.BooleanField(
+        default=True,
+        help_text = "EDM Scale factor - EDMI Reg13 Scale correction factor")
+    auto_EDMI_scf_drift = models.BooleanField(
+        default=True,
+        help_text = "EDM Scale factor - EDM Scale correction factor (drift over time)")
+    auto_EDMI_round = models.BooleanField(
+        default=True,
+        help_text = "EDMI measurement - Distance Instrument rounding")
+    auto_humi_zpc = models.BooleanField(
+        default=True,
+        help_text = "Humidity - Hygrometer calibrated correction factor")
+    auto_humi_rounding = models.BooleanField(
+        default=True,
+        help_text = "Humidity - Hygrometer rounding")
+    
+    auto_pressure_zpc = models.BooleanField(
+        default=True,
+        help_text = "Pressure - Barometer calibrated correction factor")
+    auto_pressure_rounding = models.BooleanField(
+        default=True,
+        help_text = "Pressure - Barometer rounding")
+    
+    auto_temp_zpc = models.BooleanField(
+        default=True,
+        help_text = "Temperature - Thermometer calibrated correction factor")
+    auto_temp_rounding = models.BooleanField(
+        default=True,
+        help_text = "Temperature - Thermometer rounding")
+    
     class Meta:
         ordering = ['name']
         unique_together = ('name','company')
@@ -84,6 +116,7 @@ class Uncertainty_Budget(models.Model):
 
     def __str__(self):
         return self.name
+
 
 
 class Uncertainty_Budget_Source(models.Model):

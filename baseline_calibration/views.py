@@ -391,9 +391,10 @@ def calibrate2(request,id):
             report_notes = report_notes_qry(
                 company=request.user.company, report_type='B')                
             uc_budget = uncertainty_qry(pillar_survey)
-            uc_budget['sources'] = add_calib_uc(uc_budget['sources'], 
-                                                calib,
-                                                pillar_survey)
+            uc_budget['sources'] = add_calib_uc(
+                uc_budget['sources'],
+                calib,
+                pillar_survey)
            
             alignment_survey = adjust_alignment_survey(raw_edm_obs,
                                                       baseline['pillars'])
@@ -779,6 +780,7 @@ def uc_budget_edit(request, id=None):
             return redirect('baseline_calibration:uc_budgets')
 
     context = {}
+    context['Header'] = 'Edit Uncertainty Budget'
     context['form'] = uc_budget
     context['formset'] = formset
     

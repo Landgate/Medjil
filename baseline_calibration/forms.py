@@ -237,7 +237,63 @@ class Uncertainty_BudgetForm(forms.ModelForm):
     class Meta:
         model = Uncertainty_Budget
         fields = '__all__'        
-        labels = {'std_dev_of_zero_adjustment': 'Std Dev Used When Statistically Zero (m)',}
+        labels = {
+            'std_dev_of_zero_adjustment': 'Std Dev Used When Statistically Zero (m)',
+            'auto_EDMI_scf':
+                {'group':"EDM Scale factor", 
+                 'description': "EDMI Reg13 Scale correction factor",
+                 'units': "x:1",
+                 'type': "B",
+                 'distribution': "N"},
+            'auto_EDMI_scf_drift':
+                {'group':"EDM Scale factor",
+                 'description': "EDM Scale correction factor drift over time)",
+                 'units': "x:1",
+                 'type': "B",
+                 'distribution': "N"},
+            'auto_EDMI_round': 
+                {'group':"EDMI measurement", 
+                 'description': "Distance Instrument rounding",
+                 'units': "m",
+                 'type': "B",
+                 'distribution': "R"},
+            'auto_humi_rounding':
+                {'group': "Humidity", 
+                 'description': "Hygrometer rounding",
+                 'units': "%",
+                 'type': "B",
+                 'distribution': "R"},
+            'auto_humi_zpc':
+                {'group':"Humidity", 
+                 'description': "Hygrometer calibrated correction factor",
+                 'units': "%",
+                 'type': "B",
+                 'distribution': "N"},
+            'auto_pressure_rounding':
+                {'group':"Pressure", 
+                 'description': "Barometer rounding",
+                 'units': "hPa",
+                 'type': "B",
+                 'distribution': "R"},
+            'auto_pressure_zpc':
+                {'group':"Pressure", 
+                 'description': "Barometer calibrated correction factor",
+                 'units': "hPa",
+                 'type': "B",
+                 'distribution': "N"},
+            'auto_temp_rounding':
+                {'group':"Temperature", 
+                 'description': "Thermometer rounding",
+                 'units': "°C",
+                 'type': "B",
+                 'distribution': "R"},
+            'auto_temp_zpc': 
+                {'group':"Temperature", 
+                 'description': "Thermometer calibrated correction factor",
+                 'units': "°C",
+                 'type': "B",
+                 'distribution': "N"},
+            }
 
     def clean_name(self):
         nme = self.cleaned_data['name']

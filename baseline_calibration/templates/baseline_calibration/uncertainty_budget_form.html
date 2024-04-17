@@ -29,7 +29,7 @@
                  <tr>
                       {% for field in formset.empty_form %}
                           {% if field.label != "Id" %}
-                              <td>{{ field }}</td>
+                              <td Title="{{ field.help_text }}">{{ field }}</td>
                           {% endif %}
                       {% endfor %}
                       <td>
@@ -64,17 +64,48 @@
                               <col span="1" width="20%">
                           </colgroup>
                           {% for field in form %}
-                              <tr>
-                              <td></td>
-                                  {% if field.field.is_checkbox %}                        
-                                      <td>{{ field }}</td>                                        
-                                      <td>{{ field.label }}</td>
-                                  {% else %}
+                              {% if not field.field.is_checkbox %}
+                                  <tr Title="{{ field.help_text }}">
+                                      <td></td>
                                       <td>{{ field.label_tag }}</td>
-                                      <td>{{ field }}</td>
-                                  {% endif %}                                  
-                                  <td></td>
+                                      <td>{{ field }}</td>                               
+                                      <td></td>
+                                  </tr>
+                              {% endif %}
+                              {% for error in field.errors %}
+                              <tr>
+                                  <td colspan="2"></td>
+                                  <td>
+                                      <p style="color:Red;">{{ error }}</p>
+                                  </td>
                               </tr>
+                              {% endfor %}                            
+                          {% endfor %}
+                      </table>
+                      <h1 style="text-align:center">Optional Uncertainty Budget Sources - Populated from Instrument Register Records</h1>
+                      <table id="auto_error_sources_tbl" style="font-size:10pt;width:100%">
+                        <tr>
+                          <th>Select</th>
+                          {% for field in formset|first %}
+                              {% if field.label != "Id" %}
+                                  <th>{{ field.label|title }}</th>
+                              {% endif %}
+                          {% endfor %}
+                        </tr>
+                          {% for field in form %}
+                              {% if field.field.is_checkbox %}
+                                  <tr Title="{{ field.help_text }}">
+                                      <td style="width: 5%">{{ field }}</td>
+                                      <td style="width: 10%">{{ field.label.group }}</td>   
+                                      <td style="width: 35%">{{ field.label.description }}</td>
+                                      <td style="width: 12%">{{ field.label.units }}</td>
+                                      <td style="width: 5%">{{ field.label.type }}</td>
+                                      <td style="width: 10%">{{ field.label.distribution }}</td>                        
+                                      <td style="width: 8%">-</td>
+                                      <td style="width: 6%">-</td>
+                                      <td>-</td>
+                                  </tr>
+                              {% endif %}
                               {% for error in field.errors %}
                               <tr>
                                   <td colspan="2"></td>
@@ -87,6 +118,7 @@
                       </table>
                   </div>
                   <div class="flexbox-item_1600_IB">
+                      <h1 style="text-align:center">Additional Uncertainty Budget Sources</h1>
                       <table id="id_formset_container" style="font-size:10pt;width:100%">
                           <colgroup>
                               <col span="1" style="width: 15%;">
@@ -119,7 +151,7 @@
                           <tr id=data-form-index_{{forloop.counter0}}>
                               {% for field in form %}
                                   {% if field.label != "Id" %}
-                                      <td>{{ field }}</td>
+                                      <td Title="{{ field.help_text }}">{{ field }}</td>
                                   {% endif %}
                               {% endfor %}
                               <td>
