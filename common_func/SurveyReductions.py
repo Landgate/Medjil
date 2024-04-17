@@ -723,34 +723,34 @@ def validate_survey(pillar_survey, baseline=None, calibrations=None,
                                    str(pillar_survey['edm']) + ' with prism ' + str(pillar_survey['prism']))
                        Errs.append('EDMI calibration certificates need to be current for the date of survey:'
                                    + pillar_survey['survey_date'].strftime("%d %b, %Y"))
-            
-            if calibrations['hygro'] is None and ucb.auto_humi_zpc:
-                   Errs.append('Uncertainty budget sources that are dependant on hygrometer calibration certificates have been selected in the uncertainty budget.')
-                   Errs.append('There is no calibration records for ' + str(pillar_survey['hygrometer']))
-                   Errs.append('Hygrometer calibration certificates need to be current for the date of survey:'
-                               + pillar_survey['survey_date'].strftime("%d %b, %Y"))
-
-            if calibrations['baro'] is None and ucb.auto_pressure_zpc:
-                   Errs.append('Uncertainty budget sources that are dependant on barometer calibration certificates have been selected in the uncertainty budget.')
-                   Errs.append('There is no calibration records for ' + str(pillar_survey['barometer']))
-                   Errs.append('Barometer calibration certificates need to be current for the date of survey:'
-                               + pillar_survey['survey_date'].strftime("%d %b, %Y"))
-
-            if calibrations['them'] is None and ucb.auto_temp_zpc:
-                   Errs.append('Uncertainty budget sources that are dependant on thermometer calibration certificates have been selected in the uncertainty budget.')
-                   Errs.append('There is no calibration records for ' + str(pillar_survey['thermometer']))
-                   Errs.append('Thermometer calibration certificates need to be current for the date of survey:'
-                               + pillar_survey['survey_date'].strftime("%d %b, %Y"))
-        
             if calibrations['staff'] is None: 
-                Wrns.append('There is no calibration records for ' + str(pillar_survey['staff']))                
-        else:
-            if calibrations['them'] is None: 
-                Wrns.append('There is no calibration records for ' + str(pillar_survey['thermometer']))
-            if calibrations['baro'] is None: 
-                Wrns.append('There is no calibration records for ' + str(pillar_survey['barometer']))
-            if calibrations['hygro'] is None: 
-                Wrns.append('There is no calibration records for ' + str(pillar_survey['hygrometer']))
+                Wrns.append('There is no calibration records for ' + str(pillar_survey['staff']))
+                
+        if calibrations['hygro'] is None and ucb.auto_humi_zpc:
+               Errs.append('Uncertainty budget sources that are dependant on hygrometer calibration certificates have been selected in the uncertainty budget.')
+               Errs.append('There is no calibration records for ' + str(pillar_survey['hygrometer']))
+               Errs.append('Hygrometer calibration certificates need to be current for the date of survey:'
+                           + pillar_survey['survey_date'].strftime("%d %b, %Y"))
+
+        if calibrations['baro'] is None and ucb.auto_pressure_zpc:
+               Errs.append('Uncertainty budget sources that are dependant on barometer calibration certificates have been selected in the uncertainty budget.')
+               Errs.append('There is no calibration records for ' + str(pillar_survey['barometer']))
+               Errs.append('Barometer calibration certificates need to be current for the date of survey:'
+                           + pillar_survey['survey_date'].strftime("%d %b, %Y"))
+
+        if calibrations['them'] is None and ucb.auto_temp_zpc:
+               Errs.append('Uncertainty budget sources that are dependant on thermometer calibration certificates have been selected in the uncertainty budget.')
+               Errs.append('There is no calibration records for ' + str(pillar_survey['thermometer']))
+               Errs.append('Thermometer calibration certificates need to be current for the date of survey:'
+                           + pillar_survey['survey_date'].strftime("%d %b, %Y"))
+        
+        
+        if calibrations['them'] is None: 
+            Wrns.append('There is no calibration records for ' + str(pillar_survey['thermometer']))
+        if calibrations['baro'] is None: 
+            Wrns.append('There is no calibration records for ' + str(pillar_survey['barometer']))
+        if calibrations['hygro'] is None: 
+            Wrns.append('There is no calibration records for ' + str(pillar_survey['hygrometer']))
                 
     if raw_edm_obs:
         # check all the upload file headings are correct

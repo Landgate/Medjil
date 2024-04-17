@@ -780,6 +780,7 @@ def uc_budget_edit(request, id=None):
             return redirect('baseline_calibration:uc_budgets')
 
     context = {}
+    context['Header'] = 'Edit Uncertainty Budget'
     context['form'] = uc_budget
     context['formset'] = formset
     

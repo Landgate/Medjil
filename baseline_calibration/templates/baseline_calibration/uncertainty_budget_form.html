@@ -29,7 +29,7 @@
                  <tr>
                       {% for field in formset.empty_form %}
                           {% if field.label != "Id" %}
-                              <td>{{ field }}</td>
+                              <td Title="{{ field.help_text }}">{{ field }}</td>
                           {% endif %}
                       {% endfor %}
                       <td>
@@ -65,7 +65,7 @@
                           </colgroup>
                           {% for field in form %}
                               {% if not field.field.is_checkbox %}
-                                  <tr>
+                                  <tr Title="{{ field.help_text }}">
                                       <td></td>
                                       <td>{{ field.label_tag }}</td>
                                       <td>{{ field }}</td>                               
@@ -94,7 +94,7 @@
                         </tr>
                           {% for field in form %}
                               {% if field.field.is_checkbox %}
-                                  <tr>
+                                  <tr Title="{{ field.help_text }}">
                                       <td style="width: 5%">{{ field }}</td>
                                       <td style="width: 10%">{{ field.label.group }}</td>   
                                       <td style="width: 35%">{{ field.label.description }}</td>
@@ -151,7 +151,7 @@
                           <tr id=data-form-index_{{forloop.counter0}}>
                               {% for field in form %}
                                   {% if field.label != "Id" %}
-                                      <td>{{ field }}</td>
+                                      <td Title="{{ field.help_text }}">{{ field }}</td>
                                   {% endif %}
                               {% endfor %}
                               <td>
