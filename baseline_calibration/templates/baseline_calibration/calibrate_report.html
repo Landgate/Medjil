@@ -66,7 +66,7 @@
         </div>
         <div class="flexbox-container_IB">
             <div class="flexbox-item_400_IB flexbox-item-left_IB">
-                <B>Accredited Agency: </B>{{ pillar_survey.accreditation.accredited_company }}
+                <B>Accredited Company: </B>{{ pillar_survey.accreditation.accredited_company }}
                 <br>
                 <B>Date of Accreditation: </B>{{ pillar_survey.accreditation.valid_from_date }}
                 <br>
@@ -883,23 +883,29 @@ new Chart("edm-drift-Chart", {
       tension: 0
     }]
   },
-  options: {
-    legend: {display: false},
-    scales: {
-      xAxes: [{
-          type: 'time',
-          time: {format:'YYYY-MM-DD',
-            unitStepSize: 1,
-            tooltipFormat: 'll'},
-          scaleLabel: {display: true,
-            labelString: 'Date'}
-      }],
-      yAxes: [{
-          scaleLabel: {display: true,
-             labelString: 'Scale Factor'}
-      }],
-    }
-  }
+	options: {
+	  legend: {display: false},
+	  scales: {
+	    xAxes: [{
+	        type: 'time',
+	        time: {
+	          parser:'YYYY-MM-DD',
+	          unitStepSize: 1,
+	          tooltipFormat: 'll'
+	        },
+	        scaleLabel: {
+	          display: true,
+	          labelString: 'Date'
+	        }
+	    }],
+	    yAxes: [{
+	        scaleLabel: {
+	          display: true,
+	          labelString: 'Scale Factor'
+	        }
+	    }],
+	  }
+	}
 });
 
 </script>

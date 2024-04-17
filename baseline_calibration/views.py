@@ -542,7 +542,7 @@ def calibrate2(request,id):
                         pillar_survey['some_lum_adopted'] = True
                         report_notes.append(
                             'The uncertainty of some of the certified distances '
-                            'have been smaller than the companies accredited '
+                            'are smaller than the companies accredited '
                             'least uncertainty of measurement (LUM). In these cases '
                             'the LUM has been published in this report.')
                 
