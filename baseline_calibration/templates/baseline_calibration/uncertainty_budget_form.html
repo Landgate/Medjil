@@ -29,7 +29,7 @@
                  <tr>
                       {% for field in formset.empty_form %}
                           {% if field.label != "Id" %}
-                              <td Title="{{ field.help_text }}">{{ field }}</td>
+                              <td Title="{{ field.help_text }}">{{ field }} </td>
                           {% endif %}
                       {% endfor %}
                       <td>
@@ -45,7 +45,8 @@
              </template>     
              <form id='id_html_form' style="font-size:10.0pt;width:4500px;" action="" class="site-form" method="post" autocomplete="off">
                 <div class="flexbox-item_1600_IB">
-                    <h1 style="text-align:center">{{ Header }}</h1>
+                    <h1 style="text-align:center">Add Custom Uncertainty Budget</h1>
+                    <p style="text-align:center"><i>For more information about creating Custom Uncertainty Budget, please refer to the user manual <a href= "{% url 'calibrationguide:manual_view' %}#Chapter_4_2_2"> &#x1F6C8</a></i>
                 </div>      
                 {% if form.non_field_errors %}
                      <div class="mt-1 mb-2 non-field-errors">
