@@ -99,5 +99,6 @@ class CompanyAdmin(admin.ModelAdmin):
     search_fields = ('company_name', 'company_abbrev',)
     class Meta:
         model = Company
-        
+
+      
 admin.site.register(Calibration_Report_Notes)

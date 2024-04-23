@@ -21,7 +21,7 @@ from django.contrib.auth import password_validation
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import ReadOnlyPasswordHashField, UserCreationForm, UserChangeForm
-
+from django.contrib.auth.forms import AuthenticationForm
 
 from .models import CustomUser, Company,  Calibration_Report_Notes
 
@@ -94,7 +94,26 @@ class LoginForm(forms.ModelForm):
             password = self.cleaned_data.get('password')
             if not authenticate(email=email, password=password):
                 raise forms.ValidationError('The username and/or password you have entered is incorrect. Please check and try again!')
-    
+
+class OTPAuthenticationForm(forms.Form):
+    """
+    """
+    otp_token = forms.CharField(
+        required=False, widget=forms.TextInput(attrs={'autocomplete': 'off'})
+    )
+
+    def __init__(self, user, request=None, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user = user
+
+    def clean(self):
+        super().clean()
+        # self.clean_otp(self.user)
+        return self.cleaned_data
+
+    def get_user(self):
+        return self.user
+        
 class CompanyForm(forms.ModelForm):
     class Meta:
         model = Company

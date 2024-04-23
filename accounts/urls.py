@@ -29,6 +29,8 @@ urlpatterns = [
     path('sent/', views.activation_sent, name = 'activation_sent'),
     path('activate/<slug:uidb64>/<slug:token>/', views.activate_account, name='activate_account'),
     path('login/', views.user_login, name='login'),
+    path('otp_verify/', views.otp_verify, name = 'otp_verify'),
+    path('otp_register/', views.otp_register, name = 'otp_register'),
     path('logout/', views.user_logout, name = 'logout'),
     path('password_reset/', auth_views.PasswordResetView.as_view(
         template_name="registration/password_reset_form.html",
