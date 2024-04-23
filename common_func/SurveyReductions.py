@@ -392,81 +392,88 @@ def sum_uc_budget(uc_budget):
     return combined_uc
 
 
-def add_surveyed_uc(o, edm_trend, uc_sources, alignment_survey):
+def add_surveyed_uc(o, edm_trend, pillar_survey, uc_sources, alignment_survey):
     # '02'
     surveyed_uc = deepcopy(uc_sources)
-    surveyed_uc.append(
-        {'group': '02',
-        'ab_type':'B',
-        'distribution':'N',
-        'units': 'm',
-        'std_dev': o['slope_dist']*edm_trend['A'] + edm_trend['B'],
-        'k':t.ppf(1-0.025,df=30),
-        'degrees_of_freedom':30,
-        'description':('Linear regression on EDM distance standard deviations' +
-                       f' UC = k x ({edm_trend["A"]*1000:.6f} x L + {edm_trend["B"]*1000:.2f}) mm')})
+    if pillar_survey['uncertainty_budget'].auto_EDMI_lr:
+        surveyed_uc.append(
+            {'group': '02',
+            'ab_type':'B',
+            'distribution':'N',
+            'units': 'm',
+            'std_dev': o['slope_dist']*edm_trend['A'] + edm_trend['B'],
+            'k':t.ppf(1-0.025,df=30),
+            'degrees_of_freedom':30,
+            'description':('Linear regression on EDM distance standard deviations' +
+                           f' UC = k x ({edm_trend["A"]*1000:.6f} x L + {edm_trend["B"]*1000:.2f}) mm')})
     
     # '10'
-    frm_rl= alignment_survey[o['from_pillar']]
-    to_rl = alignment_survey[o['to_pillar']]
-    frm_rl['std_dev']= (float(frm_rl['rl_uncertainty'])/
-                        float(frm_rl['k_rl_uncertainty']))
-    to_rl['std_dev'] = (float(to_rl['rl_uncertainty'])/
-                        float(to_rl['k_rl_uncertainty']))
-
-    comb_std = sqrt(float(frm_rl['std_dev'])**2
-                    + float(to_rl['std_dev'])**2)
-        
-    surveyed_uc.append({'group': '10',
-                        'ab_type':'B',
-                        'distribution':'N',
-                        'units': 'm',
-                        'std_dev': comb_std,
-                        'degrees_of_freedom':30,
-                        'k':t.ppf(1-0.025,df=30),
-                        'description':'Height Differences'})
+    if pillar_survey['uncertainty_budget'].auto_hgts:
+        frm_rl= alignment_survey[o['from_pillar']]
+        to_rl = alignment_survey[o['to_pillar']]
+        frm_rl['std_dev']= (float(frm_rl['rl_uncertainty'])/
+                            float(frm_rl['k_rl_uncertainty']))
+        to_rl['std_dev'] = (float(to_rl['rl_uncertainty'])/
+                            float(to_rl['k_rl_uncertainty']))
+    
+        comb_std = sqrt(float(frm_rl['std_dev'])**2
+                        + float(to_rl['std_dev'])**2)
+            
+        surveyed_uc.append(
+            {'group': '10',
+            'ab_type':'B',
+            'distribution':'N',
+            'units': 'm',
+            'std_dev': comb_std,
+            'degrees_of_freedom':30,
+            'k':t.ppf(1-0.025,df=30),
+            'description':'Pillar height differences from imported file'})
        
     # '11'
-    frm_os= alignment_survey[o['from_pillar']]
-    to_os = alignment_survey[o['to_pillar']]
-    if 'OS_std_dev' not in frm_os:
-        frm_os['OS_std_dev']= (float(frm_os['os_uncertainty'])/
-                               float(frm_os['k_os_uncertainty']))
-    if 'OS_std_dev' not in to_os:
-        to_os['OS_std_dev']= (float(to_os['os_uncertainty'])/
-                              float(to_os['k_os_uncertainty']))
+    if pillar_survey['uncertainty_budget'].auto_os:
+        frm_os= alignment_survey[o['from_pillar']]
+        to_os = alignment_survey[o['to_pillar']]
+        if 'OS_std_dev' not in frm_os:
+            frm_os['OS_std_dev']= (float(frm_os['os_uncertainty'])/
+                                   float(frm_os['k_os_uncertainty']))
+        if 'OS_std_dev' not in to_os:
+            to_os['OS_std_dev']= (float(to_os['os_uncertainty'])/
+                                  float(to_os['k_os_uncertainty']))
+        
+        comb_std = sqrt(frm_os['OS_std_dev']**2 +
+                        frm_os['OS_std_dev']**2)
     
-    comb_std = sqrt(frm_os['OS_std_dev']**2 +
-                    frm_os['OS_std_dev']**2)
-
-    surveyed_uc.append({'group': '11',
-                        'ab_type':'B',
-                        'distribution':'N',
-                        'units': 'm',
-                        'std_dev': comb_std,
-                        'degrees_of_freedom':30,
-                        'k':t.ppf(1-0.025,df=30),
-                        'description':'Pillar survey offsets'})
+        surveyed_uc.append(
+            {'group': '11',
+            'ab_type':'B',
+            'distribution':'N',
+            'units': 'm',
+            'std_dev': comb_std,
+            'degrees_of_freedom':30,
+            'k':t.ppf(1-0.025,df=30),
+            'description':'Pillar alignment survey processed uncertainty'})
 
     return surveyed_uc
 
 
-def add_certified_dist_uc(o, uc_sources, std_dev_matrix, dof):
+def add_certified_dist_uc(o, pillar_survey, uc_sources, std_dev_matrix, dof):
     cd_uc = deepcopy(uc_sources)
     # '07'
-    if o['Bay'] in std_dev_matrix.keys():
-        bay = o['Bay']
-    else:
-        bay = o['to_pillar'] + ' - ' + o['from_pillar']
-    
-    cd_uc.append({'group': '07',
-                  'ab_type':'A',
-                  'distribution':'N',
-                  'units': 'm',
-                  'std_dev': std_dev_matrix[bay]['std_uncertainty'],
-                  'degrees_of_freedom':dof,
-                  'k':t.ppf(1-0.025,df=dof),
-                  'description':'Uncertainty of Certified Distance'})
+    if pillar_survey['uncertainty_budget'].auto_cd:
+        if o['Bay'] in std_dev_matrix.keys():
+            bay = o['Bay']
+        else:
+            bay = o['to_pillar'] + ' - ' + o['from_pillar']
+        
+        cd_uc.append(
+            {'group': '07',
+            'ab_type':'A',
+            'distribution':'N',
+            'units': 'm',
+            'std_dev': std_dev_matrix[bay]['std_uncertainty'],
+            'degrees_of_freedom':dof,
+            'k':t.ppf(1-0.025,df=dof),
+            'description':'Uncertainty of Certified Distance'})
 
     return cd_uc
     

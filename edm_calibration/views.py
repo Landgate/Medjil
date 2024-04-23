@@ -347,12 +347,15 @@ def calibrate2(request,id):
                                         + o['Slope_Correction'])
         
                 #----------------- Calculate Uncertainties -----------------#
-                o['uc_sources'] = add_certified_dist_uc(o, 
-                                                  uc_budget['sources'],
-                                                  baseline['std_dev_matrix'],
-                                                  baseline['calibrated_baseline'].degrees_of_freedom)
+                o['uc_sources'] = add_certified_dist_uc(
+                    o,
+                    pillar_survey,
+                    uc_budget['sources'],
+                    baseline['std_dev_matrix'],
+                    baseline['calibrated_baseline'].degrees_of_freedom)
                 
-                o['uc_sources'] = add_surveyed_uc(o, edm_trend, 
+                o['uc_sources'] = add_surveyed_uc(o, edm_trend,
+                                                  pillar_survey,
                                                   o['uc_sources'],
                                                   baseline['certified_dist'])
                       
