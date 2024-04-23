@@ -75,7 +75,7 @@ class Uncertainty_Budget(models.Model):
         help_text = "Standard deviation applied to set of observations when all"
                     " measured distances in set of observations are the same. (m)")
     
-    # boolean fields to opt for auto populating uncertainty sources from register.
+    # boolean fields to opt for populating uncertainty sources from register.
     auto_EDMI_scf = models.BooleanField(
         default=True,
         help_text = "EDM Scale factor - EDMI Reg13 Scale correction factor")
@@ -105,6 +105,20 @@ class Uncertainty_Budget(models.Model):
     auto_temp_rounding = models.BooleanField(
         default=True,
         help_text = "Temperature - Thermometer rounding")
+
+    # boolean fields to opt for populating Derived uncertainty sources.
+    auto_cd = models.BooleanField(
+        default=True,
+        help_text = "Certified distances- Pillar distances survey, processed uncertainty")
+    auto_EDMI_lr = models.BooleanField(
+        default=True,
+        help_text = "EDMI measurement - Linear regression on EDM distance standard deviations")
+    auto_hgts = models.BooleanField(
+        default=True,
+        help_text = "Heights - Pillar height differences from imported file")
+    auto_os = models.BooleanField(
+        default=True,
+        help_text = "Offset - Pillar alignment survey processed uncertainty")
     
     class Meta:
         ordering = ['name']
@@ -122,6 +136,7 @@ class Uncertainty_Budget(models.Model):
 class Uncertainty_Budget_Source(models.Model):
     uncertainty_budget = models.ForeignKey(Uncertainty_Budget, on_delete = models.CASCADE, null = False,
                  help_text="Prism used for survey")
+
     group_types = (
                  ('01','EDM scale factor'),
                  ('02','EDMI measurement'),

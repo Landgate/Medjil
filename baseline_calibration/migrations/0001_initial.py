@@ -117,6 +117,10 @@ class Migration(migrations.Migration):
                 ('auto_pressure_rounding',models.BooleanField(default=True, help_text="Pressure - Barometer rounding")),
                 ('auto_temp_zpc',models.BooleanField(default=True, help_text="Temperature - Thermometer calibrated correction factor")),
                 ('auto_temp_rounding',models.BooleanField(default=True, help_text="Temperature - Thermometer rounding")),
+                ('auto_cd',models.BooleanField(default=True, help_text="Certified distances- Pillar distances survey, processed uncertainty")),
+                ('auto_EDMI_lr',models.BooleanField(default=True, help_text="EDMI measurement - Linear regression on EDM distance standard deviations")),
+                ('auto_hgts',models.BooleanField(default=True, help_text="Heights - Pillar height differences from imported file")),
+                ('auto_os',models.BooleanField(default=True, help_text="Offset - Pillar alignment survey processed uncertainty")),
             ],
             options={
                 'ordering': ['name'],
