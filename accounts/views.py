@@ -32,6 +32,15 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.functions import Lower
 from django.contrib.auth.models import Group
 
+from django.core.exceptions import ObjectDoesNotExist
+from django_otp.plugins.otp_totp.models import TOTPDevice
+from io import BytesIO
+from base64 import b64encode, b32decode
+import qrcode
+import qrcode.image.svg
+from django.core.exceptions import ValidationError
+from django_otp import user_has_device
+
 from common_func.validators import try_delete_protected
 from .models import (
     Company, 
@@ -40,6 +49,7 @@ from .models import (
 from .forms import (
     SignupForm, 
     LoginForm, 
+    OTPAuthenticationForm,
     CustomUserChangeForm, 
     CompanyForm, 
     calibration_report_notesForm)
@@ -144,17 +154,28 @@ def user_login(request):
         form = LoginForm(data=request.POST)
         if form.is_valid():
             email = form.cleaned_data.get('email')
-            # print(email)
             password = form.cleaned_data.get('password')
             user = authenticate(email = email, password=password)
-            print(user)
             if user is not None:
                 if user.is_active:
-                    login(request, user)
+                    request.session['email'] = email
                     if 'next' in request.POST:
-                        return redirect(request.POST.get('next'))
-                    else:
-                        return redirect('accounts:user_account')
+                        request.session['next'] = request.POST.get('next')
+                    else: 
+                        request.session['next'] = None
+                    try:
+                        device = TOTPDevice.objects.get(user=user)
+                        # print(device)
+                        return redirect('accounts:otp_verify')
+                    except TOTPDevice.DoesNotExist:
+                        # return HttpResponse('No device found. Set up device!')#redirect('register-device')
+                        # # print(user)
+                        # # login(request, user)
+                        # if 'next' in request.POST:
+                        #     return redirect(request.POST.get('next'))
+                        # else:
+                        #     return redirect('accounts:user_account')
+                        return redirect('accounts:otp_register')
                 else:
                     current_site = get_current_site(request)
                     email_subject = 'Please activate your account again.'
@@ -173,6 +194,62 @@ def user_login(request):
     else:
         form = LoginForm()
     return render(request, 'accounts/login.html', {'login_form': form})
+
+def otp_verify(request):
+    form = OTPAuthenticationForm(user=request.user, data=request.POST)
+    if request.method == 'POST':
+        # form = OTPAuthenticationForm(request, data=request.POST)
+        email = request.session['email']
+        if form.is_valid():
+            otp_token= request.POST.get('otp_token') # int(request.POST.get('otp_token'))
+            otp_token = int(otp_token)
+            user =  get_object_or_404(CustomUser, email=email)
+            try:
+                # Get Device
+                device = TOTPDevice.objects.get(user=user)
+                # Verify the OTP
+                if device.verify_token(otp_token):
+                    user.verified = True
+                    user.save()
+                    login(request, user)
+                    messages.success(request, 'OTP verified successfully!')
+                    if request.session['next']:
+                        return redirect(request.session['next'])
+                    else:
+                        return redirect('accounts:user_account')
+                else:
+                    messages.warning(request, 'Invalid OTP. Please use the correct OTP device to verify!')
+                    return redirect('accounts:login')
+            except TOTPDevice.DoesNotExist:
+                messages.error(request, 'OTP device not found. Please set up OTP first!')
+        else:
+            return HttpResponse('Form is not valid')
+    return render(request, 'accounts/otp_form.html', {'otp_form': form})
+    
+def otp_register(request):
+    context = {}
+    user = get_object_or_404(CustomUser, email=request.session['email'])
+    if user.first_name:
+        username = user.first_name
+    else:
+        username = user.email
+
+    if not user_has_device(user=user):
+        totp_device = TOTPDevice.objects.create(user=user)
+        image_factory = qrcode.image.svg.SvgPathImage
+        qr_code_data = qrcode.make(
+            totp_device.config_url,
+            image_factory=image_factory
+        ).to_string().decode('utf_8')
+        context = {
+            'username' : username,
+            'qr_code_data' : qr_code_data
+        }
+        return render(request, 'accounts/otp_qr_code.html', context)
+    else:
+        messages.warning(request, 'Your device is already registered. Please login!')
+        return redirect('accounts:login')
+
 
 # User log out
 def user_logout(request):

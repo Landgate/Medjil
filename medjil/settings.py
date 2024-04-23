@@ -46,12 +46,12 @@ if not SECRET_KEY:
     SECRET_KEY = 'd%t^naj(!0x3-te!aq@gt=2wze9^oqs=3)k3$_(ng7c4d8bk_%'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = int(os.environ.get('DEBUG', default=0))
-# DEBUG = True
-if DEBUG == True:
-    load_dotenv('.env.dev')
-else:
-    load_dotenv('.env.prod')
+# DEBUG = int(os.environ.get('DEBUG', default=0))
+DEBUG = True
+# if DEBUG == True:
+#     load_dotenv('.env.dev')
+# else:
+#     load_dotenv('.env.prod')
 
 ALLOWED_HOSTS = ['127.0.0.1']
 # ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS').split(' ')
@@ -69,6 +69,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.forms',
+    "django_otp",                    # new addition
+    "django_otp.plugins.otp_totp",   # new addition
+    "qrcode",                        # new addition
     # 'crispy_forms',
     'formtools',
     'accounts',
@@ -88,6 +91,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    "django_otp.middleware.OTPMiddleware",                        # new addition
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -115,8 +119,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'medjil.wsgi.application'
-
-
+OTP_TOTP_ISSUER = "Medjil - Survey Instrument Calibration"    # addition
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
@@ -227,12 +230,15 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.AllowAllUsersModelBackend']
                        
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
 # EMAIL_HOST = 'smtp.gmail.com'
 # EMAIL_USE_SSL = False    # use port 465
 # EMAIL_USE_TLS = True    # use port 587
 # EMAIL_PORT = 587
 # EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
 # EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+
+
 EMAIL_HOST = os.environ.get("EMAIL_HOST")
 # EMAIL_USE_SSL = os.environ.get("EMAIL_USE_SSL")
 EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS")
