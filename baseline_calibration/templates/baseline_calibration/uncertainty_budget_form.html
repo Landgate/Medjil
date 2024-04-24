@@ -106,10 +106,8 @@
                                       <td style="width: 35%">{{ field.label.description }}</td>
                                       <td style="width: 12%">{{ field.label.units }}</td>
                                       <td style="width: 5%">{{ field.label.type }}</td>
-                                      <td style="width: 10%">{{ field.label.distribution }}</td>                        
-                                      <td style="width: 8%">-</td>
-                                      <td style="width: 6%">-</td>
-                                      <td>-</td>
+                                      <td style="width: 10%">{{ field.label.distribution }}</td>
+                                      {% if field.name == "auto_EDMI_scf" %} <td colspan="3" rowspan="9" style="background-color:lightGrey;text-align:center">Values sourced during computations.</td>{% endif %}
                                   </tr>
                                   {% for error in field.errors %}
                                   <tr>
@@ -146,10 +144,8 @@
                                         <td style="width: 35%">{{ field.label.description }}</td>
                                         <td style="width: 12%">{{ field.label.units }}</td>
                                         <td style="width: 5%">{{ field.label.type }}</td>
-                                        <td style="width: 10%">{{ field.label.distribution }}</td>                        
-                                        <td style="width: 8%">-</td>
-                                        <td style="width: 6%">-</td>
-                                        <td>-</td>
+                                        <td style="width: 10%">{{ field.label.distribution }}</td>
+                                        {% if field.name == "auto_cd" %} <td colspan="3" rowspan="4" style="background-color:lightGrey;text-align:center">Values derived during computations.</td>{% endif %}
                                     </tr>
                                     {% endif %}
                                 {% endif %}

@@ -344,7 +344,7 @@ class Uncertainty_BudgetForm(forms.ModelForm):
         if self.sources.is_valid() and not selected:
             groups = [uc['group'] for uc in self.sources.cleaned_data]
             if not '11' in groups:
-                raise forms.ValidationError("If this uncertainty source is not selected a source for this group must be added to 'Custom - Uncertainty Budget Sources' table")
+                raise forms.ValidationError("If this uncertainty source is not selected an uncertainty for this group must be added to 'Custom - Uncertainty Budget Sources' table")
         return selected
 
     def clean_auto_hgts(self):
@@ -352,7 +352,7 @@ class Uncertainty_BudgetForm(forms.ModelForm):
         if self.sources.is_valid() and not selected:
             groups = [uc['group'] for uc in self.sources.cleaned_data]
             if not '10' in groups:
-                raise forms.ValidationError("If this uncertainty source is not selected a source for this group must be added to 'Custom - Uncertainty Budget Sources' table")
+                raise forms.ValidationError("If this uncertainty source is not selected an uncertainty for this group must be added to 'Custom - Uncertainty Budget Sources' table")
         return selected
     
 
