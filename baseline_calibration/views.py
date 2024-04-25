@@ -776,7 +776,6 @@ def uc_budget_create(request):
                         name = 'Default', 
                         company__company_name = 'Landgate')
                         .std_dev_of_zero_adjustment)
-        ini_budget['company'] = request.user.company
         ini_sources = Uncertainty_Budget_Source.objects.filter(
                         uncertainty_budget__name = 'Default', 
                         uncertainty_budget__company__company_name = 'Landgate')

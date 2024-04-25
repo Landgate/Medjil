@@ -232,6 +232,7 @@ class Uncertainty_BudgetForm(forms.ModelForm):
         self.sources = kwargs.pop('sources', None)
         super(Uncertainty_BudgetForm, self).__init__(*args, **kwargs)
         if user:
+            self.initial['company'] = user.company
             if not user.is_staff:
                 self.fields['company'].disabled = True
                 
