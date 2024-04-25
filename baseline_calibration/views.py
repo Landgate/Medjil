@@ -603,7 +603,8 @@ def calibrate2(request,id):
                 while len(o['grp_Bay'])<n_rpt_shots:
                     o['grp_Bay'].append('')
     
-            calib['edmi_drift']['xyValues'] = [
+            if 'edmi_drift' in calib.keys():
+                calib['edmi_drift']['xyValues'] = [
                     {'x':c['calibration_date'].isoformat()[:10],
                     'y':c['scale_correction_factor'],
                     'zpc':c['zero_point_correction']} 

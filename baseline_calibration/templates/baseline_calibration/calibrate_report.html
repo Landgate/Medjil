@@ -683,12 +683,14 @@
                 </div>
             </div>
         </div>
+        {% if calib.edmi_drift.xyValues %}
         <div class="text-center">
             <h2>Calibration History - EDMI Scale Factor Drift Rate</h2>
             <div id="charts" class="flex flex-col justify-end items-center">
                 <canvas id="edm-drift-Chart" style="max-width:800px"></canvas>
             </div>
         </div>
+        {% endif %}
         <h2 style="text-align:center">Report Notes</h2>
         <div class="flexbox-container_IB">
             <div class="flexbox-item_800_IB flexbox-item-left_IB">
