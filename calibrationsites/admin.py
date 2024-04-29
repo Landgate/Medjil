@@ -22,27 +22,26 @@ from .models import (Country,
                     CalibrationSite, 
                     Pillar)
 
+from accounts.admin import admin_site
 # Register your models here.
-admin.site.register(Country)
+admin_site.register(Country)
 
-admin.site.register(Pillar)
+@admin.register(State, site=admin_site)
+class StateAdmin(admin.ModelAdmin):
+    list_display = ['name', 'statecode','country']
+
+@admin.register(Locality, site=admin_site)
+class LocalityAdmin(admin.ModelAdmin):
+    list_display = ['name', 'postcode','state','country']
 
 class PillarInline(admin.TabularInline):
     model= Pillar
     extra = 0
 
-@admin.register(State)
-class StateAdmin(admin.ModelAdmin):
-    list_display = ['name', 'statecode','country']
-
-@admin.register(Locality)
-class LocalityAdmin(admin.ModelAdmin):
-    list_display = ['name', 'postcode','state','country']
-
-@admin.register(CalibrationSite)
+@admin.register(CalibrationSite, site=admin_site)
 class CalibrationSiteAdmin(admin.ModelAdmin):
-    
     list_display = ['id', 'site_name', 'site_type', 'site_address', 'country', 'locality', 'operator', 'uploaded_on', 'modified_on']
+    list_filter = ['site_type']
     fields = ['site_type', 
             ('site_name', 'no_of_pillars'),
             'site_address', 
@@ -51,13 +50,37 @@ class CalibrationSiteAdmin(admin.ModelAdmin):
             'site_access',
             'site_config' ]
 
-    # form = LimitToStateForm
-
     inlines = [
         PillarInline,
     ]
 
-    # inlines = [
-    #     PillarInline,
-    # ]    
+try:
+    from accounts.sites import medjil_super_site
 
+    medjil_super_site.register(Country)
+
+    @admin.register(State, site=medjil_super_site)
+    class StateAdmin(admin.ModelAdmin):
+        list_display = ['name', 'statecode','country']
+
+    @admin.register(Locality, site=medjil_super_site)
+    class LocalityAdmin(admin.ModelAdmin):
+        list_display = ['name', 'postcode','state','country']
+
+    @admin.register(CalibrationSite, site=medjil_super_site)
+    class CalibrationSiteAdmin(admin.ModelAdmin):
+        list_display = ['id', 'site_name', 'site_type', 'site_address', 'country', 'locality', 'operator', 'uploaded_on', 'modified_on']
+        list_filter = ['site_type']
+        fields = ['site_type', 
+                ('site_name', 'no_of_pillars'),
+                'site_address', 
+                ('country', 'state', 'locality'),
+                'operator',
+                'site_access',
+                'site_config' ]
+
+        inlines = [
+            PillarInline,
+        ]
+except:
+    pass

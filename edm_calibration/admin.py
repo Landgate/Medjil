@@ -18,10 +18,40 @@
 from django.contrib import admin
 
 # Register your models  here.
+from accounts.admin import admin_site
 from .models import * 
 
-admin.site.register(uPillar_Survey)
+@admin.register(uPillar_Survey, site=admin_site)
+class UPillarSurveyAdmin(admin.ModelAdmin):
+    list_display = ['site', 'auto_base_calibration', 'calibrated_baseline', 'survey_date', 'computation_date', 'observer', 'weather']
+    list_filter = ['site']
+    ordering = ['site', 'survey_date']
 
-admin.site.register(uEDM_Observation)
+@admin.register(uEDM_Observation, site=admin_site)
+class UEDMObservationAdmin(admin.ModelAdmin):
+    list_display = ['pillar_survey', 'from_pillar', 'to_pillar']
 
-admin.site.register(Inter_Comparison)
+@admin.register(Inter_Comparison, site=admin_site)
+class InterComparisonAdmin(admin.ModelAdmin):
+    list_display = ['edm', 'prism', 'from_date', 'to_date', 'job_number']
+
+
+try:
+    from accounts.sites import medjil_super_site
+
+    @admin.register(uPillar_Survey, site=medjil_super_site)
+    class UPillarSurveyAdmin(admin.ModelAdmin):
+        list_display = ['site', 'auto_base_calibration', 'calibrated_baseline', 'survey_date', 'computation_date', 'observer', 'weather']
+        list_filter = ['site']
+        ordering = ['site', 'survey_date']
+
+    @admin.register(uEDM_Observation, site=medjil_super_site)
+    class UEDMObservationAdmin(admin.ModelAdmin):
+        list_display = ['pillar_survey', 'from_pillar', 'to_pillar']
+
+    @admin.register(Inter_Comparison, site=medjil_super_site)
+    class InterComparisonAdmin(admin.ModelAdmin):
+        list_display = ['edm', 'prism', 'from_date', 'to_date', 'job_number']
+
+except:
+    pass

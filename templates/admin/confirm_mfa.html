@@ -1,0 +1,36 @@
+{% extends "admin/login.html" %}
+
+{% block content %}
+  {% if form.non_field_errors %}
+    {% for error in form.non_field_errors %}
+      <p class="errornote">
+	{{ error }}
+      </p>
+    {% endfor %}
+  {% endif %}
+
+  <!-- <form action="" method="post">
+    {% csrf_token %}
+
+    <div class="form-row">
+      {{ form.otp_code.errors }}
+      {{ form.otp_code.label_tag }} {{ form.otp_code }}
+    </div>
+
+    <div class="submit-row">
+      <input type="submit" value="Submit">
+    </div>
+  </form> -->
+
+  <form action="{{ app_path }}" method="post" id="login-form">
+    {% csrf_token %}
+    <div class="form-row">
+      {{ form.otp_code.errors }}
+      {{ form.otp_code.label_tag }} {{ form.otp_code }}
+    </div>
+  
+    <div class="submit-row">
+      <input type="submit" value="Submit">
+    </div>
+  </form>
+{% endblock %}

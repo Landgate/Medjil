@@ -1,0 +1,52 @@
+{% extends "admin/login.html" %}
+{% load static %}
+{% block content %}
+  <form action="" method="post">
+    {% csrf_token %}
+
+    {% if qr_code %}
+      {% if user__first_name %}
+        <p>Dear <strong>{{ user.first_name }}</strong></p>
+      {% else %}
+        <p>Dear <strong>{{ user.email }}</strong>,</p>
+      {% endif %}
+      
+      <p>Please scan the QR Code on Microsoft Authenticator App in your Phone to set up the two-factor authentication:</p>
+      <div>{{ qr_code|safe }} </div>
+
+    {% else %}
+      {% if form_errors %}
+        {% for error in form_errors %}
+          <p class="errornote">
+            {{ error }}
+          </p>
+        {% endfor %}
+      {% endif %}
+    {% endif %}
+
+    <div class="submit-row">
+      <!-- <input type="submit" value="Go to Login" id="go_to_login_button"> -->
+      <a href="{% url 'admin:login' %}" onclick="return confirmation()">Go to Login</a>
+    </div>
+  </form>
+
+
+  <script>
+    //   // const btn = document.getElementById('go_to_login_button');
+
+    //   // function go_to_next(e){
+    //   //   e.preventDefault();
+    //   //   location.href = "url 'admin:login'" //www.google.com'
+    //   // }
+    //   // btn.addEventListener("click", go_to_next, false);
+
+    const errorNote = document.querySelector("p.errornote")
+    
+      function confirmation() {
+        if (!errorNote) {
+          // console.log(errorNote.innerHTML.trim())
+          return confirm('Have you scanned the Qrcode in your Authenticator app? You will not be able to login into your account without the Autheticator app for security reasons.');
+        }
+      }
+  </script>
+{% endblock %}

@@ -1,5 +1,4 @@
 '''
-
    © 2023 Western Australian Land Information Authority
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,20 +12,85 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-
 '''
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import Group
-# Customise page headings
-admin.site.site_header = "Landgate Admin"
-admin.site.site_title = "Survey Services Portal"
-admin.site.index_title = "Welcome to Landgate Staff Range Calibration Portal"
+from django.urls import path, reverse
+from django.contrib.auth import REDIRECT_FIELD_NAME
+from .models import MedjilTOTPDevice, MedjilTOTPDeviceAdmin
+
+from .views import AdminSetupTwoFactorAuthView, AdminConfirmTwoFactorAuthView
 
 # Register your models here.
-
 from .models import CustomUser, Company, Calibration_Report_Notes
+##############################################################################
+############################ BUILD A CUSTOM ADMIN SITE #######################
+##############################################################################
+class MedjilAdminSite(admin.AdminSite):
+    def get_urls(self):
+        base_urlpatterns = super().get_urls()
 
+        extra_urlpatterns = [
+            path(
+                "setup-mfa/",
+                self.admin_view(AdminSetupTwoFactorAuthView.as_view()),
+                name="setup-mfa"
+            ),
+            path(
+                "confirm-mfa/",
+                self.admin_view(AdminConfirmTwoFactorAuthView.as_view()),
+                name="confirm-mfa"
+            )
+        ]
+
+        return extra_urlpatterns + base_urlpatterns
+    
+    def login(self, request, *args, **kwargs):
+        if request.method != 'POST':
+            return super().login(request, *args, **kwargs)
+
+        username = request.POST.get('username')
+        # Query the device 
+        two_factor_auth_data = MedjilTOTPDevice.objects.filter(user__email = username).first()
+
+        request.POST._mutable = True
+        request.POST[REDIRECT_FIELD_NAME] = reverse('admin:confirm-mfa')
+
+        if two_factor_auth_data is None:
+            request.POST[REDIRECT_FIELD_NAME] = reverse("admin:setup-mfa")
+
+        request.POST._mutable = False
+
+        return super().login(request, *args, **kwargs)
+    
+    def has_permission(self, request):
+        has_perm = super().has_permission(request)
+
+        if not has_perm:
+            return has_perm
+
+        two_factor_auth_data = MedjilTOTPDevice.objects.filter(
+            user=request.user
+        ).first()
+
+        allowed_paths = [
+            reverse("admin:confirm-mfa"),
+            reverse("admin:setup-mfa")
+        ]
+
+        if request.path in allowed_paths:
+            return True
+
+        if two_factor_auth_data is not None and request.user.is_staff:
+            two_factor_auth_token = request.session.get("session_key")
+            return str(two_factor_auth_data.session_key) == two_factor_auth_token
+            # return True
+
+        return False
+##############################################################################
+############################ USER CUSTOMISATION  #############################
+##############################################################################
 @admin.register(CustomUser)
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
@@ -81,24 +145,45 @@ class CustomUserAdmin(UserAdmin):
 
     get_groups.short_description = 'Groups'
 
-class GroupAdmin(admin.ModelAdmin):
+##############################################################################
+######################### DEFINE THE CUSTOM ADMIN SITE #######################
+##############################################################################
+admin_site = MedjilAdminSite(name='landgate_admin')
+admin_site.site_header = 'Landgate - Medjil Administration Site'
+admin_site.site_title = 'Medjil Administration'
+admin_site.index_title = 'Medjil Site Administration'
+#######################################################################
+##################### REGISTER MODELS #################################
+#######################################################################
+admin_site.register(CustomUser)
+admin_site.register(MedjilTOTPDevice, MedjilTOTPDeviceAdmin)
+
+class Roles(Group):
+    class Meta:
+        proxy = True
+        verbose_name = verbose_name_plural = 'Roles'
+
+@admin.register(Roles, site=admin_site)
+class RolesAdmin(admin.ModelAdmin):
     list_display = ['name', 'pk']
     class Meta:
-        model = Group
+        model = Roles
 
     ordering = (
         'pk', 'name',
     )
 
-admin.site.unregister(Group)
-admin.site.register(Group, GroupAdmin)
-
-@admin.register(Company)
+@admin.register(Company, site=admin_site)
 class CompanyAdmin(admin.ModelAdmin):
     list_display = ('company_name', 'company_abbrev',)
     search_fields = ('company_name', 'company_abbrev',)
     class Meta:
         model = Company
-
       
-admin.site.register(Calibration_Report_Notes)
+@admin.register(Calibration_Report_Notes, site=admin_site)
+class CalibrationReportNotesAdmin(admin.ModelAdmin):
+    list_display = ['company', 'report_type', 'note_type']
+    list_filter = ['company']
+##############################################################################
+##################################### END OF LINE  ###########################
+##############################################################################

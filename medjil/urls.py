@@ -36,10 +36,13 @@ from django.contrib import admin
 from django.urls import path, include
 # import views
 from . import views
+from accounts.admin import admin_site as medjil_admin_site
+from accounts.sites import medjil_super_site
 
 # URL 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin/', medjil_super_site.urls),                                # No mfa authentication for this site
+    path('medjil-admin/', medjil_admin_site.urls),
     path('accounts/', include('accounts.urls')),
     path('calibrationsites/', include('calibrationsites.urls')),
     path('instruments/', include('instruments.urls')),

@@ -28,24 +28,29 @@ from .token_generator import account_activation_token
 from django.core.mail import EmailMessage
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.core.exceptions import ObjectDoesNotExist
-from django.db.models.functions import Lower
-from django.contrib.auth.models import Group
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.urls import reverse_lazy
+from django.core.exceptions import ValidationError
+from django import forms
+from django.views.generic import FormView, TemplateView
+import qrcode
+import qrcode.image.svg
 
-from django.core.exceptions import ObjectDoesNotExist
-from django_otp.plugins.otp_totp.models import TOTPDevice
+from django.contrib.auth.models import Group
+from django.db.models.functions import Lower
+# from django_otp.plugins.otp_totp.models import TOTPDevice
 from io import BytesIO
 from base64 import b64encode, b32decode
 import qrcode
 import qrcode.image.svg
-from django.core.exceptions import ValidationError
-from django_otp import user_has_device
 
 from common_func.validators import try_delete_protected
 from .models import (
+    MedjilTOTPDevice,
     Company, 
     CustomUser, 
     Calibration_Report_Notes)
+
 from .forms import (
     SignupForm, 
     LoginForm, 
@@ -56,6 +61,92 @@ from .forms import (
 
 
 # Create your views here.
+# admin mfa set up view
+class AdminSetupTwoFactorAuthView(TemplateView):
+    template_name = "admin/setup_mfa.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        user = self.request.user
+        existing_device = MedjilTOTPDevice.objects.filter(user=user).first()
+        if not existing_device:
+            totp_device = MedjilTOTPDevice.objects.create(user=user, name = 'Medjil App', confirmed=False)
+            image_factory = qrcode.image.svg.SvgPathImage
+            qr_code_image = qrcode.make(
+                totp_device.config_url,
+                image_factory=image_factory
+            ).to_string().decode('utf_8')
+            context = {
+                'user' : user,
+                'qr_code' : qr_code_image
+            }
+        else:
+            context["form_errors"] = forms.ValidationError('You have already registered on your Authenticator app.')
+        return context
+    
+
+    def post(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        # context = {'email': request.user.email}
+        # user = request.user
+
+        # existing_device = MedjilTOTPDevice.objects.filter(user=user).first()
+        # if not existing_device:
+        #     totp_device = MedjilTOTPDevice.objects.create(user=user, confirmed=False)
+        #     image_factory = qrcode.image.svg.SvgPathImage
+        #     qr_code_image = qrcode.make(
+        #         totp_device.config_url,
+        #         image_factory=image_factory
+        #     ).to_string().decode('utf_8')
+        #     context = {
+        #         'email' : user.email,
+        #         'qr_code' : qr_code_image
+        #     }
+        # else:
+        #     context["form_errors"] = forms.ValidationError('You have already registered on your Authenticator app.')
+
+        return self.render_to_response(context)
+    
+    
+# Admin confirm view
+class AdminConfirmTwoFactorAuthView(FormView):
+    template_name = "admin/confirm_mfa.html"
+    success_url = reverse_lazy("admin:index")
+
+    class OTPTokenForm(forms.Form):
+        otp_code = forms.CharField(required=True, label = 'Enter OTP Code')
+
+        def clean_otp_code(self):
+            self.two_factor_auth_data = MedjilTOTPDevice.objects.filter(user=self.user).first()
+            if self.two_factor_auth_data is None:
+                raise ValidationError("Multi-factor authentication not set up.")
+
+            otp_code = self.cleaned_data.get("otp_code")
+
+            # if not self.two_factor_auth_data.validate_otp(otp):
+            if not self.two_factor_auth_data.verify_token(otp_code):
+                raise ValidationError("Invalid OTP Code.")
+            else:
+                self.two_factor_auth_data.confirmed = True
+                self.two_factor_auth_data.save()
+            
+            return otp_code
+
+    def get_form_class(self):
+        return self.OTPTokenForm
+
+    def get_form(self, *args, **kwargs):
+        form = super().get_form(*args, **kwargs)
+        form.user = self.request.user
+        return form
+
+    def form_valid(self, form):
+        form.two_factor_auth_data.rotate_session_key()
+        self.request.session["session_key"] = str(form.two_factor_auth_data.session_key)
+        
+        return super().form_valid(form)
+
 def user_home(request):
     return HttpResponse("This is my homepage")
 
@@ -117,8 +208,8 @@ def user_signup(request):
                             ]
             if email.endswith('landgate.wa.gov.au'):
                 user.groups.add(Group.objects.get(name = 'Landgate'))
-            else:
-                user.groups.add(Group.objects.get(name = 'Others'))
+            # else:
+            #     user.groups.add(Group.objects.get(name = 'Others'))
             # Assign to geodesy group
             if email in geodesy_group:
                 user.groups.add(Group.objects.get(name = 'Geodesy'))
@@ -155,7 +246,9 @@ def user_login(request):
         if form.is_valid():
             email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
+            
             user = authenticate(email = email, password=password)
+            
             if user is not None:
                 if user.is_active:
                     request.session['email'] = email
@@ -164,12 +257,10 @@ def user_login(request):
                     else: 
                         request.session['next'] = None
                     try:
-                        device = TOTPDevice.objects.get(user=user)
+                        device = MedjilTOTPDevice.objects.get(user=user)
                         # print(device)
                         return redirect('accounts:otp_verify')
-                    except TOTPDevice.DoesNotExist:
-                        # return HttpResponse('No device found. Set up device!')#redirect('register-device')
-                        # # print(user)
+                    except MedjilTOTPDevice.DoesNotExist:
                         # # login(request, user)
                         # if 'next' in request.POST:
                         #     return redirect(request.POST.get('next'))
@@ -193,6 +284,7 @@ def user_login(request):
                 messages.error(request, "Please check the login details.")
     else:
         form = LoginForm()
+        print('form is invalid')
     return render(request, 'accounts/login.html', {'login_form': form})
 
 def otp_verify(request):
@@ -206,11 +298,14 @@ def otp_verify(request):
             user =  get_object_or_404(CustomUser, email=email)
             try:
                 # Get Device
-                device = TOTPDevice.objects.get(user=user)
+                device = MedjilTOTPDevice.objects.get(user=user)
                 # Verify the OTP
                 if device.verify_token(otp_token):
                     user.verified = True
                     user.save()
+                    if not device.confirmed:
+                        device.confirmed = True
+                        device.save()
                     login(request, user)
                     messages.success(request, 'OTP verified successfully!')
                     if request.session['next']:
@@ -220,7 +315,7 @@ def otp_verify(request):
                 else:
                     messages.warning(request, 'Invalid OTP. Please use the correct OTP device to verify!')
                     return redirect('accounts:login')
-            except TOTPDevice.DoesNotExist:
+            except MedjilTOTPDevice.DoesNotExist:
                 messages.error(request, 'OTP device not found. Please set up OTP first!')
         else:
             return HttpResponse('Form is not valid')
@@ -234,8 +329,9 @@ def otp_register(request):
     else:
         username = user.email
 
-    if not user_has_device(user=user):
-        totp_device = TOTPDevice.objects.create(user=user)
+    existing_device = MedjilTOTPDevice.objects.filter(user=user).first()
+    if not existing_device:
+        totp_device = MedjilTOTPDevice.objects.create(user=user)
         image_factory = qrcode.image.svg.SvgPathImage
         qr_code_data = qrcode.make(
             totp_device.config_url,

@@ -19,9 +19,49 @@ from django.db import models
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
+
+import uuid
+from django_otp.plugins.otp_totp.models import TOTPDevice
+from django_otp.plugins.otp_totp.admin import TOTPDeviceAdmin
+from django.utils import timezone
+
 from common_func.validators import validate_profanity
 
 # Create your models here.
+class MedjilTOTPDevice(TOTPDevice):
+    # created_sat = models.DateTimeField(auto_now_add=True, null=True)
+    # last_used_sat = models.DateTimeField(null=True, blank=True)
+    session_key = models.UUIDField(blank=True, null=True)
+
+    def name(self, obj):
+        # return the value of the field you want to display
+        return obj.name
+        name.short_description = 'Device Name'
+
+    def verify_token(self, token):
+        verified = super().verify_token(token)
+        if verified:
+            self.last_used_at = timezone.now()
+            self.save()
+        return verified
+    
+    def rotate_session_key(self):
+        self.session_key = uuid.uuid4()
+        self.save(update_fields=['session_key'])
+
+class MedjilTOTPDeviceAdmin(TOTPDeviceAdmin):
+    list_display = TOTPDeviceAdmin.list_display + ['created_at', 'last_used_at']
+    
+    def name(self, obj):
+        # return the value of the field you want to display
+        return obj.name
+        name.short_description = 'Device Name'
+        
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        form.base_fields['name'].label = 'Device Name'
+        return form  
+    
 class Company(models.Model):
     company_name = models.CharField(
         validators=[validate_profanity],
@@ -106,7 +146,7 @@ class CustomUser(AbstractUser):
     objects = CustomUserManager()
 
     def __str__(self):
-        return self.email
+        return self.email.lower()
     
 
 class Calibration_Report_Notes(models.Model):

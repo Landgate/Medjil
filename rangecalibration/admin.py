@@ -18,14 +18,16 @@
 from django.contrib import admin
 from .models import RangeCalibrationRecord, RawDataModel, AdjustedDataModel, HeightDifferenceModel, BarCodeRangeParam
 
+from accounts.admin import admin_site
+
 # Register your models here.
-@admin.register(BarCodeRangeParam)
+@admin.register(BarCodeRangeParam, site=admin_site)
 class BarCodeRangeParamAdmin(admin.ModelAdmin):
     list_display = ['site_id', 'modified_on', 'created_on']
-
     ordering = ['modified_on']
+# admin_site.register(BarCodeRangeParam, BarCodeRangeParamAdmin)
 
-@admin.register(RangeCalibrationRecord)
+@admin.register(RangeCalibrationRecord, site=admin_site)
 class RangeCalibrationRecordAdmin(admin.ModelAdmin):
     list_display = ['job_number', 'site_id', 'inst_staff', 'staff_type', 'staff_length', \
                     'inst_level', 'calibration_date', 'updated_to', 'valid']
@@ -33,25 +35,47 @@ class RangeCalibrationRecordAdmin(admin.ModelAdmin):
     ordering = ['valid', 'inst_staff__staff_number', '-calibration_date']
     list_filter = ['inst_staff__staff_model']
 
-@admin.register(RawDataModel)
+@admin.register(RawDataModel, site=admin_site)
 class RawDataModelAdmin(admin.ModelAdmin):
     list_display = ['job_number', 'calibration_id', 'staff_number','staff_type','staff_length','level_number','calibration_date']
-    # class Meta:
-    #     model = RawDataModel
 
-@admin.register(AdjustedDataModel)
+@admin.register(AdjustedDataModel, site=admin_site)
 class AdjustedDataModelAdmin(admin.ModelAdmin):
     list_display = ['job_number', 'calibration_id', 'staff_number','staff_type','staff_length','level_number','calibration_date']
 
-@admin.register(HeightDifferenceModel)
+@admin.register(HeightDifferenceModel, site=admin_site)
 class HeightDifferenceModelAdmin(admin.ModelAdmin):
-    # class Meta:
-    #     model = HeightDifferenceModel
     list_display = ['job_number', 'calibration_id', 'staff_number','staff_type','staff_length','level_number','calibration_date']
-    # list_display = ['site_name', 'staff_number', 'observation_date', 'start_temperature','end_temperature']
 
-# @admin.register(RangeParameters)
-# class RangeParametersAdmin(admin.ModelAdmin):
-#     class Meta:
-#         model = RangeParameters
-#     # list_display = ['Jan', 'Feb', 'Mar']
+#####################################################
+try:
+    from accounts.sites import medjil_super_site
+
+    @admin.register(BarCodeRangeParam, site=medjil_super_site)
+    class BarCodeRangeParamAdmin(admin.ModelAdmin):
+        list_display = ['site_id', 'modified_on', 'created_on']
+        ordering = ['modified_on']
+
+    @admin.register(RangeCalibrationRecord, site=medjil_super_site)
+    class RangeCalibrationRecordAdmin(admin.ModelAdmin):
+        list_display = ['job_number', 'site_id', 'inst_staff', 'staff_type', 'staff_length', \
+                        'inst_level', 'calibration_date', 'updated_to', 'valid']
+
+        ordering = ['valid', 'inst_staff__staff_number', '-calibration_date']
+        list_filter = ['inst_staff__staff_model']
+
+    @admin.register(RawDataModel, site=medjil_super_site)
+    class RawDataModelAdmin(admin.ModelAdmin):
+        list_display = ['job_number', 'calibration_id', 'staff_number','staff_type','staff_length','level_number','calibration_date']
+
+    @admin.register(AdjustedDataModel, site=medjil_super_site)
+    class AdjustedDataModelAdmin(admin.ModelAdmin):
+        list_display = ['job_number', 'calibration_id', 'staff_number','staff_type','staff_length','level_number','calibration_date']
+
+    @admin.register(HeightDifferenceModel, site=medjil_super_site)
+    class HeightDifferenceModelAdmin(admin.ModelAdmin):
+        list_display = ['job_number', 'calibration_id', 'staff_number','staff_type','staff_length','level_number','calibration_date']
+
+
+except:
+    pass
