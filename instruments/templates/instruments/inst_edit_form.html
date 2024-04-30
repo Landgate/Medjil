@@ -99,7 +99,7 @@
     {% if  inst_type == 'level' %}
         const specOptions = document.querySelector("#id_{{inst_type}}_model")
     {% else %}
-        const specOptions = document.querySelector("#id_{{inst_type}}_specs")
+        const specOptions = document.querySelector("#id_{{inst_type}}_specs") || document.getElementById("id_mets_specs");
         
         var inst_comment = document.getElementById('id_comment');
         inst_comment.addEventListener('input', () => {
@@ -108,7 +108,7 @@
         })
     {% endif %}
     
-    var SN_Number = document.getElementById("id_{{inst_type}}_number");
+    var SN_Number = document.getElementById("id_{{inst_type}}_number") || document.getElementById("id_mets_number");
     SN_Number.addEventListener('input', () => {
         SN_Number.value = SN_Number.value ? SN_Number.value.trim() : '' ;
         window.sessionStorage.setItem('SN_Number', SN_Number.value);
