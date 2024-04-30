@@ -141,7 +141,6 @@
     {% endfor %}
 
     showTab(currentTab); // Display the current tab
-    tglCalibBase();
     tglEdmFile();
     
     function showTab(n) {
@@ -162,6 +161,7 @@
         document.getElementById("nextBtn").innerHTML = "Next";
       }
       document.getElementById("pgOfpgs").innerHTML = "Page "+ (n+1) + " of " + (lastTab+1);
+      tglCalibBase();
     }
     
     function nextPrev(n) {
@@ -241,22 +241,26 @@
     
     function tglCalibBase() {
       // This function will hide/unhide the calibrated baseline select
+      // if the table row with id 'tr-site' is visible.
       var chk = document.getElementById("id_auto_base_calibration");
       var site = document.getElementById("id_site");
+      tr_site = document.getElementById("tr-site");
       var tr_calib =  document.getElementById("tr-calibrated_baseline");
       var slt_calib =  document.getElementById("id_calibrated_baseline");
       
-      if (chk.checked) {
-          tr_calib.style.display = 'none';
-          site.disabled = false;
-          site.setAttribute("required", "");
-          slt_calib.removeAttribute("required");
-      } else {
-          tr_calib.style.display = '';
-          site.disabled = true;
-          site.value = ''
-          site.removeAttribute("required");
-          slt_calib.setAttribute("required", "");
+      if (tr_site.style.display !='none'){
+          if (chk.checked ) {
+              tr_calib.style.display = 'none';
+              site.disabled = false;
+              site.setAttribute("required", "");
+              slt_calib.removeAttribute("required");
+          } else {
+              tr_calib.style.display = '';
+              site.disabled = true;
+              site.value = ''
+              site.removeAttribute("required");
+              slt_calib.setAttribute("required", "");
+          }
       }
     }
     
