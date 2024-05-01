@@ -284,7 +284,7 @@ def user_login(request):
                 messages.error(request, "Please check the login details.")
     else:
         form = LoginForm()
-        print('form is invalid')
+        # print('form is invalid')
     return render(request, 'accounts/login.html', {'login_form': form})
 
 def otp_verify(request):
