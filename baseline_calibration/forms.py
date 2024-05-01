@@ -229,8 +229,10 @@ class Std_Deviation_MatrixForm(forms.ModelForm):
 class Uncertainty_BudgetForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
+        self.sources = kwargs.pop('sources', None)
         super(Uncertainty_BudgetForm, self).__init__(*args, **kwargs)
         if user:
+            self.initial['company'] = user.company
             if not user.is_staff:
                 self.fields['company'].disabled = True
                 
@@ -244,55 +246,92 @@ class Uncertainty_BudgetForm(forms.ModelForm):
                  'description': "EDMI Reg13 Scale correction factor",
                  'units': "x:1",
                  'type': "B",
-                 'distribution': "N"},
+                 'distribution': "N",
+                 'origin': "Instument Register"},
             'auto_EDMI_scf_drift':
                 {'group':"EDM Scale factor",
                  'description': "EDM Scale correction factor drift over time)",
                  'units': "x:1",
                  'type': "B",
-                 'distribution': "N"},
+                 'distribution': "N",
+                 'origin': "Instument Register"},
             'auto_EDMI_round': 
                 {'group':"EDMI measurement", 
                  'description': "Distance Instrument rounding",
                  'units': "m",
                  'type': "B",
-                 'distribution': "R"},
+                 'distribution': "R",
+                 'origin': "Instument Register"},
             'auto_humi_rounding':
                 {'group': "Humidity", 
                  'description': "Hygrometer rounding",
                  'units': "%",
                  'type': "B",
-                 'distribution': "R"},
+                 'distribution': "R",
+                 'origin': "Instument Register"},
             'auto_humi_zpc':
                 {'group':"Humidity", 
                  'description': "Hygrometer calibrated correction factor",
                  'units': "%",
                  'type': "B",
-                 'distribution': "N"},
+                 'distribution': "N",
+                 'origin': "Instument Register"},
             'auto_pressure_rounding':
                 {'group':"Pressure", 
                  'description': "Barometer rounding",
                  'units': "hPa",
                  'type': "B",
-                 'distribution': "R"},
+                 'distribution': "R",
+                 'origin': "Instument Register"},
             'auto_pressure_zpc':
                 {'group':"Pressure", 
                  'description': "Barometer calibrated correction factor",
                  'units': "hPa",
                  'type': "B",
-                 'distribution': "N"},
+                 'distribution': "N",
+                 'origin': "Instument Register"},
             'auto_temp_rounding':
                 {'group':"Temperature", 
                  'description': "Thermometer rounding",
                  'units': "°C",
                  'type': "B",
-                 'distribution': "R"},
+                 'distribution': "R",
+                 'origin': "Instument Register"},
             'auto_temp_zpc': 
                 {'group':"Temperature", 
                  'description': "Thermometer calibrated correction factor",
                  'units': "°C",
                  'type': "B",
-                 'distribution': "N"},
+                 'distribution': "N",
+                 'origin': "Instument Register"},
+            'auto_cd': 
+                {'group':"Certified distances", 
+                 'description': "Pillar distances survey, processed uncertainty",
+                 'units': "m",
+                 'type': "B",
+                 'distribution': "N",
+                 'origin': "Derived"},
+            'auto_EDMI_lr': 
+                {'group':"EDMI measurement", 
+                 'description': "Linear regression on EDM distance standard deviations",
+                 'units': "m",
+                 'type': "B",
+                 'distribution': "N",
+                 'origin': "Derived"},
+            'auto_hgts': 
+                {'group':"Heights", 
+                 'description': "Pillar height differences from imported file",
+                 'units': "m",
+                 'type': "B",
+                 'distribution': "N",
+                 'origin': "Derived"},
+            'auto_os': 
+                {'group':"Offset", 
+                 'description': "Pillar alignment survey processed uncertainty",
+                 'units': "m",
+                 'type': "B",
+                 'distribution': "N",
+                 'origin': "Derived"},
             }
 
     def clean_name(self):
@@ -300,6 +339,22 @@ class Uncertainty_BudgetForm(forms.ModelForm):
         if nme.lower() == 'default':
             raise forms.ValidationError("'Default' is a reserved keyword. Please rename this item.")
         return nme
+
+    def clean_auto_os(self):
+        selected = self.cleaned_data['auto_os']
+        if self.sources.is_valid() and not selected:
+            groups = [uc['group'] for uc in self.sources.cleaned_data]
+            if not '11' in groups:
+                raise forms.ValidationError("If this uncertainty source is not selected an uncertainty for this group must be added to 'Custom - Uncertainty Budget Sources' table")
+        return selected
+
+    def clean_auto_hgts(self):
+        selected = self.cleaned_data['auto_hgts']
+        if self.sources.is_valid() and not selected:
+            groups = [uc['group'] for uc in self.sources.cleaned_data]
+            if not '10' in groups:
+                raise forms.ValidationError("If this uncertainty source is not selected an uncertainty for this group must be added to 'Custom - Uncertainty Budget Sources' table")
+        return selected
     
 
 class Uncertainty_Budget_SourceForm(forms.ModelForm):

@@ -272,12 +272,14 @@ def Calibrations_qry(frm_data):
                 calibration_date__lte = frm_data['survey_date'] ,
                 instrument__pk = frm_data['barometer'].pk
                 ).order_by('-calibration_date').first()
-    if 'hygrometer' in frm_data:
+    if frm_data['hygrometer']:
         calib['hygro'] = Mets_certificate.objects.filter(
                     calibration_date__lte = frm_data['survey_date'] ,
                     instrument__pk = frm_data['hygrometer'].pk
                     ).order_by('-calibration_date').first()
-    
+    else:
+        calib['hygro'] = None
+        
     return calib
 
 

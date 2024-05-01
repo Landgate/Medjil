@@ -45,7 +45,7 @@
              </template>     
              <form id='id_html_form' style="font-size:10.0pt;width:4500px;" action="" class="site-form" method="post" autocomplete="off">
                 <div class="flexbox-item_1600_IB">
-                    <h1 style="text-align:center">Add Custom Uncertainty Budget</h1>
+                    <h1 style="text-align:center">{{ Header }}</h1>
                     <p style="text-align:center"><i>For more information about creating Custom Uncertainty Budget, please refer to the user manual <a href= "{% url 'calibrationguide:manual_view' %}#Chapter_4_2_2"> &#x1F6C8</a></i>
                 </div>      
                 {% if form.non_field_errors %}
@@ -65,25 +65,29 @@
                               <col span="1" width="20%">
                           </colgroup>
                           {% for field in form %}
-                              {% if not field.field.is_checkbox %}
+                              {% if not field.label.origin %}
                                   <tr Title="{{ field.help_text }}">
                                       <td></td>
                                       <td>{{ field.label_tag }}</td>
                                       <td>{{ field }}</td>                               
                                       <td></td>
                                   </tr>
+                                  {% for error in field.errors %}
+                                  <tr>
+                                      <td colspan="2"></td>
+                                      <td>
+                                          <p style="color:Red;">{{ error }}</p>
+                                      </td>
+                                  </tr>
+                                  {% endfor %}
                               {% endif %}
-                              {% for error in field.errors %}
-                              <tr>
-                                  <td colspan="2"></td>
-                                  <td>
-                                      <p style="color:Red;">{{ error }}</p>
-                                  </td>
-                              </tr>
-                              {% endfor %}                            
                           {% endfor %}
                       </table>
-                      <h1 style="text-align:center">Optional Uncertainty Budget Sources - Populated from Instrument Register Records</h1>
+                </div>
+                <div class="flexbox-item_1600_IB"> 
+                      <h1 style="text-align:center" Title="Select or deselect uncertainty source propogated from the Instrument Register record.">
+                      Instrument Register Record - Uncertainty Budget Sources
+                      </h1>
                       <table id="auto_error_sources_tbl" style="font-size:10pt;width:100%">
                         <tr>
                           <th>Select</th>
@@ -94,32 +98,72 @@
                           {% endfor %}
                         </tr>
                           {% for field in form %}
-                              {% if field.field.is_checkbox %}
+                              {% if field.label.origin %}
+                                  {% if field.label.origin == "Instument Register" %}
                                   <tr Title="{{ field.help_text }}">
                                       <td style="width: 5%">{{ field }}</td>
                                       <td style="width: 10%">{{ field.label.group }}</td>   
                                       <td style="width: 35%">{{ field.label.description }}</td>
                                       <td style="width: 12%">{{ field.label.units }}</td>
                                       <td style="width: 5%">{{ field.label.type }}</td>
-                                      <td style="width: 10%">{{ field.label.distribution }}</td>                        
-                                      <td style="width: 8%">-</td>
-                                      <td style="width: 6%">-</td>
-                                      <td>-</td>
+                                      <td style="width: 10%">{{ field.label.distribution }}</td>
+                                      {% if field.name == "auto_EDMI_scf" %} <td colspan="3" rowspan="9" style="background-color:lightGrey;text-align:center">Values sourced during computations.</td>{% endif %}
                                   </tr>
-                              {% endif %}
-                              {% for error in field.errors %}
-                              <tr>
-                                  <td colspan="2"></td>
-                                  <td>
-                                      <p style="color:Red;">{{ error }}</p>
-                                  </td>
-                              </tr>
-                              {% endfor %}                            
+                                  {% for error in field.errors %}
+                                  <tr>
+                                      <td></td>
+                                      <td colspan="5">
+                                          <p style="color:Red;">{{ error }}</p>
+                                      </td>
+                                  </tr>
+                                  {% endfor %}  
+                                  {% endif %}
+                              {% endif %}                          
                           {% endfor %}
                       </table>
                   </div>
+                  <div class="flexbox-item_1600_IB"> 
+                        <h1 style="text-align:center" Title="Select or deselect uncertainty source derived uncertainty in uncertainty budget.">
+                        Derived - Uncertainty Budget Sources
+                        </h1>
+                        <table id="auto_error_sources_tbl" style="font-size:10pt;width:100%">
+                          <tr>
+                            <th>Select</th>
+                            {% for field in formset|first %}
+                                {% if field.label != "Id" %}
+                                    <th>{{ field.label|title }}</th>
+                                {% endif %}
+                            {% endfor %}
+                          </tr>
+                            {% for field in form %}
+                                {% if field.label.origin %}
+                                    {% if field.label.origin == "Derived" %}
+                                    <tr Title="{{ field.help_text }}">
+                                        <td style="width: 5%">{{ field }}</td>
+                                        <td style="width: 10%">{{ field.label.group }}</td>   
+                                        <td style="width: 35%">{{ field.label.description }}</td>
+                                        <td style="width: 12%">{{ field.label.units }}</td>
+                                        <td style="width: 5%">{{ field.label.type }}</td>
+                                        <td style="width: 10%">{{ field.label.distribution }}</td>
+                                        {% if field.name == "auto_cd" %} <td colspan="3" rowspan="4" style="background-color:lightGrey;text-align:center">Values derived during computations.</td>{% endif %}
+                                    </tr>
+                                    {% endif %}
+                                {% endif %}
+                                {% for error in field.errors %}
+                                <tr>
+                                    <td></td>
+                                    <td colspan="5">
+                                        <p style="color:Red;">{{ error }}</p>
+                                    </td>
+                                </tr>
+                                {% endfor %}                            
+                            {% endfor %}
+                        </table>
+                    </div>
                   <div class="flexbox-item_1600_IB">
-                      <h1 style="text-align:center">Additional Uncertainty Budget Sources</h1>
+                      <h1 style="text-align:center" Title="Add or Delete rows to customise list of uncertainty sources">
+                      Custom - Uncertainty Budget Sources
+                      </h1>
                       <table id="id_formset_container" style="font-size:10pt;width:100%">
                           <colgroup>
                               <col span="1" style="width: 15%;">
@@ -136,7 +180,7 @@
                       <tr>
                           {% for field in formset|first %}
                               {% if field.label != "Id" %}
-                                  <th>{{ field.label|title }}</th>
+                                  <th Title="{{ field.help_text }}">{{ field.label|title }}</th>
                               {% endif %}
                           {% endfor %}
                           <th>Action</th>

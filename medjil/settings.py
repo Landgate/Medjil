@@ -47,12 +47,12 @@ if not SECRET_KEY:
     SECRET_KEY = 'xxy656@qziuc(5bq)0wjo)kwd(#_(6ylzah#2-iju9t*0g4_q!'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = int(os.environ.get('DEBUG', default=0))
-# DEBUG = True
-if DEBUG == True:
-    load_dotenv('.env.dev')
-else:
-    load_dotenv('.env.prod')
+# DEBUG = int(os.environ.get('DEBUG', default=0))
+DEBUG = True
+# if DEBUG == True:
+#     load_dotenv('.env.dev')
+# else:
+#     load_dotenv('.env.prod')
 
 ALLOWED_HOSTS = ['.landgate.wa.gov.au','127.0.0.1']
 # ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS').split(' ')
@@ -128,7 +128,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'medjil.wsgi.application'
 OTP_TOTP_ISSUER = "Medjil - Survey Instrument Calibration"    # addition
-
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases

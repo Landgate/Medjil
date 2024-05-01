@@ -423,7 +423,8 @@ def calibrate2(request,id):
                                         + o['Slope_Correction'])
     
                 #----------------- Calculate Uncertainties -----------------#
-                o['uc_sources'] = add_surveyed_uc(o, edm_trend, 
+                o['uc_sources'] = add_surveyed_uc(o, edm_trend,
+                                                  pillar_survey,
                                                   uc_budget['sources'],
                                                   alignment_survey)
                       
@@ -518,7 +519,8 @@ def calibrate2(request,id):
                 cd['delta_os'] = get_delta_os(alignment_survey,cd)
     
                 #--------------------- Add Type B --------------------------------------#
-                cd['uc_sources'] = add_surveyed_uc(cd, edm_trend, 
+                cd['uc_sources'] = add_surveyed_uc(cd, edm_trend,
+                                                   pillar_survey,
                                                 uc_budget['sources'],
                                                 alignment_survey)
                 cd['uc_sources'] = add_typeB(cd['uc_sources'], d, matrix_y, chi_test['dof'])
@@ -601,7 +603,8 @@ def calibrate2(request,id):
                 while len(o['grp_Bay'])<n_rpt_shots:
                     o['grp_Bay'].append('')
     
-            calib['edmi_drift']['xyValues'] = [
+            if 'edmi_drift' in calib.keys():
+                calib['edmi_drift']['xyValues'] = [
                     {'x':c['calibration_date'].isoformat()[:10],
                     'y':c['scale_correction_factor'],
                     'zpc':c['zero_point_correction']} 
@@ -747,16 +750,68 @@ def uc_budgets(request):
     return render(request, 'baseline_calibration/Uncertainty_budgets_list.html', context)
 
 
+@login_required(login_url="/accounts/login")
+def uc_budget_create(request):    
+    uc_sources = formset_factory(Uncertainty_Budget_SourceForm, extra=0)
+    if request.method == 'POST':        
+        uc_sources = uc_sources(request.POST)
+        uc_budget = Uncertainty_BudgetForm(
+            request.POST,
+            sources = uc_sources,
+            user=request.user)
+        if uc_budget.is_valid() and uc_sources.is_valid():
+            uc_budget.save()
+            for uc_source in uc_sources:
+                f = uc_source.save(commit=False)
+                f.uncertainty_budget = uc_budget.instance
+                f.save()
+            next_url = request.POST.get('next')
+            if next_url:
+                return redirect(next_url)
+            else:
+                return redirect('baseline_calibration:uc_budgets')
+    else:
+        ini_budget={}
+        ini_budget['std_dev_of_zero_adjustment'] = (
+            Uncertainty_Budget.objects.get(
+                        name = 'Default', 
+                        company__company_name = 'Landgate')
+                        .std_dev_of_zero_adjustment)
+        ini_sources = Uncertainty_Budget_Source.objects.filter(
+                        uncertainty_budget__name = 'Default', 
+                        uncertainty_budget__company__company_name = 'Landgate')
+        
+        uc_sources = uc_sources(initial=[vars(row) for row in ini_sources])
+        
+        uc_budget = Uncertainty_BudgetForm(
+            initial=ini_budget, 
+            sources = uc_sources,
+            user=request.user)
+    
+    context = {}
+    context['Header'] = 'Create Custom Uncertainty Budget'        
+    context['form'] = uc_budget
+    context['formset'] = uc_sources
+    
+    return render(request, 'baseline_calibration/uncertainty_budget_form.html', context)
+
+
 @login_required(login_url="/accounts/login") 
 def uc_budget_edit(request, id=None):
-    
-    obj = get_object_or_404(Uncertainty_Budget, id=id)
-    uc_budget = Uncertainty_BudgetForm(request.POST or None, instance=obj)
-    uc_sources = modelformset_factory(Uncertainty_Budget_Source,
-                            form=Uncertainty_Budget_SourceForm, extra=0)
+       
+    uc_sources = modelformset_factory(
+        Uncertainty_Budget_Source,
+        form=Uncertainty_Budget_SourceForm, 
+        extra=0)
     qs = Uncertainty_Budget_Source.objects.filter(
                             uncertainty_budget = id)
     formset = uc_sources(request.POST or None, queryset=qs)
+    
+    obj = get_object_or_404(Uncertainty_Budget, id=id)
+    uc_budget = Uncertainty_BudgetForm(
+        request.POST or None, 
+        sources = formset,
+        instance=obj)
     
     # Edit the database according to submitted valid form.
     if all([uc_budget.is_valid(), formset.is_valid()]):
@@ -783,48 +838,6 @@ def uc_budget_edit(request, id=None):
     context['Header'] = 'Edit Uncertainty Budget'
     context['form'] = uc_budget
     context['formset'] = formset
-    
-    return render(request, 'baseline_calibration/uncertainty_budget_form.html', context)
-
-
-@login_required(login_url="/accounts/login") 
-def uc_budget_create(request):    
-    if request.method == 'POST':
-        uc_budget = Uncertainty_BudgetForm(request.POST, user=request.user)
-        uc_sources = formset_factory(Uncertainty_Budget_SourceForm, extra=0)
-        uc_sources = uc_sources(request.POST)
-        if uc_budget.is_valid() and uc_sources.is_valid():
-            uc_budget.save()
-            for uc_source in uc_sources:
-                f = uc_source.save(commit=False)
-                f.uncertainty_budget = uc_budget.instance
-                f.save()
-            next_url = request.POST.get('next')
-            if next_url:
-                return redirect(next_url)
-            else:
-                return redirect('baseline_calibration:uc_budgets')
-    else:
-        ini_budget={}
-        ini_budget['std_dev_of_zero_adjustment'] = (
-            Uncertainty_Budget.objects.get(
-                        name = 'Default', 
-                        company__company_name = 'Landgate')
-                        .std_dev_of_zero_adjustment)
-        ini_budget['company'] = request.user.company
-        ini_sources = Uncertainty_Budget_Source.objects.filter(
-                        uncertainty_budget__name = 'Default', 
-                        uncertainty_budget__company__company_name = 'Landgate')
-        
-        uc_sources = formset_factory(Uncertainty_Budget_SourceForm, extra=0)
-        uc_sources = uc_sources(initial=[vars(row) for row in ini_sources])
-        
-        uc_budget = Uncertainty_BudgetForm(initial=ini_budget, user=request.user)
-    
-    context = {}
-    context['Header'] = 'Create Uncertainty Budget from Default'        
-    context['form'] = uc_budget
-    context['formset'] = uc_sources
     
     return render(request, 'baseline_calibration/uncertainty_budget_form.html', context)
 
@@ -861,7 +874,7 @@ def accreditations(request):
 @login_required(login_url="/accounts/login") 
 def accreditation_edit(request, id=None):
     context = {}
-    # if id==None this is a new pillar survey.
+    # if id==None this is a new accredittion.
     if id == 'None':
         ini ={'accredited_company': request.user.company}
         accreditation = AccreditationForm(request.POST or None,

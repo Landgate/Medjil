@@ -44,6 +44,14 @@ from base64 import b64encode, b32decode
 import qrcode
 import qrcode.image.svg
 
+from django.core.exceptions import ObjectDoesNotExist
+from io import BytesIO
+from base64 import b64encode, b32decode
+import qrcode
+import qrcode.image.svg
+from django.core.exceptions import ValidationError
+from django_otp import user_has_device
+
 from common_func.validators import try_delete_protected
 from .models import (
     MedjilTOTPDevice,
