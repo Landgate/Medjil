@@ -79,10 +79,6 @@ function changeToPrintFormat() {
   printStyles.sheet.insertRule('body { font-size: 12pt; }', 0);
   printStyles.sheet.insertRule('.no-print { display: none; }', 0);
 
-  // Hide elements that should not be printed
-  var nav = document.querySelector("nav");
-  nav.style.display = "none";
-
   // Trigger the print dialog
   window.print();
 
