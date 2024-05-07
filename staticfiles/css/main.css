@@ -1473,11 +1473,11 @@ svg#report-view:hover path {
   fill: blue;
 }
 
-svg#trash:hover path {
+svg.bi bi-trash:hover path {
   fill: pink;
 }
 
-.icon.#book:hover path {
+svg#search-book:hover path {
   fill: green;
 }
 
