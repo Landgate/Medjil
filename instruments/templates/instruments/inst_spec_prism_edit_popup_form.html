@@ -39,15 +39,26 @@
                 <br>
             {% endif %}
             <table>
+                            <tr>
+                                <td width="35%">Make Name</td>
+                                    <td width="45%">{{ form.inst_make }}
+                                    <datalist id="makes">
+                                        <!-- Options will be populated here by JavaScript -->
+                                    </datalist>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="35%">Model Name</td>
+                                <td width="45%">{{ form.inst_model }}
+                                    <datalist id="models">
+                                        <!-- Options will be populated here by JavaScript -->
+                                    </datalist>
+                                </td>
+                            </tr>
                 <tr>
                     <td width="35%">{{ form.prism_owner.label|title }}</td>
                     <td width="45%">{{ form.prism_owner }}</td>
                     <td width="15%"></td>
-                </tr>
-                <tr>
-                    <td width="35%">{{ form.prism_model.label|title }}</td>
-                    <td width="45%">{{ form.prism_model }}</td>
-                    <td width="15%"><a href="{% url 'instruments:inst_model_createby_inst_type' inst_type %}" target="_blank" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white text-center cursor-pointer" onclick="return showAddPopup(this);" id="add_level">&#43;</a></td>
                 </tr>
 
                 <tr>
@@ -129,7 +140,40 @@
             window.opener.location.reload(true);
         }
 </script>
+<script>
+    var makes = {{ makes|safe }};
+    var models = {{ models|safe }};
 
+    var dataList = document.getElementById('makes');
+    makes.forEach(function(item) {
+        var option = document.createElement('option');
+        option.value = item.make;
+        dataList.appendChild(option);
+    });
+    filter_models();
+
+    function filter_models(){
+        make_input = document.getElementById('id_inst_make').value.toUpperCase();
+        var dataList = document.getElementById('models');
+        document.getElementById('models').innerHTML = '';
+        
+        if (make_input){
+            var make_object = makes.find(function(record){
+                return record.make === make_input;
+            });
+        }
+        if (make_object){
+            models.forEach(function(item) {
+            if (make_object.id === item.make_id){
+                var option = document.createElement('option');
+                option.value = item.model;
+                dataList.appendChild(option);
+            }
+            });
+        }
+    }
+document.getElementById('id_inst_make').addEventListener('input', filter_models);
+</script>
 <body onunload="javascript:refreshParent()">
 
 {% endblock %}

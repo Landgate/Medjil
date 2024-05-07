@@ -92,10 +92,11 @@ class InstrumentModelCreateByInstTypeForm(forms.Form):
         self.initial['inst_type'] = inst_type
     
     inst_type = forms.ChoiceField(widget = forms.Select(), choices = inst_types)
-    make = forms.ModelChoiceField(empty_label='Select one of the following',
-                                required=True,
-                                queryset=InstrumentMake.objects.all(),
-                                widget=forms.Select())
+    make = forms.ModelChoiceField(
+        empty_label='Select one of the following',
+        required=True,
+        queryset=InstrumentMake.objects.all(),
+        widget=forms.Select())
 
     inst_make = forms.CharField(
         max_length=25, min_length=4, required=False,
@@ -237,6 +238,17 @@ class Prism_InstForm(forms.ModelForm):
 
 
 class Prism_SpecificationForm(forms.ModelForm):
+    inst_make = forms.CharField(
+        max_length=25, min_length=4, 
+        widget=forms.TextInput(attrs={'list':"makes"})
+        )
+    inst_model = forms.CharField(
+        max_length=25, min_length=4, 
+        widget=forms.TextInput(attrs={'list':"models"})
+        )
+    units_manu_unc_const = forms.CharField(
+        widget=forms.Select(choices=length_units))
+
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
         super(Prism_SpecificationForm, self).__init__(*args, **kwargs) 
@@ -244,15 +256,11 @@ class Prism_SpecificationForm(forms.ModelForm):
         self.base_fields['units_manu_unc_const'].initial = 'mm'
         if not user.is_staff:
             self.fields['prism_owner'].disabled = True
-        self.fields['prism_model'].empty_label = '--- Select one ---'
 
     class Meta:
         model = Prism_Specification
         fields = '__all__'
-        exclude = ('created_on', 'modified_on')
-        
-    units_manu_unc_const = forms.CharField(
-        widget=forms.Select(choices=length_units))
+        exclude = ('created_on', 'modified_on', 'prism_model')
 
 
 class Mets_InstForm(forms.ModelForm):

@@ -203,10 +203,15 @@ def register_edit(request, inst_disp, tab, id):
                                             request.FILES or None, 
                                             instance = obj, 
                                             user = request.user)
-    
+    makes_qs = InstrumentMake.objects.all()
+    makes = list(makes_qs.values())
+    models_qs = InstrumentModel.objects.filter(inst_type=inst_disp)
+    models = list(models_qs.values())
     if not form.is_valid():
         context = {
             'inst_type' : inst_disp,
+            'makes': makes,
+            'models': models,
             'form': form
             }
         return render(request, tmplate, context) 
@@ -215,6 +220,13 @@ def register_edit(request, inst_disp, tab, id):
         # Commit content to the database
         frm = form.cleaned_data
         instance = form.save(commit=False)
+        if tab == 'models':
+            instance.prism_model, created = InstrumentModel.objects.get_or_create(
+                inst_type=inst_disp,
+                make = get_object_or_404(InstrumentMake, make = frm['inst_make']),                
+                model=frm['inst_model']
+            )
+
         # Convert input to database standard units
         if inst_disp != 'hygro':
             if 'units_manu_unc_const' in frm.keys():
