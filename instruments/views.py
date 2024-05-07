@@ -226,7 +226,7 @@ def register_edit(request, inst_disp, tab, id):
             if 'units_manu_unc_ppm' in frm.keys():
                 manu_ppm, _ = db_std_units(
                     frm['manu_unc_ppm'], frm['units_manu_unc_ppm'])
-                instance.manu_unc_ppm = manu_ppm * 1e6
+                if manu_ppm: instance.manu_unc_ppm = manu_ppm * 1e6 
             if 'units_frequency' in frm.keys(): 
                 instance.frequency, _ = db_std_units(frm['frequency'],frm['units_frequency'])
             if 'units_unit_length' in frm.keys():
@@ -235,7 +235,7 @@ def register_edit(request, inst_disp, tab, id):
             if 'units_carrier_wavelength' in frm.keys():
                 c_wave, _ = db_std_units(
                     frm['carrier_wavelength'], frm['units_carrier_wavelength'])
-                instance.carrier_wavelength = c_wave * 1e9
+                if c_wave: instance.carrier_wavelength = c_wave * 1e9
             if 'units_measurement_inc' in frm.keys():
                 instance.measurement_increments, _ = db_std_units(
                     frm['measurement_increments'], frm['units_measurement_inc'])

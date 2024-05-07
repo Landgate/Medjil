@@ -1472,6 +1472,15 @@ svg#edit-view:hover path {
 svg#report-view:hover path {
   fill: blue;
 }
+
+svg#trash:hover path {
+  fill: pink;
+}
+
+.icon.#book:hover path {
+  fill: green;
+}
+
 /* .icon-link {
   display:  block;
   z-index: 1;

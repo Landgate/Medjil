@@ -45,28 +45,29 @@ def db_std_units(orig_val, orig_unit):
     new_val = orig_val
     new_unit = orig_unit
     
-    if orig_unit == 'ppm': new_val = round(orig_val / 1e6, 20)
-    if orig_unit == '%': new_val = orig_val / 100
-    if orig_unit == 'nm': new_val = round(orig_val / 1e9, 20)
-    if orig_unit == 'µm': new_val = round(orig_val / 1e6, 20)
-    if orig_unit == 'mm': new_val = round(orig_val / 1000, 20)
-    if orig_unit == 'mmHg': 
-        new_val = round(float(orig_val) * 1.33322387415, 13)
-    if orig_unit == 'inHg': 
-        new_val = round(float(orig_val) * 33.8639, 13)
-    if orig_unit == 'MHz': 
-        new_val = orig_val * 1e6
-        new_unit = 'Hz'
-    if orig_unit == '°F': 
-        new_val = (orig_val -32) * (5/9)
-        new_unit = '°C'
-        
-    if any([orig_unit == 'nm', orig_unit == 'mm', orig_unit == 'µm']): 
-        new_unit = 'm'
-    if any([orig_unit == 'ppm', orig_unit == '%']):
-        new_unit = 'a.x'
-    if any([orig_unit == 'inHg', orig_unit == 'mmHg']):
-        new_unit = 'hPa'
+    if orig_val:
+        if orig_unit == 'ppm': new_val = round(orig_val / 1e6, 20)
+        if orig_unit == '%': new_val = orig_val / 100
+        if orig_unit == 'nm': new_val = round(orig_val / 1e9, 20)
+        if orig_unit == 'µm': new_val = round(orig_val / 1e6, 20)
+        if orig_unit == 'mm': new_val = round(orig_val / 1000, 20)
+        if orig_unit == 'mmHg': 
+            new_val = round(float(orig_val) * 1.33322387415, 13)
+        if orig_unit == 'inHg': 
+            new_val = round(float(orig_val) * 33.8639, 13)
+        if orig_unit == 'MHz': 
+            new_val = orig_val * 1e6
+            new_unit = 'Hz'
+        if orig_unit == '°F': 
+            new_val = (orig_val -32) * (5/9)
+            new_unit = '°C'
+            
+        if any([orig_unit == 'nm', orig_unit == 'mm', orig_unit == 'µm']): 
+            new_unit = 'm'
+        if any([orig_unit == 'ppm', orig_unit == '%']):
+            new_unit = 'a.x'
+        if any([orig_unit == 'inHg', orig_unit == 'mmHg']):
+            new_unit = 'hPa'
 
     return new_val, new_unit
 
