@@ -543,6 +543,8 @@ class Migration(migrations.Migration):
                     "measurement_increments",
                     models.DecimalField(
                         decimal_places=6,
+                        validators=[
+                            django.core.validators.MinValueValidator(0.000000001)],
                         help_text="Resolution of the measurement eg. 0.0001",
                         max_digits=7,
                     ),
@@ -1269,6 +1271,8 @@ class Migration(migrations.Migration):
                     "measurement_increments",
                     models.DecimalField(
                         decimal_places=6,
+                        validators=[
+                            django.core.validators.MinValueValidator(0.000000001)],
                         help_text="Resolution of the measurement eg. 0.01",
                         max_digits=7,
                     ),

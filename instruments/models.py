@@ -266,6 +266,7 @@ class EDM_Specification(models.Model):
 
     measurement_increments = models.DecimalField(
         max_digits=7, decimal_places=6,
+        validators=[MinValueValidator(0.000000001)],
         help_text="Resolution of the measurement eg. 0.01"
     )
     created_on = models.DateTimeField(auto_now_add=True, null=True)
@@ -466,6 +467,7 @@ class Mets_Specification(models.Model):
 
     measurement_increments = models.DecimalField(
         max_digits=7, decimal_places=6,
+        validators=[MinValueValidator(0.000000001)],
         help_text="Resolution of the measurement eg. 0.0001"
     )
 
