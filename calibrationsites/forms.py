@@ -51,7 +51,8 @@ class CalibrationSiteForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
-        super(CalibrationSiteForm, self).__init__(*args, **kwargs) 
+        super(CalibrationSiteForm, self).__init__(*args, **kwargs)
+        self.fields['site_type'].required = True
         # self.fields['state'].queryset = State.objects.none()
         # self.fields['locality'].queryset = Locality.objects.none()
         # self.fields['operator'].initial = user.company

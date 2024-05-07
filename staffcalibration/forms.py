@@ -17,6 +17,8 @@
 '''
 from django import forms
 from django.db.models import Q
+from django.core.exceptions import NON_FIELD_ERRORS
+
 from instruments.models import Staff, DigitalLevel
 from .models import StaffCalibrationRecord
 from calibrationsites.models import CalibrationSite
@@ -100,11 +102,16 @@ class StaffCalibrationForm(forms.ModelForm):
         if not user.is_staff:
             self.fields['inst_staff'].queryset = Staff.objects.filter(staff_owner=user.company)
             self.fields['inst_level'].queryset = DigitalLevel.objects.filter(level_owner=user.company)
-            self.fields['site_id'].queryset = CalibrationSite.objects.filter(site_type = 'staff_range')
+        
+        self.fields['site_id'].queryset = CalibrationSite.objects.filter(site_type = 'staff_range')
             
         self.fields['site_id'].empty_label = '--- Select one ---'
         self.fields['inst_staff'].empty_label = '--- Select one ---'
         self.fields['inst_level'].empty_label = '--- Select one ---'
+
+        self.fields['site_id'].required = True
+        self.fields['inst_staff'].required = True
+        self.fields['inst_level'].required = True
 
     start_temperature = forms.FloatField(help_text = "Temperature at the start of observation.")
     end_temperature = forms.FloatField(help_text = "Temperature at the end of observation.")
@@ -117,5 +124,11 @@ class StaffCalibrationForm(forms.ModelForm):
             'calibration_date': forms.DateInput(format=('%d-%m-%Y'), attrs={'help_text':'Select a date', 'type':'date'}),
             'field_file' : forms.FileInput(attrs={'accept' : '.csv'}),
             'field_book' : forms.FileInput(attrs={'accept' : '.pdf, .jpg, .tif'})
+        }
+
+        error_messages = {
+            NON_FIELD_ERRORS: {
+                'unique_together': "%(model_name)s's %(field_labels)s appears to be exist already. Please check the records and calibrate again.",
+            }
         }
 

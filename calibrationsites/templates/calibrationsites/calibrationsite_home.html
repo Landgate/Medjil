@@ -38,8 +38,8 @@
 <div class="flex-with-sidebar">
 	<div class="left-sidebar px-3">
 		<div class="mt-5">
-			<span>Select location:</span>
-			<div>				
+			<span>Select a location or a State:</span>
+			<div class="mt-2">				
 				<span>
 					<select id = "id_select-state" style="width:160px; padding:0.1rem" name="site-name">
 						{% for site_id, site_name in state_list %}
@@ -70,10 +70,12 @@
 		<div class="post-content" >	
 			<div>
 				<div>
-					<div class="mt-2 flex justify-center">{% if user.is_staff %}
-						<a class="px-3 py-2 border border-transparent text-lg leading-4 rounded text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out" href="{% url 'calibrationsites:create-site' %}?reset">
-							Add new callibration site 
-						</a>{% endif %}
+					<div class="mt-2 flex justify-center">
+						{% if user.is_staff %}
+							<a class="px-3 py-2 border border-transparent text-lg leading-4 rounded text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out" href="{% url 'calibrationsites:create-site' %}?reset">
+								Add new calibration site 
+							</a>
+						{% endif %}
 					</div>
 				</div>  			 
 				<div>
@@ -92,7 +94,9 @@
 								<th class="text-left">Plan</th>
 								<th class="text-left">Updated</th>
 								<th class="text-left">Status</th>
-								<th class="text-left">Action</th>
+								{% if user.is_staff %}
+									<th class="text-left">Action</th>
+								{% endif %}
 							</tr>
 						</thead>
 						{% for element in baselines %}
@@ -127,11 +131,14 @@
 							</td>
 							<td class="text-left">{{ element.modified_on|date:"d/m/Y" }}</td>							
 							<td class="text-left">Open</td>
-							<td class="text-left"><a class="a_link" href="{{ element.get_absolute_url }}">
-								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000" class="bi bi-pencil-fill" id = "edit-view" viewBox="0 0 16 16">
-									<path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"></path>
-								  </svg>
-							</a> </td>
+							
+							{% if user.is_staff %}
+								<td class="text-left"><a class="a_link" href="{{ element.get_absolute_url }}">
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000" class="bi bi-pencil-fill" id = "edit-view" viewBox="0 0 16 16">
+										<path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"></path>
+									</svg>
+								</a> </td>
+							{% endif %}
 						</tr>
 							
 						</tbody>
@@ -154,8 +161,10 @@
 								<th class="text-left">Access</th>
 								<th class="text-left">Plan</th>
 								<th class="text-left">Updated</th>
-								<th class="text-left">Status</th>	
-								<th class="text-left">Action</th>								
+								<th class="text-left">Status</th>
+								{% if user.is_staff %}	
+									<th class="text-left">Action</th>	
+								{% endif %}								
 							</tr>
 						</thead>
 						{% for element in staff_ranges %}
@@ -190,13 +199,16 @@
 							</td>
 							<td class="text-left">{{ element.modified_on|date:"d/m/Y" }}</td>							
 							<td class="text-left">Open</td>
-							<td class="text-left">
-								<a class="a_link" href="{{ element.get_absolute_url }}">
-									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000" class="bi bi-pencil-fill" id = "edit-view" viewBox="0 0 16 16">
-                                        <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"></path>
-                                      </svg>
-								</a>
-							</td>							
+
+							{% if user.is_staff %}	
+								<td class="text-left">
+									<a class="a_link" href="{{ element.get_absolute_url }}">
+										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000" class="bi bi-pencil-fill" id = "edit-view" viewBox="0 0 16 16">
+											<path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"></path>
+										</svg>
+									</a>
+								</td>		
+							{% endif %}					
 						</tr>
 						</tbody>
 						{% endfor %}

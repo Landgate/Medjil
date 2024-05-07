@@ -47,6 +47,7 @@
   	    		<th class="text-left font-semibold text-base text-gray-900">Staff Number</th>
   	    		<th class="text-left font-semibold text-base text-gray-900">Level Number</th>
   	    		<th class="text-left font-semibold text-base text-gray-900">Observer</th>
+            <th class="text-left font-semibold text-base text-gray-900">Owner</th>
   	    		<th class="text-center font-semibold text-base text-gray-900">Report</th>
             <th class="text-center font-semibold text-base text-gray-900">Action</th>
       		</tr>
@@ -58,6 +59,7 @@
       	    		<td class="font-regular text-left"> {{ item.inst_staff }} </td>
       	    		<td class="font-regular text-left"> {{ item.inst_level }} </td>
       	    		<td class="font-regular text-left"> {{ item.observer }} </td>
+                <td class="font-regular text-left"> {{ item.inst_staff.staff_owner }} </td>
       	    		<td class="font-regular text-center"> 
                   <a class="px-2" href="{% url 'staffcalibration:print_report' item.id %}" target="_blank" rel="noopener noreferrer">
                     <svg version="1.0" xmlns="http://www.w3.org/2000/svg" id="report-view"

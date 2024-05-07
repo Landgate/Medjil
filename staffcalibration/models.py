@@ -47,6 +47,7 @@ class StaffCalibrationRecord(models.Model):
         limit_choices_to=Q(site_type = 'staff_range') | Q(site_type = 'staff_lab'),
         on_delete = models.PROTECT, 
         null = True, blank = True,
+        help_text = "Select the staff calibration range. Please contact Landgate, if it does not exist.",
         verbose_name = 'Calibration Site')
     job_number = models.CharField(
         max_length=15, 
@@ -56,11 +57,13 @@ class StaffCalibrationRecord(models.Model):
         Staff, 
         null=True,
         on_delete = models.PROTECT, 
+        help_text = "Select staff.",
         verbose_name = 'Staff Number')
     inst_level = models.ForeignKey(
         DigitalLevel, 
         on_delete = models.PROTECT, 
         null = True, blank = True,
+        help_text = "Select level.",
         verbose_name = 'Level Number')
     scale_factor = models.FloatField(
         null=True, 
@@ -110,7 +113,7 @@ class StaffCalibrationRecord(models.Model):
 
     class Meta:
         ordering = ['inst_staff', 'calibration_date']
-        unique_together = ['job_number', 'inst_staff', 'calibration_date']
+        unique_together = ['inst_staff', 'calibration_date']
         verbose_name = "Barcode Staff Calibrations"
 
     def __str__(self):

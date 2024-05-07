@@ -29,7 +29,7 @@
         <!-- <br> -->
         {% endif %}	
         <div class="post-header">
-            <h2 class="post-title">List of Levelling Staves and Certificates</h2>
+            <h2 class="post-title">Levelling Staves and Calibration Certificates</h2>
         </div>    
         <div class="mt-2 mb-5 flex justify-center">
             <a href="{% url 'staffcalibration:create_record' %}" class="px-3 py-2 border border-transparent text-lg leading-4 rounded text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
@@ -37,7 +37,7 @@
             </a>  
           </div> 
         <div class="post-content">		      
-            {% if staff_list %}
+            {% if queryset %}
             <table style="table-layout: fixed; width: 100%">
                 <tr>
                     <th>Job Number</th>
@@ -50,7 +50,7 @@
                     <th class="text-center">Certificate</th>
                     <th class="text-center">Action</th>
                 </tr>
-                {% for element in staff_list %}
+                {% for element in queryset %}
                 <tr>
                     <td>{{ element.job_number }}</td>
                     <!-- <td> <a class="a_link" href="{{ element.inst_staff.get_absolute_url }}">{{ element.inst_staff.staff_number }}</a> </td> -->
@@ -78,7 +78,7 @@
                                 </svg>
                             </a>
                         {% elif element.field_book %}
-                            <a href="{% url 'staffcalibration:print_report' element.job_number %}" target="__blank">
+                            <a href="{% url 'staffcalibration:print_report' element.id %}" target="__blank">
                                 <svg version="1.1" baseProfile="tiny" id="report-view" xmlns:x="&ns_extend;" xmlns:i="&ns_ai;" xmlns:graph="&ns_graphs;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/" x="0px" y="0px" width="16" height="16" viewBox="0 0 42 42" xml:space="preserve">
                                     <path fill-rule="evenodd" d="M22.5,1.5h-14c-2.55,0-3,0.561-3,3v32c0,2.49,0.55,3,3,3h24c2.5,0,3-0.47,3-3v-22h-13V1.5z M35.5,11.5l-10-10v10H35.5z"/>
                                 </svg>
@@ -97,7 +97,7 @@
                 {% endfor %}
             </table>
             {% endif %}
-        <div><i>* The most recent records only</i></div>
+        <div><i> <strong>Note:</strong> The most recent records only</i></div>
     </div>
 	<!-- </div>	 -->
 </article>

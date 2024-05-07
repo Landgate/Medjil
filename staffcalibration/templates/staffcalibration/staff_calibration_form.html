@@ -39,6 +39,7 @@
         <!-- <br> -->
         {% endif %}
         
+                
         <form action="" class="site-form" method="post" enctype="multipart/form-data">
             <div class="mb-5 site-form-header bg-indigo-300 rounded px-2">
                 <h2 class="text-center">Barcode Staff Calibration Details</h2>
@@ -80,6 +81,14 @@
                 {% endfor %}
         
             </table>
+
+            {% if form.non_field_errors %}
+                <ul class="message-list" style="padding: 0.5rem 1.5rem">
+                    {% for error in form.non_field_errors %}
+                        <li class="error-danger"><strong>{{ error }}</strong></li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
              
             <div class="button-container">
 				<button class="submit-button bg-green-500 hover:bg-green-400" type="submit" >Save</button>
