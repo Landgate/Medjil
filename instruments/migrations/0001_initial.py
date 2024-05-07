@@ -1,6 +1,6 @@
 '''
 
-   © 2023 Western Australian Land Information Authority
+   © 2024 Western Australian Land Information Authority
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -67,7 +67,7 @@ class Migration(migrations.Migration):
                 ),
                 ("comment", models.CharField(
                     blank=True,
-                    max_length=265,
+                    max_length=256,
                     null=True,
                     validators=[common_func.validators.validate_profanity])),
                 ("created_on", models.DateTimeField(auto_now_add=True, null=True)),
@@ -1303,7 +1303,7 @@ class Migration(migrations.Migration):
             model_name="edm_inst",
             name="edm_specs",
             field=models.ForeignKey(
-                null=True, blank=True,
+                null=False, blank=False,
                 on_delete=django.db.models.deletion.PROTECT,
                 to="instruments.edm_specification",
                 verbose_name="EDM Specification",

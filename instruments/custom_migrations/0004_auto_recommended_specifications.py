@@ -26,7 +26,7 @@ import_file = os.path.join(
     settings.MEDIA_ROOT, 'InitialData/Specification Recommendations/Edm Specification Recommendations.csv')
 
 edms_specs = []
-with open(import_file, 'r') as file:
+with open(import_file, 'r', encoding='cp1252') as file:
     csv_reader = csv.reader(file)
     headers = next(csv_reader)  # Read the first row as headers
     

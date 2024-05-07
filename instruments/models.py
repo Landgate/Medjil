@@ -317,7 +317,7 @@ class EDM_Inst(models.Model):
     edm_specs = models.ForeignKey(
         EDM_Specification,
         on_delete=models.PROTECT,
-        null=True, blank=True,
+        null=False, blank=False,
         verbose_name="EDM Specifications"
     )
     created_on = models.DateTimeField(auto_now_add=True, null=True)
