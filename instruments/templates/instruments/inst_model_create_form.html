@@ -117,6 +117,9 @@
             {% endif %}
 
             <div class="button-container">
+                {% if request.GET.next %}
+                    <a href= {{ request.GET.next }} class="submit-button bg-red-500 hover:bg-green-400" style="text-align: center">Cancel</a>
+                {% endif %}
                 <button class="submit-button bg-green-500 hover:bg-green-400" type="submit" >Save</button>
             </div>
 
