@@ -27,6 +27,7 @@ from django.views import generic
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
+from django.db.models import Case, When, Value, IntegerField, Max, OuterRef, Subquery
 
 # Import Models
 from common_func.validators import try_delete_protected
@@ -47,20 +48,45 @@ class HomeView(generic.ListView, LoginRequiredMixin):
     paginate_by = 25
     template_name = 'staffcalibration/staff_calibration_home.html'
 
-    ordering = ['-calibration_date']
+    # ordering = ['--calibration_date']
     def get_queryset(self):
+        queryset = StaffCalibrationRecord.objects.all()
         if not self.request.user.is_staff:
-            return StaffCalibrationRecord.objects.filter(inst_staff__staff_owner = self.request.user.company)
-        else:
-            return StaffCalibrationRecord.objects.all()
+            queryset = queryset.filter(inst_staff__staff_owner = self.request.user.company)
+       
+        # Annotate the queryset so that staffs can see their records at the top
+        queryset = queryset.annotate(
+            is_top=Case(
+                When(inst_staff__staff_owner = self.request.user.company, then=Value(1)),
+                default=Value(0),
+                output_field=IntegerField(),
+            )
+        )
+        # Order by 'is_top' (descending) and then by 'date' (descending)
+        queryset = queryset.order_by('-is_top', '-calibration_date')
+        return queryset
 
 @login_required(login_url="/accounts/login")
 def user_staff_registry(request):
-    # staff list
-    staff_list = StaffCalibrationRecord.objects.filter(inst_staff__staff_owner=request.user.company).distinct().order_by('inst_staff__staff_model')
-
+    
+    if request.user.is_staff:
+        queryset = StaffCalibrationRecord.objects.all()
+        queryset = queryset.annotate(
+            is_top=Case(
+                When(inst_staff__staff_owner = request.user.company, then=Value(1)),
+                default=Value(0),
+                output_field=IntegerField(),
+            )
+        )
+        queryset = queryset.order_by('-is_top', '-calibration_date')
+    else:
+        queryset = StaffCalibrationRecord.objects.filter(inst_staff__staff_owner = request.user.company)
+    
+    subQuery = queryset.filter(inst_staff = OuterRef('inst_staff')).order_by('-calibration_date').values('calibration_date')[:1]
+    queryset = queryset.filter(calibration_date = Subquery(subQuery)) #(latest_date=Max('calibration_date')).filter(calibration_date=F('latest_date')).order_by('inst_staff__number')
+    
     context = {
-        'staff_list': staff_list,
+        'queryset': queryset,
     }
     return render(request, 'staffcalibration/staff_calibration_record.html', context)
 ################################################################################    
@@ -383,6 +409,9 @@ def print_report(request, id):
 def delete_record(request, id):
     thisRecord = StaffCalibrationRecord.objects.get(id=id)
     try_delete_protected(request, thisRecord)
-    
-    return redirect('staffcalibration:staff_registry')
+
+    # current_page_url = request.build_absolute_uri()
+    previous_page_url = request.META.get('HTTP_REFERER')
+    # return redirect('staffcalibration:home')
+    return redirect(previous_page_url)
 ###############################################################################

@@ -54,9 +54,9 @@ from accounts.models import Company
 def site_home(request):
     staff_ranges = CalibrationSite.objects.filter(site_type = 'staff_range')
     baselines = CalibrationSite.objects.filter(site_type = 'baseline')
-
-    filter_states = CalibrationSite.objects.order_by('state').values('state').distinct()
-    state_list = [('None', '--- Select by State ---'),]
+    
+    filter_states = CalibrationSite.objects.filter(country__name__exact = 'Australia').order_by('state').values('state').distinct()
+    state_list = [('None', '--- Select one ---'),]
     for state_id in filter_states:
         state = State.objects.filter(id = state_id['state']).values('statecode')[0]
         state_list.append((state_id['state'], state['statecode'],))
