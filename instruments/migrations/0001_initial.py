@@ -706,7 +706,7 @@ class Migration(migrations.Migration):
                         default=30,
                         help_text="Degrees of freedom of calibration For a Type B estimate use the following as a guide:  3 for not very confident, 10 for moderate confidence, 30 for very confident.",
                         validators=[
-                            django.core.validators.MinValueValidator(0),
+                            django.core.validators.MinValueValidator(1),
                             django.core.validators.MaxValueValidator(500),
                         ],
                     ),
@@ -1096,7 +1096,7 @@ class Migration(migrations.Migration):
                     models.IntegerField(
                         help_text="Degrees of freedom of calibration",
                         validators=[
-                            django.core.validators.MinValueValidator(0),
+                            django.core.validators.MinValueValidator(1),
                             django.core.validators.MaxValueValidator(500),
                         ],
                         verbose_name="Degrees of Freedom",

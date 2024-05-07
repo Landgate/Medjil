@@ -711,7 +711,7 @@ class EDMI_certificate (models.Model):
         help_text="Results of measurement standard deviation (m)",
         verbose_name="Standard Deviation")
     degrees_of_freedom = models.IntegerField(
-        validators = [MinValueValidator(0), MaxValueValidator(500)],
+        validators = [MinValueValidator(1), MaxValueValidator(500)],
         help_text="Degrees of freedom of calibration",
         verbose_name="Degrees of Freedom")
 
@@ -812,7 +812,7 @@ class Mets_certificate (models.Model):
         null=True,blank = True)
 
     degrees_of_freedom = models.IntegerField(
-        validators = [MinValueValidator(0), MaxValueValidator(500)],
+        validators = [MinValueValidator(1), MaxValueValidator(500)],
         help_text="Degrees of freedom of calibration " +
                   "For a Type B estimate use the following as a guide: "
                   " 3 for not very confident, "

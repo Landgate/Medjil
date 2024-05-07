@@ -75,7 +75,7 @@ class Migration(migrations.Migration):
                 ('zero_point_correction', models.FloatField(blank=True, help_text='If: Instrument Correction (m) = 1.00000013.L + 0.0003, Zero Point Correction = 0.0003m', null=True, validators=[django.core.validators.MinValueValidator(-0.1), django.core.validators.MaxValueValidator(0.1)])),
                 ('zpc_uncertainty', models.FloatField(blank=True, help_text='Uncertainty of the zero point correction (m) at 95% Confidence Level', null=True, validators=[django.core.validators.MinValueValidator(0.0), django.core.validators.MaxValueValidator(0.1)], verbose_name='zero point correction uncertainty')),
                 ('variance', models.FloatField(blank=True, help_text='Variance of least squares adjustment of the calibration', null=True)),
-                ('degrees_of_freedom', models.IntegerField(blank=True, help_text='Degrees of freedom of calibration', null=True, validators=[django.core.validators.MinValueValidator(0), django.core.validators.MaxValueValidator(500)])),
+                ('degrees_of_freedom', models.IntegerField(blank=True, help_text='Degrees of freedom of calibration', null=True, validators=[django.core.validators.MinValueValidator(1), django.core.validators.MaxValueValidator(500)])),
                 ('uploaded_on', models.DateTimeField(auto_now_add=True, null=True)),
                 ('modified_on', models.DateTimeField(auto_now=True, null=True)),
                 ('data_entered_person', models.CharField(validators=[common_func.validators.validate_profanity], blank=True, max_length=25, null=True),),
@@ -139,7 +139,7 @@ class Migration(migrations.Migration):
                 ('std_dev', models.FloatField(blank=True, help_text='Standard deviation in terms of the units specified', null=True)),
                 ('uc95', models.FloatField(blank=True, help_text='Uncertainty at 95% confidence in terms of the units specified', null=True, validators=[django.core.validators.MinValueValidator(1e-20)], verbose_name='Uncertainty')),
                 ('k', models.FloatField(default=2.0, help_text='The coverage factor for each input quantity. Typically 2.0 for a 95% confidence interval (normal distribution) or sqrt(3) for a rectangular distribution.', null=True, validators=[django.core.validators.MinValueValidator(1.0), django.core.validators.MaxValueValidator(5.0)], verbose_name='k')),
-                ('degrees_of_freedom', models.IntegerField(default=30, help_text='Degrees of freedom of calibration For a Type B estimate use the following as a guide:  3 for not very confident, 10 for moderate confidence, 30 for very confident.', validators=[django.core.validators.MinValueValidator(0), django.core.validators.MaxValueValidator(500)], verbose_name='dof')),
+                ('degrees_of_freedom', models.IntegerField(default=30, help_text='Degrees of freedom of calibration For a Type B estimate use the following as a guide:  3 for not very confident, 10 for moderate confidence, 30 for very confident.', validators=[django.core.validators.MinValueValidator(1), django.core.validators.MaxValueValidator(500)], verbose_name='dof')),
                 ('uncertainty_budget', models.ForeignKey(help_text='Prism used for survey', on_delete=django.db.models.deletion.CASCADE, to='baseline_calibration.uncertainty_budget')),
             ],
             options={

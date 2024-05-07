@@ -214,7 +214,7 @@ class Uncertainty_Budget_Source(models.Model):
                  default = 2.0,
                  null=True)
     degrees_of_freedom = models.IntegerField(
-                 validators = [MinValueValidator(0), MaxValueValidator(500)],
+                 validators = [MinValueValidator(1), MaxValueValidator(500)],
                  verbose_name= 'dof',
                  help_text="Degrees of freedom of calibration "
                             "For a Type B estimate use the following as a guide: "
@@ -383,7 +383,7 @@ class Pillar_Survey(models.Model):
     variance = models.FloatField(blank = True, null=True,
                  help_text="Variance of least squares adjustment of the calibration")
     degrees_of_freedom = models.IntegerField(blank = True, null=True,
-                 validators = [MinValueValidator(0), MaxValueValidator(500)],
+                 validators = [MinValueValidator(1), MaxValueValidator(500)],
                  help_text="Degrees of freedom of calibration")
    
     data_entered_person = models.CharField(
