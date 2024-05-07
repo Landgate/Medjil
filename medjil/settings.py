@@ -132,13 +132,12 @@ OTP_TOTP_ISSUER = "Medjil - Survey Instrument Calibration"    # addition
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-HOST=(os.environ.get('MEDJIL_DB_HOST')).strip('"')
-USER=(os.environ.get('MEDJIL_DB_USER')).strip('"')
-PASSWORD=(os.environ.get('MEDJIL_DB_PASSWORD')).strip('"')
-NAME=(os.environ.get('MEDJIL_DB_NAME')).strip('"')
-ENGINE=(os.environ.get('MEDJIL_DB_ENGINE')).strip('"')
-
 if 'MEDJIL_DB_ENGINE' in os.environ:
+    HOST=(os.environ.get('MEDJIL_DB_HOST')).strip('"')
+    USER=(os.environ.get('MEDJIL_DB_USER')).strip('"')
+    PASSWORD=(os.environ.get('MEDJIL_DB_PASSWORD')).strip('"')
+    NAME=(os.environ.get('MEDJIL_DB_NAME')).strip('"')
+    ENGINE=(os.environ.get('MEDJIL_DB_ENGINE')).strip('"')
     DATABASES = {
         'default': {
             'ENGINE': ENGINE,
@@ -267,16 +266,19 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # redirect url
-LOGIN_REDIRECT_URL = '/'
+if 'MEDJIL_ENVIRONMENT' in os.environ:
+    LOGIN_REDIRECT_URL = '/'
 
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    
+    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
 
-STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
+    ENV=os.environ.get('MEDJIL_ENVIRONMENT')
+    
+    AWS_STORAGE_BUCKET_NAME = 'lg-medjil-staticfiles-'+ENV
 
-ENV=os.environ.get('MEDJIL_ENVIRONMENT')
-
-AWS_STORAGE_BUCKET_NAME = 'lg-medjil-staticfiles-'+ENV
-
-AWS_QUERYSTRING_AUTH = False
-
-AWS_S3_CUSTOM_DOMAIN = os.environ.get('MEDJIL_CLOUDFRONT_DOMAIN_NAME')
+    AWS_QUERYSTRING_AUTH = False
+    
+    AWS_S3_CUSTOM_DOMAIN = os.environ.get('MEDJIL_CLOUDFRONT_DOMAIN_NAME')
+else:
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

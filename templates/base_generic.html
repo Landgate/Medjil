@@ -40,20 +40,21 @@
                         <span>Medjil</span>
                         <span>The Survey Instrumentation Calibration Portal</span>
                     </p>
-                </a>                
+                </a>      
+                {% if user.is_authenticated %}          
                 <div class="header-userinfo">
                     <div class="inline-flex items-center">
                         <span class="pxr-2">Welcome</span> 
                         <button class="dropdown-btn" data-dropdown="dropdown1" aria-haspopup="true" aria-expanded="false" aria-label="discover"> 
-                            {% if user.is_authenticated %}
+                            <!-- {% if user.is_authenticated %} -->
                                 {% if not user.first_name %}
                                     <span class="primary-link pxr-2"><strong> {{ user.email }}</strong></span>
                                 {% else %}
                                     <span class="primary-link pxr-2"><strong>{{ user.first_name }}</strong></span>
                                 {% endif %}
-                            {% else %}
+                            <!-- {% else %}
                                 <span class="primary-link pxr-2"><strong>Signup or Login</strong></span>
-                            {% endif %}
+                            {% endif %} -->
                             <i class="fas fa-angle-down rotate" aria-hidden="true"></i>
                         </button>
                     </div>
@@ -74,6 +75,7 @@
                         {% endif %}   
                     </ul>
                 </div>
+                {% endif %}
             </div>
         </div>
     </header>
