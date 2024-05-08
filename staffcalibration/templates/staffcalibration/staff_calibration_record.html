@@ -96,8 +96,15 @@
                 </tr>               
                 {% endfor %}
             </table>
+            <p><i> <strong>Note:</strong> The most recent records only</i></p>
+            {% else %}
+            <br>
+            <hr>
+            <p class="py-2">
+                There is currently no staff calibration record! Click <a href="{% url 'staffcalibration:home' %}"></a> to start calibrating your levelling staff.
+            </p>
             {% endif %}
-        <div><i> <strong>Note:</strong> The most recent records only</i></div>
+        
     </div>
 	<!-- </div>	 -->
 </article>

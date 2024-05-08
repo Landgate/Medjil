@@ -116,6 +116,19 @@
                 </li>
                 <li class="nav-item has-subnav"><a tabindex="0">Staff Calibration</a>
                     <ul class="sub-links">
+                        <li class="sub-items">
+                            <a href="{% url 'staffcalibration:home' %}">
+                                <div class="sub-item-header">Staff Calibration</div>
+                                <div class="sub-item-description">Calibrate barcoded levelling staff</div>
+                            </a>
+                        </li>     
+                        <li class="sub-items">
+                            <a href="{% url 'staffcalibration:staff_registry' %}">
+                                <div class="sub-item-header">Levelling Staff Registry</div>
+                                <div class="sub-item-description">View all company staff calibration records</div>
+                            </a>
+                        </li>          
+                        
                         {% if user.is_staff %}
                         <li class="sub-items">
                             <a href="{% url 'rangecalibration:home' %}">
@@ -123,25 +136,14 @@
                                 <div class="sub-item-description">Calibrate levelling staff range</div>
                             </a>
                         </li>
-                        {% endif %}
-                        <li class="sub-items">
-                            <a href="{% url 'staffcalibration:home' %}">
-                                <div class="sub-item-header">Staff Calibration</div>
-                                <div class="sub-item-description">Calibrate barcoded levelling staff</div>
-                            </a>
-                        </li>                        
+                        
                         <li class="sub-items">
                             <a href="{% url 'rangecalibration:range_param' %}">
                                 <div class="sub-item-header">Calibration Range Parameters</div>
                                 <div class="sub-item-description">View calibration range parameters</div>
                             </a>
                         </li>
-                        <li class="sub-items">
-                            <a href="{% url 'staffcalibration:staff_registry' %}">
-                                <div class="sub-item-header">Levelling Staff Registry</div>
-                                <div class="sub-item-description">View all company staff calibration records</div>
-                            </a>
-                        </li>
+                        {% endif %}
                     </ul>
                 </li>
                 <!-- <li class="nav-item has-subnav"><a tabindex="0">Baseline Calibration </a>
@@ -200,8 +202,8 @@
                     <ul class="sub-links">
                         <li class="sub-items">
                             <a href="{% url 'calibrationguide:guide_view' %}">
-                                <div class="sub-item-header">Calibration Guides</div>
-                                <div class="sub-item-description">Guides to calibrate EDM baseline or instrumentaion</div>
+                                <div class="sub-item-header">User Guides</div>
+                                <div class="sub-item-description">Please read the instructions to perform the instrument calibrations </div>
                             </a>
                         </li>
                         <li class="sub-items">

@@ -40,6 +40,8 @@
       {% if user.is_authenticated %}
       <hr>
       <br>
+      {% if object_list %}
+        {% for item in object_list %}
       	<table style="table-layout: fixed; width: 100%">
       		<tr>
       			<th class="text-left font-semibold text-base text-gray-900">Job Number</th>    	
@@ -51,8 +53,7 @@
   	    		<th class="text-center font-semibold text-base text-gray-900">Report</th>
             <th class="text-center font-semibold text-base text-gray-900">Action</th>
       		</tr>
-          {% if object_list %}
-        		{% for item in object_list %}
+          
           		<tr>
           			<td class="font-regular text-left"> {{ item.job_number }}</td>    	
       	    		<td class="font-regular text-left"> {{ item.calibration_date|date:"d/m/Y" }} </td>
