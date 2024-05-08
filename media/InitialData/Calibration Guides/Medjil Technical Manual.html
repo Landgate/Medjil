@@ -39,7 +39,7 @@ svg: {
 <body>
 <h1>Calibration of Survey Instrumentation Technical Manual</h1>
 <h1>Copyright © 2020-2024 Western Australian Land Information Authority</h1>
-<h1>Last updated April 2024</h1>
+<h1>Last updated May 2024</h1>
 <hr>
 <br>
 <div>
@@ -64,7 +64,10 @@ svg: {
 <a href="#Chapter_5">5 Least squares adjustment</a>
 </h3>
 <h3>
-<a href="#Chapter_6">6 Reports</a>
+<a href="#Chapter_6">6 Calibration reports</a>
+</h3>
+<h3>
+<a href="#Chapter_7">7 Barcode staff calibration</a>
 </h3>
 <br>
 </div>
@@ -76,7 +79,7 @@ svg: {
 <ul STYLE="margin:30px">
 <li>EDM Instrumentation using standardised EDM Baselines</li>
 <li>EDM Baselines using standardised instruments</li>
-<li>Levelling staff using staff calibration range facility</li>
+<li>Barcode staff using staff calibration range facility</li>
 </ul>
 <p>The purpose of calibrating the EDM Instrumentation (EDMI) is to establish the legal traceability of a user's instrument to the national standard of length provided by the National Measurement Institute (NMI). This is accomplished by determining the Instrument Correction and its uncertainty through a survey procedure conducted at a certified EDM Baseline. The certification of EDM Baselines are maintained by individual States and Territories.</p>
 <p>The certification (or calibration) of EDM baselines establishes updated (or improved) distances between their pillars. The calibration of an EDMI provides distance correction specific to that instrumentation which are to be applied to measurements taken using that instrumentation (eg. EDM and prism). EDM Baselines and EDMI calibration should be conducted on a regular basis. Check your legislative requirements in your State and Territory for compliance.</p>
@@ -1220,7 +1223,7 @@ A rectangular distribution represents an arbitrary outcome that lies between cer
 </div>
 <div id="Chapter_6">
 <!-- CHAPTER 6 -->
-<h1>6 Reports</h1>
+<h1>6 Calibration reports</h1>
 <div id="Chapter_6_1"></div>
 <h2>6.1 Statistical tests</h2>
 <p>Table 6.1 provides a lists of the ISO 17123-4:2012 recommended hypothesis testing to help the interpretation of the calibration results.</p>
@@ -1282,6 +1285,37 @@ A rectangular distribution represents an arbitrary outcome that lies between cer
 <p>&emsp;&emsp;U<sub>ref</sub> = uncertainty of the distance at the reference baseline</p>
 <br>
 <p>If the |E<sub>n</sub>| &#8804; 1 the results are satisfactory (new baseline (laboratory) is comparable to other baselines (laboratories) in terms of its performance) and if the |E<sub>n</sub>| > 1 the results are unsatisfactory (baselines are not providing the same results).</p></div>
+<br>
+<div id="Chapter_7">
+<!-- CHAPTER 7 -->
+<h1>7 Barcode staff calibration</h1>
+<p>With the use of digital levelling systems by the surveying industry, there is a need to determine the accuracy of barcode staves. Medjil enables the survey industry to perform calibration of barcode staves using dedicated staff calibration range facility.</p>
+<div id="Chapter_7_1"></div>
+<h2>7.1 Range calibration</h2>
+<p>The Landgate barcode staff calibration range is located at the Land Surveyors Licensing Board's examination site at Boya and consists of 2 observing pillars and a series of 21 stainless steel pins set in a solid granite outcrop. The pins have been placed at optimum distances from the pillars and cater for testing over a 4 metre height difference. The relative height differences between the pins have been accurately determined by repeat observations using precision levels in conjunction with calibrated invar staves. Landgate regularly monitor and re-measure the test range to ensure its ongoing accuracy.</p>
+<img src="\media\TechnicalManual\tbaseline\Medjil_Technical_Manual\Picture_7_1.png" alt="Boya barcode staff calibration range">
+<h3>7.1.1 Mathematical model for the calibration of the Barcode Calibration Range</h3>
+<p>For the the calibrations of the range the following mathematical model is used to fit the observations (height differences) between the pins. Redundant observations are required in order to carry out a least squares adjustment.</p>
+<div>$$ ΔH_{ij}=(M_{jk}-M_{ik})\ \ \ (Eq. 7.1) $$ </div>
+<p>Where:</p>
+<p>&emsp;&emsp;∆H<sub>ij</sub> = height difference between pins i and j</p>
+<p>&emsp;&emsp;M<sub>ik</sub> = staff reading at pin i with a digital level</p>
+<p>&emsp;&emsp;M<sub>jk</sub> = staff reading at Pin j with a digital level</p>
+<p>&emsp;&emsp;k = sbservation set number. Each set contains several observations taken with the same instrument (level), staff and observing pillar</p>
+<h3>7.1.2 Observation equations for each height interval between adjoining pins</h3>
+<p>The observation equations are derived from the mathematical model where the residual is the difference between the observed and the most probable height difference between the pins. One observation equation is formed for each observation. The initial (most probabale) height difference is adopted from a previous range calibration.</p>
+<div>$$ v_k=ΔH_{ij}-[M_{jk}-M_{ik} ]\ \ \ (Eq. 7.2) $$ </div>
+<p>Where:</p>
+<p>&emsp;&emsp;v<sub>k</sub> = residual of the observation set between pins i and j in metres</p>
+<p>The above equation can be expressed in a matrix notation as:</p>
+<div>$$ v = AX+m\ \ \ (Eq. 7.3)$$ </div>
+<p>Where:</p>
+
+
+<div id="Chapter_7_2"></div>
+<h2>7.2 Staff calibration</h2>
+<p>To calibrate range, the following mathematical model is used to fit the observations (height differences) between the pins. Redundant observations are essential to estimate height differences and their uncertainties using least squares adjustment.</p>
+</div>
 <p>End of manual</p>
 </body>
 </html>
