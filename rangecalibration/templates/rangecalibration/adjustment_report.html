@@ -23,9 +23,17 @@
     
     <header class="post-header">
       <div class="grid-2 items-center">
-        <h2 class="post-title text-center">Range Calibration Report</h2>
-        <a href="{% url 'rangecalibration:print_record' job_number %}" target="_blank" rel="noopener noreferrer">
-          <button class="px-3 py-1 border border-transparent text-base leading-4 font-small rounded-md text-white bg-red-600 hover:bg-red-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out" >Print pdf &raquo;</button></a>
+        <h2 class="post-title" style="text-align: left;">Range Calibration Report</h2>
+
+        <div class="flex items-center justify-start">
+          <a href="{% url 'rangecalibration:print_record' calibration_id %}" target="__blank">
+            <button class="mr-3 px-3 py-1 border border-transparent text-lg leading-4 font-medium rounded text-white bg-red-600 hover:bg-red-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out" >Print Report &raquo;</button>
+          </a>
+    
+          <a href="{% url 'rangecalibration:home' %}">
+            <button class="ml-3 px-3 py-1 border border-transparent text-lg leading-4 font-medium rounded text-white bg-gray-600 hover:bg-gray-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out" >Back to Records</button>
+          </a>
+        </div>
       </div>
     </header>
 
@@ -146,5 +154,22 @@
       </table>
     </div>
   </article>
+
+
+  <script>
+    let allowLeave = false;
+
+    document.querySelector('.post-header').addEventListener('click', function(e) {
+      if(e.target.tagName === 'BUTTON') {
+        allowLeave = true;
+      }
+    })
+
+    window.onbeforeunload = function() {
+      if (!allowLeave) {
+        return "Have you printed the Range Calibration Report?";
+      }
+    };
+  </script>
 
 {% endblock content %}

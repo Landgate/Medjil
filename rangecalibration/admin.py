@@ -29,7 +29,7 @@ class BarCodeRangeParamAdmin(admin.ModelAdmin):
 
 @admin.register(RangeCalibrationRecord, site=admin_site)
 class RangeCalibrationRecordAdmin(admin.ModelAdmin):
-    list_display = ['job_number', 'site_id', 'inst_staff', 'staff_type', 'staff_length', \
+    list_display = ['id', 'job_number', 'site_id', 'inst_staff', 'staff_type', 'staff_length', \
                     'inst_level', 'calibration_date', 'updated_to', 'valid']
 
     ordering = ['valid', 'inst_staff__staff_number', '-calibration_date']
@@ -58,7 +58,7 @@ try:
 
     @admin.register(RangeCalibrationRecord, site=medjil_super_site)
     class RangeCalibrationRecordAdmin(admin.ModelAdmin):
-        list_display = ['job_number', 'site_id', 'inst_staff', 'staff_type', 'staff_length', \
+        list_display = ['id', 'job_number', 'site_id', 'inst_staff', 'staff_type', 'staff_length', \
                         'inst_level', 'calibration_date', 'updated_to', 'valid']
 
         ordering = ['valid', 'inst_staff__staff_number', '-calibration_date']

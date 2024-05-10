@@ -128,7 +128,7 @@ class StaffCalibrationForm(forms.ModelForm):
 
         error_messages = {
             NON_FIELD_ERRORS: {
-                'unique_together': "%(model_name)s's %(field_labels)s appears to be exist already. Please check the records and calibrate again.",
+                'unique_together': "%(model_name)s's %(field_labels)s appears to exist already. Please check the records and calibrate again.",
             }
         }
 

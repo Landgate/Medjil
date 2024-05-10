@@ -731,7 +731,7 @@ button.dropdown-btn {
   font-weight: 400;
   margin: 1rem 0 .5rem; }
 .post p {
-  font-size: 0.95rem;
+  font-size: 1rem;
   line-height: 1.5;
   margin: 0 0 1rem; }
 .post strong {
@@ -966,7 +966,7 @@ button.dropdown-btn {
 .alert,
 .error {
   /* padding-left: 1.875rem; */
-  font-size: 0.625;
+  font-size: 0.75;
   font-weight: 400;
 }
 
@@ -1245,7 +1245,7 @@ select .default {
 .errorlist li {
   list-style-type: none;
   color: red;
-  font-size: 0.75rem;
+  font-size: 0.95rem;
   padding: 5px;
 }
 
