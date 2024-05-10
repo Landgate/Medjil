@@ -306,7 +306,7 @@ class RangeCalibrationWizard(LoginRequiredMixin, SessionWizardView):
             # Check pins with database
             if (newPillarList == pillarList):
                 # Update RangeCalibrationRecord
-                RangeCalibrationRecord.objects.create(  job_number = job_number,
+                obj, created = RangeCalibrationRecord.objects.get_or_create(  job_number = job_number,
                                                         site_id = site_id,
                                                         inst_staff = staff_number,
                                                         inst_level = level_number,
@@ -316,15 +316,14 @@ class RangeCalibrationWizard(LoginRequiredMixin, SessionWizardView):
                                                         observer = observer,
                                                         field_book = field_book,
                                                         field_file = field_file)
-
-                # Update the RawDataModel
-                calibration_id = RangeCalibrationRecord.objects.get(job_number = job_number)
+                # Create Raw Data model
                 RawDataModel.objects.create(
-                                        calibration_id = calibration_id,
+                                        calibration_id = obj,
                                         observation = thisMeasurement) 
 
                 # build the context to render to the template
                 context = {
+                        'calibration_id' : obj.id,
                         'job_number': job_number,
                         'staff_number': staff_number,
                         'level_number': level_number,
@@ -333,7 +332,6 @@ class RangeCalibrationWizard(LoginRequiredMixin, SessionWizardView):
                         'average_temperature': (ave_temperature1+ave_temperature2)/2,
                         'range_measurement': thisMeasurement
                 }
-
                 return render(self.request, 'rangecalibration/range_report.html',  context = context)
             else:
                 mPillarsInData = [x for x in pillarList if x not in newPillarList]
@@ -428,6 +426,7 @@ def adjust(request, id):
                                     height_difference = output_hdiff) 
     # build the context to render to the template
     context = {
+            'calibration_id' : thisRecord.id,
             'job_number': thisRecord.job_number,
             'site_id': thisRecord.site_id,
             'staff_number': thisRecord.inst_staff,
@@ -561,11 +560,16 @@ def range_param_process(request):
                         z_threshold = 1.4
                         for i in range(len(pillarList)):
                             diff = dataList[:,i].astype(float)
+                            #print("Initial Diff: ", diff)
                             # diff_mean = diff.mean()
                             # diff_std = diff.std()
                             if diff.std() != 0:
                                 z_score = (diff-diff.mean())/diff.std()
+                                #print("Z Score: ", z_score)
+                                
                                 diff = diff[abs(z_score)<z_threshold]
+                                #print("Later Diff: ", diff)
+
                                 thisObj['count'].append(len(diff))
                                 thisObj['mean'].append('{:07.5f}'.format(diff.mean()))
                                 thisObj['std_dev'].append('{:07.5f}'.format(diff.std()))
@@ -659,6 +663,7 @@ def print_record(request, id):
     # print(output_hdiff.height_difference)
     # Prepare the context to be rendered
     context = {
+            'calibration_id' : thisRecord.id,
             'job_number': thisRecord.job_number,
             'site_id': thisRecord.site_id,
             'staff_number': thisRecord.inst_staff,
@@ -740,11 +745,16 @@ def delete_record(request, id):
             z_threshold = 1.4
             for i in range(len(pillarList)):
                 diff = dataList[:,i].astype(float)
+                print("Initial Diff: ", diff)
                 # diff_mean = diff.mean()
                 # diff_std = diff.std()
                 if diff.std() != 0:
                     z_score = (diff-diff.mean())/diff.std()
+                    print("Z Score: ", z_score)
+                    
                     diff = diff[abs(z_score)<z_threshold]
+                    print("Later Diff: ", diff)
+
                     thisObj['count'].append(len(diff))
                     thisObj['mean'].append('{:07.5f}'.format(diff.mean()))
                     thisObj['std_dev'].append('{:07.5f}'.format(diff.std()))

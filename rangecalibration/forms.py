@@ -16,6 +16,7 @@
 
 '''
 from django import forms
+from django.core.exceptions import NON_FIELD_ERRORS
 from django.core.validators import MaxValueValidator, MinValueValidator
 # from .models import Calibration_Update
 from instruments.models import Staff, DigitalLevel
@@ -61,6 +62,12 @@ class RangeForm1(forms.ModelForm):
             'inst_level': forms.Select(attrs={'required': 'true'}),
             'calibration_date': forms.DateInput(format=('%d-%m-%Y'), attrs={'type':'date'}),
             }
+
+        error_messages = {
+            NON_FIELD_ERRORS: {
+                'unique_together': "%(model_name)s's %(field_labels)s appears to exist already. Please check the records and calibrate again.",
+            }
+        }
 
 class RangeForm2(forms.ModelForm):
     def __init__(self, *args, **kwargs):

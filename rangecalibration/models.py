@@ -49,11 +49,7 @@ def get_upload_to_fieldbook(instance, filename):
 
 # Create your models here.
 class RangeCalibrationRecord(models.Model):
-    # id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    job_number = models.CharField(max_length=15, 
-                                validators = [RegexValidator(r'^[A-Z]{2}[0-9]{8}$', 'Ten characters starting with two alphabets and ending with eight numbers are allowed.')],
-                                help_text = "Enter a job number, e.g., JN20222511",
-                                verbose_name = 'Job Number')
+    # id = models.Big(primary_key=True, help_text='Unique ID for this calibration record')
     job_number = models.CharField(max_length=10, 
                                     validators = [RegexValidator(r'^[A-Z]{2}[0-9]{8}$', 'Ten characters starting with two alphabets and ending with eight numbers are allowed.')],
                                     help_text = "Enter a job number, e.g., JN20222511",
@@ -99,12 +95,12 @@ class RangeCalibrationRecord(models.Model):
 
     class Meta:
         constraints = [models.UniqueConstraint(
-            fields=['site_id', 'job_number', 'inst_staff', 'calibration_date'], name = 'unique_calibration_instance'
+            fields=['job_number', 'inst_staff', 'calibration_date'], name = 'unique_calibration_instance'
             ),
         ]
         ordering = ['inst_staff', 'calibration_date']
         verbose_name = "Staff Range Calibrations"
-        # unique_together = ['site_id', 'job_number', 'inst_staff', 'calibration_date']
+        # unique_together = ['job_number', 'inst_staff', 'calibration_date']
 
     def __str__(self):
         return f'{self.job_number} ({self.calibration_date.strftime("%Y-%m-%d")})'

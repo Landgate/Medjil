@@ -966,7 +966,7 @@ button.dropdown-btn {
 .alert,
 .error {
   /* padding-left: 1.875rem; */
-  font-size: 0.625;
+  font-size: 0.75;
   font-weight: 400;
 }
 
@@ -1245,7 +1245,7 @@ select .default {
 .errorlist li {
   list-style-type: none;
   color: red;
-  font-size: 0.75rem;
+  font-size: 0.95rem;
   padding: 5px;
 }
 
