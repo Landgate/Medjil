@@ -33,30 +33,9 @@
             <div class="flex justify-center items-center">
                 <img class="mt-2 mb-2 px-2 py-1"style="max-width: 100%; height:auto" src="{% static 'images/1.jpg' %}" alt="Calibration Baseline">
             </div>
-            <div>  
-                <div>
-                    <h2 class="post-title text-center">
-                        <span class="text-gray-900 text-3xl font-extrabold">
-                            Welcome to Medjil - 
-                        </span>
-                        <br>
-                        <span>
-                            the Survey Instrumentation Calibration Portal
-                        </span>
-                    </h2>
-                </div>    
-                <div class="px-2 py-2 flex flex-col">
-                    <p>
-                        This secure online portal is designed to help you manage your surveying instruments such as Total Stations or Levelling Staves and enable you to calibrate them without having to download or update an external software. 
-                    </p>
-                    {% if not user.is_authenticated %}
-
-                    <div  class="flex flex-col justify-between">
-                        <p>
-                            To get started, sign up or log in here.
-                        </p>
-                        <br>
-                        
+        </div>
+                            {% if not user.is_authenticated %}
+                    <div  class="flex flex-col justify-between">                      
                         <div class="flex justify-center">
                             <a href="{% url 'accounts:signup' %}" class="px-8 py-2 border border-transparent text-base leading-4 rounded text-white bg-blue-400 hover:bg-blue-300 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
                                 Sign up
@@ -68,24 +47,11 @@
                         </div>
                     </div>
                     {% endif %}
-                    <br>
-                    
-                    
-                    
-                </div>
-            </div>
-        </div>
-
+				<br>
         <div class="mt-4 px-2">
-            <p>
-                <strong>Medjil</strong> means accurate in <i> Whadjuk Noongar </i> language, a term carefully adopted to provide a system to rigorously calibrate the Electronic Distance Measurement (EDM) in the Total Station and the levelling staff used in spirit levelling. To proceed with instrument calibration, please click on the <strong>Resources</strong> tab and read the respective user guides carefully.
-            </p>
-            <p>
-                The User Guides provide a step-by-step instructions for calibrating an instrument - be it an EDM or a levelling Staff. The calibration laboratories (e.g., EDM Baseline or the Staff Calibration Range) are calibrated as required using calibrated instruments to provide an accurate and up-to-date parameters used for calibrating your instrument.  
-            </p>
-            <p>
-                The <strong>Technical Manual</strong> is designed to provide an indepth understanding of the underlying theories, mathemical formulas and assumptions used by the system to perform the calibrations.   
-            </p>
+            <p><strong>Medjil</strong>, which means ‘accurate’ in the <i>Whadjuk Noongar</i> language, is a tool designed for the rigorous calibration of Electronic Distance Measurement Instrumentation (EDMI) and barcode leveling staffs. To proceed with the calibration of your instrument, please refer to the user guides available under the <strong>Resources</strong> tab</p>
+            <p>The provided calibration laboratories, such as the EDM Baseline or the Staff Calibration Range, are managed by NMI-authorized organizations. Medjil allows authorized users to calibrate both types of laboratories.</p>
+            <p>The <strong>Technical Manual</strong> is designed to provide an indepth understanding of the underlying theories, mathemical formulas and assumptions used by the system to perform the calibrations.</p>
         </div>
 
     </div>
