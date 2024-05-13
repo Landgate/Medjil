@@ -61,13 +61,13 @@ class PillarSurveyForm(forms.ModelForm):
         self.fields['staff'].queryset = Staff.objects.filter(
             staff_owner = user.company)
         self.fields['thermometer'].queryset = Mets_Inst.objects.filter(
-            mets_specs__mets_model__inst_type = 'thermo',
+            mets_specs__inst_type = 'thermo',
             mets_specs__mets_owner = user.company)
         self.fields['barometer'].queryset = Mets_Inst.objects.filter(
-            mets_specs__mets_model__inst_type = 'baro',
+            mets_specs__inst_type = 'baro',
             mets_specs__mets_owner = user.company)
         self.fields['hygrometer'].queryset = Mets_Inst.objects.filter(
-            mets_specs__mets_model__inst_type = 'hygro',
+            mets_specs__inst_type = 'hygro',
             mets_specs__mets_owner = user.company)
         self.fields['accreditation'].queryset = Accreditation.objects.filter(
             accredited_company = user.company)

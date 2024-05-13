@@ -50,24 +50,24 @@ class CalibrateEdmForm(forms.ModelForm):
             self.fields['edm'].queryset = EDM_Inst.objects.all()
             self.fields['prism'].queryset = Prism_Inst.objects.all()
             self.fields['thermometer'].queryset = Mets_Inst.objects.filter(
-                mets_specs__mets_model__inst_type = 'thermo')
+                mets_specs__inst_type = 'thermo')
             self.fields['barometer'].queryset = Mets_Inst.objects.filter(
-                mets_specs__mets_model__inst_type = 'baro')
+                mets_specs__inst_type = 'baro')
             self.fields['hygrometer'].queryset = Mets_Inst.objects.filter(
-                mets_specs__mets_model__inst_type = 'hygro')
+                mets_specs__inst_type = 'hygro')
         else:
             self.fields['edm'].queryset = EDM_Inst.objects.filter(
                 edm_specs__edm_owner = user.company)
             self.fields['prism'].queryset = Prism_Inst.objects.filter(
                 prism_specs__prism_owner = user.company)
             self.fields['thermometer'].queryset = Mets_Inst.objects.filter(
-                mets_specs__mets_model__inst_type = 'thermo',
+                mets_specs__inst_type = 'thermo',
                 mets_specs__mets_owner = user.company)
             self.fields['barometer'].queryset = Mets_Inst.objects.filter(
-                mets_specs__mets_model__inst_type = 'baro',
+                mets_specs__inst_type = 'baro',
                 mets_specs__mets_owner = user.company)
             self.fields['hygrometer'].queryset = Mets_Inst.objects.filter(
-                mets_specs__mets_model__inst_type = 'hygro',
+                mets_specs__inst_type = 'hygro',
                 mets_specs__mets_owner = user.company)
             
     class Meta:

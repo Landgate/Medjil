@@ -220,12 +220,6 @@ def register_edit(request, inst_disp, tab, id):
         # Commit content to the database
         frm = form.cleaned_data
         instance = form.save(commit=False)
-        if tab == 'models':
-            instance.prism_model, created = InstrumentModel.objects.get_or_create(
-                inst_type=inst_disp,
-                make = get_object_or_404(InstrumentMake, make = frm['inst_make']),                
-                model=frm['inst_model']
-            )
 
         # Convert input to database standard units
         if inst_disp != 'hygro':
@@ -389,11 +383,11 @@ def instrument_register(request, inst_disp):
         or inst_disp == 'hygro' or inst_disp == 'psy'):
         
         tabs['models_list'] = Mets_Specification.objects.filter(
-            mets_model__inst_type = inst_disp)
+            inst_type = inst_disp)
         tabs['insts_list'] = Mets_Inst.objects.filter(
-            mets_specs__mets_model__inst_type = inst_disp)
+            mets_specs__inst_type = inst_disp)
         tabs['certificates_list'] = (Mets_certificate.objects.filter(
-            instrument__mets_specs__mets_model__inst_type = inst_disp)
+            instrument__mets_specs__inst_type = inst_disp)
             .order_by('instrument__mets_number', '-calibration_date')
             .values('pk', 'instrument__mets_number',
                     'calibration_date',

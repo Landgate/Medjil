@@ -224,7 +224,7 @@ def create_medjil_manu(rx, commit_errors):
 
 
 def create_medjil_model(rx, request, commit_errors):
-    # Create BASELINE Models as Medjil Models/Specifications
+    # Create BASELINE Models as Medjil Models
     for rx_model in rx['InstrumentModel'].values():
         rx_make = rx['InstrumentMake'][rx_model['InstrumentMake_fk']]
         make = rx_make['medjil_pk']

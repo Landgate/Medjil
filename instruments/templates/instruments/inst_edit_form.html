@@ -42,7 +42,7 @@
             </div>
             <table>
                 {% for field in form %}
-                    <tr>
+                    <tr title="{{ field.help_text|safe }}">
                         <td width="25%">
                             <strong>{{ field.label_tag }}</strong>
                         </td>
@@ -51,10 +51,6 @@
                             {% for error in field.errors %}
                                 <p class="error error-danger">{{ error }}</p>
                             {% endfor %}
-                            <!-- Help text -->
-                            {% if not field.field.widget.attrs.placeholder and field.help_text %}
-                                <p class="helptext">{{ field.help_text }}</p>
-                            {% endif %}
                         </td>
                         <td width="10%">
                             {% if '_specs' in field.name %}

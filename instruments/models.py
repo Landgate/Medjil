@@ -34,6 +34,18 @@ from math import sin, cos, pi
 
 User = settings.AUTH_USER_MODEL
 
+inst_types = (
+    (None, 'Select one of the following'),
+    ('edm', 'Total Station EDM'),
+    ('prism', 'Prism'),
+    ('level', 'Digital Level'),
+    ('staff', 'Barcoded Staff'),
+    ('baro', 'Barometer'),
+    ('thermo', 'Thermometer'),
+    ('hygro', 'Hygrometer'),
+    ('psy', 'Psychrometer'),
+    ('others', 'Others'),
+)
 length_units = (
     ('µm','µm'),
     ('nm','nm'),
@@ -71,19 +83,6 @@ class InstrumentMake(models.Model):
 
 
 class InstrumentModel(models.Model):
-    inst_types = (
-        (None, 'Select one of the following'),
-        ('edm', 'Total Station EDM'),
-        ('prism', 'Prism'),
-        ('level', 'Digital Level'),
-        ('staff', 'Barcoded Staff'),
-        ('baro', 'Barometer'),
-        ('thermo', 'Thermometer'),
-        ('hygro', 'Hygrometer'),
-        ('psy', 'Psychrometer'),
-        ('others', 'Others'),
-    )
-
     inst_type = models.CharField(
         max_length=6,
         choices=inst_types,
@@ -191,16 +190,20 @@ class Staff(models.Model):
 ############################ EDM INSTRUMENTS ########################
 #####################################################################
 class EDM_Specification(models.Model):
+    edm_model_name = models.CharField(
+        validators=[validate_profanity],
+        max_length=25,
+        verbose_name="EDM Model Name"
+    )
+    edm_make_name = models.CharField(
+        validators=[validate_profanity],
+        max_length=25,
+        verbose_name="EDM Make Name"
+    )
     edm_owner = models.ForeignKey(
         Company,
         on_delete=models.PROTECT,
-        verbose_name='EDM owner'
-    )
-    edm_model = models.ForeignKey(
-        InstrumentModel,
-        limit_choices_to={'inst_type__exact': 'edm'},
-        on_delete=models.PROTECT,
-        verbose_name='EDM model'
+        verbose_name='EDM Owner'
     )
 
     edm_type = models.CharField(
@@ -273,14 +276,18 @@ class EDM_Specification(models.Model):
     modified_on = models.DateTimeField(auto_now=True, null=True)
 
     class Meta:
-        ordering = ['edm_model']
-        unique_together = ('edm_model', 'edm_owner')
-        verbose_name = "EDM Models/Specifications"
+        ordering = ['edm_make_name', 'edm_model_name']
+        unique_together = ("edm_make_name", "edm_model_name", "edm_owner")
+        verbose_name = "EDM Specification"
 
     def __str__(self):
-        return f'{self.edm_model.make} {self.edm_model.model} ({self.edm_owner.company_abbrev})'
+        return f'{self.edm_make_name} {self.edm_model_name} ({self.edm_owner.company_abbrev})'
 
-
+    def save(self, *args, **kwargs):
+        self.edm_make_name = self.edm_make_name.upper()
+        super().save(*args, **kwargs)
+        
+        
 def get_upload_to_edm_photos(instance, filename):
     modified_date = date.today().strftime('%Y%m%d')
     filename = filename.split('\\')[-1]
@@ -319,7 +326,7 @@ class EDM_Inst(models.Model):
         EDM_Specification,
         on_delete=models.PROTECT,
         null=False, blank=False,
-        verbose_name="EDM Specifications"
+        verbose_name="EDM Specification"
     )
     created_on = models.DateTimeField(auto_now_add=True, null=True)
     modified_on = models.DateTimeField(auto_now=True, null=True)
@@ -327,7 +334,7 @@ class EDM_Inst(models.Model):
     class Meta:
         ordering = ['edm_specs']
         unique_together = ('edm_specs', 'edm_number')
-        verbose_name = "EDM Instruments"
+        verbose_name = "EDM Instrument"
 
     def get_absolute_url(self):
         return reverse('instruments:inst_edm_update', args=[str(self.id)])
@@ -344,16 +351,20 @@ class EDM_Inst(models.Model):
 
 
 class Prism_Specification(models.Model):
+    prism_model_name = models.CharField(
+        validators=[validate_profanity],
+        max_length=25,
+        verbose_name="Prism Model Name"
+    )
+    prism_make_name = models.CharField(
+        validators=[validate_profanity],
+        max_length=25,
+        verbose_name="Prism Make Name"
+    )
     prism_owner = models.ForeignKey(
         Company,
-        on_delete=models.SET_NULL,
-        null=True,
+        on_delete=models.PROTECT,
         verbose_name="Prism Owner"
-    )
-    prism_model = models.ForeignKey(
-        InstrumentModel,
-        limit_choices_to={'inst_type__exact': 'prism'},
-        on_delete=models.PROTECT
     )
     manu_unc_const = models.FloatField(
         validators=[MinValueValidator(0.0), MaxValueValidator(10.0)],
@@ -370,12 +381,16 @@ class Prism_Specification(models.Model):
     modified_on = models.DateTimeField(auto_now=True, null=True)
 
     class Meta:
-        ordering = ['prism_model']
-        unique_together = ('prism_model', 'prism_owner')
-        verbose_name = "Prism Models/Specifications"
+        ordering = ["prism_make_name", "prism_model_name"]
+        unique_together = ("prism_make_name", "prism_model_name", "prism_owner")
+        verbose_name = "Prism Model"
 
     def __str__(self):
-        return f'{self.prism_model.make} {self.prism_model.model} ({self.prism_owner.company_abbrev})'
+        return f'{self.prism_make_name} {self.prism_model_name} ({self.prism_owner.company_abbrev})'
+
+    def save(self, *args, **kwargs):
+        self.prism_make_name = self.prism_make_name.upper()
+        super().save(*args, **kwargs)
 
 
 def get_upload_to_prism_photos(instance, filename):
@@ -423,7 +438,7 @@ class Prism_Inst(models.Model):
     class Meta:
         ordering = ['prism_specs']
         unique_together = ('prism_specs', 'prism_number')
-        verbose_name = "Prism Instruments"
+        verbose_name = "Prism Instrument"
 
     def get_absolute_url(self):
         return reverse('instruments:inst_prism_update', args=[str(self.id)])
@@ -437,19 +452,28 @@ class Prism_Inst(models.Model):
             self.photo.storage.delete(self.photo.path)
         except:
             print('No files to delete')
+            
 class Mets_Specification(models.Model):
+    inst_type = models.CharField(
+        max_length=6,
+        choices=inst_types,
+        verbose_name='instrument type',
+        null=True
+    )
+    mets_model_name = models.CharField(
+        validators=[validate_profanity],
+        max_length=25,
+        verbose_name="Instrument Model Name"
+    )
+    mets_make_name = models.CharField(
+        validators=[validate_profanity],
+        max_length=25,
+        verbose_name="Instrument Make Name"
+    )
     mets_owner = models.ForeignKey(
         Company,
-        on_delete=models.PROTECT
-    )
-
-    mets_model = models.ForeignKey(
-        InstrumentModel,
-        limit_choices_to=Q(inst_type__exact='baro') |
-                         Q(inst_type__exact='thermo') |
-                         Q(inst_type__exact='hygro') |
-                         Q(inst_type__exact='psy'),
-        on_delete=models.PROTECT
+        on_delete=models.PROTECT,
+        verbose_name="Instrument Owner"
     )
 
     manu_unc_const = models.FloatField(
@@ -475,12 +499,16 @@ class Mets_Specification(models.Model):
     modified_on = models.DateTimeField(auto_now=True, null=True)
 
     class Meta:
-        ordering = ['mets_model']
-        unique_together = ('mets_model', 'mets_owner')
-        verbose_name = "Meteorological Instrument Models"
+        ordering = ['mets_make_name', 'mets_model_name']
+        unique_together = ('inst_type', 'mets_make_name', 'mets_model_name', 'mets_owner')
+        verbose_name = "Meteorological Instrument Model"
 
     def __str__(self):
-        return f'({self.mets_model.inst_type}) {self.mets_model.make} {self.mets_model.model} ({self.mets_owner.company_abbrev})'
+        return f'{self.mets_make_name} {self.mets_model_name} ({self.mets_owner.company_abbrev})'
+
+    def save(self, *args, **kwargs):
+        self.mets_make_name = self.mets_make_name.upper()
+        super().save(*args, **kwargs)
 
 
 def get_upload_to_mets_photos(instance, filename):
@@ -498,7 +526,7 @@ class Mets_Inst(models.Model):
     mets_specs = models.ForeignKey(
         Mets_Specification,
         on_delete=models.PROTECT,
-        verbose_name='instrument specifications'
+        verbose_name='instrument Specification'
     )
     mets_number = models.CharField(
         max_length=15,
@@ -531,7 +559,7 @@ class Mets_Inst(models.Model):
     class Meta:
         ordering = ['mets_specs']
         unique_together = ('mets_specs', 'mets_number')
-        verbose_name = "Meteorological Instruments"
+        verbose_name = "Meteorological Instrument"
 
     def get_absolute_url(self):
         return reverse('instruments:inst_mets_update', args=[str(self.id)])
@@ -730,7 +758,7 @@ class EDMI_certificate (models.Model):
     
     class Meta:
         ordering = ['edm', 'calibration_date']
-        verbose_name = "EDMI Calibration Certificates"
+        verbose_name = "EDMI Calibration Certificate"
 
     def save(self, *args, **kwargs):
           self.scf_std_dev = self.scf_uncertainty / self.scf_coverage_factor
@@ -832,7 +860,7 @@ class Mets_certificate (models.Model):
 
     class Meta:
         ordering = ['instrument', 'calibration_date']
-        verbose_name = "Meteorological Calibration Certificates"
+        verbose_name = "Meteorological Calibration Certificate"
 
     def save(self, *args, **kwargs):
          self.zpc_std_dev = self.zpc_uncertainty / self.zpc_coverage_factor

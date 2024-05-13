@@ -90,15 +90,15 @@ class uPillar_Survey(models.Model):
               help_text="Meterological corrections have been applied in the EDM instrument.")
     
     thermometer = models.ForeignKey(Mets_Inst, on_delete = models.PROTECT, null = False,
-              limit_choices_to={'mets_specs__mets_model__inst_type': 'thermo'},
+              limit_choices_to={'mets_specs__inst_type': 'thermo'},
               help_text="Thermometer used for survey",
               related_name="ufield_thermometer")
     barometer = models.ForeignKey(Mets_Inst, on_delete = models.PROTECT, null = False,
-             limit_choices_to={'mets_specs__mets_model__inst_type': 'baro'},
+             limit_choices_to={'mets_specs__inst_type': 'baro'},
              help_text="Barometer used for survey",
              related_name="ufield_barometer")
     hygrometer = models.ForeignKey(Mets_Inst, on_delete = models.PROTECT, blank=True, null = True,
-             limit_choices_to={'mets_specs__mets_model__inst_type': 'hygro'},
+             limit_choices_to={'mets_specs__inst_type': 'hygro'},
              help_text="Hygrometer, if used for survey",
              related_name="ufield_hygrometer")
     thermo_calib_applied = models.BooleanField(default=True,

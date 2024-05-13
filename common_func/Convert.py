@@ -42,6 +42,7 @@ from geodepy.geodesy import grid2geo, rho
 
 def db_std_units(orig_val, orig_unit):
     # function converts all values to scalar, m, Hz, °C or hPa
+    orig_val = float(orig_val)
     new_val = orig_val
     new_unit = orig_unit
     

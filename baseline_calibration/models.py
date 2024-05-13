@@ -334,7 +334,7 @@ class Pillar_Survey(models.Model):
                   " has been applied prior to data import.")
                   
     thermometer = models.ForeignKey(Mets_Inst, on_delete = models.PROTECT, null = False,
-                 limit_choices_to={'mets_specs__mets_model__inst_type': 'thermo'},
+                 limit_choices_to={'mets_specs__inst_type': 'thermo'},
                  help_text="Thermometer used for survey",
                  related_name="field_thermometer")
     thermo_calib_applied = models.BooleanField(default=True,
@@ -342,21 +342,21 @@ class Pillar_Survey(models.Model):
                  help_text="The thermometer calibration correction"
                   " has been applied prior to data import.")
     barometer = models.ForeignKey(Mets_Inst, on_delete = models.PROTECT, null = False,
-                 limit_choices_to={'mets_specs__mets_model__inst_type': 'baro'},
+                 limit_choices_to={'mets_specs__inst_type': 'baro'},
                  help_text="Barometer used for survey",
                  related_name="field_barometer")
     baro_calib_applied = models.BooleanField(default=True,
                  verbose_name= 'barometer calibration corrections applied',
                  help_text="The barometer calibration correction has been applied prior to data import.")
     hygrometer = models.ForeignKey(Mets_Inst, on_delete = models.PROTECT, blank=True, null = True,
-                 limit_choices_to={'mets_specs__mets_model__inst_type': 'hygro'},
+                 limit_choices_to={'mets_specs__inst_type': 'hygro'},
                  help_text="Hygrometer, if used for survey",
                  related_name="field_hygrometer")
     hygro_calib_applied = models.BooleanField(default=True,
                  verbose_name= 'Hygrometer calibration corrections applied',
                  help_text="The hygrometer correction has been applied prior to data import.")
     psychrometer = models.ForeignKey(Mets_Inst, on_delete = models.PROTECT, blank=True, null = True,
-                 limit_choices_to={'mets_specs__mets_model__inst_type': 'psy'},
+                 limit_choices_to={'mets_specs__inst_type': 'psy'},
                  help_text="Psychrometer, if used for survey",
                  related_name="field_psychrometer")
     psy_calib_applied = models.BooleanField(default=True,
