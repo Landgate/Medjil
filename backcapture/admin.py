@@ -16,5 +16,19 @@
 
 '''
 from django.contrib import admin
+from .models import * 
+from accounts.admin import admin_site
 
 # Register your models here.
+@admin.register(Backcapture_History, site=admin_site)
+class Backcapture_HistoryeAdmin(admin.ModelAdmin):
+    fields = ['user']
+
+try:
+    from accounts.sites import medjil_super_site    
+    
+    @admin.register(Backcapture_History, site=medjil_super_site)
+    class Backcapture_HistoryAdmin(admin.ModelAdmin):
+        fields = ['user']
+except:
+    pass

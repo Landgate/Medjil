@@ -107,7 +107,10 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.AddConstraint(
-            model_name='rangecalibrationrecord',
-            constraint=models.UniqueConstraint(fields=('site_id', 'job_number', 'inst_staff', 'calibration_date'), name='unique_calibration_instance'),
+            model_name="rangecalibrationrecord",
+            constraint=models.UniqueConstraint(
+                fields=("job_number", "inst_staff", "calibration_date"),
+                name="unique_calibration_instance",
+            ),
         ),
     ]

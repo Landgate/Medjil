@@ -88,7 +88,8 @@ class Mets_SpecificationAdmin(admin.ModelAdmin):
     list_display = ('mets_model_name',)
     list_filter = ('inst_type','mets_owner',)
     fields = ['mets_owner', 
-              'mets_make_name', 'mets_model_name', 
+              'inst_type', 
+              ('mets_make_name', 'mets_model_name'), 
               ('manu_unc_const','manu_unc_k'),
               'measurement_increments']
 
@@ -182,7 +183,8 @@ try:
         list_display = ('mets_model_name',)
         list_filter = ('inst_type','mets_owner',)
         fields = ['mets_owner', 
-                  'mets_make_name', 'mets_model_name', 
+                  'inst_type', 
+                  ('mets_make_name', 'mets_model_name'), 
                   ('manu_unc_const','manu_unc_k'),
                   'measurement_increments']
 
