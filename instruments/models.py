@@ -105,6 +105,16 @@ class InstrumentModel(models.Model):
 
 
 class DigitalLevel(models.Model):
+    level_make_name = models.CharField(
+        validators=[validate_profanity],
+        max_length=25,
+        verbose_name="Level Make Name"
+    )
+    level_model_name = models.CharField(
+        validators=[validate_profanity],
+        max_length=25,
+        verbose_name="Level Model Name"
+    )
     level_owner = models.ForeignKey(Company, on_delete=models.SET_NULL, null=True)
     level_number = models.CharField(
         max_length=15,
@@ -112,7 +122,7 @@ class DigitalLevel(models.Model):
         help_text="Enter the instrument number"
     )
     level_model = models.ForeignKey(
-        InstrumentModel,
+        InstrumentModel,    #!!!
         limit_choices_to={'inst_type__exact': 'level'},
         on_delete=models.CASCADE,
         null=True
@@ -121,8 +131,8 @@ class DigitalLevel(models.Model):
     modified_on = models.DateTimeField(auto_now=True, null=True)
 
     class Meta:
-        ordering = ['level_number', 'level_model']
-        unique_together = ['level_number', 'level_owner']
+        ordering = ['level_number', 'level_model','level_model_name']
+        unique_together = ['level_make_name','level_model_name','level_number', 'level_owner']
 
     def get_absolute_url(self):
         return reverse('instruments:inst_level_update', args=[str(self.id)])
@@ -132,8 +142,18 @@ class DigitalLevel(models.Model):
 
 
 class Staff(models.Model):
+    staff_make_name = models.CharField(
+        validators=[validate_profanity],
+        max_length=25,
+        verbose_name="Level Make Name"
+    )
+    staff_model_name = models.CharField(
+        validators=[validate_profanity],
+        max_length=25,
+        verbose_name="Level Model Name"
+    )
     staff_model = models.ForeignKey(
-        InstrumentModel,
+        InstrumentModel,    #!!!
         limit_choices_to={'inst_type__exact': 'staff'},
         on_delete=models.CASCADE,
         null=True
@@ -177,7 +197,7 @@ class Staff(models.Model):
     modified_on = models.DateTimeField(auto_now=True, null=True)
 
     class Meta:
-        unique_together = ['staff_number', 'staff_owner']
+        unique_together = ['staff_make_name','staff_model_name','staff_number', 'staff_owner']
         ordering = ['staff_number']
 
     def __str__(self):

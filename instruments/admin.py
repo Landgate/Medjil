@@ -45,12 +45,12 @@ class InstrumentModelAdmin(admin.ModelAdmin):
 
 @admin.register(Staff, site=admin_site)
 class StaffAdmin(admin.ModelAdmin):
-    list_display = ['id', 'staff_number', 'staff_owner', 'staff_model', 'staff_type','staff_length','thermal_coefficient', 'created_on', 'modified_on']
+    list_display = ['id', 'staff_make_name','staff_model_name', 'staff_number', 'staff_owner', 'staff_model', 'staff_type','staff_length','thermal_coefficient', 'created_on', 'modified_on']
     list_filter = ('staff_model__make', 'staff_owner',)
 
 @admin.register(DigitalLevel, site=admin_site)
 class DigitalLevelAdmin(admin.ModelAdmin):
-    list_display = ('level_number', 'level_owner', 'level_model', 'created_on', 'modified_on')
+    list_display = ('level_make_name','level_model_name', 'level_number', 'level_owner', 'level_model', 'created_on', 'modified_on')
     list_filter = ('level_model__make', 'level_owner', )
 
 @admin.register(EDM_Specification, site=admin_site)
@@ -142,12 +142,12 @@ try:
 
     @admin.register(Staff, site=medjil_super_site)
     class StaffAdmin(admin.ModelAdmin):
-        list_display = ['id', 'staff_number', 'staff_owner', 'staff_model', 'staff_type','staff_length','thermal_coefficient', 'created_on', 'modified_on']
+        list_display = ['id', 'staff_make_name','staff_model_name', 'staff_number', 'staff_owner', 'staff_model', 'staff_type','staff_length','thermal_coefficient', 'created_on', 'modified_on']
         list_filter = ('staff_model__make', 'staff_owner',)
 
     @admin.register(DigitalLevel, site=medjil_super_site)
     class DigitalLevelAdmin(admin.ModelAdmin):
-        list_display = ('level_number', 'level_owner', 'level_model', 'created_on', 'modified_on')
+        list_display = ('level_make_name','level_model_name','level_number', 'level_owner', 'level_model', 'created_on', 'modified_on')
         list_filter = ('level_model__make', 'level_owner', )
 
     @admin.register(EDM_Specification, site=medjil_super_site)

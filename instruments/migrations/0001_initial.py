@@ -1360,6 +1360,21 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 (
+                    "staff_make_name",
+                    models.CharField(
+                        max_length=25,
+                        verbose_name="Level Make Name",
+                        validators=[common_func.validators.validate_profanity]),
+
+                ),                (
+                    "staff_model_name",
+                    models.CharField(
+                        max_length=25,
+                        verbose_name="Level Model Name",
+                        validators=[common_func.validators.validate_profanity]),
+
+                ),
+                (
                     "staff_number",
                     models.CharField(
                         help_text="Enter the instrument number", 
@@ -1429,7 +1444,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 "ordering": ["staff_number"],
-                "unique_together": {("staff_number", "staff_owner")},
+                "unique_together": {("staff_make_name","staff_model_name","staff_number", "staff_owner")},
             },
         ),
         migrations.AlterUniqueTogether(
@@ -1447,6 +1462,22 @@ class Migration(migrations.Migration):
                         serialize=False,
                         verbose_name="ID",
                     ),
+                ),
+                (
+                    "level_make_name",
+                    models.CharField(
+                        max_length=25,
+                        verbose_name="Level Make Name",
+                        validators=[common_func.validators.validate_profanity]),
+
+                ),
+                (
+                    "level_model_name",
+                    models.CharField(
+                        max_length=25,
+                        verbose_name="Level Model Name",
+                        validators=[common_func.validators.validate_profanity]),
+
                 ),
                 (
                     "level_number",
@@ -1479,7 +1510,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 "ordering": ["level_number", "level_model"],
-                "unique_together": {("level_number", "level_owner")},
+                "unique_together": {("level_make_name","level_model_name","level_number", "level_owner")},
             },
         ),
     ]

@@ -203,7 +203,7 @@ def register_edit(request, inst_disp, tab, id):
                                             request.FILES or None, 
                                             instance = obj, 
                                             user = request.user)
-    makes_qs = InstrumentMake.objects.all()
+    makes_qs = InstrumentMake.objects.exclude(make='OTHERS')
     makes = list(makes_qs.values())
     models_qs = InstrumentModel.objects.filter(inst_type=inst_disp)
     models = list(models_qs.values())

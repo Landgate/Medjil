@@ -128,8 +128,15 @@ class DigitalLevelCreateForm(forms.ModelForm):
         widget=forms.Select())
     class Meta:
         model = DigitalLevel
-        fields = ('level_model', 'level_owner', 'level_number',)
+        fields = ('level_make_name','level_model_name','level_model', 'level_owner', 'level_number',)
         # exclude = ('level_model',)
+        widgets = {
+            'level_make_name': forms.TextInput(
+                attrs={'onchange':'filter_models()',
+                       'list':'makes'}),
+            'level_model_name': forms.TextInput(
+                attrs={'list':'models'})
+            }   
 
 
 class StaffCreateForm(forms.ModelForm):
@@ -149,7 +156,14 @@ class StaffCreateForm(forms.ModelForm):
 
     class Meta:
         model = Staff
-        fields = '__all__'   
+        fields = '__all__' 
+        widgets = {
+            'staff_make_name': forms.TextInput(
+                attrs={'onchange':'filter_models()',
+                       'list':'makes'}),
+            'staff_model_name': forms.TextInput(
+                attrs={'list':'models'})
+            }     
         
     calibrated = forms.BooleanField(
         required=False, 

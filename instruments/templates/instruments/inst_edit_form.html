@@ -46,7 +46,16 @@
                         <td width="25%">
                             <strong>{{ field.label_tag }}</strong>
                         </td>
-                        <td width="65%"> {{ field }} 
+                        <td width="65%"> {{ field }}
+                            {% if 'make_name' in field.name %}
+                                <datalist id="makes">
+                                    <!-- Options will be populated here by JavaScript -->
+                                </datalist>                            
+                            {% elif 'model_name' in field.name %}
+                                <datalist id="models">
+                                    <!-- Options will be populated here by JavaScript -->
+                                </datalist>
+                            {% endif %}
                             <!-- Errors -->
                             {% for error in field.errors %}
                                 <p class="error error-danger">{{ error }}</p>
@@ -78,6 +87,42 @@
     </div>
 </article>
 <script>
+    const db_makes = {{ makes|safe }};
+    const db_models = {{ models|safe }};
+
+    window.onload = function() {
+        var dataList = document.getElementById('makes');
+        
+        db_makes.forEach(function(item) {
+            var option = document.createElement('option');
+            option.value = item.make;
+            dataList.appendChild(option);
+            console.log(option);
+        });
+        filter_models();
+    }
+    
+    function filter_models(){
+        make_input = document.querySelector('[id$="_make_name"]').value.toUpperCase();
+        var dataList = document.getElementById('models');
+        dataList.innerHTML = '';
+        
+        if (make_input){
+            var make_object = db_makes.find(function(record){
+                return record.make === make_input;
+            });
+        }
+        if (make_object){
+            db_models.forEach(function(item) {
+            if (make_object.id === item.make_id){
+                var option = document.createElement('option');
+                option.value = item.model;
+                dataList.appendChild(option);
+            }
+            });
+        }
+    }
+
     function showAddPopup(triggeringLink) {
         var name = triggeringLink.id.replace(/^add_/, '');
         href = triggeringLink.href;
