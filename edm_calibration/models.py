@@ -54,8 +54,8 @@ class uPillar_Survey(models.Model):
     calibrated_baseline = models.ForeignKey(
         Pillar_Survey, on_delete = models.PROTECT, null = True,
         help_text="Baseline certified distances")
-    survey_date = models.DateField(null=False, blank=False)
-    computation_date = models.DateField(null=False, blank=False)
+    survey_date = models.DateField()
+    computation_date = models.DateField()
     observer = models.CharField(
          validators=[validate_profanity],max_length=25, null = True, blank = True)
     weather_type = (
@@ -70,30 +70,29 @@ class uPillar_Survey(models.Model):
     weather = models.CharField(max_length=25,
               choices=weather_type,
               help_text="Weather conditions",
-              unique=False,
               )
     job_number = models.CharField(max_length=25,
               help_text="Job reference eg., JN 20212216",
               validators=[validate_profanity],
-              unique=False,
               blank=True, null = True,
               verbose_name= 'Job Number/Reference'
               )
+    comment = models.CharField(max_length=256, blank = True, null=True)
     
-    edm = models.ForeignKey(EDM_Inst, on_delete = models.PROTECT, null = False,
+    edm = models.ForeignKey(EDM_Inst, on_delete = models.PROTECT,
               help_text="EDM used for survey",
               verbose_name= 'EDM')
-    prism = models.ForeignKey(Prism_Inst, on_delete = models.PROTECT, null = False,
+    prism = models.ForeignKey(Prism_Inst, on_delete = models.PROTECT,
               help_text="Prism used for survey")
     mets_applied = models.BooleanField(default=True,
               verbose_name= 'Atmospheric corrections applied to EDM data',
               help_text="Meterological corrections have been applied in the EDM instrument.")
     
-    thermometer = models.ForeignKey(Mets_Inst, on_delete = models.PROTECT, null = False,
+    thermometer = models.ForeignKey(Mets_Inst, on_delete = models.PROTECT,
               limit_choices_to={'mets_specs__inst_type': 'thermo'},
               help_text="Thermometer used for survey",
               related_name="ufield_thermometer")
-    barometer = models.ForeignKey(Mets_Inst, on_delete = models.PROTECT, null = False,
+    barometer = models.ForeignKey(Mets_Inst, on_delete = models.PROTECT,
              limit_choices_to={'mets_specs__inst_type': 'baro'},
              help_text="Barometer used for survey",
              related_name="ufield_barometer")
@@ -112,7 +111,7 @@ class uPillar_Survey(models.Model):
               verbose_name= 'Hygrometer calibration corrections applied',
               help_text="The hygrometer correction has been applied prior to data import.")
     
-    uncertainty_budget = models.ForeignKey(Uncertainty_Budget, on_delete = models.PROTECT, null = False,
+    uncertainty_budget = models.ForeignKey(Uncertainty_Budget, on_delete = models.PROTECT,
               help_text="Preset uncertainty budget")
     scalar = models.DecimalField(max_digits=6, decimal_places=2, default=1.00,
               verbose_name= 'a-priori scalar',
@@ -164,12 +163,12 @@ class uPillar_Survey(models.Model):
 
 class uEDM_Observation(models.Model):
     pillar_survey = models.ForeignKey(
-        uPillar_Survey, on_delete = models.CASCADE, null = False)
+        uPillar_Survey, on_delete = models.CASCADE)
     
     from_pillar = models.ForeignKey(
-        Pillar, on_delete = models.CASCADE, null = False)
+        Pillar, on_delete = models.CASCADE)
     to_pillar = models.ForeignKey(
-        Pillar, on_delete = models.CASCADE, null = False, related_name='+')
+        Pillar, on_delete = models.CASCADE, related_name='+')
     
     inst_ht = models.DecimalField(
         max_digits=4, decimal_places=3,
@@ -206,26 +205,22 @@ class uEDM_Observation(models.Model):
     
 class Inter_Comparison(models.Model):
     edm = models.ForeignKey(
-        EDM_Inst, on_delete = models.CASCADE, 
-        blank=False, null = False,
+        EDM_Inst, on_delete = models.CASCADE,
         help_text="EDM used for interlaboratory comparison",
         verbose_name= 'EDM')
     prism = models.ForeignKey(
-        Prism_Inst, on_delete = models.CASCADE, 
-        blank=False, null = False,
+        Prism_Inst, on_delete = models.CASCADE,
         help_text="Prism used for interlaboratory comparison",
         verbose_name= 'Prism')
-    from_date = models.DateField(null=False, blank=False)
-    to_date = models.DateField(null=False, blank=False)
+    from_date = models.DateField()
+    to_date = models.DateField()
     job_number = models.CharField(max_length=25,
               help_text="Job reference eg., JN 20212216",
               validators=[validate_profanity],
-              unique=False,
               blank=True, null = True,
               verbose_name= 'Job Number/Reference'
               )
     sample_distances = models.CharField(
-        blank=False, null=False,
         validators=[validate_csv_text],
         max_length=255,
         default="20, 300, 600",

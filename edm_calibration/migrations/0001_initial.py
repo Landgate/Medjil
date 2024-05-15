@@ -78,6 +78,7 @@ class Migration(migrations.Migration):
                         verbose_name="Job Number/Reference",
                     ),
                 ),
+                ('comment', models.CharField(blank=True, max_length=256, null=True)),
                 (
                     "mets_applied",
                     models.BooleanField(

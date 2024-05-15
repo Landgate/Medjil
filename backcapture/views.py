@@ -147,7 +147,7 @@ def unknown_mets(mets_type, request, mets_number='Unknown'):
             mets_specs=mets_specs,
             mets_number=mets_number,
             mets_custodian=None,
-            comment=f'Unknown {mets_type} from BaselineWA Import')
+            comment=f'Unknown {mets_type} from Backcapture Import')
         if created:
             print(f'{mets_type} in Medjil created successfully')
             
@@ -221,9 +221,9 @@ def create_medjil_model(rx, request, commit_errors):
                 rx_model['medjil_specs_pk'], created = (
                     Prism_Specification.objects.get_or_create(
                         prism_make_name = make,
-                        prism_model_name = f"{model} ({zpc} ± {ppm}ppm)",
+                        prism_model_name = model,
                         prism_owner = request.user.company,
-                        manu_unc_const = float(rx_model['manu_unc_const']) * 2,
+                        manu_unc_const = float(zpc) * 2,
                         manu_unc_k = 2))
             except Exception as e:
                 commit_errors.append(
@@ -244,11 +244,11 @@ def create_medjil_model(rx, request, commit_errors):
                 rx_model['medjil_specs_pk'], created = (
                     EDM_Specification.objects.get_or_create(
                         edm_make_name = make,
-                        edm_model_name = f"{model} ({zpc} ± {ppm}ppm)",
+                        edm_model_name = model,
                         edm_owner = request.user.company,
                         edm_type = rx_model['type'],
-                        manu_unc_const = float(rx_model['manu_unc_const']) * 2,
-                        manu_unc_ppm = float(rx_model['manu_unc_ppm']) * 2,
+                        manu_unc_const = float(zpc) * 2,
+                        manu_unc_ppm = float(ppm) * 2,
                         manu_unc_k = 2,
                         unit_length = rx_model['unit_length'],
                         frequency = rx_model['frequency'],
@@ -346,7 +346,7 @@ def import_dli(request):
         Backcapture_History.objects.filter(created_on__lt=threshold).delete()
         commit_count = Backcapture_History.objects.filter(user=request.user).count()
         
-        if commit_count >=3:
+        if commit_count >=30:
             importForm.add_error(None, 'Error - You have exceeded your number of database imports for today.')
     
     if importForm.is_valid():
@@ -442,12 +442,15 @@ def import_dli(request):
                         uc95 = float(job['StdDevPressure'])
                         )
                 if float(job['InstCentringStdDev']) > 0:
+                        if float(job['InstCentringStdDev']) < 0.01:
+                            # Note - some data is in m some in mm Grrr#!!!
+                            job['InstCentringStdDev'] = float(job['InstCentringStdDev']) * 1000
                         UC_source3,_ = Uncertainty_Budget_Source.objects.get_or_create(
                             uncertainty_budget = rx_UC_budget,
                             group = '09',
                             description = 'Imported From BaselineWA software',
                             units = 'm',
-                            uc95 = float(job['InstCentringStdDev'])
+                            uc95 = float(job['InstCentringStdDev'])/1000
                             )
                 if float(job['InstLevellingStdDev']) > 0:
                     UC_source4,_ = Uncertainty_Budget_Source.objects.get_or_create(
@@ -482,7 +485,7 @@ def import_dli(request):
 
                 mets_applied = False
                 try:
-                    if job_measurements[0]['mets_flag'] == 'N': mets_applied = True
+                    if job_measurements[0]['mets_flag'] == 'Y': mets_applied = True
                 except:
                     mets_applied = True
                 
@@ -524,6 +527,7 @@ def import_dli(request):
                         observer = job['observer_name'],
                         weather = 'Sunny/Clear',
                         job_number = rx['Baseline'][job['baseline_fk']]['reference'],
+                        comment = f"{job['JobComments']} ({job['name']})",
                         edm = medjil_edm,
                         prism = medjil_prism,
                         mets_applied = mets_applied,
@@ -638,6 +642,7 @@ def import_dli(request):
                                 observer = job['observer_name'],
                                 weather = 'Sunny/Clear',
                                 job_number = rx['Baseline'][job['baseline_fk']]['reference'],
+                                comment = f"{job['JobComments']} ({job['name']})",
                                 edm = medjil_edm,
                                 prism = medjil_prism,
                                 mets_applied = mets_applied,
