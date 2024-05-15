@@ -97,7 +97,7 @@ class PillarSurveyForm(forms.ModelForm):
            'job_number': forms.TextInput (
                attrs={'required': 'false', 'class': 'page0'}),
            'comment': forms.TextInput (
-               attrs={'required': 'false', 'class': 'page0'}),
+               attrs={'class': 'page0'}),
            
            'edm': forms.Select(attrs={'class': 'page1'}),
            'prism': forms.Select(attrs={'class': 'page1'}),
