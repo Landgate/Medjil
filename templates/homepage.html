@@ -34,24 +34,21 @@
                 <img class="mt-2 mb-2 px-2 py-1"style="max-width: 100%; height:auto" src="{% static 'images/1.jpg' %}" alt="Calibration Baseline">
             </div>
         </div>
-                            {% if not user.is_authenticated %}
-                    <div  class="flex flex-col justify-between">                      
-                        <div class="flex justify-center">
-                            <a href="{% url 'accounts:signup' %}" class="px-8 py-2 border border-transparent text-base leading-4 rounded text-white bg-blue-400 hover:bg-blue-300 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
-                                Sign up
-                            </a>
-                            <span class="mr-3"></span>
-                            <a href="{% url 'accounts:login' %}" class="px-8 py-2 border border-transparent text-base leading-2 rounded text-white bg-green-600 hover:bg-gray-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
-                                Login
-                            </a>
-                        </div>
-                    </div>
-                    {% endif %}
-				<br>
         <div class="mt-4 px-2">
             <p>To proceed with the instrumentation calibration, please refer to the <strong>user guides</strong> available under the <strong>Resources</strong> tab. The <strong>Technical Manual</strong> provides the underlying theories, mathematical formulas and assumptions used by the Medjil portal to perform the calibrations.</p>
         </div>
-
+        
+        {% if not user.is_authenticated %}
+        <div  class="flex flex-col justify-between">                      
+        	<div class="flex justify-center">
+          	<a href="{% url 'accounts:signup' %}" class="px-8 py-2 border border-transparent text-base leading-2 rounded text-white bg-blue-400 hover:bg-blue-300 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+            	Sign up</a>
+            <span class="mr-3"></span>
+            <a href="{% url 'accounts:login' %}" class="px-8 py-2 border border-transparent text-base leading-2 rounded text-white bg-green-600 hover:bg-gray-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+            	Login</a>
+          </div>
+        </div>
+        {% endif %}
     </div>
 </article>
 
