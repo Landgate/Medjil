@@ -500,7 +500,7 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.PROTECT,
                         to="instruments.prism_specification",
-                        verbose_name="Prism Specification",
+                        verbose_name="Prism Model",
                     ),
                 ),
             ],
@@ -661,7 +661,7 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.PROTECT,
                         to="instruments.mets_specification",
-                        verbose_name="instrument Specification",
+                        verbose_name="instrument Model",
                     ),
                 ),
             ],
@@ -1334,7 +1334,7 @@ class Migration(migrations.Migration):
             options={
                 "ordering": ["edm_make_name", "edm_model_name"],
                 "unique_together": {("edm_make_name", "edm_model_name", "edm_owner")},
-                "verbose_name": "EDM Specification"
+                "verbose_name": "EDM Model"
             },
         ),
         migrations.AddField(
@@ -1344,7 +1344,7 @@ class Migration(migrations.Migration):
                 null=False, blank=False,
                 on_delete=django.db.models.deletion.PROTECT,
                 to="instruments.edm_specification",
-                verbose_name="EDM Specification",
+                verbose_name="EDM Model",
             ),
         ),
         migrations.CreateModel(

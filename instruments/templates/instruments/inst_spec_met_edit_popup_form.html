@@ -27,15 +27,15 @@
         <form action="" class="site-form" method="post">
             {% csrf_token %}
             <div class="mb-5 site-form-header bg-indigo-300 rounded px-2">
-                <h2 class="text-center">
+                <h2 class="text-center"> {% if form.instance.pk %}Edit {% else %}Create {% endif %}
                 {% if form.inst_type.value == 'baro' %}
-                 Barometer Specifications
+                 Barometer Model
                  {% elif form.inst_type.value == 'thermo'%}
-                 Thermometer Specifications
-                 {% elif form.inst_type.value == 'thermo'%}
-                 Hygrometer Specifications
+                 Thermometer Model
+                 {% elif form.inst_type.value == 'hygro'%}
+                 Hygrometer Model
                  {% else %}
-                 Psychrometer Specifications
+                 Psychrometer Model
                  {% endif %}</h2>
             </div>
             <div class="mt-5 mb-3">

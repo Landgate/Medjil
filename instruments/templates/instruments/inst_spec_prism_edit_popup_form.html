@@ -28,9 +28,9 @@
             {% csrf_token %}
             <div class="mb-5 site-form-header bg-indigo-300 rounded px-2">
                 {% if form.instance.pk %}
-                    <h2 class="text-center">Edit Prism Specification</h2>
+                    <h2 class="text-center">Edit Prism Model</h2>
                 {% else %}
-                    <h2 class="text-center">Create Prism Specification</h2>
+                    <h2 class="text-center">Create Prism Model</h2>
                 {% endif %}
             </div>
             {% if form.non_field_errors %}

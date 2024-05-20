@@ -286,7 +286,6 @@ class EDM_Specification(models.Model):
     class Meta:
         ordering = ['edm_make_name', 'edm_model_name']
         unique_together = ("edm_make_name", "edm_model_name", "edm_owner")
-        verbose_name = "EDM Specification"
 
     def __str__(self):
         return f'{self.edm_make_name} {self.edm_model_name} ({self.edm_owner.company_abbrev})'
@@ -334,7 +333,7 @@ class EDM_Inst(models.Model):
         EDM_Specification,
         on_delete=models.PROTECT,
         null=False, blank=False,
-        verbose_name="EDM Specification"
+        verbose_name="EDM Model"
     )
     created_on = models.DateTimeField(auto_now_add=True, null=True)
     modified_on = models.DateTimeField(auto_now=True, null=True)
@@ -438,7 +437,7 @@ class Prism_Inst(models.Model):
     prism_specs = models.ForeignKey(
         Prism_Specification,
         on_delete=models.PROTECT,
-        verbose_name='Prism Specification'
+        verbose_name='Prism Model'
     )
     created_on = models.DateTimeField(auto_now_add=True, null=True)
     modified_on = models.DateTimeField(auto_now=True, null=True)
@@ -534,7 +533,7 @@ class Mets_Inst(models.Model):
     mets_specs = models.ForeignKey(
         Mets_Specification,
         on_delete=models.PROTECT,
-        verbose_name='instrument Specification'
+        verbose_name='instrument Model'
     )
     mets_number = models.CharField(
         max_length=15,

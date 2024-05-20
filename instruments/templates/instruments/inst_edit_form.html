@@ -26,11 +26,20 @@
         <form action="" class="site-form" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="mb-5 site-form-header bg-indigo-300 rounded px-2">
-                {% if form.instance.pk %}
-                    <h2 class="text-center">Edit an Instrument</h2>
-                {% else %}
-                    <h2 class="text-center">Create an Instrument</h2>
-                {% endif %}
+                <h2 class="text-center"> {% if form.instance.pk %}Edit {% else %}Create {% endif %}
+                {% if inst_type == 'baro' %}
+                 Barometer Instrument
+                 {% elif inst_type == 'thermo'%}
+                 Thermometer Instrument
+                 {% elif inst_type == 'hygro'%}
+                 Hygrometer Instrument
+                 {% elif inst_type == 'psy'%}
+                 Psychrometer Instrument
+                 {% elif inst_type == 'edm'%}
+                 EDM Instrument
+                 {% else %}
+                 {{ inst_type|title }} Instrument</h2>
+                 {% endif %}</h2>
             </div>
             <div class="mt-5 mb-3">
                 {% if form.errors or form.non_field_errors %}
@@ -68,7 +77,7 @@
                             {% endif %}
                         </td>
                     </tr>
-                {% endfor %}               
+                {% endfor %}
             </table>
 
             {% if request.GET.next %}
