@@ -26,7 +26,7 @@ class StaffCalibrationRecordAdmin(admin.ModelAdmin):
                     'inst_level', 'calibration_date', 'site_id']
 
     ordering = ['inst_staff__staff_number', '-calibration_date']
-    list_filter = ['inst_staff__staff_model', 'site_id']
+    list_filter = ['inst_staff__staff_model_name', 'site_id']
 
 @admin.register(AdjustedDataModel, site=admin_site)
 class AdjustedDataModelAdmin(admin.ModelAdmin):
@@ -42,7 +42,7 @@ try:
                         'inst_level', 'calibration_date', 'site_id']
 
         ordering = ['inst_staff__staff_number', '-calibration_date']
-        list_filter = ['inst_staff__staff_model', 'site_id']
+        list_filter = ['inst_staff__staff_model_name', 'site_id']
 
     @admin.register(AdjustedDataModel, site=medjil_super_site)
     class AdjustedDataModelAdmin(admin.ModelAdmin):

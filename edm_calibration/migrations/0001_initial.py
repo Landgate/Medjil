@@ -78,6 +78,7 @@ class Migration(migrations.Migration):
                         verbose_name="Job Number/Reference",
                     ),
                 ),
+                ('comment', models.CharField(blank=True, max_length=256, null=True)),
                 (
                     "mets_applied",
                     models.BooleanField(
@@ -183,7 +184,7 @@ class Migration(migrations.Migration):
                     "barometer",
                     models.ForeignKey(
                         help_text="Barometer used for survey",
-                        limit_choices_to={"mets_specs__mets_model__inst_type": "baro"},
+                        limit_choices_to={"mets_specs__inst_type": "baro"},
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name="ufield_barometer",
                         to="instruments.mets_inst",
@@ -221,7 +222,7 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         blank=True,
                         help_text="Hygrometer, if used for survey",
-                        limit_choices_to={"mets_specs__mets_model__inst_type": "hygro"},
+                        limit_choices_to={"mets_specs__inst_type": "hygro"},
                         null=True,
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name="ufield_hygrometer",
@@ -251,7 +252,7 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         help_text="Thermometer used for survey",
                         limit_choices_to={
-                            "mets_specs__mets_model__inst_type": "thermo"
+                            "mets_specs__inst_type": "thermo"
                         },
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name="ufield_thermometer",

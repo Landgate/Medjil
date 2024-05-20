@@ -117,7 +117,6 @@ class DigitalLevelCreateForm(forms.ModelForm):
         self.base_fields['level_owner'].initial = user.company
         if not user.is_staff:
             self.fields['level_owner'].disabled = True
-        self.fields['level_model'].empty_label = '--- Select one ---'
 
         # self.fields['level_owner'].queryset = Company.objects.exclude(company_abbrev__iexact='OTH')
         self.fields['level_number'].widget.attrs['placeholder'] = 'Level number, e.g., Serial number'
@@ -128,8 +127,16 @@ class DigitalLevelCreateForm(forms.ModelForm):
         widget=forms.Select())
     class Meta:
         model = DigitalLevel
-        fields = ('level_model', 'level_owner', 'level_number',)
-        # exclude = ('level_model',)
+        fields = ('level_make_name','level_model_name', 'level_owner', 'level_number',)
+        widgets = {
+            'level_make_name': forms.TextInput(
+                attrs={'onchange':'filter_models()',
+                       'list':'makes',
+                       'autocomplete':'off'}),
+            'level_model_name': forms.TextInput(
+                attrs={'list':'models',
+                       'autocomplete':'off'})
+            }   
 
 
 class StaffCreateForm(forms.ModelForm):
@@ -139,7 +146,6 @@ class StaffCreateForm(forms.ModelForm):
         if not user.is_staff:
             self.fields['staff_owner'].queryset = Company.objects.filter(company_name=user.company.company_name)
         
-        self.fields['staff_model'].empty_label = '--- Select one ---'
         self.fields['staff_owner'].empty_label = '--- Select one ---'
 
     staff_owner = forms.ModelChoiceField(
@@ -149,8 +155,17 @@ class StaffCreateForm(forms.ModelForm):
 
     class Meta:
         model = Staff
-        fields = '__all__'   
-        
+        fields = '__all__' 
+        widgets = {
+            'staff_make_name': forms.TextInput(
+                attrs={'onchange':'filter_models()',
+                       'list':'makes',
+                       'autocomplete':'off'}),
+            'staff_model_name': forms.TextInput(
+                attrs={'list':'models',
+                       'autocomplete':'off'})
+            }     
+
     calibrated = forms.BooleanField(
         required=False, 
         label = "Is Calibrated", 
@@ -181,25 +196,6 @@ class EDM_InstForm(forms.ModelForm):
 
     
 class EDM_SpecificationForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user', None)
-        super(EDM_SpecificationForm, self).__init__(*args, **kwargs) 
-        self.initial['edm_owner'] = user.company
-        self.base_fields['units_manu_unc_const'].initial = 'mm'
-        self.base_fields['units_manu_unc_ppm'].initial = 'ppm'
-        self.base_fields['units_frequency'].initial = 'Hz'
-        self.base_fields['units_unit_length'].initial = 'm'
-        self.base_fields['units_carrier_wavelength'].initial = 'nm'
-        self.base_fields['units_measurement_inc'].initial = 'm'
-        if not user.is_staff:
-            self.fields['edm_owner'].disabled = True
-        self.fields['edm_model'].empty_label = '--- Select one ---'
-
-    class Meta:
-        model = EDM_Specification
-        fields = '__all__'
-        exclude = ('created_on', 'modified_on')
-        
     units_manu_unc_const = forms.CharField(
         widget=forms.Select(choices=length_units))
     units_manu_unc_ppm = forms.CharField(
@@ -212,6 +208,33 @@ class EDM_SpecificationForm(forms.ModelForm):
         widget=forms.Select(choices=length_units))
     units_measurement_inc = forms.CharField(
         widget=forms.Select(choices=length_units))
+    
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super(EDM_SpecificationForm, self).__init__(*args, **kwargs) 
+        self.initial['edm_owner'] = user.company
+        self.base_fields['units_manu_unc_const'].initial = 'mm'
+        self.base_fields['units_manu_unc_ppm'].initial = 'ppm'
+        self.base_fields['units_frequency'].initial = 'Hz'
+        self.base_fields['units_unit_length'].initial = 'm'
+        self.base_fields['units_carrier_wavelength'].initial = 'nm'
+        self.base_fields['units_measurement_inc'].initial = 'm'
+        if not user.is_staff:
+            self.fields['edm_owner'].disabled = True
+
+    class Meta:
+        model = EDM_Specification
+        fields = '__all__'
+        exclude = ('created_on', 'modified_on')
+        widgets = {
+            'edm_make_name': forms.TextInput(
+                attrs={'onchange':'filter_models()',
+                       'list':'makes',
+                       'autocomplete':'off'}),
+            'edm_model_name': forms.TextInput(
+                attrs={'list':'models',
+                       'autocomplete':'off'})
+            }       
     
     
 class Prism_InstForm(forms.ModelForm):
@@ -238,14 +261,6 @@ class Prism_InstForm(forms.ModelForm):
 
 
 class Prism_SpecificationForm(forms.ModelForm):
-    inst_make = forms.CharField(
-        max_length=25, min_length=4, 
-        widget=forms.TextInput(attrs={'list':"makes"})
-        )
-    inst_model = forms.CharField(
-        max_length=25, min_length=4, 
-        widget=forms.TextInput(attrs={'list':"models"})
-        )
     units_manu_unc_const = forms.CharField(
         widget=forms.Select(choices=length_units))
 
@@ -253,14 +268,23 @@ class Prism_SpecificationForm(forms.ModelForm):
         user = kwargs.pop('user', None)
         super(Prism_SpecificationForm, self).__init__(*args, **kwargs) 
         self.initial['prism_owner'] = user.company
-        self.base_fields['units_manu_unc_const'].initial = 'mm'
+        self.initial['units_manu_unc_const']= 'mm'
         if not user.is_staff:
             self.fields['prism_owner'].disabled = True
 
     class Meta:
         model = Prism_Specification
         fields = '__all__'
-        exclude = ('created_on', 'modified_on', 'prism_model')
+        exclude = ('created_on', 'modified_on')
+        widgets = {
+            'prism_make_name': forms.TextInput(
+                attrs={'onchange':'filter_models()',
+                       'list':'makes',
+                       'autocomplete':'off'}),
+            'prism_model_name': forms.TextInput(
+                attrs={'list':'models',
+                       'autocomplete':'off'})
+            }   
 
 
 class Mets_InstForm(forms.ModelForm):
@@ -273,12 +297,11 @@ class Mets_InstForm(forms.ModelForm):
                 company__company_name = user.company.company_name)
             self.fields['mets_specs'].queryset = Mets_Specification.objects.filter(
                 mets_owner__company_name = user.company.company_name,
-                mets_model__inst_type = inst_type)
+                inst_type = inst_type)
         else:
             self.fields['mets_specs'].queryset = (Mets_Specification.objects
-                .filter(mets_model__inst_type = inst_type))
+                .filter(inst_type = inst_type))
         self.fields['mets_custodian'].empty_label = '--- Select one ---'
-        self.fields['mets_specs'].empty_label = '--- Select one ---'
 
     class Meta:
         model = Mets_Inst
@@ -292,33 +315,52 @@ class Mets_InstForm(forms.ModelForm):
 
 
 class Mets_SpecificationForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user', None)
-        inst_type = kwargs.pop('inst_type', None)
-        super(Mets_SpecificationForm, self).__init__(*args, **kwargs) 
-        self.initial['mets_owner'] = user.company
-        if not user.is_staff:
-            self.fields['mets_owner'].disabled = True
-        self.fields['mets_model'].empty_label = '--- Select one ---'
-        if inst_type:
-            self.fields['mets_model'].queryset = (InstrumentModel.objects
-                .filter(inst_type = inst_type))
-
-    class Meta:
-        model = Mets_Specification
-        fields = '__all__'
-        exclude = ('created_on', 'modified_on')
-        widgets = {'mets_model': forms.Select(attrs={'onchange':'ChgUnits()'})
-                    }    
-    
     units_manu_unc_const = forms.CharField(
         widget=forms.Select(choices=ini_units))
         
     units_measurement_inc = forms.CharField(
         widget=forms.Select(choices=ini_units))
-        
     
-class EDMI_certificateForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        inst_type = kwargs.pop('inst_type', None)
+        super(Mets_SpecificationForm, self).__init__(*args, **kwargs) 
+        self.initial['mets_owner'] = user.company
+        self.initial['inst_type'] = inst_type
+        if not user.is_staff:
+            self.fields['mets_owner'].disabled = True
+
+    class Meta:
+        model = Mets_Specification
+        fields = '__all__'
+        exclude = ('created_on', 'modified_on')
+        widgets = {
+            'mets_make_name': forms.TextInput(
+                attrs={'onchange':'filter_models()',
+                       'list':'makes',
+                       'autocomplete':'off'}),
+            'mets_model_name': forms.TextInput(
+                attrs={'list':'models',
+                       'autocomplete':'off'}),
+            'inst_type': forms.HiddenInput()
+            }
+    
+class EDMI_certificateForm(forms.ModelForm):    
+    units_scf = forms.CharField(
+        widget=forms.Select(choices=ini_units))
+    units_zpc = forms.CharField(
+        widget=forms.Select(choices=ini_units))
+    units_cyc_1 = forms.CharField(
+        widget=forms.Select(choices=ini_units))
+    units_cyc_2 = forms.CharField(
+        widget=forms.Select(choices=ini_units))
+    units_cyc_3 = forms.CharField(
+        widget=forms.Select(choices=ini_units))
+    units_cyc_4 = forms.CharField(
+        widget=forms.Select(choices=ini_units))
+    units_stdev = forms.CharField(
+        widget=forms.Select(choices=ini_units))
+    
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
         super(EDMI_certificateForm, self).__init__(*args, **kwargs)
@@ -351,24 +393,12 @@ class EDMI_certificateForm(forms.ModelForm):
             'has_cyclic_corrections': forms.CheckboxInput(
                 attrs={'onclick': 'toggleCyclic();'})
            }
-        
-    units_scf = forms.CharField(
-        widget=forms.Select(choices=ini_units))
-    units_zpc = forms.CharField(
-        widget=forms.Select(choices=ini_units))
-    units_cyc_1 = forms.CharField(
-        widget=forms.Select(choices=ini_units))
-    units_cyc_2 = forms.CharField(
-        widget=forms.Select(choices=ini_units))
-    units_cyc_3 = forms.CharField(
-        widget=forms.Select(choices=ini_units))
-    units_cyc_4 = forms.CharField(
-        widget=forms.Select(choices=ini_units))
-    units_stdev = forms.CharField(
-        widget=forms.Select(choices=ini_units))
 
 
 class Mets_certificateForm(forms.ModelForm):
+    units_zpc = forms.CharField(
+        widget=forms.Select(choices=ini_units))
+
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
         inst_type = kwargs.pop('inst_type', None)
@@ -376,14 +406,14 @@ class Mets_certificateForm(forms.ModelForm):
         if not user.is_staff and inst_type:
             self.fields['instrument'].queryset = Mets_Inst.objects.filter(
                 mets_specs__mets_owner = user.company,
-                mets_specs__mets_model__inst_type = inst_type)
+                mets_specs__inst_type = inst_type)
         if not user.is_staff and not inst_type:
             self.fields['instrument'].queryset = Mets_Inst.objects.filter(
                 mets_specs__mets_owner = user.company)
                 
         if user.is_staff and inst_type:
             self.fields['instrument'].queryset = Mets_Inst.objects.filter(
-                mets_specs__mets_model__inst_type = inst_type)                
+                mets_specs__inst_type = inst_type)                
         if user.is_staff and not inst_type:
                 self.fields['instrument'].queryset = Mets_Inst.objects.all()
             
@@ -400,7 +430,4 @@ class Mets_certificateForm(forms.ModelForm):
             'certificate_upload': CustomClearableFileInput(
                 attrs={'accept' : '.pdf, .jpg, jpeg, .png, .tif'})
            }
-
-    units_zpc = forms.CharField(
-        widget=forms.Select(choices=ini_units))
         

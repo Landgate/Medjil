@@ -33,7 +33,7 @@ class RangeCalibrationRecordAdmin(admin.ModelAdmin):
                     'inst_level', 'calibration_date', 'updated_to', 'valid']
 
     ordering = ['valid', 'inst_staff__staff_number', '-calibration_date']
-    list_filter = ['inst_staff__staff_model']
+    list_filter = ['inst_staff__staff_model_name']
 
 @admin.register(RawDataModel, site=admin_site)
 class RawDataModelAdmin(admin.ModelAdmin):
@@ -62,7 +62,7 @@ try:
                         'inst_level', 'calibration_date', 'updated_to', 'valid']
 
         ordering = ['valid', 'inst_staff__staff_number', '-calibration_date']
-        list_filter = ['inst_staff__staff_model']
+        list_filter = ['inst_staff__staff_model_name']
 
     @admin.register(RawDataModel, site=medjil_super_site)
     class RawDataModelAdmin(admin.ModelAdmin):

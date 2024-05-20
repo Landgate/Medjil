@@ -24,15 +24,15 @@ from calibrationsites.models import CalibrationSite, Pillar
 from common_func.Convert import decrypt_file, list2dict, group_list
 from instruments.models import (
     DigitalLevel, EDM_Inst, EDM_Specification,
-    InstrumentMake, InstrumentModel, Mets_Inst,
+    Mets_Inst,
     Mets_Specification, Prism_Inst,
     Prism_Specification, Staff
 )
 from baseline_calibration.models import (
     Accreditation, Certified_Distance,
     Pillar_Survey, Std_Deviation_Matrix,
-    Uncertainty_Budget, EDM_Observation,
-    Level_Observation
+    Uncertainty_Budget, Uncertainty_Budget_Source,
+    EDM_Observation, Level_Observation
 )
 from edm_calibration.models import uPillar_Survey, uEDM_Observation
 from common_func.SurveyReductions import float_or_null
@@ -129,26 +129,17 @@ def get_medjil_baselines():
     return medjil_baselines
 
             
-def unknown_mets(mets_type, request, mets_number=''):
-    # Create the Mets of type in Medjil
+def unknown_mets(mets_type, request, mets_number='Unknown'):
     try:
-        medjil_mets_model, created = InstrumentModel.objects.get_or_create(
-            inst_type=mets_type, make=None, model=f'Unknown {mets_type}')
-            # use unpacking to get the created flag
-    except InstrumentModel.DoesNotExist:
-        print(f'{mets_type} Model in Medjil not inserted')
-    except Exception as e:
-        print(f'Error creating {mets_type} Model in Medjil: {e}')
-    else:
-        if created:
-            print(f'{mets_type} Model in Medjil created successfully')
-        
         mets_specs, created = Mets_Specification.objects.get_or_create(
-            mets_owner=request.user.company,
-            mets_model=medjil_mets_model,
+            inst_type=mets_type,
+            mets_make_name='Unknown Make Name'.upper(),
+            mets_model_name='Unknown Model Name',
+            mets_owner=request.user.company,            
             manu_unc_const=0,
             manu_unc_k=2,
-            measurement_increments=0.0001)
+            measurement_increments=0.0001
+            )
         if created:
             print(f'{mets_type} Specs in Medjil created successfully')
         
@@ -156,10 +147,15 @@ def unknown_mets(mets_type, request, mets_number=''):
             mets_specs=mets_specs,
             mets_number=mets_number,
             mets_custodian=None,
-            comment=f'Unknown {mets_type}')
+            comment=f'Unknown {mets_type} from Backcapture Import')
         if created:
             print(f'{mets_type} in Medjil created successfully')
-    return this_inst
+            
+        return this_inst
+    
+    except Exception as e:
+        print(e)
+        return False
 
 
 def create_medjil_level_gear(request, commit_errors):
@@ -205,59 +201,35 @@ def create_medjil_accreditation(rx, commit_errors, request):
                 f'Error creating generic accreditation in Medjil: {e}')
     return medjil_accreditation, commit_errors
 
-            
-def create_medjil_manu(rx, commit_errors):
-    # Create BASELINE Makes as Medjil Manufacturers
-    for rx_make in rx['InstrumentMake'].values():
-        manufacturer = rx_make['manufacturer'].upper().strip()                    
-        rx_make['medjil_pk'] = InstrumentMake.objects.filter(
-            make = manufacturer).first()
-        if not rx_make['medjil_pk']:
-            try:
-                rx_make['medjil_pk'] = InstrumentMake.objects.create(
-                    make=manufacturer,
-                    make_abbrev=manufacturer[:4].upper())
-            except Exception as e:
-                commit_errors.append(
-                    f'Error creating {manufacturer} Manufacturer in Medjil: {e}')
-    return rx, commit_errors
-
 
 def create_medjil_model(rx, request, commit_errors):
-    # Create BASELINE Models as Medjil Models/Specifications
+    # Create BASELINE Models as Medjil Model Specifications
     for rx_model in rx['InstrumentModel'].values():
-        rx_make = rx['InstrumentMake'][rx_model['InstrumentMake_fk']]
-        make = rx_make['medjil_pk']
-        model = rx_model['name'].upper().strip()
-        inst_type = 'edm'
-        if rx_model['type'] != 'P': inst_type = 'prism'
-        # create the Models in Medjil
-        try:
-            rx_model['medjil_model_pk'], created = InstrumentModel.objects.get_or_create(
-                inst_type = inst_type,
-                make = make,
-                model = model)
-        except Exception as e:
-            commit_errors.append(
-                f'Error creating {inst_type} Model {model} in Medjil: {e}')
-        
-        # create the Specs in Medjil tables
         if rx_model['manu_unc_const'] == '': rx_model['manu_unc_const'] = 0
         if rx_model['manu_unc_ppm'] == '': rx_model['manu_unc_ppm'] = 0
+        
+        rx_make = rx['InstrumentMake'][rx_model['InstrumentMake_fk']]
+        make = rx_make['manufacturer'].upper().strip()
+        zpc = rx_model['manu_unc_const']
+        ppm = rx_model['manu_unc_ppm']
+        model = rx_model['name'].strip()
+               
+        # create Prism in Medjil Prism_Specification tables
         if rx_model['type'] == 'P':
             # Create the prism in Medjil Specifications tables
             try:
                 rx_model['medjil_specs_pk'], created = (
                     Prism_Specification.objects.get_or_create(
+                        prism_make_name = make,
+                        prism_model_name = model,
                         prism_owner = request.user.company,
-                        prism_model = rx_model['medjil_model_pk'],
-                        manu_unc_const = float(rx_model['manu_unc_const']) * 2,
+                        manu_unc_const = float(zpc) * 2,
                         manu_unc_k = 2))
             except Exception as e:
                 commit_errors.append(
                     f'Error creating Prism Model {model} in Medjil: {e}')
         else:
-            # Create the EDM in Medjil Model and Specifications tables
+            # Create the EDM in Medjil EDM_Specification tables
             rx_model['type'] = 'pu'
             if rx_model['is_pulse'] =='False': rx_model['type'] ='ph'
             if len(rx_model['manu_ref_refrac_index']) == 0:
@@ -271,11 +243,12 @@ def create_medjil_model(rx, request, commit_errors):
             try:
                 rx_model['medjil_specs_pk'], created = (
                     EDM_Specification.objects.get_or_create(
+                        edm_make_name = make,
+                        edm_model_name = model,
                         edm_owner = request.user.company,
-                        edm_model = rx_model['medjil_model_pk'],
                         edm_type = rx_model['type'],
-                        manu_unc_const = float(rx_model['manu_unc_const']) * 2,
-                        manu_unc_ppm = float(rx_model['manu_unc_ppm']) * 2,
+                        manu_unc_const = float(zpc) * 2,
+                        manu_unc_ppm = float(ppm) * 2,
                         manu_unc_k = 2,
                         unit_length = rx_model['unit_length'],
                         frequency = rx_model['frequency'],
@@ -344,7 +317,7 @@ def match_baseline(pillars, medjil_baselines):
         if len(pillars) == len(medjil_baseline['pillars']):
             match_dist = 0
             for pillar, medjil_pillar in zip(pillars, medjil_baseline['pillars']):
-                medjil_join, az = joins(
+                medjil_join, _ = joins(
                     medjil_baseline['pillars'][0].easting,
                     medjil_baseline['pillars'][0].northing,
                     medjil_pillar.easting,
@@ -373,27 +346,20 @@ def import_dli(request):
         Backcapture_History.objects.filter(created_on__lt=threshold).delete()
         commit_count = Backcapture_History.objects.filter(user=request.user).count()
         
-        if commit_count >=3:
+        if commit_count >=30:
             importForm.add_error(None, 'Error - You have exceeded your number of database imports for today.')
     
     if importForm.is_valid():
         # Import the BASELINE_WA database into a single dictionary.
         rx = db_files2dict(importForm.cleaned_data["file_field"],
                            request.user.is_staff)
-        
-        Unknown_UC_budget = Uncertainty_Budget.objects.get(
-                    name = 'Default', 
-                    company__company_name = 'Landgate')
-        
+                
         # query the medjil baselines
         medjil_baselines = get_medjil_baselines()
         
         commit_errors = []
         commit_successes = []
-        if all(key in rx.keys() for key in ['InstrumentMake', 'InstrumentModel', 'Instrument']):
-            # Create BASELINE Makes as Medjil Manufacturers
-            rx, commit_errors = create_medjil_manu(rx, commit_errors)
-            
+        if all(key in rx.keys() for key in ['InstrumentMake', 'InstrumentModel', 'Instrument']):            
             # Create BASELINE Models as Medjil Models/Specifications
             rx, commit_errors = create_medjil_model(rx, request, commit_errors)
         
@@ -428,6 +394,72 @@ def import_dli(request):
                 job['medjil_thermo1_pk'] = unknown_mets('thermo', request, job['Thermometer1'])
                 job['medjil_thermo2_pk'] = unknown_mets('thermo', request, job['Thermometer2'])
                 
+                # Create the Uncertainty Budget to match
+                rx_UC_Name = (
+                    'Backcapture - ' +
+                    job['StdDevTemp'] +
+                    job['StdDevPressure'] +
+                    job['InstCentringStdDev'] +
+                    job['InstLevellingStdDev'] 
+                    )
+                try:
+                    rx_UC_budget, created = Uncertainty_Budget.objects.get_or_create(
+                        name = rx_UC_Name, 
+                        company = request.user.company,
+                        std_dev_of_zero_adjustment = 0.0002,
+                        auto_EDMI_scf = False,
+                        auto_EDMI_scf_drift = False,
+                        auto_EDMI_round = False,
+                        auto_humi_zpc = False,
+                        auto_humi_rounding = False,
+                        auto_pressure_zpc = False,
+                        auto_pressure_rounding = False,
+                        auto_temp_zpc = False,
+                        auto_temp_rounding = False,
+                        auto_cd = True,
+                        auto_EDMI_lr = True,
+                        auto_hgts = True,
+                        auto_os = True,
+                        )
+                except:
+                    rx_UC_budget = Uncertainty_Budget.objects.get(
+                        name = 'Default',
+                        company__company_name = 'Landgate')
+                if float(job['StdDevTemp']) > 0:
+                    UC_source1,_ = Uncertainty_Budget_Source.objects.get_or_create(
+                        uncertainty_budget = rx_UC_budget,
+                        group = '04',
+                        description = 'Imported From BaselineWA software',
+                        units = '°C',
+                        uc95 = float(job['StdDevTemp'])
+                        )
+                if float(job['StdDevPressure']) > 0:
+                    UC_source2,_ = Uncertainty_Budget_Source.objects.get_or_create(
+                        uncertainty_budget = rx_UC_budget,
+                        group = '05',
+                        description = 'Imported From BaselineWA software',
+                        units = 'hPa',
+                        uc95 = float(job['StdDevPressure'])
+                        )
+                if float(job['InstCentringStdDev']) > 0:
+                        if float(job['InstCentringStdDev']) < 0.01:
+                            # Note - some data is in m some in mm Grrr#!!!
+                            job['InstCentringStdDev'] = float(job['InstCentringStdDev']) * 1000
+                        UC_source3,_ = Uncertainty_Budget_Source.objects.get_or_create(
+                            uncertainty_budget = rx_UC_budget,
+                            group = '09',
+                            description = 'Imported From BaselineWA software',
+                            units = 'm',
+                            uc95 = float(job['InstCentringStdDev'])/1000
+                            )
+                if float(job['InstLevellingStdDev']) > 0:
+                    UC_source4,_ = Uncertainty_Budget_Source.objects.get_or_create(
+                        uncertainty_budget = rx_UC_budget,
+                        group = '10',
+                        description = 'Imported From BaselineWA software',
+                        units = 'm',
+                        uc95 = float(job['InstLevellingStdDev'])
+                        )
                 try:
                     job_measurements = jobs_measurements[job['pk']]['grp_job_fk']
                     uniq_bays = set(
@@ -453,7 +485,7 @@ def import_dli(request):
 
                 mets_applied = False
                 try:
-                    if job_measurements[0]['mets_flag'] == 'N': mets_applied = True
+                    if job_measurements[0]['mets_flag'] == 'Y': mets_applied = True
                 except:
                     mets_applied = True
                 
@@ -495,6 +527,7 @@ def import_dli(request):
                         observer = job['observer_name'],
                         weather = 'Sunny/Clear',
                         job_number = rx['Baseline'][job['baseline_fk']]['reference'],
+                        comment = f"{job['JobComments']} ({job['name']})",
                         edm = medjil_edm,
                         prism = medjil_prism,
                         mets_applied = mets_applied,
@@ -510,7 +543,7 @@ def import_dli(request):
                         hygro_calib_applied = True,
                         psychrometer = None,
                         psy_calib_applied = True,
-                        uncertainty_budget = Unknown_UC_budget,
+                        uncertainty_budget = rx_UC_budget,
                         outlier_criterion = 3,
                         fieldnotes_upload = None,
                         zero_point_correction = 0,
@@ -568,9 +601,9 @@ def import_dli(request):
                                 tgt_ht = meas['to_ht'],
                                 hz_direction = az,
                                 raw_slope_dist = obs['EDMObsDistance'],
-                                raw_temperature = float_or_null(obs['MeasDryTemp']),
-                                raw_pressure = float_or_null(obs['MeasPressure']),
-                                raw_humidity = float_or_null(obs['MeasHumidity'])
+                                raw_temperature = float_or_null(obs['MeasDryTemp']) or 0,
+                                raw_pressure = float_or_null(obs['MeasPressure']) or 0,
+                                raw_humidity = float_or_null(obs['MeasHumidity'] or 0)
                                 )
                     except Exception as e:
                         commit_errors.append(
@@ -594,36 +627,38 @@ def import_dli(request):
                                     to_pillar = to_pillar['medjil_pillar'],
                                     std_uncertainty = uc
                                     ))
-
+                
                 if job['calibration_type'] == 'I' and len(commit_error) == 0:
                     test_cyclic = True
                     if float(medjil_edm.edm_specs.unit_length) < 5: test_cyclic = False
                     try:
                         medjil_edmi_calibration, created = (
                             uPillar_Survey.objects.get_or_create(
-                            site = medjil_baseline,
-                            survey_date =  dt.strptime(
-                                job['survey_date'],'%d/%m/%Y').isoformat()[:10],
-                            computation_date = dt.strptime(
-                                job['computation_date'],'%d/%m/%Y').isoformat()[:10],
-                            observer = job['observer_name'],
-                            weather = 'Sunny/Clear',
-                            job_number = rx['Baseline'][job['baseline_fk']]['reference'],
-                            edm = medjil_edm,
-                            prism = medjil_prism,
-                            mets_applied = mets_applied,
-                            thermometer = job['medjil_thermo1_pk'],
-                            barometer = job['medjil_baro1_pk'],
-                            hygrometer = medjil_hygro,
-                            thermo_calib_applied = thermo_calib_applied,
-                            baro_calib_applied = baro_calib_applied,
-                            hygro_calib_applied = True,
-                            uncertainty_budget = Unknown_UC_budget,
-                            outlier_criterion = 3,
-                            test_cyclic = test_cyclic,
-                            variance = 1,
-                            degrees_of_freedom = len(uniq_bays)-2,
-                            k = 1.996)
+                                site = medjil_baseline,
+                                survey_date =  dt.strptime(
+                                    job['survey_date'],'%d/%m/%Y').isoformat()[:10],
+                                computation_date = dt.strptime(
+                                    job['computation_date'],'%d/%m/%Y').isoformat()[:10],
+                                observer = job['observer_name'],
+                                weather = 'Sunny/Clear',
+                                job_number = rx['Baseline'][job['baseline_fk']]['reference'],
+                                comment = f"{job['JobComments']} ({job['name']})",
+                                edm = medjil_edm,
+                                prism = medjil_prism,
+                                mets_applied = mets_applied,
+                                thermometer = job['medjil_thermo1_pk'],
+                                barometer = job['medjil_baro1_pk'],
+                                # hygrometer = medjil_hygro,
+                                thermo_calib_applied = thermo_calib_applied,
+                                baro_calib_applied = baro_calib_applied,
+                                hygro_calib_applied = True,
+                                uncertainty_budget = rx_UC_budget,
+                                outlier_criterion = 3,
+                                test_cyclic = test_cyclic,
+                                # variance = 1,
+                                # degrees_of_freedom = len(uniq_bays)-2,
+                                # k = 1.996
+                                )
                             )
                         commit_successes.append(job["name"])
                     except Exception as e:
@@ -644,9 +679,9 @@ def import_dli(request):
                                     inst_ht = meas['from_ht'],
                                     tgt_ht = meas['to_ht'],
                                     raw_slope_dist = obs['EDMObsDistance'],
-                                    raw_temperature = float_or_null(obs['MeasDryTemp']),
-                                    raw_pressure = float_or_null(obs['MeasPressure']),
-                                    raw_humidity = float_or_null(obs['MeasHumidity'])
+                                    raw_temperature = float_or_null(obs['MeasDryTemp']) or 0,
+                                    raw_pressure = float_or_null(obs['MeasPressure']) or 0,
+                                    raw_humidity = float_or_null(obs['MeasHumidity']) or 0
                                     ))
                     except Exception as e:
                         commit_errors.append(

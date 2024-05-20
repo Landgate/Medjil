@@ -6,7 +6,6 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("instruments", "0005_alter_edm_inst_edm_specs"),
         ("calibrationsites", "0004_auto_Create_Default_Pillars"),
         ("staffcalibration", "0003_alter_staffcalibrationrecord_options_and_more"),
     ]

@@ -56,10 +56,6 @@
                                 class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" onclick="cacheInputs();return true;">&#43;</a>
                             {% endif %}
                            
-                            {% if field.name == "staff" %}
-                                <a href="{% url 'instruments:inst_staff_create' %}?next={{request.path}}" 
-                                class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" onclick="cacheInputs();return true;">&#43;</a>
-                            {% endif %}
                             {% if field.name == "thermometer" %}
                                 <a href="{% url 'instruments:register_edit' inst_disp="thermo" tab="insts" id=None %}?next={{request.path}}"
                                 class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" onclick="cacheInputs();return true;">&#43;</a>

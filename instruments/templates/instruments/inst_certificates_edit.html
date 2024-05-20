@@ -56,41 +56,41 @@
                             {% if 'units_' not in field.name and '_uncertainty' not in field.name and '_coverage_factor' not in field.name %}
                                 <td>{{ field.label_tag }}</td>
                                 {% if 'zero_point_correction' == field.name %}
-                                    <td title="{{ field.help_text }}">{{ field }}</td>
+                                    <td title="{{ field.help_text|safe }}">{{ field }}</td>
                                     <td title="{{ form.zpc_uncertainty.help_text }}">{{ form.zpc_uncertainty }}</td>
                                     <td title="{{ form.zpc_coverage_factor.help_text }}">{{ form.zpc_coverage_factor }}</td>
                                     <td>{{ form.units_zpc }}</td>
                                 {% elif 'scale_correction_factor' == field.name %}
-                                    <td title="{{ field.help_text }}">{{ field }}</td>
+                                    <td title="{{ field.help_text|safe }}">{{ field }}</td>
                                     <td title="{{ form.scf_uncertainty.help_text }}">{{ form.scf_uncertainty }}</td>
                                     <td title="{{ form.scf_coverage_factor.help_text }}">{{ form.scf_coverage_factor }}</td>
                                     <td>{{ form.units_scf }}</td>
                                 {% elif 'cyclic_one' == field.name %}
-                                    <td title="{{ field.help_text }}">{{ field }}</td>
+                                    <td title="{{ field.help_text|safe }}">{{ field }}</td>
                                     <td title="{{ form.cyc_1_uncertainty.help_text }}">{{ form.cyc_1_uncertainty }}</td>
                                     <td title="{{ form.cyc_1_coverage_factor.help_text }}">{{ form.cyc_1_coverage_factor }}</td>
                                     <td>{{ form.units_cyc_1 }}</td>
                                 {% elif 'cyclic_two' == field.name %}
-                                    <td title="{{ field.help_text }}">{{ field }}</td>
+                                    <td title="{{ field.help_text|safe }}">{{ field }}</td>
                                     <td title="{{ form.cyc_2_uncertainty.help_text }}">{{ form.cyc_2_uncertainty }}</td>
                                     <td title="{{ form.cyc_2_coverage_factor.help_text }}">{{ form.cyc_2_coverage_factor }}</td>
                                     <td>{{ form.units_cyc_2 }}</td>
                                 {% elif 'cyclic_three' == field.name %}
-                                    <td title="{{ field.help_text }}">{{ field }}</td>
+                                    <td title="{{ field.help_text|safe }}">{{ field }}</td>
                                     <td title="{{ form.cyc_3_uncertainty.help_text }}">{{ form.cyc_3_uncertainty }}</td>
                                     <td title="{{ form.cyc_3_coverage_factor.help_text }}">{{ form.cyc_3_coverage_factor }}</td>
                                     <td>{{ form.units_cyc_3 }}</td>
                                 {% elif 'cyclic_four' == field.name %}
-                                    <td title="{{ field.help_text }}">{{ field }}</td>
+                                    <td title="{{ field.help_text|safe }}">{{ field }}</td>
                                     <td title="{{ form.cyc_4_uncertainty.help_text }}">{{ form.cyc_4_uncertainty }}</td>
                                     <td title="{{ form.cyc_4_coverage_factor.help_text }}">{{ form.cyc_4_coverage_factor }}</td>
                                     <td>{{ form.units_cyc_4 }}</td>
                                 {% elif 'standard_deviation' == field.name %}
-                                    <td title="{{ field.help_text }}">{{ field }}</td>
+                                    <td title="{{ field.help_text|safe }}">{{ field }}</td>
                                     <td></td><td></td>
                                     <td>{{ form.units_stdev }}</td>
                                 {% else %}
-                                    <td colspan="3" title="{{ field.help_text }}">{{ field }}</td>
+                                    <td colspan="3" title="{{ field.help_text|safe }}">{{ field }}</td>
                                     <td></td>
                                 {% endif %}
                             {% endif %}

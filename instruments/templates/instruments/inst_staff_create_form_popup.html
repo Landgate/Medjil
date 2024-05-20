@@ -61,6 +61,15 @@
                     <tr>
                         <td width="25%"><strong>{{ field.label_tag }}</strong></td>
                         <td width="70%"> {{ field }} 
+                            {% if 'make_name' in field.name %}
+                                <datalist id="makes">
+                                    <!-- Options will be populated here by JavaScript -->
+                                </datalist>                            
+                            {% elif 'model_name' in field.name %}
+                                <datalist id="models">
+                                    <!-- Options will be populated here by JavaScript -->
+                                </datalist>
+                            {% endif %}
                             <!-- Errors -->
                             {% for error in field.errors %}
                                 <p class="error error-danger">{{ error }}</p>
@@ -74,9 +83,7 @@
                             {% endif %}
                         </td>
                         <td width="5%">
-                                {% if 'model' in field.name %}
-                                   <a href="/instruments/inst_model_createby_inst_type/staff" target="_blank" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" onclick="return showAddPopup(this);" id="add_staff">&#43;</a>
-                                {% elif 'coefficient' in field.name %}
+                                {% if 'coefficient' in field.name %}
                                     <span>ppm</span>
                                 {% elif 'length' in field.name %}
                                     <span>m</span>
@@ -91,9 +98,7 @@
             {% if request.GET.next %}
                 <input type="hidden" name="next" value="{{ request.GET.next }}">
             {% endif %}
-            <!-- <div class="button-container">
-                <button class="submit-button bg-green-500 hover:bg-green-400" type="submit" >Submit</button>
-            </div> -->
+
             <div class="wizard-button-container">
 				{% if wizard.steps.prev %}
 					<button class="next-button bg-indigo-400 hover:bg-indigo-300 text-base" name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}" formnovalidate> {% trans "<span>&#171;</span> Previous" %}</button>
@@ -115,34 +120,13 @@
         </form>
     </div>
 </article>
+<script src="{% static 'js/instrument/instrument.js' %}"></script>
+<script src="{% static 'js/instrument/popups.js' %}"></script>
 
 <script>
-    function showAddPopup(triggeringLink) {
-        var name = triggeringLink.id.replace(/^add_/, '');
-        href = triggeringLink.href;
-        var win = window.open(href, name, "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=850,width=500,height=400");
-        win.focus();
-        return false;
-    }
-
-    modelOptions = document.querySelector("#id_inst_staff_form-staff_model")
-    function closePopup(win, newID, newRepr) {
-        window.sessionStorage.setItem('new_model',  newID);
-        win.close();
-    }
+    const db_makes = {{ makes|safe }};
+    const db_models = {{ models|safe }};
     
-
-    let newModelValue = sessionStorage.getItem('new_model');
-    if (newModelValue) {
-        for(var i = 0;i < modelOptions.options.length;i++){
-                if(modelOptions.options[i].value == newModelValue ){
-                    modelOptions.options[i].selected = true;
-                }
-            }
-        
-        window.sessionStorage.removeItem('new_model');
-    }
-
     var staffCoefficients = {
         'invar': 0.81,
         'fiberglass': 10.00,
@@ -168,14 +152,7 @@
             replaceWarning.style.display = 'block'
             replaceWarning.style.color = 'red'
         }
-    })
-
-
-    
-    function refreshParent() 
-        {
-            window.opener.location.reload(true);
-        }
+    });
 
     function closeWin() {
         window.close();
