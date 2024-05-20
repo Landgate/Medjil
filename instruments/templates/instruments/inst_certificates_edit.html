@@ -27,11 +27,20 @@
         <form action="" class="site-form" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="mb-5 site-form-header bg-indigo-300 rounded px-2">
-                {% if form.instance.pk %}
-                    <h2 class="text-center">Edit Certificate Details</h2>
-                {% else %}
-                    <h2 class="text-center">Create Certificate Details</h2>
-                {% endif %}
+                <h2 class="text-center"> {% if form.instance.pk %}Edit {% else %}Create {% endif %}
+                {% if inst_type == 'baro' %}
+                 Barometer Certificate
+                 {% elif inst_type == 'thermo'%}
+                 Thermometer Certificate
+                 {% elif inst_type == 'hygro'%}
+                 Hygrometer Certificate
+                 {% elif inst_type == 'psy'%}
+                 Psychrometer Certificate
+                 {% elif inst_type == 'edm'%}
+                 EDM Certificate
+                 {% else %}
+                 {{ inst_type|title }} Certificate</h2>
+                 {% endif %}</h2>
             </div>
             <div class="mt-5 mb-3">
                 <!-- {{ form.errors }} -->

@@ -25,7 +25,8 @@
     <div class="post-content">
         <form action="" class="site-form" method="post" enctype="multipart/form-data">
             <div class="mb-5 site-form-header bg-indigo-300 rounded px-2">
-                <h2 class="text-center">Create/Edit Certificate Details</h2>
+                <h2 class="text-center">{% if form.instance.pk %}Edit {% else %}Create {% endif %}
+                	Barcoded Staff Certificate</h2>
             </div>
             <div class="mb-3 px-2 site-form-header">
                 <p class="text-center text-lg"><u>Step {{ wizard.steps.step1 }} of  {{ wizard.steps.count }}</u></p>
