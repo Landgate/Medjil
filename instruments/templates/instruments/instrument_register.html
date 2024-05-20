@@ -280,9 +280,7 @@
     }
 
     function closePopup(win, newID, newRepr) {
-        // $(id).append('<option value=' + newID + ' selected >' + newRepr + '</option>')
-        // console.log(id, newID, newRepr)
-        window.sessionStorage.setItem('new_instance',  newID);
+        window.sessionStorage.setItem('new_model',  newID);
         win.close();
     }
     var data_tabs = document.querySelectorAll('input[name="tabs"]');

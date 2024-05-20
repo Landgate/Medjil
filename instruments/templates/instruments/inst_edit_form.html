@@ -65,9 +65,6 @@
                             {% if '_specs' in field.name %}
                                 <a href="{% url 'instruments:register_edit' inst_disp=inst_type tab="models" id=None %}" target="_blank"  onclick="return showAddPopup(this);" id="add_spec" 
                                 class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer">&#43;</a>
-                            {% elif 'model' in field.name %}
-                                <a href="{% url 'instruments:inst_model_createby_inst_type' 'level' %}" target="_blank"  onclick="return showAddPopup(this);" id="add_spec" 
-                                class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer">&#43;</a>
                             {% endif %}
                         </td>
                     </tr>
@@ -86,89 +83,14 @@
         </form>
     </div>
 </article>
+<script src="{% static 'js/instrument/instrument.js' %}"></script>
+<script src="{% static 'js/instrument/popups.js' %}"></script>
+
+
 <script>
     const db_makes = {{ makes|safe }};
     const db_models = {{ models|safe }};
-
-    window.onload = function() {
-        var dataList = document.getElementById('makes');
-        
-        db_makes.forEach(function(item) {
-            var option = document.createElement('option');
-            option.value = item.make;
-            dataList.appendChild(option);
-            console.log(option);
-        });
-        filter_models();
-    }
     
-    function filter_models(){
-        make_input = document.querySelector('[id$="_make_name"]').value.toUpperCase();
-        var dataList = document.getElementById('models');
-        dataList.innerHTML = '';
-        
-        if (make_input){
-            var make_object = db_makes.find(function(record){
-                return record.make === make_input;
-            });
-        }
-        if (make_object){
-            db_models.forEach(function(item) {
-            if (make_object.id === item.make_id){
-                var option = document.createElement('option');
-                option.value = item.model;
-                dataList.appendChild(option);
-            }
-            });
-        }
-    }
-
-    function showAddPopup(triggeringLink) {
-        var name = triggeringLink.id.replace(/^add_/, '');
-        href = triggeringLink.href;
-        var win = window.open(href, name, "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=850,width=850,height=500");
-        win.resizeTo(850, win.screen.availHeight *3 / 4);
-        win.focus();
-        return false;
-    }
-
-    function closePopup(win, newID, newRepr) {
-        window.sessionStorage.setItem('new_instance',  newID);
-        win.close();
-    }
-
-    {% if  inst_type == 'level' %}
-        const specOptions = document.querySelector("#id_{{inst_type}}_model")
-    {% else %}
-        const specOptions = document.querySelector("#id_{{inst_type}}_specs") || document.getElementById("id_mets_specs");
-        
-        var inst_comment = document.getElementById('id_comment');
-        inst_comment.addEventListener('input', () => {
-            inst_comment.value = inst_comment.value ? inst_comment.value.trim() : '' ;
-            window.sessionStorage.setItem('inst_comment', inst_comment.value);
-        })
-    {% endif %}
-    
-    var SN_Number = document.getElementById("id_{{inst_type}}_number") || document.getElementById("id_mets_number");
-    SN_Number.addEventListener('input', () => {
-        SN_Number.value = SN_Number.value ? SN_Number.value.trim() : '' ;
-        window.sessionStorage.setItem('SN_Number', SN_Number.value);
-    })
-
-    let newInstanceValue = sessionStorage.getItem('new_instance');
-    if (newInstanceValue) {
-        for(var i = 0;i < specOptions.options.length;i++){
-                if(specOptions.options[i].value == newInstanceValue ){
-                    specOptions.options[i].selected = true;
-                }
-            }
-        
-        SN_Number.value = sessionStorage.getItem('SN_Number');
-        inst_comment.value = sessionStorage.getItem('inst_comment');
-        window.sessionStorage.removeItem('SN_Number');
-        window.sessionStorage.removeItem('inst_comment');
-        window.sessionStorage.removeItem('new_instance');
-    }
 </script>
 
 {% endblock %}

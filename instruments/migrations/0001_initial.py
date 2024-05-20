@@ -1363,14 +1363,15 @@ class Migration(migrations.Migration):
                     "staff_make_name",
                     models.CharField(
                         max_length=25,
-                        verbose_name="Level Make Name",
+                        verbose_name="Staff Make Name",
                         validators=[common_func.validators.validate_profanity]),
 
-                ),                (
+                ),
+                (
                     "staff_model_name",
                     models.CharField(
                         max_length=25,
-                        verbose_name="Level Model Name",
+                        verbose_name="Staff Model Name",
                         validators=[common_func.validators.validate_profanity]),
 
                 ),
@@ -1424,15 +1425,6 @@ class Migration(migrations.Migration):
                 ),
                 ("created_on", models.DateTimeField(auto_now_add=True, null=True)),
                 ("modified_on", models.DateTimeField(auto_now=True, null=True)),
-                (
-                    "staff_model",
-                    models.ForeignKey(
-                        limit_choices_to={"inst_type__exact": "staff"},
-                        null=True,
-                        on_delete=django.db.models.deletion.CASCADE,
-                        to="instruments.instrumentmodel",
-                    ),
-                ),
                 (
                     "staff_owner",
                     models.ForeignKey(
@@ -1491,15 +1483,6 @@ class Migration(migrations.Migration):
                 ("created_on", models.DateTimeField(auto_now_add=True, null=True)),
                 ("modified_on", models.DateTimeField(auto_now=True, null=True)),
                 (
-                    "level_model",
-                    models.ForeignKey(
-                        limit_choices_to={"inst_type__exact": "level"},
-                        null=True,
-                        on_delete=django.db.models.deletion.CASCADE,
-                        to="instruments.instrumentmodel",
-                    ),
-                ),
-                (
                     "level_owner",
                     models.ForeignKey(
                         null=True,
@@ -1509,7 +1492,7 @@ class Migration(migrations.Migration):
                 ),
             ],
             options={
-                "ordering": ["level_number", "level_model"],
+                "ordering": ["level_number", "level_model_name"],
                 "unique_together": {("level_make_name","level_model_name","level_number", "level_owner")},
             },
         ),

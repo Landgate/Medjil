@@ -117,7 +117,6 @@ class DigitalLevelCreateForm(forms.ModelForm):
         self.base_fields['level_owner'].initial = user.company
         if not user.is_staff:
             self.fields['level_owner'].disabled = True
-        self.fields['level_model'].empty_label = '--- Select one ---'
 
         # self.fields['level_owner'].queryset = Company.objects.exclude(company_abbrev__iexact='OTH')
         self.fields['level_number'].widget.attrs['placeholder'] = 'Level number, e.g., Serial number'
@@ -128,14 +127,15 @@ class DigitalLevelCreateForm(forms.ModelForm):
         widget=forms.Select())
     class Meta:
         model = DigitalLevel
-        fields = ('level_make_name','level_model_name','level_model', 'level_owner', 'level_number',)
-        # exclude = ('level_model',)
+        fields = ('level_make_name','level_model_name', 'level_owner', 'level_number',)
         widgets = {
             'level_make_name': forms.TextInput(
                 attrs={'onchange':'filter_models()',
-                       'list':'makes'}),
+                       'list':'makes',
+                       'autocomplete':'off'}),
             'level_model_name': forms.TextInput(
-                attrs={'list':'models'})
+                attrs={'list':'models',
+                       'autocomplete':'off'})
             }   
 
 
@@ -146,7 +146,6 @@ class StaffCreateForm(forms.ModelForm):
         if not user.is_staff:
             self.fields['staff_owner'].queryset = Company.objects.filter(company_name=user.company.company_name)
         
-        self.fields['staff_model'].empty_label = '--- Select one ---'
         self.fields['staff_owner'].empty_label = '--- Select one ---'
 
     staff_owner = forms.ModelChoiceField(
@@ -160,11 +159,13 @@ class StaffCreateForm(forms.ModelForm):
         widgets = {
             'staff_make_name': forms.TextInput(
                 attrs={'onchange':'filter_models()',
-                       'list':'makes'}),
+                       'list':'makes',
+                       'autocomplete':'off'}),
             'staff_model_name': forms.TextInput(
-                attrs={'list':'models'})
+                attrs={'list':'models',
+                       'autocomplete':'off'})
             }     
-        
+
     calibrated = forms.BooleanField(
         required=False, 
         label = "Is Calibrated", 
@@ -228,9 +229,11 @@ class EDM_SpecificationForm(forms.ModelForm):
         widgets = {
             'edm_make_name': forms.TextInput(
                 attrs={'onchange':'filter_models()',
-                       'list':'makes'}),
+                       'list':'makes',
+                       'autocomplete':'off'}),
             'edm_model_name': forms.TextInput(
-                attrs={'list':'models'})
+                attrs={'list':'models',
+                       'autocomplete':'off'})
             }       
     
     
@@ -265,7 +268,7 @@ class Prism_SpecificationForm(forms.ModelForm):
         user = kwargs.pop('user', None)
         super(Prism_SpecificationForm, self).__init__(*args, **kwargs) 
         self.initial['prism_owner'] = user.company
-        self.base_fields['units_manu_unc_const'].initial = 'mm'
+        self.initial['units_manu_unc_const']= 'mm'
         if not user.is_staff:
             self.fields['prism_owner'].disabled = True
 
@@ -276,9 +279,11 @@ class Prism_SpecificationForm(forms.ModelForm):
         widgets = {
             'prism_make_name': forms.TextInput(
                 attrs={'onchange':'filter_models()',
-                       'list':'makes'}),
+                       'list':'makes',
+                       'autocomplete':'off'}),
             'prism_model_name': forms.TextInput(
-                attrs={'list':'models'})
+                attrs={'list':'models',
+                       'autocomplete':'off'})
             }   
 
 
@@ -332,9 +337,11 @@ class Mets_SpecificationForm(forms.ModelForm):
         widgets = {
             'mets_make_name': forms.TextInput(
                 attrs={'onchange':'filter_models()',
-                       'list':'makes'}),
+                       'list':'makes',
+                       'autocomplete':'off'}),
             'mets_model_name': forms.TextInput(
-                attrs={'list':'models'}),
+                attrs={'list':'models',
+                       'autocomplete':'off'}),
             'inst_type': forms.HiddenInput()
             }
     

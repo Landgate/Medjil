@@ -121,42 +121,30 @@ class DigitalLevel(models.Model):
         validators=[MinLengthValidator(4), validate_profanity],
         help_text="Enter the instrument number"
     )
-    level_model = models.ForeignKey(
-        InstrumentModel,    #!!!
-        limit_choices_to={'inst_type__exact': 'level'},
-        on_delete=models.CASCADE,
-        null=True
-    )
     created_on = models.DateTimeField(auto_now_add=True, null=True)
     modified_on = models.DateTimeField(auto_now=True, null=True)
 
     class Meta:
-        ordering = ['level_number', 'level_model','level_model_name']
+        ordering = ['level_number', 'level_make_name', 'level_model_name']
         unique_together = ['level_make_name','level_model_name','level_number', 'level_owner']
 
     def get_absolute_url(self):
         return reverse('instruments:inst_level_update', args=[str(self.id)])
 
     def __str__(self):
-        return f'{self.level_number} {self.level_model}'
+        return f'{self.level_number} {self.level_model_name}'
 
 
 class Staff(models.Model):
     staff_make_name = models.CharField(
         validators=[validate_profanity],
         max_length=25,
-        verbose_name="Level Make Name"
+        verbose_name="Staff Make Name"
     )
     staff_model_name = models.CharField(
         validators=[validate_profanity],
         max_length=25,
-        verbose_name="Level Model Name"
-    )
-    staff_model = models.ForeignKey(
-        InstrumentModel,    #!!!
-        limit_choices_to={'inst_type__exact': 'staff'},
-        on_delete=models.CASCADE,
-        null=True
+        verbose_name="Staff Model Name"
     )
     staff_owner = models.ForeignKey(Company, on_delete=models.SET_NULL, null=True)
     staff_number = models.CharField(

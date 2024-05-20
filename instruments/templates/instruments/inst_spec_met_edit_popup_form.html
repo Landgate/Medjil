@@ -118,6 +118,10 @@
         </form>
     </div>
 </article>
+
+<script src="{% static 'js/instrument/instrument.js' %}"></script>
+<script src="{% static 'js/instrument/popups.js' %}"></script>
+
 <script>
     const inst_type = "{{ form.inst_type.value|safe }}";
     const db_makes = {{ makes|safe }};
@@ -133,38 +137,9 @@
     const  uc_units_slt = document.getElementById("id_units_manu_unc_const")
     const  inc_units_slt = document.getElementById("id_units_measurement_inc")
     
-    window.onload = function() {
-        var dataList = document.getElementById('makes');
-        
-        db_makes.forEach(function(item) {
-            var option = document.createElement('option');
-            option.value = item.make;
-            dataList.appendChild(option);
-        });
-        filter_models();
+    window.addEventListener('load', function() {
         ChgUnits();
-    }
-    
-    function filter_models(){
-        make_input = document.getElementById('id_mets_make_name').value.toUpperCase();
-        var dataList = document.getElementById('models');
-        dataList.innerHTML = '';
-        
-        if (make_input){
-            var make_object = db_makes.find(function(record){
-                return record.make === make_input;
-            });
-        }
-        if (make_object){
-            db_models.forEach(function(item) {
-            if (make_object.id === item.make_id){
-                var option = document.createElement('option');
-                option.value = item.model;
-                dataList.appendChild(option);
-            }
-            });
-        }
-    }
+    });
     
     // On dropdown change, Change unit options
     function ChgUnits() {
@@ -203,12 +178,7 @@
         }
     }
   
-    //  Refresh Parent Function
-    function refreshParent() 
-        {
-            window.opener.location.reload(true);
-        }
 </script>
-        <body onunload="javascript:refreshParent()">
+	<body onunload="javascript:refreshParent()">
 
 {% endblock %}
