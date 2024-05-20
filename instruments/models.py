@@ -286,7 +286,6 @@ class EDM_Specification(models.Model):
     class Meta:
         ordering = ['edm_make_name', 'edm_model_name']
         unique_together = ("edm_make_name", "edm_model_name", "edm_owner")
-        verbose_name = "EDM Model"
 
     def __str__(self):
         return f'{self.edm_make_name} {self.edm_model_name} ({self.edm_owner.company_abbrev})'

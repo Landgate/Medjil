@@ -67,13 +67,14 @@ svg: {
 <a href="#Chapter_6">6 Calibration reports</a>
 </h3>
 <h3>
-<a href="#Chapter_7">7 Barcode staff calibration</a>
+<a href="#Chapter_7">7 Staff calibration</a>
 </h3>
 <br>
 </div>
 <div id="Chapter_0">
 <!-- INTRO -->
 <h1>Introduction</h1>
+<p>Medjil, means ‘accurate’ in the <i>Whadjuk Noongar</i> language.</p>
 <p>The Medjil portal was developed by <a href="https://www.landgate.wa.gov.au/">Landgate</a> (the Western Australian Land Information Authority) in collaboration with the <a href="https://www.icsm.gov.au"/>Intergovernmental Committee on Surveying and Mapping</a> (ICSM) jurisdictions.</p>
 <p>The portal allows the calibration of the following:</p>
 <ul STYLE="margin:30px">
@@ -1299,8 +1300,8 @@ A rectangular distribution represents an arbitrary outcome that lies between cer
 <div>$$ ΔH_{ij}=(M_{jk}-M_{ik})\ \ \ (Eq. 7.1) $$ </div>
 <p>Where:</p>
 <p>&emsp;&emsp;∆H<sub>ij</sub> = height difference between pins i and j</p>
-<p>&emsp;&emsp;M<sub>ik</sub> = staff reading at pin i with a digital level</p>
-<p>&emsp;&emsp;M<sub>jk</sub> = staff reading at Pin j with a digital level</p>
+<p>&emsp;&emsp;M<sub>ik</sub> = staff reading at pin i with a certified invar digital level</p>
+<p>&emsp;&emsp;M<sub>jk</sub> = staff reading at Pin j with a certified invar digital level</p>
 <p>&emsp;&emsp;k = sbservation set number. Each set contains several observations taken with the same instrument (level), staff and observing pillar</p>
 <h3>7.1.2 Observation equations for each height interval between adjoining pins</h3>
 <p>The observation equations are derived from the mathematical model where the residual is the difference between the observed and the most probable height difference between the pins. One observation equation is formed for each observation. The initial (most probabale) height difference is adopted from a previous range calibration.</p>
@@ -1322,14 +1323,57 @@ A rectangular distribution represents an arbitrary outcome that lies between cer
 <p>&emsp;&emsp;σ<sub>M<sub>j</sub></sub> = standard deviation of the observations to pin j
 <p>&emsp;&emsp;σ<sub>T<sub>ij</sub></sub> = standard deviation of the temperature correction between pin i and j
 <p>Modern level instruments provide standard deviation of measurements usually obtained from several observations.</p>
-<p>A posteriori uncertainties of the adjusted (calibrated) height differences are dervivied from the a posteriori standard deviations and expanded to acieve 95% confidence level by mupliplying them by coverage factor k = 1.99:</p>
-<div>$$ σ_{H_{ij}}=\sqrt{{({A}^TPA)}^{-1}} *1.99\ \ \ (Eq. 7.6)$$ </div>
-
-<h3>7.1.3 Detecting gross and systematic errors</h3>
-
+<p>A posteriori uncertainties of the adjusted (calibrated) height differences are dervivied from the a posteriori standard deviations and expanded to achieve 95% confidence level by mupliplying them by coverage factor k = 1.96:</p>
+<div>$$ σ_{H_{ij}}=\sqrt{{({A}^TPA)}^{-1}} *1.96\ \ \ (Eq. 7.6)$$ </div>
+<h3>7.1.3 Time dependant range</h3>
+<p>Regular measurements of the Boya calibration range carried out by Landgate over the years indicated seasonal variations of up to 1 mm, thereby mandating the development of the time-dependent range which are used for (time depandant) staff calibration.</p>
+<p>The range was measured every month over a period of two years and the observations used to estimate the folloing (see figure below) time dependant values of the range height differences.</p>
+<img src="\media\TechnicalManual\tbaseline\Medjil_Technical_Manual\Picture_7_2.png" alt="Boya barcode staff calibration range">
+<p>The calibration range is monitored on a regular basis to ensure the stability of the results and to detect potential anomalies.<p> 
 <div id="Chapter_7_2"></div>
-<h2>7.2 Staff calibration</h2>
-<p>To calibrate range, the following mathematical model is used to fit the observations (height differences) between the pins. Redundant observations are essential to estimate height differences and their uncertainties using least squares adjustment.</p>
+<h2>7.2 Calibration of barcode staff</h2>
+<h3>7.2.1 Mathematical model for the computation of the correction factor of a barcode staff (the staff calibibration)</h3>
+<p>To estimate the the correction factor C<sub>f</sub> of a barcoded staff the following mathematical model is used</p>
+<div>$$ C_f=\frac{ΔH_{ij}}{(M_{j}-M_{i})}\ \ \ (Eq. 7.7) $$ </div>
+<p>Where:</p>
+<p>&emsp;&emsp;∆H<sub>ij</sub> = certified range height difference between pins i and j</p>
+<p>&emsp;&emsp;M<sub>i</sub> = barcoded staff reading at pin i</p>
+<p>&emsp;&emsp;M<sub>j</sub> = barcoded staff reading at pin j</p>
+<h3>7.2.2 Observation equations for each height interval between adjoining pins</h3>
+<div>$$ V_{ij}=1 - \frac{ΔH_{ij}}{[M_{j}-M_{i}]}\ \ \ (Eq. 7.8) $$ </div>
+<p>Where:</p>
+<p>&emsp;&emsp;V<sub>ij</sub> = residual of the correction factor of the height difference between pins i and j</p>
+<p>For n pins the following set of equtions can be formed:</p>
+<div>$$ \left[\begin{matrix} v_1=1-∆H_{1,2}/(M_2-M_1 )\\v_2=1-∆H_{1,3}/(M_3-M_1 )\\\ldots\\v_{(n-1)}=1-∆H_{(1,n)}/(M_n-M_1 )\\\end{matrix}\right]\ \ \ (Eq. 7.9) $$ </div>
+<p>Where:</p>
+<p>&emsp;&emsp;n = number of pins in the range. A pin is a physical mark on which the staff is placed. At Boya range a total of 21 pins can be used.</p>
+<p>The above equation can be expressed in a matrix notation:</p>
+<div>$$ V=AX+w\ \ \ (Eq. 7.10) $$ </div>
+<p>Where:</p>
+<p>&emsp;&emsp;A = [1]</p>
+<p>&emsp;&emsp;X = [C<sub>f</sub>]</p>
+<p>&emsp;&emsp;w = [∆H<sub>1,n</sub>/(M<sub>n</sub>-M<sub>1</sub>)]</p>
+<p>In accordance with Section (5), the observations, along with the with matrix P (same as per Eq. 7.4) constructed from a-priori standard deviations of height differnces, undergo a least squares adjustment to obtain the estimated correction factor C<sub>f</sub> of the barcoded staff.</p>
+<p>A posteriori uncertainty of the estimated correction factor is dervied from the a posteriori standard deviations to achieve 95% confidence level by multiplying them by coverage factor k = 1.96.</p>
+<h3>7.2.3 Reducing the correction factor to a standard temperature</h3>
+<p>The staff correction factor C<sub>f</sub> is estimated at the average temperature during the staff calibration procedure and is further reduced to the standard temperature T<sub>0</sub> using the following formula:</p>
+<div>$$ C_{f_{T_0}}=C_f*(1+(CoE(T_0-T_{Obs})))\ \ \ (Eq. 7.11) $$ </div>
+<p>Where:</p>
+<p>&emsp;&emsp;C<sub>f<sub>T<sub>0</sub></sub></sub> = the staff correction factor at 25.0C</p>
+<p>&emsp;&emsp;C<sub>f</sub> = the staff correction factor estimated at the average temperature during the time of staff calibration procedure</p>
+<p>&emsp;&emsp;T<sub>0</sub> = 25.0 C</p>
+<p>&emsp;&emsp;T<sub>Obs</sub> = average temperature [C] at the time of staff calibration procedure</p>
+<p>&emsp;&emsp;CoE = the coefficient of expansion of the barcoded staff</p>
+<h3>7.2.4 Height differnce observations correction</h3>
+<p>To correct the height differences of the barcoded staff the following formula is provided in the staff calibration certificate/report:</p>
+<div>$$ ∆H_C=((((T_{Obs}-T_0)*CoE)+1)*C_{f_{T_0}})*∆H_{Obs}\ \ \ (Eq. 7.12) $$ </div>
+<p>Where:</p>
+<p>&emsp;&emsp;∆H<sub>C</sub> = corrected height difference</p>
+<p>&emsp;&emsp;T<sub>Obs</sub> = average temperature [C] at the time of survey</p>
+<p>&emsp;&emsp;T<sub>0</sub> = 25.0C</p>
+<p>&emsp;&emsp;CoE = the coefficient of expansion of the barcoded staff</p>
+<p>&emsp;&emsp;C<sub>f<sub>T<sub>0</sub></sub></sub> = the staff correction factor at 25.0 C</p>
+<p>&emsp;&emsp;∆H<sub>Obs</sub> = observed height difference</p> 
 </div>
 <p>End of manual</p>
 </body>
