@@ -1346,17 +1346,17 @@ A rectangular distribution represents an arbitrary outcome that lies between cer
 <p>For n pins the following set of equtions can be formed:</p>
 <div>$$ \left[\begin{matrix} v_1=1-∆H_{1,2}/(M_2-M_1 )\\v_2=1-∆H_{1,3}/(M_3-M_1 )\\\ldots\\v_{(n-1)}=1-∆H_{(1,n)}/(M_n-M_1 )\\\end{matrix}\right]\ \ \ (Eq. 7.9) $$ </div>
 <p>Where:</p>
-<p>&emsp;&emsp;n = number of pins in the rnge. A pin is a phyical mark on which the staff is placed. At Boya range a total of 21 pins can be used.</p>
+<p>&emsp;&emsp;n = number of pins in the range. A pin is a physical mark on which the staff is placed. At Boya range a total of 21 pins can be used.</p>
 <p>The above equation can be expressed in a matrix notation:</p>
 <div>$$ V=AX+w\ \ \ (Eq. 7.10) $$ </div>
 <p>Where:</p>
 <p>&emsp;&emsp;A = [1]</p>
 <p>&emsp;&emsp;X = [C<sub>f</sub>]</p>
 <p>&emsp;&emsp;w = [∆H<sub>1,n</sub>/(M<sub>n</sub>-M<sub>1</sub>)]</p>
-<p>In accordance with Section (5), the observations, along with the waith matrix P (same as per Eq. 7.4) constructed from a-priori standard daviations of height differnces, undergo a least squares adjustment to obtain the estimated correction factor C<sub>f</sub> of the barcoded staff.</p>
-<p>A posteriori uncertainty of the estimated correction factor is dervivied from the a posteriori standard deviation to achieve 95% confidence level by mupliplying them by coverage factor k = 1.96.</p>
-<h3>7.2.3 Reducing the correction factor to a standart temperature</h3>
-<p>The staff correction factor C<sub>f</sub> is estimated at the average temparature during the staff calibration procedure and is further reduced to the standard temperature T<sub>0</sub> using the following formula:</p>
+<p>In accordance with Section (5), the observations, along with the with matrix P (same as per Eq. 7.4) constructed from a-priori standard deviations of height differnces, undergo a least squares adjustment to obtain the estimated correction factor C<sub>f</sub> of the barcoded staff.</p>
+<p>A posteriori uncertainty of the estimated correction factor is dervied from the a posteriori standard deviations to achieve 95% confidence level by multiplying them by coverage factor k = 1.96.</p>
+<h3>7.2.3 Reducing the correction factor to a standard temperature</h3>
+<p>The staff correction factor C<sub>f</sub> is estimated at the average temperature during the staff calibration procedure and is further reduced to the standard temperature T<sub>0</sub> using the following formula:</p>
 <div>$$ C_{f_{T_0}}=C_f*(1+(CoE(T_0-T_Obs)))\ \ \ (Eq. 7.11) $$ </div>
 <p>Where:</p>
 <p>&emsp;&emsp;C<sub>f<sub>T<sub>0</sub></sub></sub> = the staff correction factor at 25.0C</p>
@@ -1364,8 +1364,8 @@ A rectangular distribution represents an arbitrary outcome that lies between cer
 <p>&emsp;&emsp;T<sub>0</sub> = 25.0C</p>
 <p>&emsp;&emsp;T<sub>Obs</sub> = average temperature [C] during the staff calibration procedure</p>
 <p>&emsp;&emsp;CoE = the coefficient of expansion of the barcoded staff</p>
-<h3>7.2.4 Height observation correction</h3>
-<p>To correct the height differences of the barcoded (calibrated) staff the following formula is provided in the staff calibration certificate/report:</p>
+<h3>7.2.4 Height differnces observations correction</h3>
+<p>To correct the height differences of the barcoded staff the following formula is provided in the staff calibration certificate/report:</p>
 <div>$$ ∆H_C=((((T_Obs-T_0)*CoE)+1)*C_{f_{T_0}})*∆H_Obs\ \ \ (Eq. 7.12) $$ </div>
 <p>Where:</p>
 <p>&emsp;&emsp;∆H<sub>C</sub> = corrected height difference</p>
@@ -1373,7 +1373,7 @@ A rectangular distribution represents an arbitrary outcome that lies between cer
 <p>&emsp;&emsp;T<sub>0</sub> = 25.0C</p>
 <p>&emsp;&emsp;CoE = the coefficient of expansion of the barcoded staff</p>
 <p>&emsp;&emsp;C<sub>f<sub>T<sub>0</sub></sub></sub> = the staff correction factor at 25.0C</p>
-<p>&emsp;&emsp;∆H<sub>Obs</sub> = cobserved height difference</p> 
+<p>&emsp;&emsp;∆H<sub>Obs</sub> = cbserved height difference</p> 
 </div>
 <p>End of manual</p>
 </body>
