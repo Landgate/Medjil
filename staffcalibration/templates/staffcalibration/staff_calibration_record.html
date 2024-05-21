@@ -1,6 +1,6 @@
 <!--
 
-   © 2023 Western Australian Land Information Authority
+   © 2024 Western Australian Land Information Authority
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -55,15 +55,22 @@
                     <td>{{ element.job_number }}</td>
                     <!-- <td> <a class="a_link" href="{{ element.inst_staff.get_absolute_url }}">{{ element.inst_staff.staff_number }}</a> </td> -->
                     <td>{{ element.inst_staff.staff_number }}</td>
-                    <td>{{ element.inst_staff.staff_model.model }} ({{ element.inst_staff.staff_model.make }})</td>
+                    <td>{{ element.inst_staff.staff_model_name }} ({{ element.inst_staff.staff_make_name}})</td>
                     <td>{{ element.inst_staff.staff_type|title }}</td>
                     <td>{{ element.scale_factor|stringformat:"1.6f" }}</td>
                     <td class="text-center">
                         {% if element.field_url %}
                             <a href="{{ element.field_url|default_if_none:'#' }}" target="__blank">
-                                <svg version="1.1" baseProfile="tiny" id="report-view" xmlns:x="&ns_extend;" xmlns:i="&ns_ai;" xmlns:graph="&ns_graphs;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/" x="0px" y="0px" width="16" height="16" viewBox="0 0 42 42" xml:space="preserve">
-                                    <path fill-rule="evenodd" d="M22.5,1.5h-14c-2.55,0-3,0.561-3,3v32c0,2.49,0.55,3,3,3h24c2.5,0,3-0.47,3-3v-22h-13V1.5z M35.5,11.5l-10-10v10H35.5z"/>
-                                </svg>
+                            <svg version="1.0" xmlns="http://www.w3.org/2000/svg" id="field-view"
+                             width="16.000000pt" height="14.500000pt" viewBox="0 0 50.000000 50.000000"
+                             preserveAspectRatio="xMidYMid meet">                            
+                            <g transform="translate(0.000000,50.000000) scale(0.100000,-0.100000)"
+                            fill="#000000" stroke="none">
+                            <path d="M70 255 l0 -245 178 2 177 3 3 220 c1 121 0 230 -3 243 -5 22 -7 22 -180 22 l-175 0 0 -245z m50 0 c0 -228 -1 -235 -20 -235 -19 0 -20 7 -20 235 0 228 1 235 20 235 19 0 20 -7 20 -235z m294 219 c8 -20 8 -418 0 -438 -5 -14 -28 -16 -145 -16 l-139 0 0 235 0 235 139 0 c117 0 140 -2 145 -16z"/>
+                            <path d="M294 416 c-3 -8 2 -29 12 -47 l17 -34 15 32 c8 17 12 38 9 47 -8 20 -46 21 -53 2z m36 -12 c0 -8 -5 -12 -10 -9 -6 4 -8 11 -5 16 9 14 15 11 15 -7z"/>
+                            <path d="M178 394 c-26 -14 -28 -19 -28 -80 0 -59 2 -65 18 -58 9 4 29 7 45 6 34 -2 70 -2 105 0 15 1 35 -2 45 -6 16 -8 18 -3 15 60 -2 38 -7 68 -12 66 -6 -1 -9 -25 -7 -53 2 -39 -1 -50 -10 -47 -8 3 -16 15 -20 29 -6 21 -7 22 -8 3 -1 -12 -12 -26 -26 -32 -25 -11 -25 -11 -25 33 0 24 5 47 10 50 16 10 12 25 -5 19 -8 -3 -24 1 -37 10 -27 19 -26 19 -60 0z m20 -61 c-4 -62 -28 -71 -28 -10 0 24 3 47 7 50 16 17 24 3 21 -40z m46 41 c12 -4 16 -20 16 -55 0 -48 0 -48 -25 -37 -21 9 -25 18 -25 55 0 43 5 48 34 37z"/>
+                            </g>
+                            </svg>
                             </a></td>
                         {% else %}
                             <a href="#">-</a>
@@ -73,9 +80,17 @@
                     <td class="text-center">
                         {% if element.report_url %}
                             <a href="{{ element.report_url|default_if_none:'#' }}" target="__blank">
-                                <svg version="1.1" baseProfile="tiny" id="report-view" xmlns:x="&ns_extend;" xmlns:i="&ns_ai;" xmlns:graph="&ns_graphs;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/" x="0px" y="0px" width="16" height="16" viewBox="0 0 42 42" xml:space="preserve">
-                                    <path fill-rule="evenodd" d="M22.5,1.5h-14c-2.55,0-3,0.561-3,3v32c0,2.49,0.55,3,3,3h24c2.5,0,3-0.47,3-3v-22h-13V1.5z M35.5,11.5l-10-10v10H35.5z"/>
-                                </svg>
+                            <svg version="1.0" xmlns="http://www.w3.org/2000/svg" id="report-view"
+                             width="16.000000pt" height="14.500000pt" viewBox="0 0 50.000000 50.000000"
+                             preserveAspectRatio="xMidYMid meet">                    
+                            <g transform="translate(0.000000,50.000000) scale(0.100000,-0.100000)" fill="#000000" stroke="none">
+                            <path d="M92 493 c-34 -14 -42 -59 -42 -251 0 -176 1 -191 21 -216 l20 -26 149 0 150 0 17 27 c16 24 18 52 18 226 l0 199 -28 24 c-27 23 -34 24 -160 23 -73 0 -138 -3 -145 -6z m295 -53 c19 -35 14 -383 -5 -402 -9 -9 -52 -14 -137 -16 -173 -5 -165 -15 -165 221 0 242 -10 228 163 225 129 -3 132 -3 144 -28z"/>
+                            <path d="M120 300 l0 -110 120 0 c100 0 120 3 120 15 0 12 -18 15 -105 15 l-105 0 0 95 c0 78 -3 95 -15 95 -12 0 -15 -19 -15 -110z"/>
+                            <path d="M317 349 c-26 -20 -29 -20 -46 -5 -10 9 -22 16 -27 16 -14 0 -74 -63 -74 -78 0 -21 23 -13 46 15 21 27 23 27 42 10 19 -17 21 -17 66 10 43 26 53 43 30 50 -5 1 -22 -7 -37 -18z"/>
+                            <path d="M120 145 c0 -12 20 -15 120 -15 100 0 120 3 120 15 0 13 -20 15 -120 15 -100 0 -120 -2 -120 -15z"/>
+                            <path d="M120 85 c0 -12 20 -15 120 -15 100 0 120 3 120 15 0 13 -20 15 -120 15 -100 0 -120 -2 -120 -15z"/>
+                            </g>
+                            </svg>
                             </a>
                         {% elif element.field_book %}
                             <a href="{% url 'staffcalibration:print_report' element.id %}" target="__blank">
