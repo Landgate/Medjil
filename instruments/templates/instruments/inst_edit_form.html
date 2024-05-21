@@ -26,11 +26,20 @@
         <form action="" class="site-form" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="mb-5 site-form-header bg-indigo-300 rounded px-2">
-                {% if form.instance.pk %}
-                    <h2 class="text-center">Edit an Instrument</h2>
-                {% else %}
-                    <h2 class="text-center">Create an Instrument</h2>
-                {% endif %}
+                <h2 class="text-center"> {% if form.instance.pk %}Edit {% else %}Create {% endif %}
+                {% if inst_type == 'baro' %}
+                 Barometer Instrument
+                 {% elif inst_type == 'thermo'%}
+                 Thermometer Instrument
+                 {% elif inst_type == 'hygro'%}
+                 Hygrometer Instrument
+                 {% elif inst_type == 'psy'%}
+                 Psychrometer Instrument
+                 {% elif inst_type == 'edm'%}
+                 EDM Instrument
+                 {% else %}
+                 {{ inst_type|title }} Instrument</h2>
+                 {% endif %}</h2>
             </div>
             <div class="mt-5 mb-3">
                 {% if form.errors or form.non_field_errors %}
@@ -42,31 +51,33 @@
             </div>
             <table>
                 {% for field in form %}
-                    <tr>
+                    <tr title="{{ field.help_text|safe }}">
                         <td width="25%">
                             <strong>{{ field.label_tag }}</strong>
                         </td>
-                        <td width="65%"> {{ field }} 
+                        <td width="65%"> {{ field }}
+                            {% if 'make_name' in field.name %}
+                                <datalist id="makes">
+                                    <!-- Options will be populated here by JavaScript -->
+                                </datalist>                            
+                            {% elif 'model_name' in field.name %}
+                                <datalist id="models">
+                                    <!-- Options will be populated here by JavaScript -->
+                                </datalist>
+                            {% endif %}
                             <!-- Errors -->
                             {% for error in field.errors %}
                                 <p class="error error-danger">{{ error }}</p>
                             {% endfor %}
-                            <!-- Help text -->
-                            {% if not field.field.widget.attrs.placeholder and field.help_text %}
-                                <p class="helptext">{{ field.help_text }}</p>
-                            {% endif %}
                         </td>
                         <td width="10%">
                             {% if '_specs' in field.name %}
                                 <a href="{% url 'instruments:register_edit' inst_disp=inst_type tab="models" id=None %}" target="_blank"  onclick="return showAddPopup(this);" id="add_spec" 
                                 class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer">&#43;</a>
-                            {% elif 'model' in field.name %}
-                                <a href="{% url 'instruments:inst_model_createby_inst_type' 'level' %}" target="_blank"  onclick="return showAddPopup(this);" id="add_spec" 
-                                class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer">&#43;</a>
                             {% endif %}
                         </td>
                     </tr>
-                {% endfor %}               
+                {% endfor %}
             </table>
 
             {% if request.GET.next %}
@@ -81,53 +92,14 @@
         </form>
     </div>
 </article>
+<script src="{% static 'js/instrument/instrument.js' %}"></script>
+<script src="{% static 'js/instrument/popups.js' %}"></script>
+
+
 <script>
-    function showAddPopup(triggeringLink) {
-        var name = triggeringLink.id.replace(/^add_/, '');
-        href = triggeringLink.href;
-        var win = window.open(href, name, "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=850,width=850,height=500");
-        win.resizeTo(850, win.screen.availHeight *3 / 4);
-        win.focus();
-        return false;
-    }
-
-    function closePopup(win, newID, newRepr) {
-        window.sessionStorage.setItem('new_instance',  newID);
-        win.close();
-    }
-
-    {% if  inst_type == 'level' %}
-        const specOptions = document.querySelector("#id_{{inst_type}}_model")
-    {% else %}
-        const specOptions = document.querySelector("#id_{{inst_type}}_specs") || document.getElementById("id_mets_specs");
-        
-        var inst_comment = document.getElementById('id_comment');
-        inst_comment.addEventListener('input', () => {
-            inst_comment.value = inst_comment.value ? inst_comment.value.trim() : '' ;
-            window.sessionStorage.setItem('inst_comment', inst_comment.value);
-        })
-    {% endif %}
+    const db_makes = {{ makes|safe }};
+    const db_models = {{ models|safe }};
     
-    var SN_Number = document.getElementById("id_{{inst_type}}_number") || document.getElementById("id_mets_number");
-    SN_Number.addEventListener('input', () => {
-        SN_Number.value = SN_Number.value ? SN_Number.value.trim() : '' ;
-        window.sessionStorage.setItem('SN_Number', SN_Number.value);
-    })
-
-    let newInstanceValue = sessionStorage.getItem('new_instance');
-    if (newInstanceValue) {
-        for(var i = 0;i < specOptions.options.length;i++){
-                if(specOptions.options[i].value == newInstanceValue ){
-                    specOptions.options[i].selected = true;
-                }
-            }
-        
-        SN_Number.value = sessionStorage.getItem('SN_Number');
-        inst_comment.value = sessionStorage.getItem('inst_comment');
-        window.sessionStorage.removeItem('SN_Number');
-        window.sessionStorage.removeItem('inst_comment');
-        window.sessionStorage.removeItem('new_instance');
-    }
 </script>
 
 {% endblock %}

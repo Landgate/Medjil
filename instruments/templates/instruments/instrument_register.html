@@ -48,7 +48,7 @@
 			<div class="tab-wrap">
 		    	{% if 'models_list' in tabs.keys %}
     				<input id="tab1" type="radio" name="tabs">
-    				<label for="tab1">Models/Specifications</label>
+    				<label for="tab1">Models</label>
 		    	{% endif %}	
 				<input id="tab2" type="radio" name="tabs" checked="checked">
 				<label for="tab2">Instruments</label>
@@ -280,9 +280,7 @@
     }
 
     function closePopup(win, newID, newRepr) {
-        // $(id).append('<option value=' + newID + ' selected >' + newRepr + '</option>')
-        // console.log(id, newID, newRepr)
-        window.sessionStorage.setItem('new_instance',  newID);
+        window.sessionStorage.setItem('new_model',  newID);
         win.close();
     }
     var data_tabs = document.querySelectorAll('input[name="tabs"]');

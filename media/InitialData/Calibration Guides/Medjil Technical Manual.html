@@ -67,7 +67,7 @@ svg: {
 <a href="#Chapter_6">6 Calibration reports</a>
 </h3>
 <h3>
-<a href="#Chapter_7">7 Barcode staff calibration</a>
+<a href="#Chapter_7">7 Staff calibration</a>
 </h3>
 <br>
 </div>
@@ -1329,7 +1329,7 @@ A rectangular distribution represents an arbitrary outcome that lies between cer
 <p>Regular measurements of the Boya calibration range carried out by Landgate over the years indicated seasonal variations of up to 1 mm, thereby mandating the development of the time-dependent range which are used for (time depandant) staff calibration.</p>
 <p>The range was measured every month over a period of two years and the observations used to estimate the folloing (see figure below) time dependant values of the range height differences.</p>
 <img src="\media\TechnicalManual\tbaseline\Medjil_Technical_Manual\Picture_7_2.png" alt="Boya barcode staff calibration range">
-<p>The calibration range is monitored on a regular basis to ensure the validity of the model.<p> 
+<p>The calibration range is monitored on a regular basis to ensure the stability of the results and to detect potential anomalies.<p> 
 <div id="Chapter_7_2"></div>
 <h2>7.2 Calibration of barcode staff</h2>
 <h3>7.2.1 Mathematical model for the computation of the correction factor of a barcode staff (the staff calibibration)</h3>
@@ -1346,15 +1346,34 @@ A rectangular distribution represents an arbitrary outcome that lies between cer
 <p>For n pins the following set of equtions can be formed:</p>
 <div>$$ \left[\begin{matrix} v_1=1-∆H_{1,2}/(M_2-M_1 )\\v_2=1-∆H_{1,3}/(M_3-M_1 )\\\ldots\\v_{(n-1)}=1-∆H_{(1,n)}/(M_n-M_1 )\\\end{matrix}\right]\ \ \ (Eq. 7.9) $$ </div>
 <p>Where:</p>
-<p>&emsp;&emsp;n = number of pins in the rnge. A pin is a phyical mark on which  the staff is placed. At Boya range a total of 21 pins can be used.</p>
-<p>The abobe equatio can be expressed in a matrix notation:</p>
+<p>&emsp;&emsp;n = number of pins in the range. A pin is a physical mark on which the staff is placed. At Boya range a total of 21 pins can be used.</p>
+<p>The above equation can be expressed in a matrix notation:</p>
 <div>$$ V=AX+w\ \ \ (Eq. 7.10) $$ </div>
 <p>Where:</p>
 <p>&emsp;&emsp;A = [1]</p>
 <p>&emsp;&emsp;X = [C<sub>f</sub>]</p>
 <p>&emsp;&emsp;w = [∆H<sub>1,n</sub>/(M<sub>n</sub>-M<sub>1</sub>)]</p>
-<p>In accordance with Section (5), the observations, along with the waith matrix P (same as per Eq. 7.4) constructed from a-priori standard daviations, undergo a least squares adjustment to obtain the estimated correction factor C<sub>f</sub> of the barcoded staff.</p>
-<p>A posteriori uncertainty of the estimated staff correction factor is dervivied from the a posteriori standard deviation and expanded to achieve 95% confidence level by mupliplying them by coverage factor k = 1.96.</p>
+<p>In accordance with Section (5), the observations, along with the with matrix P (same as per Eq. 7.4) constructed from a-priori standard deviations of height differnces, undergo a least squares adjustment to obtain the estimated correction factor C<sub>f</sub> of the barcoded staff.</p>
+<p>A posteriori uncertainty of the estimated correction factor is dervied from the a posteriori standard deviations to achieve 95% confidence level by multiplying them by coverage factor k = 1.96.</p>
+<h3>7.2.3 Reducing the correction factor to a standard temperature</h3>
+<p>The staff correction factor C<sub>f</sub> is estimated at the average temperature during the staff calibration procedure and is further reduced to the standard temperature T<sub>0</sub> using the following formula:</p>
+<div>$$ C_{f_{T_0}}=C_f*(1+(CoE(T_0-T_{Obs})))\ \ \ (Eq. 7.11) $$ </div>
+<p>Where:</p>
+<p>&emsp;&emsp;C<sub>f<sub>T<sub>0</sub></sub></sub> = the staff correction factor at 25.0C</p>
+<p>&emsp;&emsp;C<sub>f</sub> = the staff correction factor estimated at the average temperature during the time of staff calibration procedure</p>
+<p>&emsp;&emsp;T<sub>0</sub> = 25.0 C</p>
+<p>&emsp;&emsp;T<sub>Obs</sub> = average temperature [C] at the time of staff calibration procedure</p>
+<p>&emsp;&emsp;CoE = the coefficient of expansion of the barcoded staff</p>
+<h3>7.2.4 Height differnce observations correction</h3>
+<p>To correct the height differences of the barcoded staff the following formula is provided in the staff calibration certificate/report:</p>
+<div>$$ ∆H_C=((((T_{Obs}-T_0)*CoE)+1)*C_{f_{T_0}})*∆H_{Obs}\ \ \ (Eq. 7.12) $$ </div>
+<p>Where:</p>
+<p>&emsp;&emsp;∆H<sub>C</sub> = corrected height difference</p>
+<p>&emsp;&emsp;T<sub>Obs</sub> = average temperature [C] at the time of survey</p>
+<p>&emsp;&emsp;T<sub>0</sub> = 25.0C</p>
+<p>&emsp;&emsp;CoE = the coefficient of expansion of the barcoded staff</p>
+<p>&emsp;&emsp;C<sub>f<sub>T<sub>0</sub></sub></sub> = the staff correction factor at 25.0 C</p>
+<p>&emsp;&emsp;∆H<sub>Obs</sub> = observed height difference</p> 
 </div>
 <p>End of manual</p>
 </body>

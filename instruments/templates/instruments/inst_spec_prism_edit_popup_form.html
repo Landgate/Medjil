@@ -28,65 +28,66 @@
             {% csrf_token %}
             <div class="mb-5 site-form-header bg-indigo-300 rounded px-2">
                 {% if form.instance.pk %}
-                    <h2 class="text-center">Edit Prism Specification</h2>
+                    <h2 class="text-center">Edit Prism Model</h2>
                 {% else %}
-                    <h2 class="text-center">Create Prism Specification</h2>
+                    <h2 class="text-center">Create Prism Model</h2>
                 {% endif %}
             </div>
-            
             {% if form.non_field_errors %}
                 <b>{{ form.non_field_errors }}</b>
                 <br>
             {% endif %}
             <table>
-                            <tr>
-                                <td width="35%">Make Name</td>
-                                    <td width="45%">{{ form.inst_make }}
-                                    <datalist id="makes">
-                                        <!-- Options will be populated here by JavaScript -->
-                                    </datalist>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td width="35%">Model Name</td>
-                                <td width="45%">{{ form.inst_model }}
-                                    <datalist id="models">
-                                        <!-- Options will be populated here by JavaScript -->
-                                    </datalist>
-                                </td>
-                            </tr>
+                <!-- Prism Make -->
+                <tr title="{{ form.prism_make_name.help_text }}">
+                    <td width="35%">{{ form.prism_make_name.label }}</td>
+                    <td width="45%">
+                        {{ form.prism_make_name }}
+                        <datalist id="makes">
+                            <!-- Options will be populated here by JavaScript -->
+                        </datalist>
+                        {% for error in form.prism_make_name.errors %}
+                            <p class="error error-danger">{{ error }}</p>
+                        {% endfor %}
+                    </td>
+                </tr>
+                <!-- Prism Model -->
+                <tr title="{{ form.prism_model_name.help_text }}">
+                    <td width="35%">{{ form.prism_model_name.label }}</td>
+                    <td width="45%">
+                        {{ form.prism_model_name }}
+                        <datalist id="models">
+                            <!-- Options will be populated here by JavaScript -->
+                        </datalist>
+                        {% for error in form.prism_model_name.errors %}
+                            <p class="error error-danger">{{ error }}</p>
+                        {% endfor %}
+                    </td>
+                </tr>
+                <!-- Prism Owner -->
                 <tr>
                     <td width="35%">{{ form.prism_owner.label|title }}</td>
                     <td width="45%">{{ form.prism_owner }}</td>
-                    <td width="15%"></td>
                 </tr>
-
-                <tr>
+                <tr title="{{ form.manu_unc_const.help_text }}">
                     <td width="35%">{{ form.manu_unc_const.label|title }}</td>
-                    <td width="45%">{{ form.manu_unc_const }}
+                    <td width="45%">
+                        {{ form.manu_unc_const }}
                         {% for error in form.manu_unc_const.errors %}
                             <p class="error error-danger">{{ error }}</p>
                         {% endfor %}
-                        <!-- Help text -->
-                        {% if not form.manu_unc_const.widget.attrs.placeholder and form.manu_unc_const.help_text %}
-                            <p class="helptext">{{ form.manu_unc_const.help_text }}</p>
-                        {% endif %}
                     </td>
                     <td width="15%">{{ form.units_manu_unc_const }}</td>
                 </tr>
-                <tr>
+                <tr title="{{ form.manu_unc_k.help_text }}">
                     <td width="35%">{{ form.manu_unc_k.label|title }}</td>
-                    <td width="45%">{{ form.manu_unc_k }}
+                    <td width="45%">
+                        {{ form.manu_unc_k }}
                         {% for error in form.manu_unc_k.errors %}
                         <p class="error error-danger">{{ error }}</p>
                         {% endfor %}
-                        <!-- Help text -->
-                        {% if not form.manu_unc_k.widget.attrs.placeholder and form.manu_unc_k.help_text %}
-                            <p class="helptext">{{ form.manu_unc_k.help_text }}</p>
-                        {% endif %}
                     </td>
                 </tr>
-
             </table>
 
             {% if request.GET.next %}
@@ -101,79 +102,14 @@
     </div>
 </article>
 
+<script src="{% static 'js/instrument/instrument.js' %}"></script>
+<script src="{% static 'js/instrument/popups.js' %}"></script>
+
 <script>
-    window.onload = function() {
-        if(!window.location.hash) {
-            window.location = window.location + '#loaded';
-            window.location.reload();
-        }
-    }
+    const db_makes = {{ makes|safe }};
+    const db_models = {{ models|safe }};
     
-        function showAddPopup(triggeringLink) {
-        var name = triggeringLink.id.replace(/^add_/, '');
-        href = triggeringLink.href;
-        var win = window.open(href, name, "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=850,width=600,height=420");
-        win.focus();
-        return false;
-    }
-
-    modelOptions = document.querySelector("#id_prism_model")
-    function closePopup(win, newID, newRepr) {
-        window.sessionStorage.setItem('new_model',  newID);
-        win.close();
-    }
-    
-
-    let newModelValue = sessionStorage.getItem('new_model');
-    if (newModelValue) {
-        for(var i = 0;i < modelOptions.options.length;i++){
-                if(modelOptions.options[i].value == newModelValue ){
-                    modelOptions.options[i].selected = true;
-                }
-            }
-        
-        window.sessionStorage.removeItem('new_model');
-    }
-    //  Refresh Parent Function
-    function refreshParent() 
-        {
-            window.opener.location.reload(true);
-        }
 </script>
-<script>
-    var makes = {{ makes|safe }};
-    var models = {{ models|safe }};
-
-    var dataList = document.getElementById('makes');
-    makes.forEach(function(item) {
-        var option = document.createElement('option');
-        option.value = item.make;
-        dataList.appendChild(option);
-    });
-    filter_models();
-
-    function filter_models(){
-        make_input = document.getElementById('id_inst_make').value.toUpperCase();
-        var dataList = document.getElementById('models');
-        document.getElementById('models').innerHTML = '';
-        
-        if (make_input){
-            var make_object = makes.find(function(record){
-                return record.make === make_input;
-            });
-        }
-        if (make_object){
-            models.forEach(function(item) {
-            if (make_object.id === item.make_id){
-                var option = document.createElement('option');
-                option.value = item.model;
-                dataList.appendChild(option);
-            }
-            });
-        }
-    }
-document.getElementById('id_inst_make').addEventListener('input', filter_models);
-</script>
-<body onunload="javascript:refreshParent()">
+	<body onunload="javascript:refreshParent()">
 
 {% endblock %}

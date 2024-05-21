@@ -45,20 +45,20 @@ class InstrumentModelAdmin(admin.ModelAdmin):
 
 @admin.register(Staff, site=admin_site)
 class StaffAdmin(admin.ModelAdmin):
-    list_display = ['id', 'staff_number', 'staff_owner', 'staff_model', 'staff_type','staff_length','thermal_coefficient', 'created_on', 'modified_on']
-    list_filter = ('staff_model__make', 'staff_owner',)
+    list_display = ['id', 'staff_make_name','staff_model_name', 'staff_number', 'staff_owner', 'staff_type','staff_length','thermal_coefficient', 'created_on', 'modified_on']
+    list_filter = ('staff_make_name', 'staff_owner',)
 
 @admin.register(DigitalLevel, site=admin_site)
 class DigitalLevelAdmin(admin.ModelAdmin):
-    list_display = ('level_number', 'level_owner', 'level_model', 'created_on', 'modified_on')
-    list_filter = ('level_model__make', 'level_owner', )
+    list_display = ('level_make_name','level_model_name', 'level_number', 'level_owner', 'created_on', 'modified_on')
+    list_filter = ('level_make_name', 'level_owner', )
 
 @admin.register(EDM_Specification, site=admin_site)
 class EDM_SpecificationAdmin(admin.ModelAdmin):
-    list_display = ('edm_model', 'edm_owner', 'edm_type')
+    list_display = ('edm_make_name', 'edm_model_name','edm_owner', 'edm_type')
     list_filter = ('edm_owner',)
     fields = ['edm_owner',
-              ('edm_model', 'edm_type'), 
+              ('edm_make_name', 'edm_model_name', 'edm_type'), 
               ('manu_unc_const', 'manu_unc_ppm', 'manu_unc_k'),
               ('unit_length', 'frequency', 'carrier_wavelength', 'manu_ref_refrac_index'),
               'measurement_increments']
@@ -70,10 +70,10 @@ class EDM_InstAdmin(admin.ModelAdmin):
 
 @admin.register(Prism_Specification, site=admin_site)
 class Prism_SpecificationAdmin(admin.ModelAdmin):
-    list_display = ('prism_model',)
+    list_display = ('prism_make_name','prism_model_name',)
     list_filter = ('prism_owner',)
     fields = ['prism_owner',
-              'prism_model', 
+              'prism_make_name', 'prism_model_name', 
               ('manu_unc_const','manu_unc_k')]
 
 @admin.register(Prism_Inst, site=admin_site)
@@ -85,17 +85,18 @@ class Prism_InstAdmin(admin.ModelAdmin):
 ################################
 @admin.register(Mets_Specification, site=admin_site)
 class Mets_SpecificationAdmin(admin.ModelAdmin):
-    list_display = ('mets_model',)
-    list_filter = ('mets_model__inst_type','mets_owner',)
+    list_display = ('mets_model_name',)
+    list_filter = ('inst_type','mets_owner',)
     fields = ['mets_owner', 
-              'mets_model', 
+              'inst_type', 
+              ('mets_make_name', 'mets_model_name'), 
               ('manu_unc_const','manu_unc_k'),
               'measurement_increments']
 
 @admin.register(Mets_Inst, site=admin_site)
 class Mets_InstAdmin(admin.ModelAdmin):
     list_display = ('mets_specs','mets_number')
-    list_filter = ('mets_specs__mets_model','mets_specs__mets_owner', )
+    list_filter = ('mets_specs__mets_model_name','mets_specs__mets_owner', )
 ##############################
 ## CALIBRATION CERTIFICATES ##
 ##############################
@@ -118,7 +119,7 @@ class EDMI_certificateAdmin(admin.ModelAdmin):
 @admin.register(Mets_certificate, site=admin_site)
 class Mets_certificateAdmin(admin.ModelAdmin):
     list_display = ('calibration_date', 'instrument')
-    list_filter = ('instrument__mets_specs__mets_model__inst_type', 
+    list_filter = ('instrument__mets_specs__inst_type', 
                    'instrument',
                    'instrument__mets_specs__mets_owner',)
 ###########################################################################
@@ -141,23 +142,23 @@ try:
 
     @admin.register(Staff, site=medjil_super_site)
     class StaffAdmin(admin.ModelAdmin):
-        list_display = ['id', 'staff_number', 'staff_owner', 'staff_model', 'staff_type','staff_length','thermal_coefficient', 'created_on', 'modified_on']
-        list_filter = ('staff_model__make', 'staff_owner',)
+        list_display = ['id', 'staff_make_name','staff_model_name', 'staff_number', 'staff_owner', 'staff_type','staff_length','thermal_coefficient', 'created_on', 'modified_on']
+        list_filter = ('staff_make_name', 'staff_owner',)
 
     @admin.register(DigitalLevel, site=medjil_super_site)
     class DigitalLevelAdmin(admin.ModelAdmin):
-        list_display = ('level_number', 'level_owner', 'level_model', 'created_on', 'modified_on')
-        list_filter = ('level_model__make', 'level_owner', )
+        list_display = ('level_make_name','level_model_name','level_number', 'level_owner', 'created_on', 'modified_on')
+        list_filter = ('level_make_name', 'level_owner', )
 
     @admin.register(EDM_Specification, site=medjil_super_site)
     class EDM_SpecificationAdmin(admin.ModelAdmin):
-        list_display = ('edm_model', 'edm_owner', 'edm_type')
+        list_display = ('edm_make_name', 'edm_model_name','edm_owner', 'edm_type')
         list_filter = ('edm_owner',)
         fields = ['edm_owner',
-                ('edm_model', 'edm_type'), 
-                ('manu_unc_const', 'manu_unc_ppm', 'manu_unc_k'),
-                ('unit_length', 'frequency', 'carrier_wavelength', 'manu_ref_refrac_index'),
-                'measurement_increments']
+                  ('edm_make_name', 'edm_model_name', 'edm_type'), 
+                  ('manu_unc_const', 'manu_unc_ppm', 'manu_unc_k'),
+                  ('unit_length', 'frequency', 'carrier_wavelength', 'manu_ref_refrac_index'),
+                  'measurement_increments']
 
     @admin.register(EDM_Inst, site=medjil_super_site)
     class EDM_InstAdmin(admin.ModelAdmin):
@@ -166,11 +167,11 @@ try:
 
     @admin.register(Prism_Specification, site=medjil_super_site)
     class Prism_SpecificationAdmin(admin.ModelAdmin):
-        list_display = ('prism_model',)
+        list_display = ('prism_make_name','prism_model_name',)
         list_filter = ('prism_owner',)
         fields = ['prism_owner',
-                'prism_model', 
-                ('manu_unc_const','manu_unc_k')]
+                  'prism_make_name', 'prism_model_name', 
+                  ('manu_unc_const','manu_unc_k')]
 
     @admin.register(Prism_Inst, site=medjil_super_site)
     class Prism_InstAdmin(admin.ModelAdmin):
@@ -179,17 +180,18 @@ try:
 
     @admin.register(Mets_Specification, site=medjil_super_site)
     class Mets_SpecificationAdmin(admin.ModelAdmin):
-        list_display = ('mets_model',)
-        list_filter = ('mets_model__inst_type','mets_owner',)
+        list_display = ('mets_model_name',)
+        list_filter = ('inst_type','mets_owner',)
         fields = ['mets_owner', 
-                'mets_model', 
-                ('manu_unc_const','manu_unc_k'),
-                'measurement_increments']
+                  'inst_type', 
+                  ('mets_make_name', 'mets_model_name'), 
+                  ('manu_unc_const','manu_unc_k'),
+                  'measurement_increments']
 
     @admin.register(Mets_Inst, site=medjil_super_site)
     class Mets_InstAdmin(admin.ModelAdmin):
         list_display = ('mets_specs','mets_number')
-        list_filter = ('mets_specs__mets_model','mets_specs__mets_owner', )
+        list_filter = ('mets_specs__mets_model_name','mets_specs__mets_owner', )
 
     @admin.register(EDMI_certificate, site=medjil_super_site)
     class EDMI_certificateAdmin(admin.ModelAdmin):
@@ -210,7 +212,7 @@ try:
     @admin.register(Mets_certificate, site=medjil_super_site)
     class Mets_certificateAdmin(admin.ModelAdmin):
         list_display = ('calibration_date', 'instrument')
-        list_filter = ('instrument__mets_specs__mets_model__inst_type', 
+        list_filter = ('instrument__mets_specs__inst_type', 
                     'instrument',
                     'instrument__mets_specs__mets_owner',)
 

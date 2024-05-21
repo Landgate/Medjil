@@ -203,7 +203,7 @@ def register_edit(request, inst_disp, tab, id):
                                             request.FILES or None, 
                                             instance = obj, 
                                             user = request.user)
-    makes_qs = InstrumentMake.objects.all()
+    makes_qs = InstrumentMake.objects.exclude(make='OTHERS')
     makes = list(makes_qs.values())
     models_qs = InstrumentModel.objects.filter(inst_type=inst_disp)
     models = list(models_qs.values())
@@ -220,12 +220,6 @@ def register_edit(request, inst_disp, tab, id):
         # Commit content to the database
         frm = form.cleaned_data
         instance = form.save(commit=False)
-        if tab == 'models':
-            instance.prism_model, created = InstrumentModel.objects.get_or_create(
-                inst_type=inst_disp,
-                make = get_object_or_404(InstrumentMake, make = frm['inst_make']),                
-                model=frm['inst_model']
-            )
 
         # Convert input to database standard units
         if inst_disp != 'hygro':
@@ -259,6 +253,7 @@ def register_edit(request, inst_disp, tab, id):
             
         instance.save()
         
+
         if tab == 'models':
             return HttpResponse('<script>opener.closePopup(window, "%s", "%s");</script>' % (instance.pk, instance))
         else:
@@ -389,11 +384,11 @@ def instrument_register(request, inst_disp):
         or inst_disp == 'hygro' or inst_disp == 'psy'):
         
         tabs['models_list'] = Mets_Specification.objects.filter(
-            mets_model__inst_type = inst_disp)
+            inst_type = inst_disp)
         tabs['insts_list'] = Mets_Inst.objects.filter(
-            mets_specs__mets_model__inst_type = inst_disp)
+            mets_specs__inst_type = inst_disp)
         tabs['certificates_list'] = (Mets_certificate.objects.filter(
-            instrument__mets_specs__mets_model__inst_type = inst_disp)
+            instrument__mets_specs__inst_type = inst_disp)
             .order_by('instrument__mets_number', '-calibration_date')
             .values('pk', 'instrument__mets_number',
                     'calibration_date',
@@ -501,7 +496,17 @@ def inst_level_create_popup(request):
                 # return redirect('accounts:user-account')
     else:
         form = DigitalLevelCreateForm(user= request.user)
-    return render(request, 'instruments/inst_level_create_popup_form.html', {'form':form})
+
+    makes_qs = InstrumentMake.objects.exclude(make='OTHERS')
+    makes = list(makes_qs.values())
+    models_qs = InstrumentModel.objects.filter(inst_type='level')
+    models = list(models_qs.values())
+    context = {
+        'form':form,
+        'makes': makes,
+        'models': models
+        }
+    return render(request, 'instruments/inst_level_create_popup_form.html', context)
 
 #####################################################################################
 class DigitalLevelCreateView(LoginRequiredMixin, generic.CreateView):
@@ -511,7 +516,15 @@ class DigitalLevelCreateView(LoginRequiredMixin, generic.CreateView):
         return kwargs
 
     def get(self, request, *args, **kwargs):
-        context = {'form': DigitalLevelCreateForm(user=self.request.user)}
+        makes_qs = InstrumentMake.objects.exclude(make='OTHERS')
+        makes = list(makes_qs.values())
+        models_qs = InstrumentModel.objects.filter(inst_type='level')
+        models = list(models_qs.values())
+        context = {
+            'form': DigitalLevelCreateForm(user=self.request.user),
+            'makes': makes,
+            'models': models
+            }
         return render(request, 'instruments/inst_level_create_form.html', context)
 
     def post(self, request, *args, **kwargs):
@@ -553,6 +566,15 @@ class StaffCreationWizard(LoginRequiredMixin, NamedUrlSessionWizardView):
         #     kwargs['inst_type'] = 'staff'
         return kwargs
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        makes_qs = InstrumentMake.objects.exclude(make='OTHERS')
+        models_qs = InstrumentModel.objects.filter(inst_type='staff')
+        
+        context['makes'] = list(makes_qs.values())
+        context['models'] = list(models_qs.values())
+        return context
+    
     def done(self, form_list, **kwargs):
         data = {k: v for form in form_list for k, v in form.cleaned_data.items()}
         inst_number = data['staff_number']
@@ -626,15 +648,23 @@ class StaffCreationWizardPopUp(LoginRequiredMixin, NamedUrlSessionWizardView):
     def get_form_kwargs(self, step=1):
         kwargs = super(StaffCreationWizardPopUp, self).get_form_kwargs(step)
         kwargs['user'] = self.request.user
-        # if step == 'inst_model_form':
-        #     kwargs['inst_type'] = 'staff'
         return kwargs
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        makes_qs = InstrumentMake.objects.exclude(make='OTHERS')
+        models_qs = InstrumentModel.objects.filter(inst_type='staff')
+        
+        context['makes'] = list(makes_qs.values())
+        context['models'] = list(models_qs.values())
+        return context
+    
     def done(self, form_list, **kwargs):
         data = {k: v for form in form_list for k, v in form.cleaned_data.items()}
         inst_number = data['staff_number']
         inst_owner = data['staff_owner']
-        inst_model = data['staff_model']
+        inst_make = data['staff_make_name']
+        inst_model = data['staff_model_name']
 
         # Other parameters
         staff_type = data['staff_type']
@@ -648,7 +678,8 @@ class StaffCreationWizardPopUp(LoginRequiredMixin, NamedUrlSessionWizardView):
             inst_staff = Staff.objects.create(
                     staff_owner = inst_owner,
                     staff_number = inst_number,
-                    staff_model = inst_model,
+                    staff_make_name = inst_make,
+                    staff_model_name = inst_model,
                     staff_type = staff_type,
                     staff_length = staff_length,
                     thermal_coefficient = thermal_coefficient,
@@ -668,7 +699,8 @@ class StaffCreationWizardPopUp(LoginRequiredMixin, NamedUrlSessionWizardView):
             inst_staff = Staff.objects.create(
                     staff_owner = inst_owner,
                     staff_number = inst_number,
-                    staff_model = inst_model,
+                    staff_make_name = inst_make,
+                    staff_model_name = inst_model,
                     staff_type = staff_type,
                     staff_length = staff_length,
                     thermal_coefficient = thermal_coefficient,
@@ -695,8 +727,14 @@ def inst_staff_update(request, id):
     if form.is_valid():
         form.save()
         return redirect ('instruments:home', inst_disp='staff')
+    makes_qs = InstrumentMake.objects.exclude(make='OTHERS')
+    makes = list(makes_qs.values())
+    models_qs = InstrumentModel.objects.filter(inst_type='level')
+    models = list(models_qs.values())
     context = {
-        'form': form
+        'form': form,
+        'makes': makes,
+        'models': models
         }
     return render(request, 'instruments/inst_edit_form.html', context)
 

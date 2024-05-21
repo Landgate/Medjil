@@ -86,7 +86,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 "ordering": ["edm_specs"],
-                "verbose_name": "EDM Instruments",
+                "verbose_name": "EDM Instrument",
             },
         ),
         migrations.CreateModel(
@@ -392,6 +392,29 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 (
+                    "prism_make_name",
+                    models.CharField(
+                        max_length=25,
+                        verbose_name="Prism Make Name",
+                        validators=[common_func.validators.validate_profanity]),
+
+                ),                (
+                    "prism_model_name",
+                    models.CharField(
+                        max_length=25,
+                        verbose_name="Prism Model Name",
+                        validators=[common_func.validators.validate_profanity]),
+
+                ),
+                (
+                    "prism_owner",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="accounts.company",
+                        verbose_name="Prism Owner",
+                    ),
+                ),
+                (
                     "manu_unc_const",
                     models.FloatField(
                         help_text="Manufacturers centring accuracy = ±1mm",
@@ -416,28 +439,11 @@ class Migration(migrations.Migration):
                 ),
                 ("created_on", models.DateTimeField(auto_now_add=True, null=True)),
                 ("modified_on", models.DateTimeField(auto_now=True, null=True)),
-                (
-                    "prism_model",
-                    models.ForeignKey(
-                        limit_choices_to={"inst_type__exact": "prism"},
-                        on_delete=django.db.models.deletion.PROTECT,
-                        to="instruments.instrumentmodel",
-                    ),
-                ),
-                (
-                    "prism_owner",
-                    models.ForeignKey(
-                        null=True,
-                        on_delete=django.db.models.deletion.SET_NULL,
-                        to="accounts.company",
-                        verbose_name="Prism Owner",
-                    ),
-                ),
             ],
             options={
-                "ordering": ["prism_model"],
-                "unique_together": {("prism_model", "prism_owner")},
-                	"verbose_name": "Prism Models/Specifications",
+                "ordering": ["prism_make_name", "prism_model_name"],
+                "unique_together": {("prism_make_name", "prism_model_name", "prism_owner")},
+                	"verbose_name": "Prism Model",
             },
         ),
         migrations.CreateModel(
@@ -494,14 +500,14 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.PROTECT,
                         to="instruments.prism_specification",
-                        verbose_name="Prism Specification",
+                        verbose_name="Prism Model",
                     ),
                 ),
             ],
             options={
                 "ordering": ["prism_specs"],
                 "unique_together": {("prism_specs", "prism_number")},
-                "verbose_name": "Prism Instruments"
+                "verbose_name": "Prism Instrument"
             },
         ),
         migrations.CreateModel(
@@ -514,6 +520,49 @@ class Migration(migrations.Migration):
                         primary_key=True,
                         serialize=False,
                         verbose_name="ID",
+                    ),
+                ),
+                (
+                    "mets_make_name",
+                    models.CharField(
+                        max_length=25,
+                        verbose_name="Instrument Make Name",
+                        validators=[common_func.validators.validate_profanity]),
+
+                ),                (
+                    "mets_model_name",
+                    models.CharField(
+                        max_length=25,
+                        verbose_name="Instrument Model Name",
+                        validators=[common_func.validators.validate_profanity]),
+
+                ),
+                (
+                    "mets_owner",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="accounts.company",
+                        verbose_name="Instrument Owner",
+                    ),
+                ),
+                (
+                    "inst_type",
+                    models.CharField(
+                        choices=[
+                            (None, "Select one of the following"),
+                            ("edm", "Total Station EDM"),
+                            ("prism", "Prism"),
+                            ("level", "Digital Level"),
+                            ("staff", "Barcoded Staff"),
+                            ("baro", "Barometer"),
+                            ("thermo", "Thermometer"),
+                            ("hygro", "Hygrometer"),
+                            ("psy", "Psychrometer"),
+                            ("others", "Others"),
+                        ],
+                        max_length=6,
+                        null=True,
+                        verbose_name="instrument type",
                     ),
                 ),
                 (
@@ -551,32 +600,11 @@ class Migration(migrations.Migration):
                 ),
                 ("created_on", models.DateTimeField(auto_now_add=True, null=True)),
                 ("modified_on", models.DateTimeField(auto_now=True, null=True)),
-                (
-                    "mets_model",
-                    models.ForeignKey(
-                        limit_choices_to=models.Q(
-                            ("inst_type__exact", "baro"),
-                            ("inst_type__exact", "thermo"),
-                            ("inst_type__exact", "hygro"),
-                            ("inst_type__exact", "psy"),
-                            _connector="OR",
-                        ),
-                        on_delete=django.db.models.deletion.PROTECT,
-                        to="instruments.instrumentmodel",
-                    ),
-                ),
-                (
-                    "mets_owner",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.PROTECT,
-                        to="accounts.company",
-                    ),
-                ),
             ],
             options={
-                "ordering": ["mets_model"],
-                "unique_together": {("mets_model", "mets_owner")},
-                "verbose_name": "Meteorological Instrument Models",
+                "ordering": ["mets_make_name", "mets_model_name"],
+                "unique_together": {("inst_type", "mets_make_name", "mets_model_name", "mets_owner")},
+                "verbose_name": "Meteorological Instrument Model",
             },
         ),
         migrations.CreateModel(
@@ -633,14 +661,14 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.PROTECT,
                         to="instruments.mets_specification",
-                        verbose_name="instrument specifications",
+                        verbose_name="instrument Model",
                     ),
                 ),
             ],
             options={
                 "ordering": ["mets_specs"],
                 "unique_together": {("mets_specs", "mets_number")},
-                "verbose_name": "Meteorological Instruments",
+                "verbose_name": "Meteorological Instrument",
             },
         ),
         migrations.CreateModel(
@@ -735,7 +763,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 "ordering": ["instrument", "calibration_date"],
-                "verbose_name": "Meteorological Calibration Certificates",
+                "verbose_name": "Meteorological Calibration Certificate",
             },
         ),
         migrations.CreateModel(
@@ -1141,7 +1169,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 "ordering": ["edm", "calibration_date"],
-                "verbose_name": "EDMI Calibration Certificates",
+                "verbose_name": "EDMI Calibration Certificate",
             },
         ),
         migrations.CreateModel(
@@ -1154,6 +1182,29 @@ class Migration(migrations.Migration):
                         primary_key=True,
                         serialize=False,
                         verbose_name="ID",
+                    ),
+                ),
+                (
+                    "edm_make_name",
+                    models.CharField(
+                        max_length=25,
+                        verbose_name="EDM Make Name",
+                        validators=[common_func.validators.validate_profanity]),
+
+                ),                (
+                    "edm_model_name",
+                    models.CharField(
+                        max_length=25,
+                        verbose_name="EDM Model Name",
+                        validators=[common_func.validators.validate_profanity]),
+
+                ),
+                (
+                    "edm_owner",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="accounts.company",
+                        verbose_name="EDM Owner",
                     ),
                 ),
                 (
@@ -1279,28 +1330,11 @@ class Migration(migrations.Migration):
                 ),
                 ("created_on", models.DateTimeField(auto_now_add=True, null=True)),
                 ("modified_on", models.DateTimeField(auto_now=True, null=True)),
-                (
-                    "edm_model",
-                    models.ForeignKey(
-                        limit_choices_to={"inst_type__exact": "edm"},
-                        on_delete=django.db.models.deletion.PROTECT,
-                        to="instruments.instrumentmodel",
-                        verbose_name="EDM model",
-                    ),
-                ),
-                (
-                    "edm_owner",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.PROTECT,
-                        to="accounts.company",
-                        verbose_name="EDM owner",
-                    ),
-                ),
             ],
             options={
-                "ordering": ["edm_model"],
-                "unique_together": {("edm_model", "edm_owner")},
-                "verbose_name": "EDM Models/Specifications"
+                "ordering": ["edm_make_name", "edm_model_name"],
+                "unique_together": {("edm_make_name", "edm_model_name", "edm_owner")},
+                "verbose_name": "EDM Model"
             },
         ),
         migrations.AddField(
@@ -1310,7 +1344,7 @@ class Migration(migrations.Migration):
                 null=False, blank=False,
                 on_delete=django.db.models.deletion.PROTECT,
                 to="instruments.edm_specification",
-                verbose_name="EDM Specification",
+                verbose_name="EDM Model",
             ),
         ),
         migrations.CreateModel(
@@ -1324,6 +1358,22 @@ class Migration(migrations.Migration):
                         serialize=False,
                         verbose_name="ID",
                     ),
+                ),
+                (
+                    "staff_make_name",
+                    models.CharField(
+                        max_length=25,
+                        verbose_name="Staff Make Name",
+                        validators=[common_func.validators.validate_profanity]),
+
+                ),
+                (
+                    "staff_model_name",
+                    models.CharField(
+                        max_length=25,
+                        verbose_name="Staff Model Name",
+                        validators=[common_func.validators.validate_profanity]),
+
                 ),
                 (
                     "staff_number",
@@ -1376,15 +1426,6 @@ class Migration(migrations.Migration):
                 ("created_on", models.DateTimeField(auto_now_add=True, null=True)),
                 ("modified_on", models.DateTimeField(auto_now=True, null=True)),
                 (
-                    "staff_model",
-                    models.ForeignKey(
-                        limit_choices_to={"inst_type__exact": "staff"},
-                        null=True,
-                        on_delete=django.db.models.deletion.CASCADE,
-                        to="instruments.instrumentmodel",
-                    ),
-                ),
-                (
                     "staff_owner",
                     models.ForeignKey(
                         null=True,
@@ -1395,7 +1436,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 "ordering": ["staff_number"],
-                "unique_together": {("staff_number", "staff_owner")},
+                "unique_together": {("staff_make_name","staff_model_name","staff_number", "staff_owner")},
             },
         ),
         migrations.AlterUniqueTogether(
@@ -1415,6 +1456,22 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 (
+                    "level_make_name",
+                    models.CharField(
+                        max_length=25,
+                        verbose_name="Level Make Name",
+                        validators=[common_func.validators.validate_profanity]),
+
+                ),
+                (
+                    "level_model_name",
+                    models.CharField(
+                        max_length=25,
+                        verbose_name="Level Model Name",
+                        validators=[common_func.validators.validate_profanity]),
+
+                ),
+                (
                     "level_number",
                     models.CharField(
                         help_text="Enter the instrument number",
@@ -1426,15 +1483,6 @@ class Migration(migrations.Migration):
                 ("created_on", models.DateTimeField(auto_now_add=True, null=True)),
                 ("modified_on", models.DateTimeField(auto_now=True, null=True)),
                 (
-                    "level_model",
-                    models.ForeignKey(
-                        limit_choices_to={"inst_type__exact": "level"},
-                        null=True,
-                        on_delete=django.db.models.deletion.CASCADE,
-                        to="instruments.instrumentmodel",
-                    ),
-                ),
-                (
                     "level_owner",
                     models.ForeignKey(
                         null=True,
@@ -1444,8 +1492,8 @@ class Migration(migrations.Migration):
                 ),
             ],
             options={
-                "ordering": ["level_number", "level_model"],
-                "unique_together": {("level_number", "level_owner")},
+                "ordering": ["level_number", "level_model_name"],
+                "unique_together": {("level_make_name","level_model_name","level_number", "level_owner")},
             },
         ),
     ]

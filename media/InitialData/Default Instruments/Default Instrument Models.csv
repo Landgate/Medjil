@@ -88,10 +88,10 @@ edm,Sokkia      ,iM 100
 edm,Sokkia      ,FX
 edm,Sokkia      ,iX 600
 edm,Sokkia      ,iX 1200
-edm,Topcon,OS 200
-edm,Topcon,GM 100
-edm,Topcon,OS Series
 edm,Topcon,GM 50
+edm,Topcon,GM 100
+edm,Topcon,OS 200
+edm,Topcon,OS Series
 edm,Topcon,GPT 3500
 edm,Topcon,GTL 1200
 edm,Topcon,GT 1200/600
@@ -134,6 +134,74 @@ staff,Leica,GKNL4M
 staff,Leica,GTL4M 
 staff,Leica,GTL4C
 prism,Leica,GPH1P
+prism,Leica,GPR121
+prism,Leica,GPR111
+prism,Leica,GPH1
+prism,Leica,GPR1
+prism,Leica,GZT4
+prism,Leica,GMP101
+prism,Leica,GMP111
+prism,Leica,GMP111-0
+prism,Leica,GPR105
+prism,Leica,GRZ4
+prism,Leica,GRZ122
+prism,Leica,GRZ101
+prism,Leica,MPR122
+prism,Leica,CPR111
+prism,Leica,GMP004
+prism,Leica,GMP104
+prism,Sokkia      ,360 Robotic Prism
+prism,Sokkia      ,APO1
+prism,Sokkia      ,APO1S
+prism,Sokkia      ,Black AY mini
+prism,Sokkia      ,CST optima
+prism,Sokkia      ,Metal mini prism middle bubble
+prism,Sokkia      ,Metal mini prism side bubble
+prism,Sokkia      ,Plastic mini prism
+prism,Sokkia      ,0/30 Poly prism
+prism,Trimble,360 Prism
+prism,Trimble,Mini Prism
+prism,Trimble,Small Monitoring Prism
+prism,Trimble,Large Monitoring Prism
 baro,DRUCK,DPI740
 thermo,DELTA OHM,HD 2301.0R - HP472ACR
 hygro,DELTA OHM,HD 2301.0R - HP472ACR
+baro,Kestrel,1000
+baro,Kestrel,2000
+baro,Kestrel,2500
+baro,Kestrel,3000
+baro,Kestrel,3500
+baro,Kestrel,3500 DT
+baro,Kestrel,4000
+baro,Kestrel,4200
+baro,Kestrel,4250
+baro,Kestrel,4300
+baro,Kestrel,4400
+baro,Kestrel,4500
+baro,Kestrel,4500 HDR
+thermo,Kestrel,1000
+thermo,Kestrel,2000
+thermo,Kestrel,2500
+thermo,Kestrel,3000
+thermo,Kestrel,3500
+thermo,Kestrel,3500 DT
+thermo,Kestrel,4000
+thermo,Kestrel,4200
+thermo,Kestrel,4250
+thermo,Kestrel,4300
+thermo,Kestrel,4400
+thermo,Kestrel,4500
+thermo,Kestrel,4500 HDR
+hygro,Kestrel,1000
+hygro,Kestrel,2000
+hygro,Kestrel,2500
+hygro,Kestrel,3000
+hygro,Kestrel,3500
+hygro,Kestrel,3500 DT
+hygro,Kestrel,4000
+hygro,Kestrel,4200
+hygro,Kestrel,4250
+hygro,Kestrel,4300
+hygro,Kestrel,4400
+hygro,Kestrel,4500
+hygro,Kestrel,4500 HDR

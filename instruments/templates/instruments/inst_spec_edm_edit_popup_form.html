@@ -27,9 +27,9 @@
             <div class="mb-5 site-form-header bg-indigo-300 rounded px-2">
                 <h2 class="text-center">
                     {% if form.instance.pk %}
-                        Edit EDM Model Specifications
+                        Edit EDM Models
                     {% else %}
-                        Create EDM Model Specifications
+                        Create EDM Models
                     {% endif %}
                 </h2>
             </div>
@@ -39,21 +39,37 @@
                 </div>
             {% endif %}
             <table>
+                <!-- EDM Make -->
+                <tr title="{{ form.edm_make_name.help_text }}">
+                    <td width="35%">{{ form.edm_make_name.label }}</td>
+                    <td width="45%">
+                        {{ form.edm_make_name }}
+                        <datalist id="makes">
+                            <!-- Options will be populated here by JavaScript -->
+                        </datalist>
+                        {% for error in form.edm_make_name.errors %}
+                            <p class="error error-danger">{{ error }}</p>
+                        {% endfor %}
+                    </td>
+                </tr>
+                <!-- EDM Model -->
+                <tr title="{{ form.edm_model_name.help_text }}">
+                    <td width="35%">{{ form.edm_model_name.label }}</td>
+                    <td width="45%">
+                        {{ form.edm_model_name }}
+                        <datalist id="models">
+                            <!-- Options will be populated here by JavaScript -->
+                        </datalist>
+                        {% for error in form.edm_model_name.errors %}
+                            <p class="error error-danger">{{ error }}</p>
+                        {% endfor %}
+                    </td>
+                </tr>
                 <!-- EDM Owner -->
                 <tr title="{{ form.edm_owner.help_text }}">
                     <td width="35%">{{ form.edm_owner.label }}</td>
                     <td width="45%">{{ form.edm_owner }}</td>
                     <td width="15%"></td>
-                </tr>
-                <!-- EDM Model -->
-                <tr title="{{ form.edm_model.help_text }}">
-                    <td width="35%">{{ form.edm_model.label }}</td>
-                    <td width="45%">{{ form.edm_model }}</td>
-                    <td width="15%">
-                        <a href="/instruments/inst_model_createby_inst_type/edm/" target="_blank" 
-                        class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" 
-                        onclick="return showAddPopup(this);" id="add_level">&#43;</a>
-                    </td>
                 </tr>
                 <tr>
                     <td>EDM Specifications Lookup Table</td>
@@ -212,46 +228,13 @@
         </form>
     </div>
 </article>
+<script src="{% static 'js/instrument/instrument.js' %}"></script>
+<script src="{% static 'js/instrument/popups.js' %}"></script>
 
 <script>
-    window.onload = function() {
-        if(!window.location.hash) {
-            window.location = window.location + '#loaded';
-            window.location.reload();
-        }
-    }
-    
-    function showAddPopup(triggeringLink) {
-        var name = triggeringLink.id.replace(/^add_/, '');
-        href = triggeringLink.href;
-        var win = window.open(href, name, "toolbar=yes,scrollbars=yes,resizable=yes,top=200,left=850,width=600,height=420");
-        win.focus();
-        return false;
-    }
+    const db_makes = {{ makes|safe }};
+    const db_models = {{ models|safe }};
 
-    modelOptions = document.querySelector("#id_edm_model")
-    function closePopup(win, newID, newRepr) {
-        window.sessionStorage.setItem('new_model',  newID);
-        win.close();
-    }
-    
-
-    let newModelValue = sessionStorage.getItem('new_model');
-    if (newModelValue) {
-        for(var i = 0;i 
-    < modelOptions.options.length;i++){
-                if(modelOptions.options[i].value == newModelValue ){
-                    modelOptions.options[i].selected = true;
-                }
-            }
-        
-        window.sessionStorage.removeItem('new_model');
-    }
-    //  Refresh Parent Function
-    function refreshParent() 
-        {
-            window.opener.location.reload(true);
-        }
 </script>
 <body onunload="javascript:refreshParent()">
 

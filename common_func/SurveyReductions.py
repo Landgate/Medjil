@@ -677,7 +677,8 @@ def add_calib_uc(uc_sources, calib, pillar_survey):
 def is_float(n):
     try:
         float(n)
-    except ValueError:
+    except ValueError as e:
+        print(e)
         return False
     else:
         return True
@@ -804,35 +805,35 @@ def validate_survey(pillar_survey, baseline=None, calibrations=None,
         for k, o in raw_edm_obs.items():
             #check the values of all data
             if not is_float(o['inst_ht']):
-                Errs.append('instrument height "' +o['inst_ht'] + '" is invalid')
+                Errs.append(f'instrument height "{o["inst_ht"]}" is invalid')
             if not is_float(o['tgt_ht']):
-                Errs.append('target height "' +o['tgt_ht'] + '" is invalid')
+                Errs.append(f'target height "{o["tgt_ht"]}" is invalid')
             if 'hz_direction' in o:
                 if not is_float(o['hz_direction']):
-                    Errs.append('Horizontal Direction "' + o['hz_direction'] + '" is invalid')
+                    Errs.append(f'Horizontal Direction text "{o["hz_direction"]}" is invalid')
                 else: 
                     if float(o['hz_direction']) < 0 or float(o['hz_direction']) > 360:
-                        Errs.append('Horizontal Direction "' + o['hz_direction'] + '" is invalid')
+                        Errs.append(f'Horizontal Direction "{o["hz_direction"]}" is invalid')
             if not is_float(o['raw_slope_dist']):
-                Errs.append('Slope distance "' +o['raw_slope_dist'] + '" is invalid')
+                Errs.append(f"Slope distance {o['raw_slope_dist']} is invalid")
             if not is_float(o['raw_temperature']):
-                Errs.append('Temperature reading "' +o['raw_temperature'] + '" is invalid')
+                Errs.append(f"Temperature reading {o['raw_temperature']} is invalid")
             if not is_float(o['raw_pressure']):
-                Errs.append('Pressure reading "' +o['raw_pressure'] + '" is invalid')
+                Errs.append(f"Pressure reading {o['raw_pressure']} is invalid")
             if not is_float(o['raw_humidity']):
-                Errs.append('Humidity reading "' +o['raw_humidity'] + '" is invalid')
+                Errs.append(f"Humidity reading {o['raw_humidity']} is invalid")
             
-            #Check pillar names are valid
+            # Check pillar names are valid
             if not o['from_pillar'] in pillars:
                 pop_list.append(k)
-                Errs.append('Pillar "' + o['from_pillar'] + '" is not a valid pillar name.'
-                            + 'The observation "' +  o['from_pillar'] + '--' + o['to_pillar'] 
-                            + '" has been removed from the data')
+                Errs.append(f'Pillar "{o["from_pillar"]}" is not a valid pillar name.'
+                            f'The observation "{o["from_pillar"]}--{o["to_pillar"]}" '
+                            'has been removed from the data')
             if not o['to_pillar'] in pillars:
                 pop_list.append(k)
-                Errs.append('Pillar "' + o['to_pillar'] + '" is not a valid pillar name.'
-                            + 'The observation "' +  o['from_pillar'] + '--' + o['to_pillar'] 
-                            + '" has been removed from the data')
+                Errs.append(f'Pillar "{o["to_pillar"]}" is not a valid pillar name.'
+                            f'The observation "{o["from_pillar"]}--{o["to_pillar"]}" '
+                            'has been removed from the data')
         for pop_it in pop_list:
             raw_edm_obs.pop(pop_it, None)
     
@@ -898,12 +899,12 @@ def validate_survey(pillar_survey, baseline=None, calibrations=None,
         lvl_nmes =[]
         for k, o in raw_lvl_obs.items():
             if not is_float(o['reduced_level']):
-                 Errs.append('Reduced Level reading "' +o['reduced_level'] + '"is invalid')
-            if not is_float(o['std_dev']):
-                 Errs.append('Reduced Level standard deviation "' +o['std_dev'] + '"is invalid')
-            else:
-                if o['std_dev']==0:
-                    o['std_dev']=0.00001
+                 Errs.append(f"Reduced Level reading {o['reduced_level']} is invalid")
+            # if not is_float(o['std_dev']):
+            #      Errs.append(f"Reduced Level standard deviation '{o['std_dev']}' is invalid")
+            # else:
+            #     if float(o['std_dev'])==0:
+            #         o['std_dev']=0.00001
             
             if not o['pillar'] in lvl_nmes:
                 lvl_nmes.append(o['pillar'])
