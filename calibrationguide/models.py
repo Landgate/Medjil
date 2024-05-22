@@ -85,10 +85,7 @@ class CalibrationInstruction(models.Model):
 
     def __str__(self):
         return self.title
-    
-    def get_absolute_url(self):
-        return reverse("calibrationguide:detail", args=[self.id])
-    
+        
     def save(self, *args, **kwargs):
         super(CalibrationInstruction, self).save(*args, **kwargs)
         img = PilImage.open(self.thumbnail.path)
@@ -167,9 +164,6 @@ class TechnicalManual(models.Model):
 
     def __str__(self):
         return self.title
-    
-    def get_absolute_url(self):
-        return reverse("calibrationguide:manual-detail", args=[self.id])
     
     def save(self, *args, **kwargs):
         super(TechnicalManual, self).save(*args, **kwargs)
