@@ -23,7 +23,7 @@ from django.utils.safestring import mark_safe
 from django.http import HttpResponse
 from django.contrib import messages
 from django.shortcuts import render, redirect
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.views import generic
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
@@ -707,9 +707,12 @@ def delete_record(request, id):
             }
             
     # Delete Range datasets
-    RawDataModel.objects.get(calibration_id=thisRecord).delete()
-    HeightDifferenceModel.objects.get(calibration_id=thisRecord).delete()
-    AdjustedDataModel.objects.get(calibration_id=thisRecord).delete()
+    try:
+        RawDataModel.objects.get(calibration_id=thisRecord).delete()
+        HeightDifferenceModel.objects.get(calibration_id=thisRecord).delete()
+        AdjustedDataModel.objects.get(calibration_id=thisRecord).delete()
+    except ObjectDoesNotExist:
+        pass
 
     # Get month
     m_number = thisRecord.calibration_date.month

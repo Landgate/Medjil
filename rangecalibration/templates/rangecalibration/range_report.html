@@ -38,7 +38,7 @@
       <div class="text-center">
         <h2>Range Calibration Report</h2>
       </div>
-      <div class="adjust-button text-right">
+      <div class="text-right" id="adjust-button">
         <a href="{% url 'rangecalibration:adjust' calibration_id %}" target="_blank" >
           <button class="px-3 py-1 border border-transparent leading-4 font-medium rounded text-lg text-white bg-red-600 hover:bg-red-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out" >Adjust&raquo;</button>
         </a>
@@ -104,7 +104,7 @@
 <script>
   let allowLeave = false;
 
-  document.querySelector('.adjust-button').addEventListener('click', function(e) {
+  document.getElementById('adjust-button').addEventListener('click', function(e) {
     if(e.target.tagName === 'BUTTON') {
       allowLeave = true;
     }
@@ -112,7 +112,7 @@
 
   window.onbeforeunload = function() {
     if (!allowLeave) {
-      return "Have you printed the Range Calibration Report?";
+      return "Please perform the adjustment by clicking the Adjust button! If you choose to leave, your data will not be saved!";
     }
   };
 </script>
