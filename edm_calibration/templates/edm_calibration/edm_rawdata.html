@@ -73,11 +73,11 @@
                 </table>
             </div>
             <div class="button-container">
-                <a href= "{% url 'edm_calibration:calibrate1' id=id %}" class="submit-button bg-green-500 hover:bg-green-400" style="text-align: center">Back</button>
+                <button onclick="window.location.href='{% url 'edm_calibration:calibrate1' id=id %}'" class="submit-button bg-green-500 hover:bg-green-400" style="text-align: center">Back</button>
                     {% if pillar_survey.certificate %}
-                        <a href= "{% url 'edm_calibration:pillar_survey_del' id=pillar_survey.pk %}" class="submit-button bg-red-500 hover:bg-green-400" style="text-align: center"> Cancel</a>
+                        <button onclick="window.location.href='{% url 'edm_calibration:pillar_survey_del' id=pillar_survey.pk %}'" class="submit-button bg-red-500 hover:bg-green-400" style="text-align: center"> Cancel</button>
                     {% else %}
-                        <a href= "{% url 'edm_calibration:edm_calibration_home' %}" class="submit-button bg-red-500 hover:bg-green-400" style="text-align: center">Cancel</a>
+                        <button onclick="window.location.href='{% url 'edm_calibration:edm_calibration_home' %}'" class="submit-button bg-red-500 hover:bg-green-400">Cancel</button>
                     {% endif %}
                     <button type="button" class="submit-button bg-green-500 hover:bg-green-400" onclick="submit_it()">Next</button>
             </div>

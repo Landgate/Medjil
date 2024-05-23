@@ -101,20 +101,19 @@
 
             <div class="wizard-button-container">
 				{% if wizard.steps.prev %}
-					<button class="next-button bg-indigo-400 hover:bg-indigo-300 text-base" name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}" formnovalidate> {% trans "<span>&#171;</span> Previous" %}</button>
+					<button class="next-button bg-indigo-400 hover:bg-indigo-300" name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}" formnovalidate> {% trans "<span>&#171;</span> Previous" %}</button>
                     <!-- <button class="next-button bg-green-500 hover:bg-green-300" name="wizard_goto_step" type="submit" value="{{ wizard.steps.first }}" formnovalidate>{% trans "First" %}</button> -->
                 {% endif %}
 
 				{% if wizard.steps.next %}
-					<button class="next-button bg-green-500 hover:bg-green-400 text-base" type="submit">Next</button>
+					<button class="next-button bg-green-500 hover:bg-green-400" type="submit">Next</button>
 				{% else %}
-					<button class="next-button bg-green-500 hover:bg-green-400 text-base" type="submit">Save</button>
+					<button class="next-button bg-green-500 hover:bg-green-400" type="submit">Save</button>
 				{% endif %}
 				{% if request.GET.next %}
-    				<a href= {{ request.GET.next }} class="cancelbtn bg-red-500 hover:bg-red-300 text-center">Cancel</a>
+    				<button onclick="window.location.href='{{ request.GET.next }}'" type="button" class="cancelbtn bg-red-500 hover:bg-red-300">Cancel</button>
 				{% else %}
-    				<!-- <a href="{% url 'instruments:home' inst_disp='staff' %}" class="cancelbtn bg-red-500 hover:bg-red-300 text-center">Cancel</a> -->
-                    <button onclick="closeWin()" class="cancelbtn bg-red-500 hover:bg-red-300 text-center" type="submit">Cancel</button>
+                    <button onclick="closeWin()" class="cancelbtn bg-red-500 hover:bg-red-300" type="submit">Cancel</button>
         {% endif %}
 			</div>
         </form>

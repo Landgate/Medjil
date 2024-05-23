@@ -59,7 +59,7 @@
             {% endif %}
             <div class="button-container">
                 <a onclick=history.back() class="submit-button bg-green-500 hover:bg-green-400" style="text-align: center">Back</button>
-                <a href= "{% url 'baseline_calibration:calibration_home' %}" class="submit-button bg-red-500 hover:bg-green-400" style="text-align: center">Cancel</a>
+                <button onclick="window.location.href='{% url 'baseline_calibration:calibration_home' %}'" class="submit-button bg-red-500 hover:bg-green-400">Cancel</button>
             </div>
         </div>
     </div>

@@ -106,16 +106,16 @@
 			<br>
 			<div class="wizard-button-container">
 				{% if wizard.steps.prev %}
-					<button class="next-button bg-indigo-400 hover:bg-indigo-300 text-base" name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}" formnovalidate> {% trans "<span>&#171;</span> Previous" %}</button>
+					<button class="next-button bg-indigo-400 hover:bg-indigo-300" name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}" formnovalidate> {% trans "<span>&#171;</span> Previous" %}</button>
                     <!-- <button class="next-button bg-green-500 hover:bg-green-300" name="wizard_goto_step" type="submit" value="{{ wizard.steps.first }}" formnovalidate>{% trans "First" %}</button> -->
                 {% endif %}
 
 				{% if wizard.steps.next %}
-					<a href="{% url 'rangecalibration:home' %}" class="cancelbtn bg-red-500 hover:bg-red-300 text-center">Cancel</a>
-					<button class="next-button bg-green-500 hover:bg-green-500 text-base" type="submit">Next</button>
+					<button onclick="window.location.href='{% url 'rangecalibration:home' %}'" class="cancelbtn bg-red-500 hover:bg-red-300">Cancel</button>
+					<button class="next-button bg-green-500 hover:bg-green-500" type="submit">Next</button>
 				{% else %}
-					<a href="{% url 'rangecalibration:home' %}" class="cancelbtn bg-red-500 hover:bg-red-300 text-center">Cancel</a>
-					<button class="next-button bg-green-500 hover:bg-green-500 text-base" type="submit">Save</button>
+					<button onclick="window.location.href='{% url 'rangecalibration:home' %}'" class="cancelbtn bg-red-500 hover:bg-red-300">Cancel</button>
+					<button class="next-button bg-green-500 hover:bg-green-500" type="submit">Save</button>
 				{% endif %}
 			</div>
 		</form>

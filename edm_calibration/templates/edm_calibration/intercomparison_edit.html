@@ -66,8 +66,8 @@
                 {% endfor %}
             </table>
             <div class="button-container">
-                <a href= "{% url 'edm_calibration:intercomparison_home' %}" class="submit-button bg-red-500 hover:bg-green-400" style="text-align: center">Cancel</a>
-                <button class="submit-button bg-green-500 hover:bg-green-400 text-base" type="submit" >Compute</button>
+                <button onclick="window.location.href='{% url 'edm_calibration:intercomparison_home' %}'" class="submit-button bg-red-500 hover:bg-green-400">Cancel</button>
+                <button class="submit-button bg-green-500 hover:bg-green-400" type="submit" >Compute</button>
             </div>
         </form>
     </div>

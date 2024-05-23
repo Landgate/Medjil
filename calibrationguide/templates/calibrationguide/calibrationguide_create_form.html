@@ -75,8 +75,8 @@
             <button id="add-image-form" class="mt-2 mb-4 px-2 py-1 bg-indigo-400 border-transparent rounded text-white">Add more photos</button>
 
             <div class="button-container">
-                <a href="{% url 'calibrationguide:guide_view' %}" class="cancelbtn bg-red-500 hover:bg-red-300 text-center">Cancel</a>            	
-                <button class="next-button bg-green-500 hover:bg-green-400 text-base" type="submit">Save</button>
+                <button onclick="window.location.href='{% url 'calibrationguide:guide_view' %}'" class="cancelbtn bg-red-500 hover:bg-red-300">Cancel</button>
+                <button class="next-button bg-green-500 hover:bg-green-400" type="submit">Save</button>
             </div>
         </form>
     </div>

@@ -81,8 +81,8 @@
                     </label>
                 </div>
                 <div class="button-container">
-                	  <a href="{% url 'home' %}" class="cancelbtn bg-red-500 hover:bg-red-500 text-center">Cancel</a>
-                    <button class="submit-button bg-green-500 hover:bg-green-500 text-base" type="submit" >Sign up</button>
+                	  <button onclick="window.location.href='{% url  'home' %}'" class="cancelbtn bg-red-500 hover:bg-red-500">Cancel</button>
+                    <button class="submit-button bg-green-500 hover:bg-green-500" type="submit" >Sign up</button>
                 </div>
             </form>
         </div>
