@@ -25,6 +25,7 @@ class Migration(migrations.Migration):
                 blank=True,
                 help_text="Calibration report/certificate in pdf/jpg/tif format.",
                 null=True,
+                max_length=1000,
                 upload_to=staffcalibration.models.get_upload_to_calibreport,
                 validators=[common_func.validators.validate_file_size],
                 verbose_name="Calibration certificate",

@@ -322,6 +322,7 @@ class EDM_Inst(models.Model):
         upload_to=get_upload_to_edm_photos,
         null=True,
         blank=True,
+        max_length=1000,
         validators=[validate_file_size],
         verbose_name='Instrument Photo'
     )
@@ -427,6 +428,7 @@ class Prism_Inst(models.Model):
         upload_to=get_upload_to_prism_photos,
         null=True,
         blank=True,
+        max_length=1000,
         validators=[validate_file_size],
         verbose_name='Instrument Photo'
     )
@@ -557,6 +559,7 @@ class Mets_Inst(models.Model):
         upload_to=get_upload_to_mets_photos,
         null=True,
         blank=True,
+        max_length=1000,
         validators=[validate_file_size],
         verbose_name='Instrument photo'
     )
@@ -756,6 +759,7 @@ class EDMI_certificate (models.Model):
         upload_to=get_upload_to_edmi_certificate,
         null=True,
         blank=True, 
+        max_length=1000,
         validators=[validate_file_size],
         verbose_name= 'Calibration Record')
     html_report = models.TextField(blank=True, null=True)
@@ -859,7 +863,8 @@ class Mets_certificate (models.Model):
     certificate_upload = models.FileField(
         upload_to=get_upload_to_mets_certificate,
         null=True,
-        blank=True, 
+        blank=True,
+        max_length=1000,
         validators=[validate_file_size],
         verbose_name= 'Calibration Record')
     created_on = models.DateTimeField(auto_now_add=True, null=True)

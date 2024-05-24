@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='staffcalibrationrecord',
             name='field_book',
-            field=models.FileField(blank=True, help_text='Upload the field book in pdf/jpg/tif format', null=True, validators=[validate_file_size], upload_to=staffcalibration.models.get_upload_to_fieldbook, verbose_name='Field Book'),
+            field=models.FileField(blank=True, help_text='Upload the field book in pdf/jpg/tif format', null=True, max_length=1000, validators=[validate_file_size], upload_to=staffcalibration.models.get_upload_to_fieldbook, verbose_name='Field Book'),
         ),
     ]

@@ -48,6 +48,7 @@ class Accreditation(models.Model):
         upload_to='accreditation_certificates/',
         null=True,
         blank=True, 
+        max_length=1000,	#This is the start
         validators=[validate_file_size],
         verbose_name= 'Accreditation Certificate')
                  
@@ -391,7 +392,8 @@ class Pillar_Survey(models.Model):
     fieldnotes_upload = models.FileField(
         upload_to = get_upload_to_location,
         null=True,
-        blank=True, 
+        blank=True,
+        max_length=1000,
         validators=[validate_file_size],
         verbose_name= 'Scanned fieldnotes')    
 

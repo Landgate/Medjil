@@ -22,6 +22,16 @@ from datetime import datetime
 from django.core.files import File
 from django.conf import settings
 import os
+from instruments.models import(
+    get_upload_to_edm_photos,
+    get_upload_to_prism_photos,
+    get_upload_to_mets_photos,
+    get_upload_to_edmi_certificate,
+    get_upload_to_mets_certificate
+    )
+
+from django.core.files.storage import FileSystemStorage
+
 # Start migration
 lg_prism_models = [
     {'manu_unc_const':0.6,
@@ -222,6 +232,10 @@ lg_mets_certs = [
     'mets_number':20013647},
     ]
 
+        
+#########################################################################
+
+file_storage = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'media')) #
 
 def add_landgate_instruments(apps, schema_editor):
     Company = apps.get_model("accounts", "Company")    
@@ -375,7 +389,7 @@ def add_landgate_instruments(apps, schema_editor):
             zpc_std_dev = cert['zpc_std_dev'],
             standard_deviation = cert['standard_deviation'],
             degrees_of_freedom = cert['degrees_of_freedom'],
-            certificate_upload = cert['certificate_upload'],
+            certificate_upload = File(open(cert['certificate_upload'], 'rb'), name = cert['certificate_upload'].split('/')[-1]),
             edm = medjil_edm_inst.objects.get(
                 edm_number__exact=cert['edm_number']),
             prism = medjil_prism_inst.objects.get(
@@ -412,7 +426,7 @@ def add_landgate_instruments(apps, schema_editor):
             zpc_coverage_factor = cert['zpc_coverage_factor'],
             zpc_std_dev = cert['zpc_std_dev'],
             degrees_of_freedom = cert['degrees_of_freedom'],
-            certificate_upload = cert['certificate_upload'],
+            certificate_upload = File(open(cert['certificate_upload'], 'rb'), name = cert['certificate_upload'].split('/')[-1]),
             instrument = medjil_mets_inst.objects.get(
                 mets_specs__inst_type__exact=cert['type'],
                 mets_specs__mets_owner__exact = Company.objects.get(

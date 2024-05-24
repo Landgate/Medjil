@@ -60,6 +60,7 @@ class Migration(migrations.Migration):
                     models.FileField(
                         blank=True,
                         null=True,
+                        max_length=1000,
                         validators=[common_func.validators.validate_file_size],
                         upload_to=instruments.models.get_upload_to_edm_photos,
                         verbose_name="Instrument Photo",
@@ -472,6 +473,7 @@ class Migration(migrations.Migration):
                     models.FileField(
                         blank=True,
                         null=True,
+                        max_length=1000,
                         validators=[common_func.validators.validate_file_size],
                         upload_to=instruments.models.get_upload_to_prism_photos,
                         verbose_name="Instrument Photo",
@@ -638,6 +640,7 @@ class Migration(migrations.Migration):
                     models.FileField(
                         blank=True,
                         null=True,
+                        max_length=1000,
                         validators=[common_func.validators.validate_file_size],
                         upload_to=instruments.models.get_upload_to_mets_photos,
                         verbose_name="Instrument photo",
@@ -746,6 +749,7 @@ class Migration(migrations.Migration):
                     models.FileField(
                         blank=True,
                         null=True,
+                        max_length=1000,
                         validators=[common_func.validators.validate_file_size],
                         upload_to=instruments.models.get_upload_to_mets_certificate,
                         verbose_name="Calibration Record",
@@ -1137,6 +1141,7 @@ class Migration(migrations.Migration):
                     models.FileField(
                         blank=True,
                         null=True,
+                        max_length=1000,
                         validators=[common_func.validators.validate_file_size],
                         upload_to=instruments.models.get_upload_to_edmi_certificate,
                         verbose_name="Calibration Record",

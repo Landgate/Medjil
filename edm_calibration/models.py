@@ -124,7 +124,8 @@ class uPillar_Survey(models.Model):
               help_text="Test Instrument For Cyclic Errors (Nb. Instrument Parameters Require 'Unit Lenght'")
     fieldnotes_upload = models.FileField(upload_to=get_upload_to_location,
               null=True,
-              blank=True, 
+              blank=True,
+              max_length=1000,
               validators=[validate_file_size],
               verbose_name= 'Scanned fieldnotes')
     

@@ -147,6 +147,7 @@ class Migration(migrations.Migration):
                     models.FileField(
                         blank=True,
                         null=True,
+                        max_length=1000,
                         upload_to=edm_calibration.models.get_upload_to_location,
                         validators=[common_func.validators.validate_file_size], 
                         verbose_name="Scanned fieldnotes",
