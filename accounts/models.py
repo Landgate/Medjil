@@ -20,6 +20,7 @@ from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 
+import hashlib
 import uuid
 from django_otp.plugins.otp_totp.models import TOTPDevice
 from django_otp.plugins.otp_totp.admin import TOTPDeviceAdmin
@@ -61,7 +62,13 @@ class MedjilTOTPDeviceAdmin(TOTPDeviceAdmin):
         form = super().get_form(request, obj, **kwargs)
         form.base_fields['name'].label = 'Device Name'
         return form  
-    
+
+
+def generate_short_hash():
+    # Generate a UUID, hash it, and take the first 8 characters
+    uuid_hash = hashlib.sha256(uuid.uuid4().bytes).hexdigest()[:8]
+    return uuid_hash
+
 class Company(models.Model):
     company_name = models.CharField(
         validators=[validate_profanity],
@@ -69,6 +76,11 @@ class Company(models.Model):
     company_abbrev = models.CharField(
         validators=[validate_profanity],
         max_length=20)
+    company_secret_key = models.CharField(
+        max_length=8,
+        default=generate_short_hash,
+        verbose_name='CSK - Company Secret Key',
+        help_text='Users aleady registerd with this company have access to this key')
 
     class Meta:
         ordering = ['company_name']

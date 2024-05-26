@@ -33,9 +33,13 @@ class SignupForm(UserCreationForm):
                                     queryset=Company.objects.all(),
                                     widget=forms.Select())
     
+    csk = forms.CharField(
+        label='Company Secret Key')
+    
     class Meta:
         model = CustomUser
-        fields = ('email', 'first_name', 'last_name', 'company', 'password1', 'password2')
+        fields = (
+            'email', 'first_name', 'last_name', 'company', 'csk', 'password1', 'password2')
     
     def clean_email(self):
         return self.cleaned_data.get('email').lower()
@@ -47,7 +51,16 @@ class SignupForm(UserCreationForm):
             raise forms.ValidationError("Passwords don't match")
         password_validation.validate_password(self.cleaned_data.get('password1'), None)
         return password2
-
+    
+    def clean_csk(self):
+        company = self.cleaned_data.get('company')
+        csk = self.cleaned_data.get('csk')
+        
+        if not Company.objects.filter(id=company.id, company_secret_key=csk).exists():
+            raise forms.ValidationError("The Company Secret Key is incorrect. Existing users from this company with Medjil login's have access to this key.")
+        
+        return csk
+    
     def save(self, commit=True):
         user = super().save(commit=False)
         user.set_password(self.cleaned_data["password1"])
