@@ -36,6 +36,24 @@ from .models import (
                 )
 from calibrationsites.models import CalibrationSite
 
+def guide_view(request):
+    # inst_objs = CalibrationInstruction.objects.all()
+    # img_objs = InstructionImage.objects.all()
+    # context = {
+    #     'inst_objs' : inst_objs,
+    #     'img_objs' : img_objs,
+    # }
+    return render(request, 'calibrationguide/calibrationguide_view.html')
+
+def manual_view(request):
+    # inst_objs = TechnicalManual.objects.all()
+    # img_objs = ManualImage.objects.all()
+    # context = {
+    #     'inst_objs' : inst_objs,
+    #     'img_objs' : img_objs,
+    # }
+    return render(request, 'calibrationguide/calibrationmanual_view.html')
+
 @login_required(login_url="/accounts/login") 
 def guide_create(request):
     ImageFormSet = modelformset_factory(InstructionImage, fields=('photos',), extra=1, can_delete=True)
@@ -99,16 +117,6 @@ def guide_update(request, id):
         'formset': formset,
     }
     return render(request, 'calibrationguide/calibrationguide_update_form.html', context) 
-
-
-def guide_view(request):
-    inst_objs = CalibrationInstruction.objects.all()
-    img_objs = InstructionImage.objects.all()
-    context = {
-        'inst_objs' : inst_objs,
-        'img_objs' : img_objs,
-    }
-    return render(request, 'calibrationguide/calibrationguide_guide.html', context)
 
 def guide_downloads(request):
     inst_objs = CalibrationInstruction.objects.all()
@@ -200,12 +208,3 @@ def manual_update(request, id):
         'formset': formset,
     }
     return render(request, 'calibrationguide/calibrationguide_update_form.html', context) 
-
-def manual_view(request):
-    inst_objs = TechnicalManual.objects.all()
-    img_objs = ManualImage.objects.all()
-    context = {
-        'inst_objs' : inst_objs,
-        'img_objs' : img_objs,
-    }
-    return render(request, 'calibrationguide/calibrationguide_manual.html', context)
