@@ -1,0 +1,215 @@
+
+{% load static %}
+<div class="post-content">
+
+    <p>Please login or signup to manage and calibrate your staff.</p>
+    <div class="single-item-container">
+        <button class="mr-4 px-3 py-1 border border-transparent text-sm font-small rounded text-white bg-blue-500 hover:bg-gray-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out" onclick="location.href='/accounts/login/'">Log in</button>
+        or 
+        <button class="ml-4 px-3 py-1 border border-transparent text-sm font-small rounded text-white bg-blue-500 hover:bg-gray-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out" onclick="location.href='/accounts/signup/'">Sign up</button>
+    </div>
+    <br>
+
+    <h2 class="post-title">
+        Barcode Staff Calibration
+    </h2>
+
+    <div class="mt-5 mb-3 range-guide">
+        <ol class="toc-list" role="list">
+
+        <li>
+            <a href="#Staff-Introduction">
+                <span class="title">1. Introduction</span>
+                <!-- <span class="page"><span class="visually-hidden">Page&nbsp;</span>5</span> -->
+            </a>
+        </li>
+        <li>
+            <a href="#Staff-About">
+                <span class="title">2. About the Boya Staff Calibration Range</span>
+                <!-- <span class="page"><span class="visually-hidden">Page&nbsp;</span>5</span> -->
+            </a>
+        </li>
+        <li>
+            <a href="#Staff-Field-Procedures">
+                <span class="title">3. How to calibrate barcode staves</span>
+                <!-- <span class="page"><span class="visually-hidden">Page&nbsp;</span>5</span> -->
+            </a>
+        </li>
+        <li>
+            <a href="#Staff-Sample-Data">
+                <span class="title">4. Sample data to be uploaded</span>
+                <!-- <span class="page"><span class="visually-hidden">Page&nbsp;</span>5</span> -->
+            </a>
+        </li>
+    </ol>
+
+    <br>
+    <hr style="border-top: 1px solid #ccc">
+    <div class="cf nr3 nl3">
+    
+        <div class="fl w-50-ns ph3" id="Staff-Introduction">
+            <h2>1. Introduction</h2>
+            <p>
+                Digital levelling systems have long been used by the surveying and engineering industry to determine height differences between any two or multiple locations for various applications. In Western Australia, Landgate is responsible for the national standard of measure for length, in this case, defined by the height difference or length measured in the vertical plane. In an effort to provide an accurate and a uniform system of levelling across the State, Landgate established a staff calibration range at Boya in 2002. The range comprises 2 observing pillars and 21 pins set in a granite outcrop. The pins have been placed at optimum distances from the pillars and cater for testing over a 4 metre height difference. The relative height differences between the pins have been accurately determined by repeat observations using precision levels in conjunction with calibrated invar staves.
+            </p>
+            <p>
+                The Boya Barcode Staff Calibration Range is monitored on a regular basis. Medjil is an online platform developed by Landgate to ensure that the digital levelling systems, in particular, the barcoded staves are calibrated from time to time maintain its required accuracy. Please go through the following documents before commencing the field procedure: 
+                <ul>
+                    <li><a href="https://d1a51tfkojxvkb.cloudfront.net/boya/2017_Access-sketch-Boya-barcode-staff-calibration.pdf" target="_blank">Access details</a> of the Boya barcode staff calibration range</li>
+                    <li><a href="https://d1a51tfkojxvkb.cloudfront.net/boya/Boya%20Pin%20Configuration.pdf" target="_blank">Diagram of the pin configuration</a></li>
+                    <li><a href="https://d1a51tfkojxvkb.cloudfront.net/boya/Barcoded_booking_sheet.pdf" target="_blank">Barcode Staff Booking Sheet</a></li>
+                    <li><a href="https://d1a51tfkojxvkb.cloudfront.net/sample_data/Sample-staff-load-file-format.csv" target="_blank">Sample CSV file</a></li>
+                </ul>
+            </p>
+        </div>
+
+        <div class="fl w-50-ns ph3" id="Staff-About">
+            <h2>2. About the Boya Staff Calibration Range</h2>
+            
+            <p> The Landgate barcode staff calibration range is located at the Land Surveyors Licensing Board's examination site at Boya and consists of 2 observing pillars and a series of 21 stainless steel pins set in a solid granite outcrop in a semi-arc rounding the two observing pillars.
+            </p>
+    
+            <p> The two observing pillars were first constructed beside a large piece of sloping granite which had the required 4 metres of height difference between top and bottom. The highest pillar is set at a comfortable observing height and the lowest a metre lower and closer to the rock and range. 
+            </p>
+    
+            <p>The pins were glued into drilled holes in the granite while the observing pillars were concreted deep into the ground to ensure their stability. With the 3 metre invar staff, it was possible to observe from Pin 1 to 15 from the high pillar and from Pin 7 to Pin 21 from the lower pillar
+            </p>
+    
+            <div class="grid-2">
+                <div>
+                    <p>
+                        <img src="{% static 'images/CalibrationGuides/observing-pillar 12.png' %}" alt="Observing Pillars" />
+                    </p>
+                    <h4>Digital level set on Pillar MV 83 (high pillar)</h4>
+                    <p>
+                        The low pillar or Pillar B can be seen just below the high pillar..
+                    </p>
+                </div>
+                <div>
+                    <p>
+                        <img src="{% static 'images/CalibrationGuides/invar-staff.png' %}" alt="Invar staff" />
+                    </p>
+                    <h4>Invar staff set on Pin 2</h4>
+                    <p>
+                        Invar staves set up on the pins are levelled and is held firmly by a bipole to main stability during the course of reading. 
+                    </p>
+                </div>
+                <div>
+                    <p>
+                        <img src="{% static 'images/CalibrationGuides/pin-config.png' %}" alt="Pin configuration" />
+                    </p>
+                    <h4>Stainless steel pins glued in granite rock</h4>
+                    <p>
+                        The pins were glued into drilled holes in the granite outcrop in an arc shape with a distance of about 10 metres from the high pillar and 8.8 metres from the low one.
+                    </p>
+                </div>
+                <div>
+                    <p>
+                        <img src="{% static 'images/CalibrationGuides/observing-pillar 11.png' %}" alt="Obsering from Pillar A" />
+                    </p>
+                    <h4>Observing from Pillar MV 83(high pillar).</h4>
+                    <p>
+                        With a 3 metre staff, readings can be done only for the first 15 pins using the high pillar.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="fl w-50-ns ph3" id="Staff-Field-Procedures">
+            <h2 class="mt0">3. How to calibrate barcode staves</h2>
+            <ol>
+                <li>Use the barcode staff booking sheet to record the collimation details and range observations details in the field.</li>
+                <li>Check the bubble of the digital level and the staff. Re-adjust them if necessary. The staff needs to be truly vertical for the best results.</li>
+                <li>Perform a collimation test on the digital level and use its software to compute and store the constants calculated. For this purpose, four co-linear spikes in concrete 20 m apart have been established adjacent to the range (see the <a href="https://d1a51tfkojxvkb.cloudfront.net/boya/2017_Access-sketch-Boya-barcode-staff-calibration.pdf" target="_blank">Access Sketch</a>)</li>
+                <li>Configure the settings in the digital level to record mean and standard deviation of measurement from multiple readings (at least five), if possible. Otherwise, if the instrument does not allow means from multiple observations, a minimum of three complete sets of observations (see 8 – 10 below) is required for redundancy</li>
+                <li>Set the digital level on the high observing pillar (MV 83) and shade it from the sun. Pillar B (low pillar) is utilised by Landgate when calibrating the range.</li>
+                <li>Position staff on the highest pin (Pin No 1) and allow at least 5 minutes to settle and adjust to the ambient air temperature. Record the air temperature in the booking sheet with a shaded thermometer. </li>
+                <li>A set of observations for a standard <u>four</u> metre staff consist of:
+                    <ul> 
+                        <li> Set up on Pillar MV 83
+                            <ul>
+                                <li>backsight to the staff at Pin Number 1 </li>
+                                <li>intermediate sights to the staff at Pin Numbers 2 to 20 </li>
+                                <li>foresight to the staff at Pin Number 21 </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li>A set of observations for a standard <u>three</u> metre staff consist of:
+                    <ul>
+                        <li>Setup on Pillar MV83
+                            <ul>						
+                                <li>backsight to the staff at Pin Number 1</li>
+                                <li>intermediate sights to the staff at Pin Numbers 2 to 14</li>
+                                <li>foresight to the staff at Pin Number 15</li>
+                            </ul>
+                        </li>
+                        <li>Setup on Pillar B
+                            <ul> 
+                                <li>backsight to the staff at Pin Number 7</li> 
+                                <li>intermediate sights to the staff at Pin Numbers 8 to 20</li> 
+                                <li>foresight to the staff at Pin Number 21</li> 
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li>Record the air temperature in the booking sheet at the end of each survey.</li>
+                <li>Download the level data and create a csv file in the correct format (see below).</li>
+                <li>Click <a href="/staff_calibration/staff_calibrate/">here</a> to process your staff readings and print the pdf report.</li>
+                <!-- <li>Landgate recommends that staves be re-calibrated at least every 5 years or more often if joints exhibit noticeable wear or any other repairs are made to the staff.</li> -->
+            </ol>
+        </div>
+        <div class="fl w-50-ns ph3" id="Staff-Sample-Data">
+            <h2 class="mt0">4. Sample data to be uploaded </h2>
+            <p>
+                Data should be uploaded in a correctly formatted text or csv file as per the file format. File Format - All fields are separated by a comma and must have a header line
+                <ul>
+                    <li>Field 1 = Pin number</li>
+                    <li>Field 2 = Staff reading</li>
+                    <li>Field 3 = Number of readings</li>
+                    <li>Field 4 = Standard deviations</li>
+                </ul>  
+            </p>
+
+            <p> Example of a text/csv file. The file can also be downloaded from <a href="https://d1a51tfkojxvkb.cloudfront.net/sample_data/staff_calibration_file_load.txt" target="_blank">here</a>. </p>
+
+            <table id="sample-data">
+                <tr>
+                    <th>Pin number,</th>
+                    <th>Staff reading,</th>
+                    <th>Number of readings,</th>
+                    <th>Standard deviations </th>
+                </tr>
+                <tr><td>1,</td><td>0.07417,</td><td>10,</td><td>0.000090</td></tr>
+                <tr><td>2,</td><td>0.16503,</td><td>10,</td><td>0.000070</td></tr>
+                <tr><td>3,</td><td>0.32868,</td><td>10,</td><td>0.000020</td></tr>
+                <tr><td>4,</td><td>0.47489,</td><td>10,</td><td>0.000090</td></tr>
+                <tr><td>5,</td><td>0.68799,</td><td>10,</td><td>0.000070</td></tr>
+                <tr><td>6,</td><td>0.87413,</td><td>10,</td><td>0.000040</td></tr>
+                <tr><td>9,</td><td>1.52628,</td><td>10,</td><td>0.000030</td></tr>
+                <tr><td>7,</td><td>1.07422,</td><td>10,</td><td>0.000030</td></tr>
+                <tr><td>8,</td><td>1.27955,</td><td>10,</td><td>0.000050</td></tr>
+                <tr><td>10,</td><td>1.79376,</td><td>10,</td><td>0.000040</td></tr>
+                <tr><td>11,</td><td>2.12703,</td><td>10,</td><td>0.000080</td></tr>
+                <tr><td>12,</td><td>2.3912,</td><td>10,</td><td>0.000050</td></tr>
+                <tr><td>13,</td><td>2.51647,</td><td>10,</td><td>0.000110</td></tr>
+                <tr><td>14,</td><td>2.64608,</td><td>10,</td><td>0.000050</td></tr>
+                <tr><td>15,</td><td>2.87513,</td><td>10,</td><td>0.000120</td></tr>
+                <tr><td>16,</td><td>3.05758,</td><td>10,</td><td>0.000060</td></tr>
+                <tr><td>17,</td><td>3.20978,</td><td>10,</td><td>0.000040</td></tr>
+                <tr><td>18,</td><td>3.36207,</td><td>10,</td><td>0.000120</td></tr>
+                <tr><td>19,</td><td>3.52057,</td><td>10,</td><td>0.000200</td></tr>
+                <tr><td>20,</td><td>3.6692,</td><td>10,</td><td>0.000070</td></tr>
+                <tr><td>21,</td><td>3.87885,</td><td>10,</td><td>0.000100 </td></tr>
+            </table>
+
+        </div>
+        <p> Other information required are the staff and observation metadata which is recorded in the booking sheet at the time of observation. Retain a copy of the field booking sheet at least until a new calibration is done for the staff</p>
+    </div>
+</div>
+
+<hr style="border-top: 1px solid #ccc">
+<div class="mt-3 mb-3">
+    <p><strong>Copyright © 2020-2024 Western Australian Land Information Authority</strong></p>
+    <p>Last updated: 24 May 2024</p>
+</div>

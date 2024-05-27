@@ -1,0 +1,545 @@
+
+{% load static %}
+<div class="post-content">
+    {% if not user.is_authenticated %}
+        <p>Please login or signup to manage and calibrate your staff.</p>
+        <div class="single-item-container">
+            <button class="mr-4 px-3 py-1 border border-transparent text-base font-normal rounded-md text-white bg-blue-500 hover:bg-gray-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out" onclick="location.href='/accounts/login/'">Log in</button>
+            or 
+            <button class="ml-4 px-3 py-1 border border-transparent text-base font-normal rounded-md text-white bg-green-600 hover:bg-gray-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out" onclick="location.href='/accounts/signup/'">Sign up</button>
+        </div>
+        <br>
+    {% endif %}
+    
+    <h2 class="post-title">
+        EDMI Calibration Technical Manual
+    </h2>
+
+    <div class="mt-5 mb-3 range-guide">
+      <ol class="toc-list" role="list">
+         <li>
+               <a href="#Staff-Tech-Introduction">
+                  <span class="title">Introduction</span>
+                  <!-- <span class="page"><span class="visually-hidden">Page&nbsp;</span>5</span> -->
+               </a>
+         </li>
+         <li>
+            <a href="#Staff-Tech-Range">
+               <span class="title">Staff Range Calibration</span>
+               <!-- <span class="page"><span class="visually-hidden">Page&nbsp;</span>5</span> -->
+            </a>
+            <ol role="list" style="list-style: none;">
+               <li>
+                  <a href="#Staff-Tech-Range1">
+                        <span class="title">2.1 Mathematical model for the calibration of the Barcode Calibration Range</span>
+                        <!-- <span class="page"><span class="visually-hidden">Page&nbsp;</span>5</span> -->
+                  </a>
+               </li>
+   
+               <li>
+                  <a href="#Staff-Tech-Range2">
+                        <span class="title">2.2 Observation equations for each height interval between adjoining pins</span>
+                        <!-- <span class="page"><span class="visually-hidden">Page&nbsp;</span>8</span> -->
+                  </a>
+               </li>
+               <li>
+                  <a href="#Staff-Tech-Range">
+                     <span class="title">2.3 Time dependant model</span>
+                     <!-- <span class="page"><span class="visually-hidden">Page&nbsp;</span>8</span> -->
+                  </a>
+               </li>
+            </ol>
+         </li>
+         <li>
+            <a href="#Staff-Tech-Staff">
+               <span class="title">Barcode Staff Calibration</span>
+               <!-- <span class="page"><span class="visually-hidden">Page&nbsp;</span>5</span> -->
+            </a>
+            <ol role="list" style="list-style: none;">
+               <li>
+                  <a href="#Staff-Tech-Staff1">
+                        <span class="title">3.1 Mathematical model for the computation of the correction factor of a barcode staff</span>
+                        <!-- <span class="page"><span class="visually-hidden">Page&nbsp;</span>5</span> -->
+                  </a>
+               </li>
+   
+               <li>
+                  <a href="#Staff-Tech-Staff2">
+                        <span class="title">3.2 Observation equations for each height interval between adjoining pins</span>
+                        <!-- <span class="page"><span class="visually-hidden">Page&nbsp;</span>8</span> -->
+                  </a>
+               </li>
+               <li>
+                  <a href="#Staff-Tech-Staff3">
+                     <span class="title">3.3 Reducing the correction factor to a standart temperature</span>
+                     <!-- <span class="page"><span class="visually-hidden">Page&nbsp;</span>8</span> -->
+                  </a>
+               </li>
+               <li>
+                  <a href="#Staff-Tech-Staff4">
+                     <span class="title">3.4 Correcting the observed height differences</span>
+                     <!-- <span class="page"><span class="visually-hidden">Page&nbsp;</span>8</span> -->
+                  </a>
+               </li>
+            </ol>
+         </li>
+      </ol>
+
+      <br>
+      <hr style="border-top: 1px solid #ccc">
+      <div class="cf nr3 nl3">
+         <div class="fl w-50-ns ph3" id="Staff-Tech-Introduction">
+            <h2>1. Introduction</h2>
+            <p>Medjil, means ‘accurate’ in the <i>Whadjuk Noongar</i> language.</p>
+            <p>The Medjil portal was developed by <a href="https://www.landgate.wa.gov.au/">Landgate</a> (the Western
+               Australian Land Information Authority) in collaboration with the <a
+                  href="https://www.icsm.gov.au" />Intergovernmental Committee on Surveying and Mapping</a> (ICSM)
+               jurisdictions.</p>
+            <p>The portal allows the calibration of the following:</p>
+            <ul STYLE="margin:30px">
+               <li>EDM Instrumentation using standardised EDM Baselines</li>
+               <li>EDM Baselines using standardised instruments</li>
+               <li>Barcode staff using staff calibration range facility</li>
+            </ul>
+            <p>The purpose of calibrating the EDM Instrumentation (EDMI) is to establish the legal traceability of a user's
+               instrument to the national standard of length provided by the National Measurement Institute (NMI). This is
+               accomplished by determining the Instrument Correction and its uncertainty through a survey procedure
+               conducted at a certified EDM Baseline. The certification of EDM Baselines are maintained by individual
+               States and Territories.</p>
+            <p>The certification (or calibration) of EDM baselines establishes updated (or improved) distances between their
+               pillars. The calibration of an EDMI provides distance correction specific to that instrumentation which are
+               to be applied to measurements taken using that instrumentation (eg. EDM and prism). EDM Baselines and EDMI
+               calibration should be conducted on a regular basis. Check your legislative requirements in your State and
+               Territory for compliance.</p>
+            <p>The Medjil portal provides tools and reports for Levelling Staff, EDM Baseline and EDMI calibration
+               procedures. Please refer to the specific guides that provide field calibration instructions.</p>
+            <p>This document includes reference information, encompassing mathematical equations, procedures, algorithms,
+               and computations utilized by the Medjil portal. The calibration procedures are based on the following
+               resources:</p>
+            <ul STYLE="margin:30px">
+               <li>“Instructions on the Verification of Electronic Distance Meters according to section 10, Weights and
+                  Measures (National Standards) Act, 1960” written by Dr. J. M. Rüeger, School of Surveying, University of
+                  New South Wales. P.O. Box 1, Kensington, N.S.W. 2033</li>
+               <li>“Instructions on the measurements of subsidiary standards of length in the form of EDM calibration
+                  baselines using distance meters as prescribed by the National Standards Commission: written by Dr.
+                  J.M.Rüeger, School of Surveying, University of New South Wales. P.O. Box 1, Kensington, N.S.W. 2033</li>
+               <li>“Electronic Distance Measurements” J.M.Rüeger</li>
+               <li>Draft Verifying Authorities Handbook 2001</li>
+               <li>IAG resolutions at it’s XXIIth General Assembly in Birmingham, 1999</li>
+               <li>Optics and optical instruments - Field procedures for testing geodetic and surveying instruments, ISO
+                  17123-4:2012</li>
+               <li>Evaluation of measurement data - Guide to the expression of uncertainty in measurement (GUM), JCGM
+                  100:2008 </li>
+               <li>Review of the Western Australian BASELINE Calibration Software for Electronic Distance Measuring (EDM)
+                  Instruments prepared for the Surveyor General of New South Wales by J.M.Rüeger 2019</li>
+            </ul>
+            <p>The Draft Verifying Authorities (VA) Handbook 2001 is intended for use by verifying authorities which are
+               appointed under the provisions of Regulation 73 of the National Measurement Regulations 1999 in accordance
+               with the National Measurement Act 1960 to verify reference standards of measurements under the provisions of
+               Regulation 13, 30 and 31. The determination of the a priori standard deviations and the analysis of
+               uncertainties of EDM measurements are based on the general guidelines within this handbook, ISO standards
+               and GUM.</p>
+            <p>In this manual <b>'uncertainty'</b> means <b>'expanded uncertainty'</b> specified at the 95% confidence
+               level. Standard deviation or standard uncertainty is specified at 68% confidence level. Users have the
+               flexibility to adopt or modify default uncertainties and associated traceability statements as required.</p>
+            <p>For information on Medjil development and contribution, please refer to the <a
+                  href="https://github.com/Landgate/Medjil">GitHub</a>repository.</p>
+            <br>
+         </div>
+
+         <div class="fl w-50-ns ph3" id="Staff-Tech-About">
+            <h2>1 EDM Baseline calibration</h2>
+         
+            <div id="Chapter_2_1">
+               <h3>2.1 EDM Baseline designs</h3>
+            
+               <p>Since their introduction, the use of EDM Baseline has been the preferred calibration method for EDM
+                  instrumentation. There are three different EDM Baseline designs:</p>
+               <ul STYLE="margin:30px">
+                     <li>Heerbrugg Design</li>
+                     <li>Aarau Design</li>
+                     <li>Hobart Design</li>
+               </ul>
+               <p>
+                  Each EDM Baseline design aims to achieve an equal distribution of measured distances between the shortest and
+                     longest lines without any repetitions. They also allow EDMI calibration, with or without known distances
+                     (certified baseline distances), except for the Hobart design, which requires the distances to be known
+                     beforehand. Most EDM baseline designs aim to accommodate a variety of EDM instrument unit lengths. A
+                     detailed explanation of baseline design concepts is beyond the scope of this manual. For comprehensive
+                     information on baseline design, please refer to the book 'Electronic Distance Measurement' by J.M. Rueger.
+               </p>
+               <p>
+                  The current version of Medjil requires baseline distances to be known for all types of baselines to perform
+                     EDMI calibration. This approach is crucial for ensuring distance traceability to the national standard.
+                     Therefore, EDM Baselines must first be calibrated using NMI-certified instrument to determine the certified
+                     distances before proceeding with EDMI calibration. An additional module could potentially be developed to
+                     enable EDMI calibration without known distances. However, it is important to note that such calibrations
+                     cannot be certified under the NMI Act, and the EDMI distances obtained in this manner are not legally
+                     traceable to the national standard. For Medjil development and contribution, please refer to the <a href="https://github.com/Landgate/Medjil">GitHub</a>repository.
+               </p>
+            </div>
+
+            <div id="Chapter_2_2">
+               <h2>2.2 Mathematical model and observation equations for the calibration of EDM Baseline</h2>
+
+               <p>Deriving two observation equations not only ensures that distances remain non-negative but also enhances the
+                     flexibility of the EDM Baseline survey:</p>
+               <div>$$ D_{ij}=x_j-x_i-zpc\ \ \ for\ j > i\ \ \ (Eq. 1.1)$$ </div>
+               <div>$$ D_{ij}=x_i-x_j-zpc\ \ \ for\ j < i\ \ \ (Eq. 1.2)$$ </div>
+                        <p>Where:</p>
+                        <p>&emsp;&emsp;D<sub>ij</sub> = Measured distance between pillars i and j (the observation)</p>
+                        <p>&emsp;&emsp;x<sub>i</sub> = Distance from the first pillar to pillar 'i'. Distance corrected for the
+                           pillar offsets and reduced to baseline reference height</p>
+                        <p>&emsp;&emsp;x<sub>j</sub> = Distance from the first pillar to pillar 'j'. Distance corrected for the
+                           pillar offsets and reduced to baseline reference height</p>
+                        <p>&emsp;&emsp;zpc = Zero point correction (an additive constant of the certified EDMI)</p>
+               </div>
+            </div>
+
+            <div id="Chapter_2_3"></div>
+               <h3>2.3 Example: Formation of observation equations</h3>
+               <p>Let's consider the following example baseline, comprising four pillars:</p>
+               <img src="\media\TechnicalManual\tbaseline\Medjil_Technical_Manual\Picture_1_1.png"
+                  alt="Example of EDM Baseline">
+               <br>
+               <br>
+               <p>A set of linear observation equations can be formulated based on Eq. 1.1 and Eq. 1.2 as follows:</p>
+               <div>$$
+                  \begin{matrix}D_{12}=&{+X}_2&&&-zpc\\D_{13}=&&{+X}_3&&-zpc\\D_{14}=&&&{+X}_4&-zpc\\D_{21}=&{+X}_2&&&-zpc\\D_{23}=&-X_2&+X_3&&-zpc\\D_{24}=&-X_2&&{+X}_4&-zpc\\D_{31}=&&+X_3&&-zpc\\D_{32}=&-X_2&{+X}_3&&-zpc\\D_{34}=&&-X_3&{+X}_4&-zpc\\D_{41}=&&&+X_4&-zpc\\D_{42}=&-X_2&&+X_4&-zpc\\D_{43}=&&-X_3&+X_4&-zpc\\\end{matrix}\
+                  \ \ (Eq. 1.3)$$ </div>
+               <p>In matrix notation, the observation equations can be represented as D = AX:</p>
+               <div>$$
+                  \left[\begin{matrix}D_{12}\\D_{13}\\D_{14}\\D_{21}\\D_{23}\\D_{24}\\D_{31}\\D_{32}\\D_{34}\\D_{41}\\D_{42}\\D_{43}\\\end{matrix}\right]=\left[\begin{matrix}1&0&0&-1\\0&1&0&-1\\0&0&1&-1\\1&0&0&-1\\-1&1&0&-1\\-1&0&1&-1\\0&1&0&-1\\-1&1&0&-1\\0&-1&1&-1\\0&0&1&-1\\-1&0&1&-1\\0&-1&1&-1\\\end{matrix}\right]\left[\begin{matrix}X_2\\X_3\\X_4\\zpc\\\end{matrix}\right]\
+                  \ \ (Eq. 1.4)$$ </div>
+               <p>Where:</p>
+               <p>&emsp;&emsp;D<sub>ij</sub> = Measured distance between pillars i and j (vector of the observations)
+               </p>
+               <p>&emsp;&emsp;A = The design matrix
+               <p>&emsp;&emsp;X = The certified distances and zpc (vector of the unknown output estimates)</p>
+               <p>This approach eliminates the need to provide approximate distances between pillars. In accordance
+                  with Section (5), the observations, along with their a-priori uncertainties (P), undergo a least
+                  squares adjustment to obtain the estimated certified distances d<sub>x</sub>, the zpc value, and the
+                  complete VCV matrix.</p>
+            </div>
+
+            <div id="Chapter_2_4">
+               <h3>2.4 Inter-pillar distances survey</h3>
+               <img src="\media\TechnicalManual\tbaseline\Medjil_Technical_Manual\Picture_1_3.png"
+                  alt="Inter-pillar distances survey">
+               <p>To calibrate an EDM baseline, a series of inter-pillar distance measurements (surveys) are necessary,
+                  which should include atmospheric observations of the conditions during the during measuring of each
+                  survey distance. Medjil mandates that all instrumentation used in the survey must be calibrated and
+                  possess a current certificate stating the uncertainty of the instrument readings and the calibration
+                  corrections that can be applied. The uncertainty of instrument readings plays a crucial role in
+                  propagating uncertainties for the inter-pillar distance survey.</p>
+               <p>The distance observations are assumed to be slope distances that have not been corrected for the
+                  height of instrument or height of targets. Applying atmospheric corrections by entering these into
+                  the instrument is optional but Medjil requires temperature, pressure and humidity for every distance
+                  measurement even if this has been entered into the instrument. These values are used for estimating
+                  the propagation of uncertainty as well as the optional applying of atmospheric corrections when no
+                  correction was applied by the instrument during the survey.</p>
+               <p>It is recommended each distance (bay) d<sub>ij</sub> (where i = from_pillar; j = to_pillar) should be
+                  measured four times. However, Medjil allows the number of repeat measurements to vary between bays
+                  and between surveys. The pillar survey data is to be provided in an ASCII file and must contain the
+                  following fields:</p>
+               <ul STYLE="margin:30px">
+                  <li>from_pillar: Pillar name as defined in Medjil calibration sites</li>
+                  <li>to_pillar: Pillar name as defined in Medjil calibration sites</li>
+                  <li>height_of_instrument: height in metres</li>
+                  <li>height_of_target: height in metres</li>
+                  <li>horizontal_direction(dd): angle in decimal degrees</li>
+                  <li>slope_distance: distance in metres</li>
+                  <li>temperature: temperature in degrees Celsius</li>
+                  <li>pressure: pressure in Hectopascals or millibars</li>
+                  <li>humidity: humidity in percentage</li>
+               </ul>
+               <p>Refer to this <a
+                        href="\media\TechnicalManual\tbaseline\Medjil_Technical_Manual\BUSS_baseline_calibration_edm_observations.csv"
+                        target="_self">sample dataset</a> required for an EDM baseline calibration survey data format.
+               </p>
+               <br>
+               <p>Baseline measurements must be performed in accordance with the ISO17123-4:2012 Optics and optical
+                  instruments – Field procedures for testing geodetic and surveying instruments – Part 4:
+                  Electro-optical distance meters (EDM measurements to reflectors).</p>
+            </div>
+
+            <div id="Chapter_2_5">
+               <h3>2.5 Pillar offsets survey</h3>
+               <p>The pillar offset survey determines the offset of each pillar from the alignment of the first (1) and
+                  last pillar (n). Medjil performs the required reduction of observations during the EDM Baseline
+                  calibration process. Distances observed from every pillar of the baseline can be included in the
+                  calculation of the pillar offset if the survey setup includes measurements to pillar 1 and pillar n.
+               </p>
+               <img src="\media\TechnicalManual\tbaseline\Medjil_Technical_Manual\Picture_1_2.png"
+                  alt="Pillar Offsets">
+               <p>For each pillar setup, an arbitrary set of coordinates (E<sub>j</sub>, N<sub>j</sub>) are calculated
+                  for all pillars observed according to the formula:</p>
+               <div>$$\left[E_j,N_j\right]=\ Polar2Reclangular\left(Hz_{ij},d_{ij}\right)\ \ \ (Eq. 1.5)$$ </div>
+               <p>Where:</p>
+               <p>&emsp;&emsp;d<sub>ij</sub> = horizontal distance (in metres) corrected for calibration parameters and
+                  atmospheric corrections between pillars i and j</p>
+               <p>&emsp;&emsp;Hz<sub>ij</sub> = angular direction observed at pillar i to pillar j</p>
+               <p>&emsp;&emsp;[E<sub>j</sub>,N<sub>j</sub>] = set of arbitrary coordinates (Easting and Northing) of
+                  pillar j</p>
+               <p>Then the offset of pillar j is calculated according to:</p>
+               <div>$$ O_j=d_{j}sin\left(A_{1n}-A_{j}\right)\ \ \ (Eq. 1.6) $$ </div>
+               <p>Where:</p>
+               <p>&emsp;&emsp;d<sub>j</sub> = horizontal distance between pillars i and j</p>
+               <p>&emsp;&emsp;A<sub>j</sub> = derived bearing using coordinates of pillars: E<sub>1</sub>,N<sub>1</sub>
+                  and E<sub>j</sub>,N<sub>j</sub>
+               </p>
+               <p>As the instrument moves between pillars, pillar 1 and pillar n are observed in each setup. This
+                  allows the orientation of all setups in the survey and computation of an offset for each pillar from
+                  every pillar setup that included observations to pillar 1 and pillar n. Medjil computes the average
+                  pillar offset and standard deviation redundancy of observations measured from multiple pillars.
+                  These are used for a-priori estimation of uncertainties and the reduction of EDM measured distances
+                  to the reference alignment and height. Table 4.4 demonstrates an example set of pillar offsets.</p>
+            </div>
+
+            <div id="Chapter_2_6">
+               <h3>2.6 Pillar heights survey</h3>
+               <p>Pillar heights (H<sub>j</sub>) are to be determined as orthometric heights (eg. AHD71) and provided
+                  with standard deviations. The standard deviations should preferably be derived from redundant
+                  observations. Data for the height of pillars is to be provided in an ASCII file. Refer to this
+                  <a href="\media\TechnicalManual\tbaseline\Medjil_Technical_Manual\BUSS_ baseline_calibration_level_observations.csv"
+                        target="_self">sample dataset</a> for the required data format.
+               </p>
+               <p>Pillar coordinates are required and used to determine the baseline location in order to derive
+                  geometric correction to the distances. Medjil uses an average latitude of the supplied pillar
+                  coordinates to calculate the geometric corrections of surveyed distances. (See section 3.3)</p>
+            </div>
+
+            <h2>2. About the Boya Staff Calibration Range</h2>
+            
+            <p> The Landgate barcode staff calibration range is located at the Land Surveyors Licensing Board's examination site at Boya and consists of 2 observing pillars and a series of 21 stainless steel pins set in a solid granite outcrop in a semi-arc rounding the two observing pillars.
+            </p>
+    
+            <p> The two observing pillars were first constructed beside a large piece of sloping granite which had the required 4 metres of height difference between top and bottom. The highest pillar is set at a comfortable observing height and the lowest a metre lower and closer to the rock and range. 
+            </p>
+    
+            <p>The pins were glued into drilled holes in the granite while the observing pillars were concreted deep into the ground to ensure their stability. With the 3 metre invar staff, it was possible to observe from Pin 1 to 15 from the high pillar and from Pin 7 to Pin 21 from the lower pillar
+            </p>
+    
+            <div class="grid-2">
+                <div>
+                    <p>
+                        <img src="{% static 'images/CalibrationGuides/observing-pillar 12.png' %}" alt="Observing Pillars" />
+                    </p>
+                    <h4>Digital level set on Pillar MV 83 (high pillar)</h4>
+                    <p>
+                        The low pillar or Pillar B can be seen just below the high pillar..
+                    </p>
+                </div>
+                <div>
+                    <p>
+                        <img src="{% static 'images/CalibrationGuides/invar-staff.png' %}" alt="Invar staff" />
+                    </p>
+                    <h4>Invar staff set on Pin 2</h4>
+                    <p>
+                        Invar staves set up on the pins are levelled and is held firmly by a bipole to main stability during the course of reading. 
+                    </p>
+                </div>
+                <div>
+                    <p>
+                        <img src="{% static 'images/CalibrationGuides/pin-config.png' %}" alt="Pin configuration" />
+                    </p>
+                    <h4>Stainless steel pins glued in granite rock</h4>
+                    <p>
+                        The pins were glued into drilled holes in the granite outcrop in an arc shape with a distance of about 10 metres from the high pillar and 8.8 metres from the low one.
+                    </p>
+                </div>
+                <div>
+                    <p>
+                        <img src="{% static 'images/CalibrationGuides/observing-pillar 11.png' %}" alt="Obsering from Pillar A" />
+                    </p>
+                    <h4>Observing from Pillar MV 83(high pillar).</h4>
+                    <p>
+                        With a 3 metre staff, readings can be done only for the first 15 pins using the high pillar.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="fl w-50-ns ph3" id="Staff-Tech-Range">
+            <h2>1. Range calibration</h2>
+
+            <p>The Landgate barcode staff calibration range is located at the Land Surveyors Licensing Board's examination
+               site at Boya and consists of 2 observing pillars and a series of 21 stainless steel pins set in a solid granite
+               outcrop. </p>
+            <img src="{% static 'images/CalibrationGuides/staff_calibration_pin_config.png' %}" height="30%" style="border: 2px solid #888;"
+               alt="Boya barcode staff calibration range">
+            
+            
+            <div id="Staff-Tech-Range1">
+               <h3>1.1 Mathematical model for the calibration of the Barcode Calibration Range</h3>
+               <p>For the the calibrations of the range the following mathematical model is used to fit the observations (height
+                  differences) between the pins. Redundant observations are required in order to carry out a least squares
+                  adjustment.</p>
+               <div>$$ ΔH_{ij}=(M_{jk}-M_{ik})\ \ \ (Eq. 1.1) $$ </div>
+               <p>Where:</p>
+               <p>&emsp;&emsp;∆H<sub>ij</sub> = height difference between pins i and j</p>
+               <p>&emsp;&emsp;M<sub>ik</sub> = staff reading at pin i with a certified invar digital level</p>
+               <p>&emsp;&emsp;M<sub>jk</sub> = staff reading at Pin j with a certified invar digital level</p>
+               <p>&emsp;&emsp;k = sbservation set number. Each set contains several observations taken with the same instrument
+                  (level), staff and observing pillar</p>
+            </div>
+
+            <div id="Staff-Tech-Range2">
+               <h3>1.2 Observation equations for each height interval between adjoining pins</h3>
+               <p>The observation equations are derived from the mathematical model where the residual is the difference between
+                  the observed and the most probable height difference between the pins. One observation equation is formed for
+                  each observation. The initial (most probabale) height difference is adopted from a previous range calibration.
+               </p>
+
+               <div>$$ v_k=ΔH_{ij}-[M_{jk}-M_{ik} ]\ \ \ (Eq. 1.2) $$ </div>
+               <p>Where:</p>
+               <p>&emsp;&emsp;v<sub>k</sub> = residual of the observation set between pins i and j in metres</p>
+               <p>The above equation can be expressed in a matrix notation as:</p>
+               <div>$$ v = AX+m\ \ \ (Eq. 1.3)$$ </div>
+               <p>Where:</p>
+               <p>&emsp;&emsp;A = [1]</p>
+               <p>&emsp;&emsp;X = [∆H<sub>ij</sub>]</p>
+               <p>&emsp;&emsp;m = [M<sub>jk</sub> - M<sub>ik</sub>]</p>
+
+               <p>In accordance with Section (5), the observations, along with the waith matrix P (Eq. 7.4) constructed from
+                  a-priori standard daviations, undergo a least squares adjustment to obtain the estimated (calibrated) height
+                  differences ∆H<sub>ij</sub> between pins.</p>
+               <div>$$ P=[ \frac{1}{σ_{k}^2}]\ \ \ (Eq. 1.4)$$ </div>
+               <p>Where:</p>
+               <div>$$ \sigma_{k}=\sqrt{(\sigma_{M_{i}}^2+\sigma_{M_{j}}^2+\sigma_{T_{ij}}^2)}\ \ \ (Eq. 1.5)$$ </div>
+               <p>Where:</p>
+               <p>&emsp;&emsp;\sigma<sub>M<sub>i</sub></sub> = standard deviation of the observations to pin i
+               <p>&emsp;&emsp;\sigma<sub>M<sub>j</sub></sub> = standard deviation of the observations to pin j
+               <p>&emsp;&emsp;\sigma<sub>T<sub>ij</sub></sub> = standard deviation of the temperature correction between pin i and j
+
+               <p>
+                  Modern level instruments provide standard deviation of measurements usually obtained from several observations.
+               </p>
+
+               <p>A posteriori uncertainties of the adjusted (calibrated) height differences are dervivied from the a posteriori
+                  standard deviations and expanded to achieve 95% confidence level by mupliplying them by coverage factor k =
+                  1.96:</p>
+                <div>$ \sigma_{H_{ij}} = \sqrt{({A}^TPA)^{-1}} * 1.96\ \ \ (Eq. 1.6)$ </div>
+            </div>
+
+            <div id="Staff-Tech-Range3">
+               <h3>1.3 Time dependant range</h3>
+
+               <p>Regular measurements of the Boya calibration range carried out by Landgate over the years indicated seasonal
+                  variations of up to 1 mm, thereby mandating the development of the time-dependent range which are used for
+                  (time depandant) staff calibration.</p>
+               <p>The range was measured every month over a period of two years and the observations used to estimate the
+                  folloing (see figure below) time dependant values of the range height differences.</p>
+               <img src="{% static 'images/CalibrationGuides/staff_calibration_range_param.png' %}"  height="30%" style="border: 2px solid #888;"
+                  alt="Calibrated height differences at Boya staff calibration range">
+
+               <p>The calibration range is monitored on a regular basis to ensure the validity of the model. Each new
+                  recalibration results are compared to the existing (avarege) range results to detect any anomalies.
+               <p>
+            </div>
+
+         </div>
+         
+         <!-- <div id="Chapter_7_2"></div> -->
+         <div class="fl w-50-ns ph3" id="Staff-Tech-Staff">
+            <h2>2. Barcode Staff Calibration</h2>
+
+            <div id="Staff-Tech-Staff1">
+               <h3>2.1 Mathematical model for the computation of the correction factor of a barcode staff (the staff
+                  calibibration)</h3>
+   
+               <p>To estimate the the correction factor C<sub>f</sub> of a barcoded staff the following mathematical model is
+                  used</p>
+               <div>$$ C_f=\frac{ΔH_{ij}}{(M_{j}-M_{i})}\ \ \ (Eq. 2.1) $$ </div>
+               <p>Where:</p>
+               <p>&emsp;&emsp;∆H<sub>ij</sub> = certified range height difference between pins i and j</p>
+               <p>&emsp;&emsp;M<sub>i</sub> = barcoded staff reading at pin i</p>
+               <p>&emsp;&emsp;M<sub>j</sub> = barcoded staff reading at pin j</p>
+            </div>
+
+            <div id="Staff-Tech-Staff2">
+               <h3>2.2 Observation equations for each height interval between adjoining pins</h3>
+               <div>$$ V_{ij}=1 - \frac{ΔH_{ij}}{[M_{j}-M_{i}]}\ \ \ (Eq. 2.2) $$ </div>
+               <p>Where:</p>
+               <p>&emsp;&emsp;V<sub>ij</sub> = residual of the correction factor of the height difference between pins i and j
+               </p>
+               <p>For n pins the following set of equtions can be formed:</p>
+               <div>$$ \left[\begin{matrix} v_1=1-∆H_{1,2}/(M_2-M_1 )\\v_2=1-∆H_{1,3}/(M_3-M_1
+                  )\\\ldots\\v_{(n-1)}=1-∆H_{(1,n)}/(M_n-M_1 )\\\end{matrix}\right]\ \ \ (Eq. 2.3) $$ </div>
+               <p>Where:</p>
+               <p>&emsp;&emsp;n = number of pins in the rnge. A pin is a phyical mark on which the staff is placed. At Boya range
+                  a total of 21 pins can be used.</p>
+               <p>The above equation can be expressed in a matrix notation:</p>
+               <div>$$ V=AX+w\ \ \ (Eq. 2.4) $$ </div>
+               <p>Where:</p>
+               <p>&emsp;&emsp;A = [1]</p>
+               <p>&emsp;&emsp;X = [C<sub>f</sub>]</p>
+               <p>&emsp;&emsp;w = [∆H<sub>1,n</sub>/(M<sub>n</sub>-M<sub>1</sub>)]</p>
+               <p>In accordance with Section (5), the observations, along with the waith matrix P (same as per Eq. 7.4)
+                  constructed from a-priori standard daviations of height differnces, undergo a least squares adjustment to
+                  obtain the estimated correction factor C<sub>f</sub> of the barcoded staff.</p>
+               <p>A posteriori uncertainty of the estimated correction factor is dervivied from the a posteriori standard
+                  deviation to achieve 95% confidence level by mupliplying them by coverage factor k = 1.96.</p>
+            </div>
+
+            <div id="Staff-Tech-Staff3">
+               <h3>2.3 Reducing the correction factor to a standart temperature</h3>
+
+               <p>The staff correction factor C<sub>f</sub> is estimated at the average temparature during the staff calibration
+                  procedure and is further reduced to the standard temperature T<sub>0</sub> using the following formula:</p>
+               <div>$$ C_{f_{T_0}}=C_f*(1+(\alpha(T_0-T_{obs})))\ \ \ (Eq. 2.5) $$ </div>
+               <p>Where:</p>
+               
+               <p>&emsp;&emsp;C<sub>f</sub> = the estimated staff correction factor with no tempeature correction </p>
+               <p>&emsp;&emsp;T<sub>0</sub> = standard temperature of 25.0$^\circ$C</p>
+               <p>&emsp;&emsp;T<sub>obs</sub> = average temperature [in $^\circ$C] during the staff calibration procedure</p>
+               <p>&emsp;&emsp;$\alpha$ = the coefficient of expansion of the barcoded staff</p>
+               <p>&emsp;&emsp;C<sub>f<sub>T<sub>0</sub></sub></sub> = the staff correction factor to be determined at 25.0$^\circ$C</p>
+            </div>
+               
+            <div id="Staff-Tech-Staff4">
+               <h3>2.4 Correcting the observed height differences</h3>
+
+               <p>To correct the height differences of the barcoded (calibrated) staff the following formula is provided in the
+                  staff calibration certificate/report:</p>
+               <div>$$ ∆H_C=((((T_{obs}-T_0)*\alpha)+1)*C_{f_{T_0}})*∆H_{obs}\ \ \ (Eq. 2.5) $$ </div>
+               <p>Where:</p>
+               <p>&emsp;&emsp;∆H<sub>C</sub> = corrected height difference</p>
+               <p>&emsp;&emsp;T<sub>obs</sub> = average temperature [in $^\circ$C]</p>
+               <p>&emsp;&emsp;T<sub>0</sub> = standard temperature of 25.0$^\circ$C</p>
+               <p>&emsp;&emsp;$\alpha$ = the coefficient of expansion of the barcoded staff</p>
+               <p>&emsp;&emsp;C<sub>f<sub>T<sub>0</sub></sub></sub> = the staff correction factor at T<sub>0</p>
+               <p>&emsp;&emsp;∆H<sub>obs</sub> = observed height difference</p>
+            </div>
+            
+         </div>
+    </div>
+</div>
+   
+
+<hr style="border-top: 1px solid #ccc">
+<div class="mt-3 mb-3">
+    <p><strong>Copyright © 2020-2024 Western Australian Land Information Authority</strong></p>
+    <p>Last updated: 24 May 2024</p>
+</div>
+
+<script>
+    MathJax = {
+    tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        tags: 'ams'
+    },
+    svg: {
+        fontCache: 'global',
+        displayAlign: 'left',
+        displayIndent: '2.0em'
+        }
+    };
+</script>
+
+{% block content %}
+<script type="text/javascript" async 
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+</script>
+
+{% endblock %}
