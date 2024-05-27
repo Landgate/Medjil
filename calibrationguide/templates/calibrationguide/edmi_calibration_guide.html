@@ -1,0 +1,507 @@
+{% load static %}
+<div class="post-content">
+    <p>Please login or signup to manage and calibrate your staff.</p>
+    <div class="single-item-container">
+        <button
+            class="mr-4 px-3 py-1 border border-transparent text-sm font-small rounded text-white bg-blue-500 hover:bg-gray-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out"
+            onclick="location.href='/accounts/login/'">Log in</button>
+        or
+        <button
+            class="ml-4 px-3 py-1 border border-transparent text-sm font-small rounded text-white bg-blue-500 hover:bg-gray-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out"
+            onclick="location.href='/accounts/signup/'">Sign up</button>
+    </div>
+    <br>
+
+    <h2 class="post-title">
+        EDMI Calibration Guide
+    </h2>
+
+    <div class="mt-5 mb-3 guide_view">
+        <ol class="toc-list" role="list">
+
+            <li>
+                <a href="#edm-Introduction">
+                    <span class="title">1. Introduction</span>
+                    <!-- <span class="page"><span class="visually-hidden">Page&nbsp;</span>5</span> -->
+                </a>
+            </li>
+            <li>
+                <a href="#edm-Definitions">
+                    <span class="title">2. Definitions</span>
+                    <!-- <span class="page"><span class="visually-hidden">Page&nbsp;</span>5</span> -->
+                </a>
+            </li>
+            <li>
+                <a href="#edm-Procedures">
+                    <span class="title">3. Instrument Calibration Procedure</span>
+                    <!-- <span class="page"><span class="visually-hidden">Page&nbsp;</span>5</span> -->
+                </a>
+                <ol role="list" style="list-style: none;">
+                    <li>
+                        <a href="#edm-Procedures1">
+                            <span class="title">3.1 Potential error sources</span>
+                            <!-- <span class="page"><span class="visually-hidden">Page&nbsp;</span>5</span> -->
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#edm-Procedures2">
+                            <span class="title">3.2 Legislative Requirements</span>
+                            <!-- <span class="page"><span class="visually-hidden">Page&nbsp;</span>8</span> -->
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#edm-Procedures3">
+                            <span class="title">3.3 Verification of EDMI Errors</span>
+                            <!-- <span class="page"><span class="visually-hidden">Page&nbsp;</span>8</span> -->
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#edm-Procedures4">
+                            <span class="title">3.4 EDM Baselines provided in Western Australia</span>
+                            <!-- <span class="page"><span class="visually-hidden">Page&nbsp;</span>8</span> -->
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#edm-Procedures5">
+                            <span class="title">3.5 Minimum Standard for the Uncertainty of Calibration</span>
+                            <!-- <span class="page"><span class="visually-hidden">Page&nbsp;</span>8</span> -->
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#edm-Procedures6">
+                            <span class="title">3.6 Verification Method</span>
+                            <!-- <span class="page"><span class="visually-hidden">Page&nbsp;</span>8</span> -->
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#edm-Procedures7">
+                            <span class="title">3.7 Verification Procedures</span>
+                            <!-- <span class="page"><span class="visually-hidden">Page&nbsp;</span>8</span> -->
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#edm-Procedures8">
+                            <span class="title">3.8 Reduction and Interpretation</span>
+                            <!-- <span class="page"><span class="visually-hidden">Page&nbsp;</span>8</span> -->
+                        </a>
+                    </li>
+                </ol>
+            </li>
+        </ol>
+
+        <br>
+        <hr style="border-top: 1px solid #ccc">
+        <div class="cf nr3 nl3">
+
+            <div class="fl w-50-ns ph3" id="EDM-Introduction">
+                <h2>1. Introduction</h2>
+                <p>Electronic Distance Measurement (EDM) instruments (EDM and prism => EDMI) are commonly used
+                    for measuring
+                    length.
+                    Regular calibration of these instruments is required to ensure the distances measured by
+                    these instruments
+                    are
+                    legally traceable back to the national and international standards. It is recommended EDMI
+                    should be
+                    calibrated
+                    every 6 months or after service or repair.</p>
+
+                <p>This EDMI calibration portal enables users to calibrate their instruments using one of the
+                    following
+                    calibration
+                    baselines:</p>
+
+                <ul STYLE="margin:30px">
+                    <li>Curtin University, Kent St, Bentley, 24hrs 7days a week</li>
+                    <li>Kalgoorlie Explosives Reserve, Piccadilly St, 7am to 3pm, Mon-Fri. Booking required</li>
+                    <li>Busselton Bypass 24hrs 7days a week</li>
+                </ul>
+
+                <p>Landgate re-calibrates EDM baselines every two years or as required. Check the EDM Baseline
+                    <i>Regulation
+                        13</i>
+                    certificate for details.</p>
+            </div>
+
+            <div class="fl w-50-ns ph3" id="EDM-Definitions"></div>
+            <h2>2. Definitions</h2>
+            <p><b>National Measurement Institute (NMI)</b> - is a Commonwealth statutory authority established
+                in 2004,
+                operating
+                under the National Measurement Act 1960. The Institute is responsible for advising the
+                Government on the
+                scientific,
+                technical and legislative requirements of Australia's national measurement system and has
+                specific
+                responsibilities
+                for co-ordinating the national measurement system for legal metrology.</p>
+            <p><b>Verifying Authority</b> - the NMI appoints verifying authorities under Regulation 71 and 73 of
+                the
+                National
+                Measurement Regulations 1999 in accordance with the National Measurement Act 1960. Verifying
+                authorities are
+                appointed where there is a need for legally traceable measurement. </p>
+            <p><b>Legally Traceable Measurement</b> - under the National Measurement Act 1960 measurements made
+                for a legal
+                purpose
+                must be able to be traced back to the National Reference Standard.</p>
+            <p><b>Legal Metrology</b> - comprises all measurement carried out for legal purpose. It includes all
+                measurement
+                that is
+                subject to regulation, by law or government decree.</p>
+            <p><b>Least Square Adjustment</b> - is rigorous method of adjusting redundant measurements which
+                produces the
+                best
+                adjusted values and associated uncertainties.</p>
+        </div>
+
+        <div class="fl w-50-ns ph3" id="EDM-Procedures"></div>
+        <h2>3. Instrument Calibration Procedure</h2>
+
+        <div id="EDM-Procedures1">
+            <h2>3.1 Potential error sources</h2>
+
+            <p>There are a number of sources of error inherent in surveying equipment. The three distinct
+                systematic errors,
+                which
+                may occur in EDM instruments are:</p>
+
+            <ul STYLE="margin:30px">
+                <li>Zero constant or index error</li>
+                <li>Scale error</li>
+                <li>Cyclic or short periodic error</li>
+            </ul>
+
+            <p>This procedure, know as EDMI calibration, is designed to identify the above errors and to
+                determine
+                instrument
+                constants and errors (instrument correction). Tis is achieved by conducting a series of
+                measurements on a
+                certified
+                baseline.</p>
+
+            <p>Note: It is beyond the scope of this procedure to identify all sources of error inherent in
+                surveying
+                equipment.
+                Surveyors should be aware of the limitations of the equipment they use and ensure that it is
+                well maintained
+                and
+                regularly checked.</p>
+        </div>
+        <div id="edm-Procedures2">
+            <h2>3.2 Legislative Requirements</h2>
+            <p>Matters relating to the uncertainty of surveys are detailed in Regulation 5 of the <i>Licensed
+                    Surveyors
+                    (General
+                    Surveying Practice) Regulation 1961</i>.</p>
+
+            <p>Matters relating to EDMI calibration are detailed in Regulation 20 of the <i>Licensed Surveyors
+                    (General
+                    Surveying
+                    Practice) Regulation 1961</i>.</p>
+        </div>
+        <div id="edm-Procedures3">
+            <h2>3.3 Verification of EDMI Errors</h2>
+
+            <div>
+                <h3>3.3.1 Zero Constant or Index Error</h3>
+
+                <p>Distances measured by a EDMI (combination of instrument and reflector) are subject to a
+                    constant error caused
+                    by the
+                    following three factors:</p>
+
+                <ul STYLE="margin:30px">
+                    <li>Electrical delays, geometrical detours and eccentricities in the instruments</li>
+                    <li>Differences between the electronic centre and the mechanical centre of the instrument
+                    </li>
+                    <li>Differences between the optical and mechanical centres of the reflector</li>
+                </ul>
+
+                <p>Once determined the value needs to be applied directly to every measurement. Note: Constant
+                    error applies
+                    only to a
+                    tested combination of instrument and reflector and it needs to be checked after changes of
+                    reflector, or
+                    after
+                    jolts, or instrument mounting or after service.</p>
+            </div>
+            <div>
+                <h3>3.3.2 Scale error</h3>
+                <p>Scale error is proportional to the length of the distance measured and is caused by:</p>
+
+                <ul STYLE="margin:30px">
+                    <li>Internal frequency errors, including those caused by external temperature and instrument
+                        "warm up"
+                        effects</li>
+                    <li>Uncertainty of measured temperature, pressure and humidity which affect the velocity of
+                        the propagation
+                    </li>
+                    <li>Non-homogeneous emissions/reception patterns from the emitting and receiving diodes
+                        (phase
+                        inhomogeneities)</li>
+                </ul>
+            </div>
+            <div>
+                <h3>3.3.3 Cyclic error</h3>
+                <p>The precision of an EDM instrument dependents on the precision of the internal phase
+                    measurement. Unwanted
+                    interference either through electronic/optical cross talk or multi-path effects of the
+                    transmitted signal
+                    onto the
+                    received signal causes cyclic error. The major form of the cyclic error is sinusoidal with a
+                    wavelength
+                    equal to the
+                    unit length of the instrument. The unit length is the scale on which the EDM instrument
+                    measures the
+                    distance and is
+                    derived from the fine measuring frequency. Unit length is equal to one half of the
+                    modulation wavelength
+                    (Rueger
+                    1984). The magnitude of the cyclic error can be of the order of 5 - 10 mm, but it will vary
+                    depending on the
+                    actual
+                    length measured.</p>
+            </div>
+        </div>
+        <div id="edm-Procedures4">
+            <h2>3.4 EDM Baselines provided in Western Australia</h2>
+
+            <div>
+                <h3>3.4.1 Curtin University Baseline</h3>
+
+                <p>In 1995 the Surveyor General reconditioned a ten-pillar baseline at Curtin University which
+                    had been in use
+                    for
+                    approximately ten years. Renovation included the placement of two additional pillars making
+                    the baseline a
+                    twelve-pillar baseline. New stainless steel pillar plate tops were provided to all pillars,
+                    with a 5/8"
+                    Whitworth
+                    threaded bolt at the centre of each pillar top. This baseline is situated on Curtin
+                    University property
+                    parallel to
+                    Kent Street, Bentley. The baseline is partially accessible by vehicles at all times via the
+                    track alongside
+                    the
+                    baseline. Permission is not necessary to use the baseline. Any conflict of usage should be
+                    decided on a
+                    first to
+                    occupy basis. The Curtin University contact is Ahmed El-Mowafy, Director of Graduate
+                    Research phone 9266
+                    3403,
+                    mobile 0403165643 or Email a.el-mowafy@curtin.edu.au. When contacting Curtin by Email please
+                    cc Petra
+                    Helmholz into
+                    the conversation.</p>
+            </div>
+
+            <div>
+                <h3>3.4.2 Kalgoorlie Baseline</h3>
+
+                <p>This EDM calibration baseline is situated on the Department of Mines and Petroleum Resources
+                    Explosives
+                    Reserve in
+                    Piccadilly Street, Kalgoorlie. The Kalgoorlie baseline consists of eight pillars set out
+                    such that all
+                    pillars are
+                    colinear. The baseline is readily accessible to 2WD vehicles when dry and is situated in a
+                    non-volatile area
+                    of the
+                    reserve. Phone in advance to ensure access 9091 7590. Any conflict of usage should be
+                    decided on a first to
+                    occupy
+                    basis.</p>
+            </div>
+            <div>
+                <h3>3.4.3 Busselton Baseline</h3>
+                <p>This EDM calibration baseline is situated on the Busselton Bypass west of Redgum Way and east
+                    of the Bussell
+                    Highway.
+                    The baseline consists of six pillars set out such that all pillars are colinear. The
+                    baseline is readily
+                    accessible
+                    to all vehicles. The baseline is accessible by vehicles at all times via the track alongside
+                    the length of
+                    the
+                    baseline. Permission is not necessary to use the baseline. Any conflict of usage should be
+                    decided on a
+                    first to
+                    occupy basis.</p>
+            </div>
+        </div>
+
+
+        <div id="edm-Procedures5">
+
+            <h2>3.5 Minimum Standard for the Uncertainty of Calibration</h2>
+            <p>Recommendation No 8 of the Working Party of the National Standards Commission on the calibration
+                of
+                Electromagnetic
+                Distance Measuring (EDM) equipment in 1983 states that the minimum standard for the uncertainty
+                of
+                calibrations of
+                an EDM instrument should be:</p>
+            <p>± (4.0mm + 20ppm) (5.1)</p>
+            <p>at the 95% confidence level. This recommendation means that an instrument correction is derived
+                for a
+                distance
+                meter/reflector combination from measurements on a certified EDM baseline and that the
+                uncertainty (against
+                the
+                National Standard) of this instrument correction (IC) shall not exceed ± (4.0mm + 20ppm).
+                Subsequent to a
+                calibration, the derived instrument correction is applied to distance measurements, thus
+                bringing the
+                distance meter
+                readings in line with the National Standard of length. In terms of standard deviation, the
+                instrument
+                correction
+                must be accurate to at least</p>
+            <p>± (2.0mm + 12ppm) (5.2)</p>
+            <p>It is important to realise that the uncertainty and standard deviations listed above refer to the
+                accuracy of
+                the
+                instrument correction and not to the precision of a distance measurement. The expression at
+                (5.2) does not
+                relate in
+                any way with the accuracy specification quoted by manufacturers for their instruments.</p>
+        </div>
+
+        <div id="edm-Procedures6">
+            <h2>3.6 Verification Method</h2>
+            <p>The verification method involves the measurement of a set of distances between pillars on the EDM
+                baseline to
+                determine the existence and magnitude of any errors present.</p>
+
+        </div>
+
+        <div id="edm-Procedures7">
+            <h2>3.7 Verification Procedures</h2>
+            <p>Booking sheets for the Curtin, Kalgoorlie and Busselton baselines are available.</p>
+
+            <div>
+                <h3>3.7.1 Measurement procedure on baselines</h3>
+                <p>Ascertain the unit length of the instrument (half of the modulation wavelength of the fine
+                    measurement) and
+                    record on
+                    the booking sheet. This length should be provided under the technical specifications for the
+                    instrument in
+                    the
+                    manufacturer's handbook.</p>
+            </div>
+            <div>
+                <h3>3.7.2 Sequence of measurements for a complete verification</h3>
+                <h4>3.7.2.1 Curtin University Baseline</h4>
+
+                <p>Place EDM on pillar 2 and measure to pillars 4, 5, 6, 7, 8, 9, 10, 11B and 12 in turn. Then
+                    shift EDM to
+                    pillar 3 and
+                    measure to pillars 12, 11B, 10, 9, 8, 7, 6, 5 and 4 in turn. This sequence requires the
+                    reflector to be
+                    moved up and
+                    down the line only once. Then follow 3.7.2.4.</p>
+
+                <h4>3.7.2.2 Kalgoorlie Baseline</h4>
+                <p>Place EDM on pillar 1 and measure to pillars 2, 3, 4, 5, 6, 7 and 8 in turn. Then shift EDM
+                    to pillar 2 and
+                    measure
+                    to pillars 8, 7, 6, 5, and 4 in turn. This sequence requires the reflector to be moved up
+                    and down the line
+                    only
+                    once. Then follow 3.7.2.4.</p>
+
+                <h4>3.7.2.3 Busselton Baseline</h4>
+                <p>Place EDM on pillar 1 and measure to pillars 2, 3, 4, 5 and 6 in turn. Then shift EDM to
+                    pillar 2 and measure
+                    to
+                    pillars 6, 5, 4, 3 and 1 in turn. This sequence requires the reflector to be moved up and
+                    down the line only
+                    once.
+                    Then follow 3.7.2.4.</p>
+
+                <h4>3.7.2.4 Procedure for all Baselines</h4>
+                <ol STYLE="margin:30px">
+                    <li>Complete EDM instrument 'check and adjust' as per manufacturer instruction.</li>
+                    <li>EDM instruments, thermometer and barometer are to be shaded by an umbrella in sunny and
+                        rainy
+                        conditions. Only
+                        one thermometer and barometer is required. A psychrometer or digital weather station may
+                        be used to
+                        measure
+                        relative humidity for a more accurate determination of atmospheric correction (not
+                        relevant to all
+                        EDM's).
+                        Ensure meteorological equipment has stabilised before making observations.</li>
+                    <li>Level EDM instrument and reflector carefully on all stations. Start with all foot screws
+                        in the mid
+                        position.
+                        The stainless steel pillar tops have been set level on pillars.</li>
+                    <li>Measure all heights to the instrument and prism from the pillar plate accurately to 1mm.
+                    </li>
+                    <li>The instrument should remain switched on during the whole calibration process.</li>
+                    <li>The same reflector, reflector mounting and tribrach should be used for all measurements.
+                        The reflector
+                        must have
+                        a unique identification (serial number) which must be entered on the booking sheet.</li>
+                    <li>All calibration measurements can be taken in either daytime or night-time but a mixture
+                        of day and night
+                        measurements is not acceptable.</li>
+                    <li>Meteorological field equipment will have current calibration status.</li>
+                    <li>On each line, four separate distance measurements should be taken as a minimum, with
+                        re-pointing after
+                        each
+                        measurement. </li>
+                    <li>Atmospheric Correction Control - Atmospheric corrections using corrected observed
+                        temperature and
+                        pressure
+                        should be entered into the EDM instrument. This is essential for Pulsed EDM instruments.
+                        Temperatures
+                        and
+                        pressure should be noted for every distance measured. Observers must note on the booking
+                        sheet whether
+                        the
+                        atmospheric correction control (PPM) is set to zero, or has been set according to the
+                        prevailing
+                        temperature and
+                        pressure.</li>
+                </ol>
+            </div>
+        </div>
+
+        <div id="edm-Procedures8">
+            <h2>3.8 Reduction and Interpretation</h2>
+            <p>This portal has been developed by Landgate for the calibration of EDM instruments against
+                baselines.</p>
+            <p>The calibration results and measurements for each EDM instrument and baseline are stored in a
+                database for
+                future
+                reference and legal traceability. The Curtin, Kalgoorlie and Busselton baseline details have
+                already been
+                included
+                in the database, but additional baselines may be added. A selection of EDM instruments and
+                reflector makes
+                and
+                models are also included.</p>
+            <p>The instrument details and measured distances are entered interactively by the operator. After
+                the observed
+                data is
+                reduced to obtain horizontal distances and their associated variances, a least squares
+                adjustment is
+                performed. The
+                adjustment is performed according to ISO standard.</p>
+            <p>The portal produces report for analysing instrument calibration details. A final report which
+                summarises the
+                results
+                of an EDI calibration is produced.</p>
+            <p>The minimum standards for the uncertainty of calibration are described in terms of Recommendation
+                No.8 of the
+                working
+                party of the National Standards Commission on the calibration of EDM Equipment of 1 February
+                1983. All
+                uncertainties
+                are specified at the 95% confidence level. </p>
+        </div>
+    </div>
+</div>
