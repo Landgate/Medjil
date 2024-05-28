@@ -186,22 +186,21 @@ def user_signup(request):
         return redirect('accounts:login')
     if request.method=="POST":
         form = SignupForm(data = request.POST)
-        if form.is_valid():
+        form2 = CompanyForm(data = request.POST)
+        
+        # if company is Others, both forms must validate
+        # if company is not Others only form2 does not need to validate
+        if ((form.is_valid() and request.POST['company']!='1')
+            or (form.is_valid() and form2.is_valid())
+            ):
             email = form.cleaned_data.get('email')
             user = form.save(commit=False)
             user.is_active = False
             
             if user.company.company_abbrev == "OTH":
-                company_name = request.POST['company_name']
-                company_abbrev = request.POST['company_abbrev'].upper()
-                if Company.objects.get(company_name__exact = company_name):
-                    user.company = Company.objects.get(company_name__exact = company_name)
-                else: 
-                    Company.objects.update_or_create(
-                        company_name = company_name,
-                        company_abbrev = company_abbrev
-                    )
-                    user.company = Company.objects.get(company_name__exact = company_name)
+                user_company = form2.save()
+                user.company = user_company
+                
             user.save()
 
             # Assign Groups
@@ -216,9 +215,7 @@ def user_signup(request):
                             ]
             if email.endswith('landgate.wa.gov.au'):
                 user.groups.add(Group.objects.get(name = 'Landgate'))
-            # else:
-            #     user.groups.add(Group.objects.get(name = 'Others'))
-            # Assign to geodesy group
+
             if email in geodesy_group:
                 user.groups.add(Group.objects.get(name = 'Geodesy'))
                 user.is_staff = True
@@ -242,7 +239,9 @@ def user_signup(request):
                 return redirect('/')
     else: 
         form = SignupForm()
-    return render(request, 'accounts/signup.html', {'form':form})
+        form2 = CompanyForm()
+    return render(request, 'accounts/signup.html', 
+                  {'form':form, 'form2':form2})
 
 # User log in
 def user_login(request):

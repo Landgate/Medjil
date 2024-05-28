@@ -45,10 +45,11 @@
                     <table>
                         <colgroup>
                             <col span="1" width="30%">
-                            <col span="2" width="70%">
+                            <col span="2" width="65%">
+                            <col span="2" width="5%">
                         </colgroup>
                         {% for field in form %}
-                            <tr>
+                            <tr id= id_{{ field.name }}_row>
                                 <td>{{ field.label_tag }}</td>
                                 <td> 
                                     {{ field }}
@@ -61,16 +62,25 @@
                                         <p class="helptext">{{ field.help_text }}</p>
                                     {% endif %}
                                 </td>
+                                <td>
+                                {% if field.name == "company" %}
+                                <button style="width:35px; height:35px" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" type="button" id="id_add_btn" onclick="add_button();return true;">&#43;</button>
+                                {% endif %}
+                                </td>
                             </tr>
                             {% if field.name == "company" %}
-                                <tr id="id_company_name">
-                                    <td><label for="company_name" class="text-sm text-blue-500">Company Name:</label> </td>
-                                    <td> <input type="text" name="company_name" placeholder="Enter Company name" class="text-blue-500"> </td>
-                                </tr>
-                                <tr id="id_company_abbr">
-                                    <td><label for="company_abbrev" class="text-sm text-blue-500">Abbreviation:</label></td> 
-                                    <td><input type="text" name="company_abbrev" placeholder="Enter short name" class="text-blue-500"></td> 
-                                </tr>
+                                {% for field2 in form2 %}
+                                    <tr id= id_{{ field2.name }}_row>
+                                        <td><label for="id_{{field2.name}}" class="text-sm text-blue-500">{{field2.label}}:</label></td>
+                                        <td> 
+                                            {{ field2 }}
+                                             <!-- Errors -->
+                                            {% for error in field2.errors %}
+                                                <p class="error error-danger">{{ error }}</p>
+                                            {% endfor %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
                             {% endif %}
                         {% endfor %}
                     </table>
@@ -88,7 +98,6 @@
         </div>
 
         <script type="text/javascript">
-            // const log = console.log;
             const defaultCompanyText = document.querySelector('#id_company option[value=""')
             if (defaultCompanyText) {
                 defaultCompanyText.setAttribute('class', 'default');
@@ -96,28 +105,55 @@
             }
 
             const companySelect = document.querySelector(`[id="id_company"]`);
-            const newCompanyName = document.getElementById("id_company_name")
-            const newCompanyAbbr = document.getElementById("id_company_abbr")
+            const newCompanyName = document.getElementById("id_company_name_row");
+            const newCompanyAbbr = document.getElementById("id_company_abbrev_row");
+            const old_csk = document.getElementById("id_csk_row");
+            const companyNameField = document.getElementById("id_company_name");
+            const companyAbbrevField = document.getElementById("id_company_abbrev");
+            const btn = document.getElementById("id_add_btn");
             
             // Display None
-            newCompanyName.style.display = "none"
-            newCompanyAbbr.style.display = "none"
+            newCompanyName.style.display = "none";
+            newCompanyAbbr.style.display = "none";
+            old_csk.style.display = "table-row";
+            companyNameField.removeAttribute("required");
+            companyAbbrevField.removeAttribute("required");
 
             companySelect.addEventListener(`change`, (e) => {
-              // log(`e.target`, e.target);
-              const select = e.target;
-              const value = select.value;
-              const desc = select.options[select.selectedIndex].text;
-              // log(`value desc`, value, desc);
+              var select = e.target;
+              var value = select.value;
+              var desc = select.options[select.selectedIndex].text;
+              var buttonText = btn.textContent || btn.innerText;
               if (desc=="Others") {
-                //   document.getElementById("companyDiv").style.display = "table-row";
                 newCompanyName.style.display = "table-row";
                 newCompanyAbbr.style.display = "table-row";
+                old_csk.style.display = "none";
+                companyNameField.setAttribute("required","");
+                companyAbbrevField.setAttribute("required","");
+                btn.innerText = "-"
               } else {
-                //   document.getElementById("companyDiv").style.display = "none";
                 newCompanyName.style.display = "none";
                 newCompanyAbbr.style.display = "none";
+                old_csk.style.display = "table-row";
+                companyNameField.removeAttribute("required");
+                companyAbbrevField.removeAttribute("required");
+                btn.innerText = "+"
               }
             });
+            function add_button(){
+                var buttonText = btn.textContent || btn.innerText;
+                if (buttonText === "+"){
+                    companySelect.value = 1;
+                }else{
+                    companySelect.value = "";
+                }
+                var event = new Event('change');
+                companySelect.dispatchEvent(event);
+            }
+            
+            window.onload = function() {
+                var event = new Event('change');
+                companySelect.dispatchEvent(event);
+            }
         </script>
 {% endblock %}

@@ -162,6 +162,7 @@
 								<th>No.</th>
 						  	<th>Company Name</th>
 						  	<th>Abbreviation</th>
+						  	<th>Company Secret Key</th>
 						  	<th>Action</th>
 					  	</tr>
 					  	{% for c in company_page_obj %}
@@ -169,6 +170,7 @@
 								<td>{{ forloop.counter|add:-1|add:company_page_obj.start_index }}</td>
 								<td>{{ c.company_name }}</td>
 								<td>{{ c.company_abbrev }}</td>
+								<td>{{ c.company_secret_key }}</td>
 								<td class="tab-button">
 									<a class="svg-icon edit" href="{% url 'accounts:company_update' c.id %}" >
 										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000" class="bi bi-pencil-fill" id = "edit-view" viewBox="0 0 16 16">
