@@ -47,6 +47,7 @@ class Migration(migrations.Migration):
                     default=accounts.models.generate_short_hash,
                     help_text="Users aleady registerd with this company have access to this key",
                     max_length=8,
+                    blank=True, null=True,
                     verbose_name="CSK - Company Secret Key")),
             ],
             options={

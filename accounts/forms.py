@@ -29,11 +29,13 @@ class SignupForm(UserCreationForm):
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
     password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
 
-    company = forms.ModelChoiceField(empty_label='Choose your firm/company',
-                                    queryset=Company.objects.all(),
-                                    widget=forms.Select())
+    company = forms.ModelChoiceField(
+        empty_label='Choose your firm/company',
+        queryset=Company.objects.all(),
+        widget=forms.Select())
     
     csk = forms.CharField(
+        required=False,
         label='Company Secret Key')
     
     class Meta:
@@ -56,9 +58,9 @@ class SignupForm(UserCreationForm):
         company = self.cleaned_data.get('company')
         csk = self.cleaned_data.get('csk')
         
-        if not Company.objects.filter(id=company.id, company_secret_key=csk).exists():
-            raise forms.ValidationError("The Company Secret Key is incorrect. Existing users from this company with Medjil login's have access to this key.")
-        
+        if Company.company_name != "Others":
+            if not Company.objects.filter(id=company.id, company_secret_key=csk).exists():
+                raise forms.ValidationError("The Company Secret Key is incorrect. Existing users from this company with Medjil login's have access to this key.")
         return csk
     
     def save(self, commit=True):

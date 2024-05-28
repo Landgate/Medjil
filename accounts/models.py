@@ -79,6 +79,7 @@ class Company(models.Model):
     company_secret_key = models.CharField(
         max_length=8,
         default=generate_short_hash,
+        blank=True, null=True,
         verbose_name='CSK - Company Secret Key',
         help_text='Users aleady registerd with this company have access to this key')
 
@@ -87,6 +88,10 @@ class Company(models.Model):
 
     def __str__(self):
         return self.company_name
+    
+    def save(self, *args, **kwargs):
+        self.company_abbrev = self.company_abbrev.upper()
+        super().save(*args, **kwargs)
     
         
 ####### CUSTOM MANAGER TO MAKE EMAIL AS UNIQUE ID INSTEAD OF USERNAME ######
