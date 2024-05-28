@@ -51,14 +51,16 @@
 						<table style="width:100%">
 							<tr>
 						  	<th>Name</th>
-						  	<th>Company</th>						  	
+						  	<th>Company</th>
+						  	<th>Company Secret Key</th>
 						  	<th>Email</th>
-						  	<th>Last login</th>			
-						  	<th>Action</th>				  	
+						  	<th>Last login</th>	
+						  	<th>Action</th>
 					  	</tr>
 							<tr>
 								<td>{{ this_user.first_name }} {{ this_user.last_name }}</td>		
-								<td>{{ this_user.company }}</td>														
+								<td>{{ this_user.company }}</td>
+								<td>{{ this_user.company.company_secret_key }}</td>
 								<td>{{ this_user.email }}</td>
 								<td>{{ this_user.last_login }}</td>
 								<td> 
