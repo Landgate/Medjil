@@ -20,3 +20,6 @@ from django.apps import AppConfig
 
 class RangecalibrationConfig(AppConfig):
     name = 'rangecalibration'
+
+    def ready(self):
+        import rangecalibration.signals  # noqa

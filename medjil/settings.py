@@ -30,6 +30,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 from pathlib import Path
 import os
 import dj_database_url
+from django.conf import settings
 from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -177,7 +178,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'assets'),]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
+static_dir = settings.STATIC_URL
 UPLOAD_ROOT = os.path.abspath('/mnt/EFS')
 UPLOAD_URL = '/uploads/'
 

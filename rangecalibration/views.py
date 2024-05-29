@@ -44,6 +44,8 @@ from calibrationsites.models import (Pillar,
 # forms
 from .forms import RangeParamForm
 
+# functions
+from .signals import compute_range_parameters_one
 # Home View
 class HomeView(generic.ListView):
     model = RangeCalibrationRecord
@@ -424,6 +426,13 @@ def adjust(request, id):
         HeightDifferenceModel.objects.create(
                                     calibration_id = thisRecord,
                                     height_difference = output_hdiff) 
+    
+    # Update the RangeParameter database
+    try:
+        compute_range_parameters_one(thisRecord.site_id)
+    except:
+        pass
+        # messages(request, 'Successfully updated the Calibration Range.')
     # build the context to render to the template
     context = {
             'calibration_id' : thisRecord.id,
@@ -438,7 +447,6 @@ def adjust(request, id):
             'output_hdiff' : output_hdiff,
             'output_adj': output_adj 
         }
-
     return render(request, 'rangecalibration/adjustment_report.html',  context = context)
 ###############################################################################
 ############################### Compute Annual Cycle ##########################

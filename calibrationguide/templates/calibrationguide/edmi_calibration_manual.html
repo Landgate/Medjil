@@ -279,9 +279,9 @@
                <p>&emsp;&emsp;zpc = Zero point correction (an additive constant of the certified EDMI)</p>
             </div>
             <div id="EDMI-Chapter2_3">
-               <h2>2.3 Example: Formation of observation equations</h2>
+               <h3>2.3 Example: Formation of observation equations</h3>
                <p>Let's consider the following example baseline, comprising four pillars:</p>
-               <img src="\media\TechnicalManual\tbaseline\Medjil_Technical_Manual\Picture_1_1.png"
+               <img src="{% static 'images/CalibrationGuides/edmi/Picture_1_1.png' %}"
                   alt="Example of EDM Baseline">
 
                <p>A set of linear observation equations can be formulated based on Eq. 1.1 and Eq. 1.2 as follows:
@@ -315,8 +315,8 @@
             </div>
 
             <div id="EDMI-Chapter2_4">
-               <h2>2.4 Inter-pillar distances survey</h2>
-               <img src="\media\TechnicalManual\tbaseline\Medjil_Technical_Manual\Picture_1_3.png"
+               <h3>2.4 Inter-pillar distances survey</h3>
+               <img src="{% static 'images/CalibrationGuides/edmi/Picture_1_3.png' %}"
                   alt="Inter-pillar distances survey">
                <p>To calibrate an EDM baseline, a series of inter-pillar distance measurements (surveys) are
                   necessary,
@@ -351,7 +351,7 @@
                </ul>
 
                <p>Refer to this <a
-                     href="\media\TechnicalManual\tbaseline\Medjil_Technical_Manual\BUSS_baseline_calibration_edm_observations.csv"
+                     href="{% static 'images/CalibrationGuides/edmi/BUSS_baseline_calibration_edm_observations.csv"
                      target="_self">sample dataset</a> required for an EDM baseline calibration survey data format.
                </p>
                <br>
@@ -361,7 +361,7 @@
             </div>
 
             <div id="EDMI-Chapter2_5">
-               <h2>2.5 Pillar offsets survey</h2>
+               <h3>2.5 Pillar offsets survey</h3>
                <p>The pillar offset survey determines the offset of each pillar from the alignment of the first (1)
                   and
                   last pillar (n). Medjil performs the required reduction of observations during the EDM Baseline
@@ -369,7 +369,7 @@
                   calculation of the pillar offset if the survey setup includes measurements to pillar 1 and pillar
                   n.
                </p>
-               <img src="\media\TechnicalManual\tbaseline\Medjil_Technical_Manual\Picture_1_2.png" alt="Pillar Offsets">
+               <img src="{% static 'images/CalibrationGuides/edmi/Picture_1_2.png' %}" alt="Pillar Offsets">
                <p>For each pillar setup, an arbitrary set of coordinates (E<sub>j</sub>, N<sub>j</sub>) are
                   calculated
                   for all pillars observed according to the formula:</p>
@@ -399,11 +399,11 @@
             </div>
 
             <div id="EDMI-Chapter2_6">
-               <h2>2.6 Pillar heights survey</h2>
+               <h3>2.6 Pillar heights survey</h3>
                <p>Pillar heights (H<sub>j</sub>) are to be determined as orthometric heights (eg. AHD71) and provided
                   with standard deviations. The standard deviations should preferably be derived from redundant
                   observations. Data for the height of pillars is to be provided in an ASCII file. Refer to this
-                  <a href="\media\TechnicalManual\tbaseline\Medjil_Technical_Manual\BUSS_ baseline_calibration_level_observations.csv"
+                  <a href="{% static 'images/CalibrationGuides/edmi/BUSS_ baseline_calibration_level_observations.csv"
                      target="_self">sample dataset</a> for the required data format.
                </p>
                <p>Pillar coordinates are required and used to determine the baseline location in order to derive
@@ -417,7 +417,7 @@
             <h2>3. EDM Instrumentation calibration</h2>
 
             <div id="EDMI-Chapter3_1">
-               <h2>3.1 Systematic errors in EDM instruments</h2>
+               <h3>3.1 Systematic errors in EDM instruments</h3>
                <p>
                   There are three distinct systematic errors which may occur in EDM instruments. The calibration of
                   an
@@ -427,7 +427,7 @@
                </p>
 
                <div id="EDMI-Chapter3_1_1">
-                  <h3>3.1.1 Zero Point Correction (zpc)</h3>
+                  <h4>3.1.1 Zero Point Correction (zpc)</h4>
                   <p>All distances measured by a particular EDM instrument and reflector combination (EDMI) are
                      subject to a
                      constant error caused by the following factors:
@@ -445,7 +445,7 @@
                </div>
 
                <div id="EDMI-Chapter3_1_2">
-                  <h3>3.1.2 Scale Correction Factor (scf)</h3>
+                  <h4>3.1.2 Scale Correction Factor (scf)</h4>
 
                   <p>Scale Correction Factor is proportional to the length of the distance measured and is caused by:
                   <ul>
@@ -461,7 +461,7 @@
                </div>
 
                <div id="EDMI-Chapter3_1_3">
-                  <h3>3.1.3 Cyclic Errors</h3>
+                  <h4>3.1.3 Cyclic Errors</h4>
                   <p>The precision of an EDM instrument dependents on the precision of the internal phase
                      measurements.
                      Unwanted interference through electronic/optical cross talk or multi-path effects of the
@@ -478,7 +478,7 @@
             </div>
 
             <div id="EDMI-Chapter3_2">
-               <h2>3.2 Mathematical model of the EDM Instrument Correction (IC)</h2>
+               <h3>3.2 Mathematical model of the EDM Instrument Correction (IC)</h3>
                <div>
                   $$
                   IC=zpc+scf*D+1C\sin{\left(2\pi\frac{D}{U}\right)+2C\cos{\left(2\pi\frac{D}{U}\right)+3C\sin{\left(4\pi\frac{D}{U}\right)+4C\cos{\left(4\pi\frac{D}{U}\right)}}}}\
@@ -505,7 +505,7 @@
             </div>
 
             <div id="EDMI-Chapter3_3">
-               <h2>3.3 Observation equations</h2>
+               <h3>3.3 Observation equations</h3>
                <p>For every distance measured on a EDM baseline the following observation equation can be derived:
                </p>
                <div>
@@ -553,7 +553,7 @@
          </div>
 
          <div class="fl w-50-ns ph3" id="EDMI-Chapter4">
-            <h3>4. Corrections</h3>
+            <h2>4. Corrections</h2>
 
             <div id="EDMI-Chapter4_1">
                <h3>4.1 Calibration Correction</h3>
@@ -734,7 +734,7 @@
                <p>Pillar coordinates and elevation are required and used to determine the baseline location to derive
                   geometric correction of the distances. Medjil computes an average value of the supplied
                   coordinates.</p>
-               <img src="\media\TechnicalManual\tbaseline\Medjil_Technical_Manual\Picture_3_1.png"
+               <img src="{% static 'images/CalibrationGuides/edmi/Picture_3_1.png' %}"
                   alt="Geometric correction">
                <div>
                   $$ d_R\ =\ \sqrt{\frac{\left(d_O\right)^2-\left(O_1-O_2\right)^2-(\Delta
@@ -872,11 +872,11 @@
                   </p>
                   <br>Table 5.1: Medjil uncertainty budget for calibration of EDM Baseline
                   <br>
-                  <img src="\media\TechnicalManual\tbaseline\Medjil_Technical_Manual\Picture_4_2.png"
+                  <img src="{% static 'images/CalibrationGuides/edmi/Picture_4_2.png' %}"
                      alt="Medjil uncertainty budget for calibration of EDM Baseline ">
                   <br>
                   <br>Table 5.2: Medjil uncertainty budget for calibration of EDM Instrumentation
-                  <img src="\media\TechnicalManual\tbaseline\Medjil_Technical_Manual\Picture_4_3.png"
+                  <img src="{% static 'images/CalibrationGuides/edmi/Picture_4_3.png' %}"
                      alt="Medjil uncertainty budget for calibration of EDM Instrumentation">
                   <br>
                   <br>
@@ -1668,7 +1668,7 @@
                      records, (b) 'Derived' from data during computations, and (c) 'Custom' user defined uncertainty
                      sources
                      and values.</p>
-                  <img src="\media\TechnicalManual\tbaseline\Medjil_Technical_Manual\Picture_4_1.png"
+                  <img src="{% static 'images/CalibrationGuides/edmi/Picture_4_1.png' %}"
                      alt="Uncertainty budgets">
                   <p>Where:</p>
                   <p>
@@ -1970,7 +1970,7 @@
                <p>The calibration reports displays a set of predefined endnotes. These notes can be specified for both
                   EDMI
                   and Baseline calibration and may be either mandatory or company's specific:</p>
-               <img src="\media\TechnicalManual\tbaseline\Medjil_Technical_Manual\Picture_6_2.png" alt="End notes">
+               <img src="{% static 'images/CalibrationGuides/edmi/Picture_6_2.png' %}" alt="End notes">
             </div>
             <div id="EDMI-Chapter7_3">
                <h3>7.3 Interlaboratory comparison - Baselines</h3>

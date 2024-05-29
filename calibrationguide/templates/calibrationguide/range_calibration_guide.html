@@ -1,5 +1,6 @@
 
 {% load static %}
+{% static 'data/Range Calibration' as test_dir %}
 <div class="post-content">
     <h2 class="post-title">
         Staff Range Calibration Guide
@@ -86,7 +87,7 @@
             <div class="grid-2">
                 <div>
                     <p>
-                        <img src="{% static 'images/CalibrationGuides/observing-pillar 12.png' %}" alt="Observing Pillars" />
+                        <img src="{% static 'images/CalibrationGuides/staff/observing-pillar 12.png' %}" alt="Observing Pillars" />
                     </p>
                     <h4>Digital level set on Pillar MV 83 (high pillar)</h4>
                     <p>
@@ -95,7 +96,7 @@
                 </div>
                 <div>
                     <p>
-                        <img src="{% static 'images/CalibrationGuides/invar-staff.png' %}" alt="Invar staff" />
+                        <img src="{% static 'images/CalibrationGuides/staff/invar-staff.png' %}" alt="Invar staff" />
                     </p>
                     <h4>Invar staff set on Pin 2</h4>
                     <p>
@@ -104,7 +105,7 @@
                 </div>
                 <div>
                     <p>
-                        <img src="{% static 'images/CalibrationGuides/pin-config.png' %}" alt="Pin configuration" />
+                        <img src="{% static 'images/CalibrationGuides/staff/pin-config.png' %}" alt="Pin configuration" />
                     </p>
                     <h4>Stainless steel pins glued in granite rock</h4>
                     <p>
@@ -113,7 +114,7 @@
                 </div>
                 <div>
                     <p>
-                        <img src="{% static 'images/CalibrationGuides/observing-pillar 11.png' %}" alt="Obsering from Pillar A" />
+                        <img src="{% static 'images/CalibrationGuides/staff/observing-pillar 11.png' %}" alt="Obsering from Pillar A" />
                     </p>
                     <h4>Observing from Pillar MV 83(high pillar).</h4>
                     <p>
@@ -128,10 +129,10 @@
             <p>
                 The Boya Barcode Staff Calibration Range is monitored on a regular basis. Landgate provides this staff calibration data processing service to ensure staves are calibrated based on more than two years of monitoring data, which is also updated time-to-time. Please download the following documents before you go to Boya: 
                 <ul class="pxl-7">
-                    <li><a href="https://d1a51tfkojxvkb.cloudfront.net/boya/2017_Access-sketch-Boya-barcode-staff-calibration.pdf" target="_blank">Access details</a> of the Boya barcode staff calibration range</li>
-                    <li><a href="https://d1a51tfkojxvkb.cloudfront.net/boya/Boya%20Pin%20Configuration.pdf" target="_blank">Diagram of the pin configuration</a></li>
-                    <li><a href="https://d1a51tfkojxvkb.cloudfront.net/boya/Barcoded_booking_sheet.pdf" target="_blank">Barcode Staff Booking Sheet</a></li>
-                    <li><a href="https://d1a51tfkojxvkb.cloudfront.net/sample_data/LS15_20200917.ASC" target="_blank">Sample ASCII file</a></li>
+                    <li><a href="{% static 'images/CalibrationGuides/staff/boya/2017_Access-sketch-Boya-barcode-staff-calibration.pdf' %}" target="_blank">Access details</a> of the Boya barcode staff calibration range</li>
+                    <li><a href="{% static 'images/CalibrationGuides/staff/boya/Boya Pin Configuration.pdf' %}" target="_blank">Diagram of the pin configuration</a></li>
+                    <li><a href="{% static 'images/CalibrationGuides/staff/boya/Barcoded_booking_sheet.pdf' %}" target="_blank">Barcode Staff Booking Sheet</a></li>
+                    <li><a href="{% static 'images/CalibrationGuides/staff/boya/LS15_20200917.ASC' %}" target="_blank">Sample ASCII file</a></li>
                 </ul>
                 </p>
         </div>
@@ -160,14 +161,14 @@
                             <h4>Checking the digital level (bubble)</h4>
                             <p>A Leica LS15 digital level, for example, has a <strong>Adjust</strong> menu under the <strong>Tools</strong> in the main menu.</p>
     
-                            <img src="{% static 'images/CalibrationGuides/LS15-adjust-bubble.png' %}" height="30%" style="border: 2px solid #888;" alt="Adjust Level Bubble of Digital Level">
+                            <img src="{% static 'images/CalibrationGuides/staff/LS15-adjust-bubble.png' %}" height="30%" style="border: 2px solid #888;" alt="Adjust Level Bubble of Digital Level">
     
                         </li>
                         <li>
                             <h4>Checking the Collimation Error (or line-of-sight) using the Two-Peg-Test.</h4>
-                            <p>The line-of-sight error (collimation error) is the vertical angle (&alpha;) between the actual line-of-sight and the ideal horizontal line. It is usually determined by a level test called a Two-Peg-Test. To facilitate this test, four collinear spikes in concrete, 20m apart, are available on the access track to the Calibration Range (see, <a href="https://d1a51tfkojxvkb.cloudfront.net/boya/2017_Access-sketch-Boya-barcode-staff-calibration.pdf" target="_blank">Access Diagram</a> ). The general procedure for the Two-Peg-Test is shown in the figure below.</p>
+                            <p>The line-of-sight error (collimation error) is the vertical angle (&alpha;) between the actual line-of-sight and the ideal horizontal line. It is usually determined by a level test called a Two-Peg-Test. To facilitate this test, four collinear spikes in concrete, 20m apart, are available on the access track to the Calibration Range (see, <a href="{% static 'images/CalibrationGuides/staff/boya/2017_Access-sketch-Boya-barcode-staff-calibration.pdf" target="_blank">Access Diagram</a> ). The general procedure for the Two-Peg-Test is shown in the figure below.</p>
                             
-                            <img src="{% static 'images/CalibrationGuides/LS15-two-peg-test.png' %}" height="30%" style="border: 2px solid #888;" alt="Two Peg Test">
+                            <img src="{% static 'images/CalibrationGuides/staff/LS15-two-peg-test.png' %}" height="30%" style="border: 2px solid #888;" alt="Two Peg Test">
                             
                             <p>
                                 By following the procedures described in the figure above, the line-of-sight (or the Collimation) error can be determined and automatically adjusted by selecting the <strong>F1 Line of Sight</strong> menu under <strong>Tools</strong> in a Leica LS15 digital level. Other instruments may provide similar capabilities and its best to refer to the instrument <i>User Manual</i>.   
@@ -178,7 +179,7 @@
                             <p>
                                 Invar staves come with two levelling bubbles attached on the rod. The centering of the level bubbles may go off due to shock or stress from transportation and/or normal wear and tear. The level bubbles can be adjusted by setting up the invar staff on stable location and aligning the (top and bottom) tip of the graduation marks (on both sides) with the crosshair of the Digital Level or a Total Station/Theodolite, as shown in the figure below.     
                             </p>
-                            <img src="{% static 'images/CalibrationGuides/LS15-adjust-bubble-staff.png' %}" height="30%" style="border: 2px solid #888;" alt="Adjust Level Bubble of Invar Staff">
+                            <img src="{% static 'images/CalibrationGuides/staff/LS15-adjust-bubble-staff.png' %}" height="30%" style="border: 2px solid #888;" alt="Adjust Level Bubble of Invar Staff">
                         </li>
                     </ol>
                 </li>
@@ -203,7 +204,7 @@
                         </li>
                         <li>A complete set of observations for a standard <b><u>four</u></b> metre staff consist of:
                             <ul class="pxl-7"> 
-                                <li> Set up on Pillar MV 83
+                                <li> Set up on Pillar MV 83 (Set 1 & 2)
                                     <ul class="pxl-5">
                                         <li>backsight to the staff at Pin No 1 </li>
                                         <li>intermediate sights to the staff at Pin Nos 2 to 20 </li>
@@ -214,14 +215,14 @@
                         </li>
                         <li>A complete set of observations for a standard <b><u>three</u></b> metre staff consist of:
                             <ul class="pxl-7">
-                                <li>Setup on Pillar MV83
+                                <li>Setup on Pillar MV83 (Set 1)
                                     <ul class="pxl-5">						
                                         <li>backsight to the staff at Pin No 1</li>
                                         <li>intermediate sights to the staff at Pin Nos 2 to 14</li>
                                         <li>foresight to the staff at Pin No 15</li>
                                     </ul>
                                 </li>
-                                <li>Setup on Pillar B
+                                <li>Setup on Pillar B (Set 2)
                                     <ul class="pxl-5"> 
                                         <li>backsight to the staff at Pin No 7</li> 
                                         <li>intermediate sights to the staff at Pin Nos 8 to 20</li> 
@@ -242,17 +243,84 @@
             <p>
                 This procedure can only be performed by an authorised Landgate Staff. 
             </p>
-            <ol>
-                <li>
-                    <h3>Fieldnotes and Data</h3>
+            <ol style="list-style: none;">
+                <li id="Range-Medjil-Procedures1">
+                    <h3>5.1 Fieldnotes and Data</h3>
+                    <p>The downloaded level data from a Leica Digital level (LS15/16) and the corresponding completed Booking Sheet (No 4) are shown in the figure below. If the downloaded data contains data from other surveys, it needs to be deleted and edited to just contain the right information. See this <a href="{% static 'data/Range Calibration/M_220608BOYA_Invar26296.ASC' %}" target="_blank">sample dataset</a> to ensure its integrity.</p>
+    
+                    <div style="display: flex; gap: 30px">
+                        <img src="{% static 'images/CalibrationGuides/staff/LS15-DigitalFieldRecord.png' %}" height="600" style="border: 2px solid #888;" alt="Adjust Level Bubble of Invar Staff">
+                        <img src="{% static 'images/CalibrationGuides/staff/LS15-FieldBook 2.png' %}" height="600" style="border: 2px solid #888;" alt="Adjust Level Bubble of Invar Staff">
+                    </div>
+                    <br>
+                    <p>At the moment, Medjil can read only read two (GSI) file formats exported by the Leica Digital Level (LS15/16 and DNA03). Should we plan to use digital level from a different manufacturer, a new python function will need to added in <b>'/rangecalibration/views.py'</b> to read a different file format. </p>
+                </li>
+                <li id="Range-Medjil-Procedures2">
+                    <h3>5.2 Staff Range Calibration</h3>
+                    <ul style="list-style: none;">
+                        <li>
+                            <b>Step 1:</b> To start a new Staff Range Calibration, click on the <b>Staff Calibration</b> > <b>Range Calibration</b>.
+                        </li>
+                        <br>
+                        <li>
+                            <b>Step 2:</b> Click on the <b>New calibration</b> button. Enter a <b>Job Number</b> with a ten digit alphanumeric code. 
+                            <ul>
+                                <li><b>Site Name</b>: select <b>Boya</b> from the dropdown.</li>
+                                <li><b>Staff Number</b>: select the staff number or enter a new one by clicking on the + button. This is usually an <b>invar</b> staff recently calibrated by an internationally recognised laboratory with values determined for <i>Coefficient of expansion</i>($\alpha$) and <i>the scale factor</i>($m_{0}$) at a <i>standard tempearture</i>($T_{0}$).</li>
+                                <li><b>Level Number</b>: select the digital level (number) or enter a new one by clicking on the + button.</li>
+                                <li><b>Calibration date</b>: Choose a calibration date.</li>
+                                <li>Enter an <b>Observer</b> name or tick the <b>I am the Observer</b>, if the observer is same as the person performing this procedure.</li>
+                                <li>Click the <b>next</b> button.</li>
+                                <li><b>Note:</b> Form errors will be shown in red text to help correctly fill the form. </li>
+                            </ul>                          
+                        </li>
+                        <br>
+                        <li><img src="{% static 'images/CalibrationGuides/staff/Medjil-Step1_2_3.png' %}" alt="Medjil Steps 1-3"></li>
+                        <br>
+                        <li>
+                            <b>Step 3:</b> Enter the temperatures and select the datasets.
+                            <ul>
+                                <li><b>Start Temperature (set 1)</b>: Temperature at the beginning of measurement. For example, at Pillar MV 83 for a 3 or 4 metre staff.</li>
+                                <li><b>End Temperature (set 1)</b>: Temperature at the end of measurement. For example, at Pillar MV 83 for a 3 or 4 metre staff.</li>
+                                <li><b>Start Temperature (set 2)</b>: Temperature at the beginning of measurement. For example, at Pillar B for a 3 metre staff and at Pillar MV 83 for a 4 metre staff.</li>
+                                <li><b>End Temperature (set 2)</b>: Temperature at the end of measurement. For example, at Pillar  B for a 3 metre staff and at Pillar MV 83 for a 4 metre staff.</li>
+                                <li><b>Field Data</b>: Click the <b>Choose File</b> button to select the leica GSI file (in .asc format).</li>
+                                <li><b>Field Book</b>: Click the <b>Choose File</b> button to selec the field book (in pdf format).</li>
+                                <li>Click the <b>Submit</b> button.</li>
+                                <li><b>Note:</b>  
+                                    <ul>
+                                        <li>Form errors will be shown in red text to help correctly fill the form.</li>
+                                        <li>Test data is provided <a href="{% static 'data/Range Calibration/M_220608BOYA_Invar26296.ASC' %}" target="_blank">here</a> with the corresponding <a href="{% static 'data/Range Calibration/20220608_Fieldnotes.pdf' %}" target="_blank">Field Book</a> to assist with the Staff Range Calibration procedure.</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <br>
+                        <li>
+                            <b>Step 4:</b> By submitting the form in <b>Step 3</b>, the next page will tabulate the Range measurements and calculated height differences (uncorrect and corrected for temperature).   
+                        </li>
+                        <br>
+                        <li>
+                            <img src="{% static 'images/CalibrationGuides/staff/Medjil-Step4_Range Measurements.png' %}" height="400" style="border: 2px solid #888;" alt="Range Measurement report">
+                        </li>
+                        <br>
+                        <li>
+                            <b>Step 5:</b> Click the <b>Adjust</b> button at the to generate the Range calibration report/certificate. The Range Calibration report/Certicate contains four tables that is being printed on four pages respectively, by clicking the <b>Print Report >></b> button.
+                            <ul>
+                                <li>Staff Readings and calculated height differences</li>
+                                <li>Adjusted height differences and their uncertainties</li>
+                                <li>Height differences and their observed and calculated standard errors</li>
+                            </ul>
+                        </li>
+                        <br>
+                        <li>
+                            <b>Step 6:</b> Calculating the time-dependent Range. 
+                        </li>
+                    </ul>
+                    
                 </li>
             </ol>
-            <p>The downloaded level data from a Leica Digital level (LS15/16) will appear in the following ascii format:</p>
-    
-            <div style="display: flex; gap: 30px">
-                <img src="{% static 'images/CalibrationGuides/LS15-DigitalFieldRecord.png' %}" height="600" style="border: 2px solid #888;" alt="Adjust Level Bubble of Invar Staff">
-                <img src="{% static 'images/CalibrationGuides/LS15-FieldBook 2.png' %}" height="600" style="border: 2px solid #888;" alt="Adjust Level Bubble of Invar Staff">
-            </div>
+            
         </div>
     
         <div id="Range-Conclusion">
@@ -272,5 +340,23 @@
 
 </div>
 
-
+<script>
+    MathJax = {
+       tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'ams'
+       },
+       svg: {
+          fontCache: 'global',
+          displayAlign: 'left',
+          displayIndent: '2.0em'
+       }
+    };
+ </script>
+ 
+ {% block content %}
+ <script type="text/javascript" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+ </script>
+ 
+ {% endblock %}
 

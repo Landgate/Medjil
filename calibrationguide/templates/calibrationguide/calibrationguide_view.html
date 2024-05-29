@@ -38,11 +38,14 @@
   <div class="flex-with-sidebar">
 
     <div class="left-sidebar">
+      {% if user.is_authenticated and user.is_staff %}
       <button class="tablinks" onclick="openTab(event, 'baseline-calibration')" id="defaultOpen">Baseline
         Calibration</button>
+      {% endif %}  
+      
       <button class="tablinks" onclick="openTab(event, 'edmi-calibration')">EDMI Calibration</button>
 
-      {% if not user.is_staff %}
+      {% if user.is_authenticated and user.is_staff %}
         <button class="tablinks" onclick="openTab(event, 'range-calibration')">Range Calibration</button>
       {% endif %}
 
@@ -50,15 +53,17 @@
     </div>
 
     <div class="post-content pxl-2">
+      {% if user.is_authenticated and user.is_staff %}
       <div id="baseline-calibration" class="tab-content">
         {% include 'calibrationguide/staff_calibration_guide.html' %}
       </div>
+      {% endif %}
 
       <div id="edmi-calibration" class="tab-content">
         {% include 'calibrationguide/edmi_calibration_guide.html' %}
       </div>
 
-      {% if not user.is_staff %}
+      {% if user.is_authenticated and user.is_staff %}
       <div id="range-calibration" class="tab-content">
         {% include 'calibrationguide/range_calibration_guide.html' %}
       </div>
@@ -91,10 +96,31 @@
     // Show the current tab, and add an "active" class to the button that opened the tab
     document.getElementById(tabName).style.display = "block";
     evt.currentTarget.className += " active";
+
+    // Store the current tab
+    const tabIndex = Array.from(tablinks).indexOf(evt.currentTarget);
+    window.localStorage.setItem("activeTabIndex", tabIndex);
   }
 
   // Get the element with id="defaultOpen" and click on it
-  document.getElementById("defaultOpen").click();
+  // document.getElementById("defaultOpen").click();
+
+  // Restore the active tab on page load
+  window.onload = function() {
+      const activeTabIndex = parseInt(window.localStorage.getItem("activeTabIndex"),10);
+      if (!isNaN(activeTabIndex)) {
+          console.log(activeTabIndex)
+          const tablinks = document.getElementsByClassName("tablinks");
+          if (tablinks[activeTabIndex]) {
+              tablinks[activeTabIndex].click();
+          }
+      }
+  };
+
+  // Scroll to the top of page
+  window.onbeforeunload = function() {
+    window.scrollTo(0, 0);
+  };
 </script>
 
 {% endblock content %}

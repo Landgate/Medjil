@@ -68,13 +68,13 @@
                     barcoded staves are calibrated from time to time maintain its required accuracy. Please go through
                     the following documents before commencing the field procedure:
                 <ul>
-                    <li><a href="https://d1a51tfkojxvkb.cloudfront.net/boya/2017_Access-sketch-Boya-barcode-staff-calibration.pdf"
+                    <li><a href="{% static 'images/calibrationguides/staff/boya/2017_Access-sketch-Boya-barcode-staff-calibration.pdf' %}"
                             target="_blank">Access details</a> of the Boya barcode staff calibration range</li>
-                    <li><a href="https://d1a51tfkojxvkb.cloudfront.net/boya/Boya%20Pin%20Configuration.pdf"
+                    <li><a href="{% static 'images/calibrationguides/staff/boya/Boya%20Pin%20Configuration.pdf' %}"
                             target="_blank">Diagram of the pin configuration</a></li>
-                    <li><a href="https://d1a51tfkojxvkb.cloudfront.net/boya/Barcoded_booking_sheet.pdf"
+                    <li><a href="{% static 'images/calibrationguides/staff/boya/Barcoded_booking_sheet.pdf' %}"
                             target="_blank">Barcode Staff Booking Sheet</a></li>
-                    <li><a href="https://d1a51tfkojxvkb.cloudfront.net/sample_data/Sample-staff-load-file-format.csv"
+                    <li><a href="{% static 'images/calibrationguides/staff/sample_data/Sample-staff-load-file-format.csv' %}"
                             target="_blank">Sample CSV file</a></li>
                 </ul>
                 </p>
@@ -101,7 +101,7 @@
                 <div class="grid-2">
                     <div>
                         <p>
-                            <img src="{% static 'images/CalibrationGuides/observing-pillar 12.png' %}"
+                            <img src="{% static 'images/CalibrationGuides/staff/observing-pillar 12.png' %}"
                                 alt="Observing Pillars" />
                         </p>
                         <h4>Digital level set on Pillar MV 83 (high pillar)</h4>
@@ -111,7 +111,7 @@
                     </div>
                     <div>
                         <p>
-                            <img src="{% static 'images/CalibrationGuides/invar-staff.png' %}" alt="Invar staff" />
+                            <img src="{% static 'images/CalibrationGuides/staff/invar-staff.png' %}" alt="Invar staff" />
                         </p>
                         <h4>Invar staff set on Pin 2</h4>
                         <p>
@@ -121,7 +121,7 @@
                     </div>
                     <div>
                         <p>
-                            <img src="{% static 'images/CalibrationGuides/pin-config.png' %}" alt="Pin configuration" />
+                            <img src="{% static 'images/CalibrationGuides/staff/pin-config.png' %}" alt="Pin configuration" />
                         </p>
                         <h4>Stainless steel pins glued in granite rock</h4>
                         <p>
@@ -131,7 +131,7 @@
                     </div>
                     <div>
                         <p>
-                            <img src="{% static 'images/CalibrationGuides/observing-pillar 11.png' %}"
+                            <img src="{% static 'images/CalibrationGuides/staff/observing-pillar 11.png' %}"
                                 alt="Obsering from Pillar A" />
                         </p>
                         <h4>Observing from Pillar MV 83(high pillar).</h4>
@@ -152,7 +152,7 @@
                     <li>Perform a collimation test on the digital level and use its software to compute and store the
                         constants calculated. For this purpose, four co-linear spikes in concrete 20 m apart have been
                         established adjacent to the range (see the <a
-                            href="https://d1a51tfkojxvkb.cloudfront.net/boya/2017_Access-sketch-Boya-barcode-staff-calibration.pdf"
+                            href="{% static 'images/CalibrationGuides/staff/boya/2017_Access-sketch-Boya-barcode-staff-calibration.pdf' %}"
                             target="_blank">Access Sketch</a>)</li>
                     <li>Configure the settings in the digital level to record mean and standard deviation of measurement
                         from multiple readings (at least five), if possible. Otherwise, if the instrument does not allow
@@ -194,7 +194,7 @@
                     </li>
                     <li>Record the air temperature in the booking sheet at the end of each survey.</li>
                     <li>Download the level data and create a csv file in the correct format (see below).</li>
-                    <li>Click <a href="/staff_calibration/staff_calibrate/">here</a> to process your staff readings and
+                    <li>Click <a href="/staffcalibration/calibrate/">here</a> to process your staff readings and
                         print the pdf report.</li>
                     <!-- <li>Landgate recommends that staves be re-calibrated at least every 5 years or more often if joints exhibit noticeable wear or any other repairs are made to the staff.</li> -->
                 </ol>
@@ -213,10 +213,10 @@
                 </p>
 
                 <p> Example of a text/csv file. The file can also be downloaded from <a
-                        href="https://d1a51tfkojxvkb.cloudfront.net/sample_data/staff_calibration_file_load.txt"
+                        href="{% static 'images/CalibrationGuides/staff/boya/Sample-staff-load-file-format.csv' %}"
                         target="_blank">here</a>. </p>
 
-                <table id="sample-data">
+                <table id="Staff-Sample-Data">
                     <tr>
                         <th>Pin number,</th>
                         <th>Staff reading,</th>

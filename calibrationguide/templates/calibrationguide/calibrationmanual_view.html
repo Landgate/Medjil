@@ -74,10 +74,31 @@
 		// Show the current tab, and add an "active" class to the button that opened the tab
 		document.getElementById(tabName).style.display = "block";
 		evt.currentTarget.className += " active";
+	
+		// Store the current tab
+		const tabIndex = Array.from(tablinks).indexOf(evt.currentTarget);
+		window.localStorage.setItem("activeTabIndex", tabIndex);
 	}
-    
-    // Get the element with id="defaultOpen" and click on it
-    document.getElementById("defaultOpen").click();
+
+	// Get the element with id="defaultOpen" and click on it
+	// document.getElementById("defaultOpen").click();
+
+	// Restore the active tab on page load
+	window.onload = function() {
+		const activeTabIndex = parseInt(window.localStorage.getItem("activeTabIndex"),10);
+		if (!isNaN(activeTabIndex)) {
+			console.log(activeTabIndex)
+			const tablinks = document.getElementsByClassName("tablinks");
+			if (tablinks[activeTabIndex]) {
+				tablinks[activeTabIndex].click();
+			}
+		}
+	};
+
+	// Scroll to the top of page
+	window.onbeforeunload = function() {
+		window.scrollTo(0, 0);
+	};
   </script>
 
  {% endblock content %}
