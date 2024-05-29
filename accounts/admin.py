@@ -175,7 +175,7 @@ class RolesAdmin(admin.ModelAdmin):
 
 @admin.register(Company, site=admin_site)
 class CompanyAdmin(admin.ModelAdmin):
-    list_display = ('company_name', 'company_abbrev',)
+    list_display = ('company_name', 'company_abbrev','company_secret_key')
     search_fields = ('company_name', 'company_abbrev',)
     class Meta:
         model = Company

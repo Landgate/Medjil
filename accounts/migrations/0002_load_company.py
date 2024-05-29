@@ -19,24 +19,18 @@
 
 from __future__ import unicode_literals
 
-from django.db import migrations, models
-import csv
-from datetime import datetime
-from django.conf import settings
-import os
+from django.db import migrations
 
 def load_initial_data(apps, schema_editor):
     Company = apps.get_model("accounts", "Company")
-    with open(os.path.join(settings.MEDIA_ROOT, 'Landgate/company/authority_names.csv'), 'r') as f:
-        reader = csv.reader(f)
-        header = next(reader)
 
-        companys = []
-        for row in reader:
-            company = Company.objects.create(company_abbrev = row[0], company_name = row[1])
+    company = Company.objects.create(
+        company_abbrev = 'OTH', company_name = 'Others', company_secret_key='')
+    company = Company.objects.create(
+        company_abbrev = 'LG', company_name = 'Landgate')
 
 def reverse_func(apps, schema_editor):
-    Company = apps.get_model("accounts", Company)
+    Company = apps.get_model("accounts", "Company")
 
     Company.objects.all().delete()
 
