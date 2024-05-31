@@ -29,6 +29,7 @@ from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
+from django.contrib.messages.views import SuccessMessageMixin
 from formtools.wizard.views import SessionWizardView
 
 # models
@@ -45,17 +46,25 @@ from calibrationsites.models import (Pillar,
 from .forms import RangeParamForm
 
 # functions
-from .signals import compute_range_parameters_one
+from .signals import update_range_table_current, update_range_table, compute_range_parameters
+
+
 # Home View
-class HomeView(generic.ListView):
+class HomeView(SuccessMessageMixin, generic.ListView):
     model = RangeCalibrationRecord
     paginate_by = 25
     template_name = 'rangecalibration/range_calibration_home.html'
 
     ordering = ['-calibration_date']
 
-# def range_guide(request):
-#     return render(request, 'rangecalibration/range_calibration_guide.html')
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Retrieve additional queryset for calibration records not updated to Range Param
+        if RangeCalibrationRecord.objects.filter(valid=True, updated_to = False).first():
+            context['update_param_yes'] = True
+            compute_range_parameters()
+            success_message  =  'Range table successfully updated!'
+        return context
 ###############################################################################
 ########################## FILE HANDLING ######################################
 ###############################################################################
@@ -429,10 +438,11 @@ def adjust(request, id):
     
     # Update the RangeParameter database
     try:
-        compute_range_parameters_one(thisRecord.site_id)
+        update_range_table_current(thisRecord)
+        thisRecord.updated_to = True
+        messages(request, 'Successfully updated the Calibration Range.')
     except:
         pass
-        # messages(request, 'Successfully updated the Calibration Range.')
     # build the context to render to the template
     context = {
             'calibration_id' : thisRecord.id,
@@ -451,13 +461,6 @@ def adjust(request, id):
 ###############################################################################
 ############################### Compute Annual Cycle ##########################
 ###############################################################################
-@login_required(login_url="/accounts/login")
-def range_param(request, site_id):
-    calibList = RangeCalibrationRecord.objects.filter(site_name = site_id)
-    for calib in calibList:
-        print(calib.job_number)
-    return HttpResponse("Nothing to display yet")
-
 # check if all BarCodeRangeParam month fields are null
 def is_field_blank(thisObj):
     monthCol = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
@@ -469,7 +472,6 @@ def is_field_blank(thisObj):
 def range_display(dataObj, req_column):
     # Do the calculation if data exists
     [thisList] = list(dataObj.values_list(*req_column))
-    # print(thisList)
     # datalist = datalist.items()
     thisList = [x for x in thisList]
     # print(len(thisList))
@@ -517,98 +519,22 @@ def range_param_process(request):
     if request.method=="POST":
         form = RangeParamForm(request.POST, user=request.user)
         if form.is_valid():
-            site_id = form.cleaned_data.get('site_id')
-            # Get the list of pins for the calibration site
-            pillarLst = Pillar.objects.filter(site_id = site_id).values_list('name')
-            pillarLst = np.sort(np.array([x for y in pillarLst for x in y], dtype=int))
-            
-            from_to_PillarList = {'from_to': []}
-            for i in range(len(pillarLst)-1):
-                from_to_PillarList['from_to'].append(str(pillarLst[i]) + '-' + str(pillarLst[i]+1))
+            site_id = form.cleaned_data.get('site_id') # Get the site id
+            # List the site info
+            site_info = {'site_name': site_id.site_name,
+                        'site_type': site_id.get_site_type_display(),
+                        'operator': site_id.operator.company_name,
+                        'site_address': site_id.site_address + ' ' + site_id.state.statecode + ' ' + str(site_id.locality.postcode)
+            }
+            # Get the range
+            rangeObj = BarCodeRangeParam.objects.filter(site_id = site_id)
+            # req_Cols = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']  # [field.name for field in BarCodeRangeParam._meta.fields]
+            # List of fields 
+            required_column = ['from_to', 'Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 
-            # Update the 'from_to' column of BarCodeRangeParam
-            BarCodeRangeParam.objects.get_or_create( site_id = site_id, from_to =  from_to_PillarList )
-
-            # Get the list of Calibrations 
-            calibList = RangeCalibrationRecord.objects.filter(site_id = site_id, valid=True, updated_to = False)
-            # print(calibList)
-            
-            if calibList:
-                obsDateList = np.array(calibList.values_list('job_number', 'calibration_date'), dtype=object)
-                all_mon_list = [[x.strftime('%b'), x.month] for x in obsDateList[:,1]]
-                obsDateList = np.append(obsDateList,np.c_[all_mon_list], axis=1)
-                monthList, indices  = np.unique(obsDateList[:,-1], return_index=True)
-                monthText = obsDateList[indices,2]
-                # print(monthList, monthText)
-                thisObj = {'count': [], 
-                        'mean': [], 
-                        'std_dev': []
-                    }
-                for i in range(len(monthList)):
-                    m_text = monthText[i]
-                    data = HeightDifferenceModel.objects.filter(calibration_id__calibration_date__month = monthList[i]).values_list('height_difference', flat=True)
-                    hdiff = [np.array(x['data'], dtype=object) for x in data]
-                    hdiff = np.array(hdiff, dtype=object)
-                    
-                    # Pins
-                    pillarList = hdiff[:,:,0][0]
-                    dataList = hdiff[:,:,1]  
-                    
-                    # Compute the Range Parameters
-                    if len(dataList) == 1:
-                        for i in range(len(pillarList)):
-                            diff = dataList[:,i].astype(float)[0]
-                            # print(diff)
-                            thisObj['count'].append(1)
-                            thisObj['mean'].append('{:07.5f}'.format(diff))
-                            thisObj['std_dev'].append('{:07.5f}'.format(0))
-                        # print(thisObj)
-
-                    elif len(dataList) > 1: 
-                        z_threshold = 1.4
-                        for i in range(len(pillarList)):
-                            diff = dataList[:,i].astype(float)
-                            #print("Initial Diff: ", diff)
-                            # diff_mean = diff.mean()
-                            # diff_std = diff.std()
-                            if diff.std() != 0:
-                                z_score = (diff-diff.mean())/diff.std()
-                                #print("Z Score: ", z_score)
-                                
-                                diff = diff[abs(z_score)<z_threshold]
-                                #print("Later Diff: ", diff)
-
-                                thisObj['count'].append(len(diff))
-                                thisObj['mean'].append('{:07.5f}'.format(diff.mean()))
-                                thisObj['std_dev'].append('{:07.5f}'.format(diff.std()))
-                            else:
-                                thisObj['count'].append(len(diff))
-                                thisObj['mean'].append('{:07.5f}'.format(diff.mean()))
-                                thisObj['std_dev'].append('{:07.5f}'.format(diff.std()))
-                    # Update the Range Param Values
-                    BarCodeRangeParam.objects.filter( site_id = site_id).update(**{m_text:  thisObj} )
-                    # Re-initialise the cell array - else values keep appending
-                    thisObj = {'count': [], 
-                        'mean': [], 
-                        'std_dev': []
-                    }
-                # Update RangeCalibration Update
-                for obj in calibList:
-                    obj.updated_to = True
-                    obj.save()
-                
-                site_info = {'site_name': site_id.site_name,
-                            'site_type': site_id.get_site_type_display(),
-                            'operator': site_id.operator.company_name,
-                            'site_address': site_id.site_address + ' ' + site_id.state.statecode + ' ' + str(site_id.locality.postcode)
-                }
-                # List of fields 
-                required_column = ['from_to', 'Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-                # Get the data from BarCodeRangeParam
-                rangeParamObj = BarCodeRangeParam.objects.filter(site_id = site_id)
-
-                # Get the range & params
-                range_values, range_param = range_display(rangeParamObj, required_column)
+            # if there is data for any of the month
+            if is_field_blank(rangeObj): 
+                range_values, range_param = range_display(rangeObj, required_column)
                 # Compute deviation from mean - range sum
                 tmp = np.array(range_param['mean']).astype(float)
                 range_param.update({'deviation': []})
@@ -617,42 +543,23 @@ def range_param_process(request):
                     range_param['deviation'] = ['NaN' if np.isnan(x) else round(x*1000,3) for x in tmp2]
 
                 return render(request, 'rangecalibration/range_parameters.html', {
-                                                                            'site_info': site_info,
-                                                                            'range_values': range_values,
-                                                                            'range_param': range_param})
+                                                                                'site_info': site_info,
+                                                                                'range_values': range_values,
+                                                                                'range_param': range_param
+                                                                            })
             else:
-                site_id = form.cleaned_data.get('site_id')
-                site_info = {'site_name': site_id.site_name,
-                            'site_type': site_id.get_site_type_display(),
-                            'operator': site_id.operator.company_name,
-                            'site_address': site_id.site_address + ' ' + site_id.state.statecode + ' ' + str(site_id.locality.postcode)
-                }
-                # List of fields 
-                required_column = ['from_to', 'Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-                # Get the data from BarCodeRangeParam
-                rangeParamObj = BarCodeRangeParam.objects.filter(site_id = site_id)
-                # if there is data for any of the month
-                if not is_field_blank(rangeParamObj): 
-                    range_values, range_param = range_display(rangeParamObj, required_column)
-                    # print("Params are ", range_values, range_param)
-                    # Compute deviation from mean - range sum
-                    tmp = np.array(range_param['mean']).astype(float)
-                    range_param.update({'deviation': []})
-                    if sum(~np.isnan(tmp)) >= 2:
-                        tmp2 = (tmp - np.nanmean(tmp)).tolist()
-                        range_param['deviation'] = ['NaN' if np.isnan(x) else round(x*1000,3) for x in tmp2]
-
-                    return render(request, 'rangecalibration/range_parameters.html', {
-                                                                                    'site_info': site_info,
-                                                                                    'range_values': range_values,
-                                                                                    'range_param': range_param
-                                                                                })
-                else:
-                    messages.warning(request, "There is no range parameters for this Calibration site. Redirecting to the processing page.")
-                    return redirect('rangecalibration:calibrate')
+                messages.warning(request, "There is no range parameters for this Calibration site. Redirecting to the processing page.")
+                return redirect('rangecalibration:calibrate')
     else:
         form = RangeParamForm(user=request.user)
     return render(request, 'rangecalibration/range_param_form.html', {'form':form})
+
+@login_required(login_url="/accounts/login")
+def range_param_update(request, site_id):
+    calibList = RangeCalibrationRecord.objects.filter(site_name = site_id)
+    for calib in calibList:
+        print(calib.job_number)
+    return HttpResponse("Nothing to display yet")
 ###############################################################################
 ######################### PRINT REPORT ########################################
 ###############################################################################
@@ -706,105 +613,25 @@ def view_user_guide(request):
 ###############################################################################
 def delete_record(request, id):
     thisRecord = RangeCalibrationRecord.objects.get(id=id)
-    site_id = thisRecord.site_id
 
-    site_info = {'site_name': site_id.site_name,
-                'site_type': site_id.get_site_type_display(),
-                'operator': site_id.operator.company_name,
-                'site_address': site_id.site_address + ' ' + site_id.state.statecode + ' ' + str(site_id.locality.postcode)
-            }
-            
-    # Delete Range datasets
+    # Get month in String - Jan, Feb, so on ....
+    m_text = thisRecord.calibration_date.strftime('%b')
+    calib_date = thisRecord.calibration_date.strftime('%d-%m-%Y') 
+
+    # Delete the record and update the range param table
     try:
+        # Delete associated datasets
         RawDataModel.objects.get(calibration_id=thisRecord).delete()
         HeightDifferenceModel.objects.get(calibration_id=thisRecord).delete()
         AdjustedDataModel.objects.get(calibration_id=thisRecord).delete()
+
+        BarCodeRangeParam.objects.filter(site_id = thisRecord.site_id).update(**{m_text: None})
+        update_range_table_current(thisRecord)
+        # finally delete the CalibrationRecord
+        thisRecord.delete()
+        messages.success(request, "Successfully updated the Range for the month of "+ m_text + ". Click on Staff Calibration > Range Parameters to see the updated Range.")
     except ObjectDoesNotExist:
-        pass
-
-    # Get month
-    m_number = thisRecord.calibration_date.month
-    m_text = thisRecord.calibration_date.strftime('%b')
-    m_str = thisRecord.calibration_date.strftime('%d-%m-%Y')
-    
-    # Delete Range Record
-    thisRecord.delete()
-    BarCodeRangeParam.objects.filter(site_id = site_id).update(**{m_text: None})
-
-    # Initiate the object & get the range calibration data for the Deleted Month 
-    thisObj = {'count': [],  'mean': [],  'std_dev': [] }
-    dataObj = HeightDifferenceModel.objects.filter(calibration_id__site_id = site_id, calibration_id__calibration_date__month = m_number)
-    # Recompute the range if data exists
-    if dataObj.exists():
-        data = dataObj.values_list('height_difference', flat=True)
-        hdiff = [np.array(x['data'], dtype=object) for x in data]
-        hdiff = np.array(hdiff, dtype=object)
+        messages.success(request, "Range calibration record for "+ calib_date + " does not exists. Please check and try again!" )        
         
-        # Pins
-        pillarList = hdiff[:,:,0][0]
-        dataList = hdiff[:,:,1]  
-        
-        # Compute the Range Parameters
-        if len(dataList) == 1:
-            for i in range(len(pillarList)):
-                diff = dataList[:,i].astype(float)[0]
-                # print(diff)
-                thisObj['count'].append(1)
-                thisObj['mean'].append('{:07.5f}'.format(diff))
-                thisObj['std_dev'].append('{:07.5f}'.format(0))
-        elif len(dataList) > 1: 
-            z_threshold = 1.4
-            for i in range(len(pillarList)):
-                diff = dataList[:,i].astype(float)
-                print("Initial Diff: ", diff)
-                # diff_mean = diff.mean()
-                # diff_std = diff.std()
-                if diff.std() != 0:
-                    z_score = (diff-diff.mean())/diff.std()
-                    print("Z Score: ", z_score)
-                    
-                    diff = diff[abs(z_score)<z_threshold]
-                    print("Later Diff: ", diff)
-
-                    thisObj['count'].append(len(diff))
-                    thisObj['mean'].append('{:07.5f}'.format(diff.mean()))
-                    thisObj['std_dev'].append('{:07.5f}'.format(diff.std()))
-                else:
-                    thisObj['count'].append(len(diff))
-                    thisObj['mean'].append('{:07.5f}'.format(diff.mean()))
-                    thisObj['std_dev'].append('{:07.5f}'.format(diff.std()))
-        
-        BarCodeRangeParam.objects.filter( site_id = site_id).update(**{m_text:  thisObj} )
-        thisObj = {'count': [], 
-                    'mean': [], 
-                    'std_dev': []
-                }
-        messages.success(request, "Successfully updated the Range values for the month of "+ m_text + ".")
-    else:
-        messages.warning(request, "No more Range values exists for the month of "+ m_text + ".")
-    
-    # Get the data from BarCodeRangeParam AGAIN
-    rangeParamObj = BarCodeRangeParam.objects.filter(site_id = site_id)
-    # if there is data for any of the month
-    if rangeParamObj.exists() and not is_field_blank(rangeParamObj): 
-        # List of fields 
-        required_column = ['from_to', 'Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-        
-        # Get the range & params
-        range_values, range_param = range_display(rangeParamObj, required_column)
-        # Compute deviation from mean - range sum
-        tmp = np.array(range_param['mean']).astype(float)
-        range_param.update({'deviation': []})
-        if sum(~np.isnan(tmp)) >= 2:
-            tmp2 = (tmp - np.nanmean(tmp)).tolist()
-            range_param['deviation'] = ['NaN' if np.isnan(x) else round(x*1000,3) for x in tmp2]
-
-        return render(request, 'rangecalibration/range_parameters.html', {
-                                                                    'site_info': site_info,
-                                                                    'range_values': range_values,
-                                                                    'range_param': range_param})
-    
-    else:
-        messages.success(request, "Range calibration record for "+ m_str + " is deleted. No calibration exists." )
-        return redirect('rangecalibration:home')
+    return redirect('rangecalibration:home')
 ###############################################################################
