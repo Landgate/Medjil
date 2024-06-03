@@ -43,7 +43,7 @@ def guide_view(request):
     #     'inst_objs' : inst_objs,
     #     'img_objs' : img_objs,
     # }
-    return render(request, 'calibrationguide/calibrationguide_view.html')
+    return render(request, 'calibrationguide/calibrationguide_view.html', context={})
 
 def manual_view(request):
     # inst_objs = TechnicalManual.objects.all()
@@ -52,7 +52,7 @@ def manual_view(request):
     #     'inst_objs' : inst_objs,
     #     'img_objs' : img_objs,
     # }
-    return render(request, 'calibrationguide/calibrationmanual_view.html')
+    return render(request, 'calibrationguide/calibrationmanual_view.html', context={})
 
 @login_required(login_url="/accounts/login") 
 def guide_create(request):

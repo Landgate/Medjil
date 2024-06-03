@@ -210,7 +210,7 @@ def upload_range_data(apps, schema_editor):
     RawDataModel = apps.get_model("rangecalibration", "RawDataModel")
     AdjustedDataModel = apps.get_model("rangecalibration", "AdjustedDataModel")
     HeightDifferenceModel = apps.get_model("rangecalibration", "HeightDifferenceModel")
-    BarCodeRangeParam = apps.get_model("rangecalibration", "BarCodeRangeParam")
+    # BarCodeRangeParam = apps.get_model("rangecalibration", "BarCodeRangeParam")
 
     # Starting to read the files
     range_dir = os.path.join(settings.MEDIA_ROOT, 'InitialData/Staff Range/Australia/WA/Boya/Range Calibration')
@@ -401,13 +401,11 @@ def reverse_func(apps, schema_editor):
     RawDataModel = apps.get_model("range_calibration", "RawDataModel")
     AdjustedDataModel = apps.get_model("range_calibration", "AdjustedDataModel")
     HeightDifferenceModel = apps.get_model("range_calibration", "HeightDifferenceModel")
-    RangeParameters = apps.get_model("range_calibration", "RangeParameters")
     
     Calibration_Update.objects.all().delete()
     RawDataModel.objects.all().delete()
     AdjustedDataModel.objects.all().delete()
     HeightDifferenceModel.objects.all().delete()
-    RangeParameters.objects.all().delete()
 
 
 class Migration(migrations.Migration):

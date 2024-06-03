@@ -1,5 +1,6 @@
 {% load static %}
 <div class="post-content">
+    {% if user.is_authenticated %}
     <p>Please login or signup to manage and calibrate your staff.</p>
     <div class="single-item-container">
         <button
@@ -11,7 +12,8 @@
             onclick="location.href='/accounts/signup/'">Sign up</button>
     </div>
     <br>
-
+    {% endif %}
+    
     <h2 class="post-title">
         EDMI Calibration Guide
     </h2>
