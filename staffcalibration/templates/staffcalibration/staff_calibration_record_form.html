@@ -76,10 +76,10 @@
                 {% endif %}
 
 				{% if wizard.steps.next %}
-					<button onclick="window.location.href='{% url 'instruments:home' inst_disp='staff' %}'" class="cancelbtn bg-red-500 hover:bg-red-300">Cancel</button>
+					<button type="button" onclick="window.location.href='{% url 'instruments:home' inst_disp='staff' %}'" class="cancelbtn bg-red-500 hover:bg-red-300">Cancel</button>
 					<button class="next-button bg-green-500 hover:bg-green-400" type="submit">Next</button>
 				{% else %}
-					<button onclick="window.location.href='{% url 'instruments:home' inst_disp='staff' %}'" class="cancelbtn bg-red-500 hover:bg-red-300">Cancel</button>
+					<button type="button" onclick="window.location.href='{% url 'instruments:home' inst_disp='staff' %}'" class="cancelbtn bg-red-500 hover:bg-red-300">Cancel</button>
 					<button class="next-button bg-green-500 hover:bg-green-400" type="submit">Save</button>
 				{% endif %}
 			</div>

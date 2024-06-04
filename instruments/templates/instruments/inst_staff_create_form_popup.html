@@ -111,7 +111,7 @@
 					<button class="next-button bg-green-500 hover:bg-green-400" type="submit">Save</button>
 				{% endif %}
 				{% if request.GET.next %}
-    				<button onclick="window.location.href='{{ request.GET.next }}'" type="button" class="cancelbtn bg-red-500 hover:bg-red-300">Cancel</button>
+    				<button type="button" onclick="window.location.href='{{ request.GET.next }}'" type="button" class="cancelbtn bg-red-500 hover:bg-red-300">Cancel</button>
 				{% else %}
                     <button onclick="closeWin()" class="cancelbtn bg-red-500 hover:bg-red-300" type="submit">Cancel</button>
         {% endif %}

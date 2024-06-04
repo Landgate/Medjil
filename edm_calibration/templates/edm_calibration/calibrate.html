@@ -60,31 +60,27 @@
                                 </td>
                             {% endif %}                     
                             <td>
-                                {% if field.name == "edm" or field.name == "prism" or field.name == "edm" %}
-                                    <a href="{% url 'instruments:register_edit' inst_disp=field.name tab="insts" id=None %}?next={{request.path}}"
-                                    class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" onclick="cacheInputs();return true;">&#43;</a>
-                                {% endif %}
-                               
-                                {% if field.name == "staff" %}
-                                    <a href="{% url 'instruments:inst_staff_create' %}?next={{request.path}}" 
-                                    class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" onclick="cacheInputs();return true;">&#43;</a>
-                                {% endif %}
-                                {% if field.name == "thermometer" %}
-                                    <a href="{% url 'instruments:register_edit' inst_disp="thermo" tab="insts" id=None %}?next={{request.path}}"
-                                    class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" onclick="cacheInputs();return true;">&#43;</a>
-                                {% endif %}
-                                {% if field.name == "barometer" %}
-                                    <a href="{% url 'instruments:register_edit' inst_disp="baro" tab="insts" id=None %}?next={{request.path}}"
-                                     class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" onclick="cacheInputs();return true;">&#43;</a>
-                                {% endif %}
-                                {% if field.name == "hygrometer" %}
-                                    <a href="{% url 'instruments:register_edit' inst_disp="hygro" tab="insts" id=None %}?next={{request.path}}"
-                                     class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" onclick="cacheInputs();return true;">&#43;</a>
-                                {% endif %}
-                                {% if field.name == "uncertainty_budget" %}
-                                    <a href="{% url 'baseline_calibration:uc_budget_create' %}?next={{request.path}}"  
-                                    class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" onclick="cacheInputs();return true;">&#43;</a>
-                                {% endif %}
+                            {% if field.name == "edm" or field.name == "prism" %}
+                                <button style="width:35px; height:35px" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" type="button" id="id_add_btn" 
+                                onclick="cacheInputs();window.location.href='{% url "instruments:register_edit" inst_disp=field.name tab="insts" id=None %}?next={{request.path}}'">&#43;</button>
+                            {% endif %}
+                           
+                            {% if field.name == "thermometer" %}
+                                <button style="width:35px; height:35px" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" type="button" id="id_add_btn" 
+                                onclick="cacheInputs();window.location.href='{% url "instruments:register_edit" inst_disp="thermo" tab="insts" id=None %}?next={{request.path}}'">&#43;</button>
+                            {% endif %}
+                            {% if field.name == "barometer" %}
+                                <button style="width:35px; height:35px" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" type="button" id="id_add_btn" 
+                                onclick="cacheInputs();window.location.href='{% url "instruments:register_edit" inst_disp="baro" tab="insts" id=None %}?next={{request.path}}'">&#43;</button>
+                            {% endif %}
+                            {% if field.name == "hygrometer" %}
+                                <button style="width:35px; height:35px" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" type="button" id="id_add_btn" 
+                                onclick="cacheInputs();window.location.href='{% url "instruments:register_edit" inst_disp="hygro" tab="insts" id=None %}?next={{request.path}}'">&#43;</button>
+                            {% endif %}
+                            {% if field.name == "uncertainty_budget" %}
+                                <button style="width:35px; height:35px" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" type="button" id="id_add_btn" 
+                                onclick="cacheInputs();window.location.href='{% url "baseline_calibration:uc_budget_create" %}?next={{request.path}}'">&#43;</button>
+                            {% endif %}
                             </td>
                         </tr>
                                 
@@ -110,7 +106,7 @@
             </table>
             <div class="button-container">
                 <button type="button" id="prevBtn" onclick="nextPrev(-1)" class="submit-button bg-green-500 hover:bg-green-400">Back</button>
-                <button onclick="window.location.href='{% url 'edm_calibration:edm_calibration_home' %}'" class="submit-button bg-red-500 hover:bg-green-400">Cancel</button>
+                <button type="button" onclick="window.location.href='{% url 'edm_calibration:edm_calibration_home' %}'" class="submit-button bg-red-500 hover:bg-green-400">Cancel</button>
                 <button type="button" id="nextBtn" onclick="nextPrev(1)" class="submit-button bg-green-500 hover:bg-green-400" >Next</button>
             </div>
         </form>

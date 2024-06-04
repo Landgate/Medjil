@@ -81,8 +81,9 @@
                         </td>
                         {% if field.name == 'make' %}
                             <td width="10%"> 
-                                <a id="NewMakeBtn" onclick="NewMake()" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" >&#43;</a>
-                            </td>                        
+                                <button style="width:35px; height:35px" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" type="button" 
+                                onclick="NewMake()"</button>
+                            </td>
                         {% endif %}
                     </tr>
                 {% endif %}

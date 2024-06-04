@@ -58,8 +58,8 @@
                 </div>
             {% endif %}
             <div class="button-container">
-                <a onclick=history.back() class="submit-button bg-green-500 hover:bg-green-400" style="text-align: center">Back</button>
-                <button onclick="window.location.href='{% url 'baseline_calibration:calibration_home' %}'" class="submit-button bg-red-500 hover:bg-green-400">Cancel</button>
+                <button type="button" onclick="history.back()" class="submit-button bg-green-500 hover:bg-green-400">Back</button>
+                <button type="button" onclick="window.location.href='{% url 'baseline_calibration:calibration_home' %}'" class="submit-button bg-red-500 hover:bg-green-400">Cancel</button>
             </div>
         </div>
     </div>

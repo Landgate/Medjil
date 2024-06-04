@@ -1,7 +1,7 @@
 {% load static %}
 
 <div>
-   {% if not user.is_authenticated %}
+		   {% if not user.is_authenticated %}
    <p>Please login or signup to manage and calibrate your staff.</p>
    <div class="single-item-container">
       <button
@@ -12,13 +12,12 @@
          class="ml-4 px-3 py-1 border border-transparent text-base font-normal rounded-md text-white bg-green-600 hover:bg-gray-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out"
          onclick="location.href='/accounts/signup/'">Sign up</button>
    </div>
+
    <br>
    {% endif %}
-
    <h2 class="post-title">
-      EDMI Calibration Technical Manual
+      The Survey Instrumentation Calibration Technical Manual
    </h2>
-
    <div class="mt-5 mb-3 guide_view">
       <ol class="toc-list" role="list">
          <li>
@@ -188,7 +187,7 @@
       <div class="cf nr3 nl3">
          <div class="fl w-50-ns ph3" id="EDMI-Chapter1">
             <h2>1. Introduction</h2>
-            <p>Medjil, means ‘accurate’ in the <i>Whadjuk Noongar</i> language.</p>
+            <p>We adopted the word 'Medjil' from <i>Whadjuk Noongar</i> language, which means ‘accurate’ as the name for the survey instrumentation calibration portal.</p>
             <p>The Medjil portal was developed by <a href="https://www.landgate.wa.gov.au/">Landgate</a> (the Western
                Australian Land Information Authority) in collaboration with the <a
                   href="https://www.icsm.gov.au" />Intergovernmental Committee on Surveying and Mapping</a> (ICSM)
@@ -197,8 +196,9 @@
             <ul>
                <li>EDM Instrumentation using standardised EDM Baselines</li>
                <li>EDM Baselines using standardised instruments</li>
-               <li>Barcode staff using staff calibration range facility</li>
+               <li>Barcode staff using staff calibration range facility (refer to Staff Calibration manual for more details)</li>
             </ul>
+            <br>
             <p>The purpose of calibrating the EDM Instrumentation (EDMI) is to establish the legal traceability of a
                user's
                instrument to the national standard of length provided by the National Measurement Institute (NMI). This
@@ -223,8 +223,7 @@
             <ul>
                <li>“Instructions on the Verification of Electronic Distance Meters according to section 10, Weights and
                   Measures (National Standards) Act, 1960” written by Dr. J. M. Rüeger, School of Surveying, University
-                  of
-                  New South Wales. P.O. Box 1, Kensington, N.S.W. 2033</li>
+                  of New South Wales. P.O. Box 1, Kensington, N.S.W. 2033</li>
                <li>“Instructions on the measurements of subsidiary standards of length in the form of EDM calibration
                   baselines using distance meters as prescribed by the National Standards Commission: written by Dr.
                   J.M.Rüeger, School of Surveying, University of New South Wales. P.O. Box 1, Kensington, N.S.W. 2033
@@ -240,6 +239,7 @@
                   (EDM)
                   Instruments prepared for the Surveyor General of New South Wales by J.M.Rüeger 2019</li>
             </ul>
+            <br>
             <p>The Draft Verifying Authorities (VA) Handbook 2001 is intended for use by verifying authorities which are
                appointed under the provisions of Regulation 73 of the National Measurement Regulations 1999 in
                accordance
@@ -269,6 +269,7 @@
                   <li>Aarau Design</li>
                   <li>Hobart Design</li>
                </ul>
+               <br>
                <p>Each EDM Baseline design aims to achieve an equal distribution of measured distances between the
                   shortest and
                   longest lines without any repetitions. They also allow EDMI calibration, with or without known
@@ -277,7 +278,7 @@
                   beforehand. Most EDM baseline designs aim to accommodate a variety of EDM instrument unit lengths. A
                   detailed explanation of baseline design concepts is beyond the scope of this manual. For comprehensive
                   information on baseline design, please refer to the book 'Electronic Distance Measurement' by J.M.
-                  Rueger.
+                  Rüeger.
                </p>
                <p>The current version of Medjil requires baseline distances to be known for all types of baselines to
                   perform
@@ -304,11 +305,9 @@
                <p>Where:</p>
                <p>&emsp;&emsp;D<sub>ij</sub> = Measured distance between pillars i and j (the observation)</p>
                <p>&emsp;&emsp;x<sub>i</sub> = Distance from the first pillar to pillar 'i'. Distance corrected for
-                  the
-                  pillar offsets and reduced to baseline reference height</p>
+                  the pillar offsets and reduced to baseline reference height</p>
                <p>&emsp;&emsp;x<sub>j</sub> = Distance from the first pillar to pillar 'j'. Distance corrected for
-                  the
-                  pillar offsets and reduced to baseline reference height</p>
+                  the pillar offsets and reduced to baseline reference height</p>
                <p>&emsp;&emsp;zpc = Zero point correction (an additive constant of the certified EDMI)</p>
             </div>
             <div id="EDMI-Chapter2_3">
@@ -316,7 +315,7 @@
                <p>Let's consider the following example baseline, comprising four pillars:</p>
                <img src="{% static 'images/CalibrationGuides/edmi/Picture_1_1.png' %}"
                   alt="Example of EDM Baseline">
-
+							 <br>
                <p>A set of linear observation equations can be formulated based on Eq. 2.1 and Eq. 2.2 as follows:
                </p>
                <div>
@@ -330,9 +329,7 @@
                   \left[\begin{matrix}D_{12}\\D_{13}\\D_{14}\\D_{21}\\D_{23}\\D_{24}\\D_{31}\\D_{32}\\D_{34}\\D_{41}\\D_{42}\\D_{43}\\\end{matrix}\right]=\left[\begin{matrix}1&0&0&-1\\0&1&0&-1\\0&0&1&-1\\1&0&0&-1\\-1&1&0&-1\\-1&0&1&-1\\0&1&0&-1\\-1&1&0&-1\\0&-1&1&-1\\0&0&1&-1\\-1&0&1&-1\\0&-1&1&-1\\\end{matrix}\right]\left[\begin{matrix}X_2\\X_3\\X_4\\zpc\\\end{matrix}\right]\
                   \ \ (Eq. 2.4)$$
                </div>
-
                <p>Where:</p>
-
                <p>
                   &emsp;&emsp;D<sub>ij</sub> = Measured distance between pillars i and j (vector of the observations)
                </p>
@@ -342,15 +339,14 @@
                   This approach eliminates the need to provide approximate distances between pillars. In accordance
                   with <a href="{% url 'calibrationguide:manual_view' %}#EDMI-Chapter6">Section 6</a>, the observations, along with their a-priori uncertainties (P), undergo a least
                   squares adjustment to obtain the estimated certified distances d<sub>x</sub>, the zpc value, and
-                  the
-                  complete VCV matrix.
+                  the complete VCV matrix.
                </p>
             </div>
-
             <div id="EDMI-Chapter2_4">
                <h3>2.4 Inter-pillar distances survey</h3>
                <img src="{% static 'images/CalibrationGuides/edmi/Picture_1_3.png' %}"
                   alt="Inter-pillar distances survey">
+							 <br>                  
                <p>To calibrate an EDM baseline, a series of inter-pillar distance measurements (surveys) are
                   necessary,
                   which should include atmospheric observations of the conditions during the during measuring of each
@@ -382,9 +378,9 @@
                   <li>pressure: pressure in Hectopascals or millibars</li>
                   <li>humidity: humidity in percentage</li>
                </ul>
-
+							 <br>
                <p>Refer to this <a
-                     href="{% static 'data/edmi calibration/BUSS_edm_calibration_edm_observations.csv' %}"
+                     href="{% static 'images/CalibrationGuides/edmi/BUSS_baseline_calibration_edm_observations.csv"
                      target="_self">sample dataset</a> required for an EDM baseline calibration survey data format.
                </p>
                <br>
@@ -403,6 +399,7 @@
                   n.
                </p>
                <img src="{% static 'images/CalibrationGuides/edmi/Picture_1_2.png' %}" alt="Pillar Offsets">
+							 <br>               
                <p>For each pillar setup, an arbitrary set of coordinates (E<sub>j</sub>, N<sub>j</sub>) are
                   calculated
                   for all pillars observed according to the formula:</p>
@@ -652,6 +649,21 @@
                   <p>Where:</p>
                   <p>&emsp;&emsp;p = Atmospheric pressure in hectopascals</p>
                   <p>&emsp;&emsp;t = Dry temperature in degrees Celsius</p>
+               		
+               		<p>Note term C and D were populated into the EDM specyfications Lookup Table from the following sources:</p>
+               		<ul>
+               			 <li>Rüeger, J. M. 1996. Electronic Distance Measurement - An Introduction, 4th corrected edition</li>
+               			 <li>Rüeger. J. M. 2007a. First Velocity Correction in EDM: How to get the Constants C and D, Azimuth</li>
+               			 <li>https://www.land.vic.gov.au/surveying/services/equipment-calibration-services</li>
+               			 <li>CR Kennedy</li>
+               		</ul>  
+               		<br>               		
+               		<img src="{% static 'images/CalibrationGuides/edmi/Picture_4_4.png' %}"
+                  alt="Creating EDM Model using EDM specyfication lookup table">
+									<br>               			 
+               		<p>These values are used for all pulse-type and phase measurement-type instruments. For unlisted instruments or missing values, the C-term (and reference refractive index) is derived from
+               			  the first velocity formula. All values can be manually overwritten.</p>
+               			 
                </div>
                <div id="EDMI-Chapter4_2_2">
                   <h4>4.2.2 Reference Refractive Index (n<sub>REF</sub>)</h4>
@@ -764,6 +776,7 @@
                   <li>Correction to the specified reference height of the baseline</li>
                   <li>Chord-to-Arc correction</li>
                </ul>
+               <br>
                <p>Pillar coordinates and elevation are required and used to determine the baseline location to derive
                   geometric correction of the distances. Medjil computes an average value of the supplied
                   coordinates.</p>
@@ -867,6 +880,7 @@
                <li>‘Coverage factor’ numerical factor used as a multiplier of the standard uncertainty in order to
                   obtain an expanded uncertainty</li>
             </ul>
+            <br>
             <p>Medjil complies with the ISO 17123 (all parts) recommendations to evaluate individual precision
                (experimental standard deviation known as Type A standard uncertainty) of individual instrument but also
                to define uncertainty budget which allows for combining all uncertainty components (random or systematic
@@ -911,7 +925,6 @@
                   <br>Table 5.2: Medjil uncertainty budget for calibration of EDM Instrumentation
                   <img src="{% static 'images/CalibrationGuides/edmi/Picture_4_3.png' %}"
                      alt="Medjil uncertainty budget for calibration of EDM Instrumentation">
-                  <br>
                   <br>
                   <p>The values for these automatically populated uncertainty sources are derived as follows:</p>
 
@@ -1768,6 +1781,7 @@
                      <li>The propagation (contribution) of the error sources to the total uncertainty of the calibration
                      </li>
                   </ul>
+                  <br>                  
                   <p>
                      <b>EDM scale factor</b> = Uncertainty related to the EDM scale factor can be specified in parts per
                      million (ppm), percent (%), scalar(x:1) or a ratio (1:x). All error sources belonging to this group
@@ -1929,6 +1943,9 @@
             <p>&emsp;&emsp;r = The vector of residuals</p>
             <p>The least square adjustment solution:</p>
             <div>$$ y=\left(A^TPA\right)^{-1}A^TPx\ \ \ (Eq. 6.3)$$ </div>
+            <p>Where:</p>
+            <p>&emsp;&emsp;P = The weight matrix</p>
+            <p>Please note detailed description of the least squares adjustment is out of scope of this manual. This method is widely used in surveying, geodesy and photogrammetry to solve overdetermined systems of equations based on the principle of minimising the sum of observation's residuals squares. User can explore this method in numerous available publications eg. "Practical Least Squares Adjustment of Surveying Measurements” by Alan R. Dragoo or “Adjustment Computations” by Charles D. Ghilani.</p>
          </div>
 
          <div class="fl w-50-ns ph3" id="EDMI-Chapter7">
