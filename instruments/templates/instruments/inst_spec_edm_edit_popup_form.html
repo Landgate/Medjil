@@ -114,7 +114,7 @@
                 </tr>
                 <!-- Manufacturers Accuracy Statement -->
                 <tr title="{{ form.manu_unc_const.help_text }}">
-                    <td width="35%">{{ form.manu_unc_const.label|title }}<a href= "{% url 'calibrationguide:manual_view' %}#Chapter_4"> &#x1F6C8</a></td>
+                    <td width="35%">{{ form.manu_unc_const.label|title }}<a href= "{% url 'calibrationguide:manual_view' %}#EDMI-Chapter5"> &#x1F6C8</a></td>
                     <td width="45%">{{ form.manu_unc_const }}
                         {% for error in form.manu_unc_const.errors %}
                             <p class="error error-danger">{{ error }}</p>
@@ -123,7 +123,7 @@
                     <td width="15%">{{ form.units_manu_unc_const }}</td>
                 </tr>
                 <tr title="{{ form.manu_unc_ppm.help_text }}">
-                    <td width="35%">{{ form.manu_unc_ppm.label|title }}<a href= "{% url 'calibrationguide:manual_view' %}#Chapter_4"> &#x1F6C8</a></td>
+                    <td width="35%">{{ form.manu_unc_ppm.label|title }}<a href= "{% url 'calibrationguide:manual_view' %}#EDMI-Chapter5"> &#x1F6C8</a></td>
                     <td width="45%">{{ form.manu_unc_ppm }}
                         {% for error in form.manu_unc_ppm.errors %}
                             <p class="error error-danger">{{ error }}</p>
