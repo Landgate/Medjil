@@ -317,7 +317,7 @@
                <img src="{% static 'images/CalibrationGuides/edmi/Picture_1_1.png' %}"
                   alt="Example of EDM Baseline">
 
-               <p>A set of linear observation equations can be formulated based on Eq. 1.1 and Eq. 1.2 as follows:
+               <p>A set of linear observation equations can be formulated based on Eq. 2.1 and Eq. 2.2 as follows:
                </p>
                <div>
                   $$
@@ -340,7 +340,7 @@
                <p>&emsp;&emsp;X = The certified distances and zpc (vector of the unknown output estimates)</p>
                <p>
                   This approach eliminates the need to provide approximate distances between pillars. In accordance
-                  with Section (5), the observations, along with their a-priori uncertainties (P), undergo a least
+                  with <a href="{% url 'calibrationguide:manual_view' %}#EDMI-Chapter6">Section 6</a>, the observations, along with their a-priori uncertainties (P), undergo a least
                   squares adjustment to obtain the estimated certified distances d<sub>x</sub>, the zpc value, and
                   the
                   complete VCV matrix.
@@ -441,7 +441,7 @@
                </p>
                <p>Pillar coordinates are required and used to determine the baseline location in order to derive
                   geometric correction to the distances. Medjil uses an average latitude of the supplied pillar
-                  coordinates to calculate the geometric corrections of surveyed distances. (See section 3.3)</p>
+                  coordinates to calculate the geometric corrections of surveyed distances (see, <a href="{% url 'calibrationguide:manual_view' %}#EDMI-Chapter4_3">Section 4.3</a> ).</p>
             </div>
 
          </div>
@@ -577,9 +577,9 @@
                <p>Where:</p>
                <div>$$ p_i=\frac{1}{S_{D_i}^2}\ \ \ (Eq. 3.9)$$ </div>
                <p>&emsp;&emsp;S<sub>D</sub> = a priori standard deviation of the measured distance D</p>
-               <p>Refer to Section (4) for the derivation of the uncertainties of a measured distance. The
+               <p>Refer to <a href="{% url 'calibrationguide:manual_view' %}#EDMI-Chapter4">Section 4</a> for the derivation of the uncertainties of a measured distance. The
                   observations
-                  together with a-priori uncertainties (p) are least squares adjusted as per Section (5). Note the
+                  together with a-priori uncertainties (p) are least squares adjusted as per <a href="{% url 'calibrationguide:manual_view' %}#EDMI-Chapter6">Section 6</a>. Note the
                   weight
                   matrix has the option to be additionally scaled by a variance factor.</p>
             </div>
@@ -635,10 +635,10 @@
                   <p>&emsp;&emsp;d = Distance in metres</p>
                   <p>&emsp;&emsp;e = Partial water pressure in hectopascals</p>
                   <p>$$C = (N_{REF} – 1)10^6$$</p>
-                  <p>&emsp;&emsp;n<sub>REF</sub> = Reference refractive index (Section 3.2.2)</p>
+                  <p>&emsp;&emsp;n<sub>REF</sub> = Reference refractive index (Section 4.2.2)</p>
                   <p>$$D = (n_G – 1) 10^6 (273.15 / 1013.25)\ \ \ \ (Eq. 4.2)$$</p>
                   <p>&emsp;&emsp;n<sub>G</sub> = Group refractive index of atmosphere for standard conditions</p>
-                  <p>Partial vapour pressure is derived from relative humidity:</>
+                  <p>Partial vapour pressure is derived from relative humidity:</p>
                   <div>$$ \mathrm{e\ }=\ \frac{\mathrm{E\ h}}{\mathrm{100}}\ \ \ \ (Eq. 4.3) $$</div>
                   <p>Where:</p>
                   <p>&emsp;&emsp;e = Partial water vapour pressure in hectopascals</p>
@@ -723,7 +723,7 @@
                      dry air at
                      0 C, 1013.25 hPa, partial water vapour pressure = 0 and the air contains 0.0375 %
                      CO<sub>2</sub>). See
-                     Equation 3.7.</p>
+                     Equation 4.7.</p>
                   <p>&emsp;&emsp;t = Dry bulb temperature of air (C).</p>
                   <p>&emsp;&emsp;p = Atmospheric pressure in hectopascals</p>
                   <p>&emsp;&emsp;e = Partial water vapour pressure (hPa)</p>
@@ -735,7 +735,7 @@
                   </div>
                   <p>Where:</p>
                   <p>&emsp;&emsp;&#955 = carrier wavelength in micrometres (&#956;m) in a vacuum
-                  <p>These closed formulae (Eq. 3.6 and 3.7) deviate less than 0.25 ppm from the accurate formulae
+                  <p>These closed formulae (Eq. 4.6 and 4.7) deviate less than 0.25 ppm from the accurate formulae
                      between -30
                      C and +45 C, at 1000 hPa pressure, 100% relative humidity (without condensation) and for
                      wavelengths
@@ -831,7 +831,7 @@
                   pillars
                </p>
                <p>&emsp;&emsp;R = Mean radius of curvature of the Earth at the baseline location.</p>
-               <p>The geometric correction equations 3.8 and 3.9 were derived from The Australian Geodetic Datum
+               <p>The geometric correction equations 4.8 and 4.9 were derived from The Australian Geodetic Datum
                   Technical
                   Manual, National Mapping Council of Australia, Special Publication 10 and are suitable for
                   baselines
@@ -973,8 +973,7 @@
                      <li>Heights - Height Differences - During the ‘Calibrate an EDM Baseline’ process, a *.csv file is
                         required to upload the standard uncertainty (standard deviation) of the heights of each pillar.
                         These uncertainties are used to derive the uncertainty of the height differences according to
-                        the
-                        equation 4.6.
+                        the equation 5.6.
                         <div>$$ {uc}_{\Delta H}=k\sqrt{\left(H_i^2+H_j^2\right)}\ \ \ (Eq. 5.6) $$</div>
                         <p>Where:</p>
                         <p>&emsp;&emsp;uc<sub>&#916;H</sub> = Expanded uncertainty of the height difference between
@@ -1879,14 +1878,14 @@
                      (m) or
                      millimetres (mm). All error sources belonging to this group will be combined before the
                      contribution to
-                     the total uncertainty of the calibration according to the Eg. 4.21.
+                     the total uncertainty of the calibration according to the Eg. 5.21.
                   </p>
                   <p>
                      <b>Centring</b> = Uncertainty relating to the centring can be specified in metres (m) or
                      millimetres
                      (mm). All error sources belonging to this group will be combined before the contribution to the
                      total
-                     uncertainty of the calibration according to the Eg. 4.21.
+                     uncertainty of the calibration according to the Eg. 5.21.
                   </p>
                   <p>
                      <b>Heights</b> = Uncertainty relating to the heights can be specified in metres (m) or millimetres
@@ -1938,9 +1937,9 @@
             <div id="EDMI-Chapter7_1">
                <h3>7.1 Statistical tests</h3>
 
-               <p>Table 6.1 provides a lists of the ISO 17123-4:2012 recommended hypothesis testing to help the
+               <p>Table 7.1 provides a lists of the ISO 17123-4:2012 recommended hypothesis testing to help the
                   interpretation of the calibration results.</p>
-               <br>Table 6.1 Hypothesis tests
+               <br>Table 7.1 Hypothesis tests
                <table border="1">
                   <tr>
                      <th align="left">Test</th>

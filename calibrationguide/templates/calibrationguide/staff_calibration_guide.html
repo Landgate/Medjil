@@ -1,6 +1,6 @@
 {% load static %}
 <div class="post-content">
-    {% if user.is_authenticated %}
+    {% if not user.is_authenticated %}
     <p>Please login or signup to manage and calibrate your staff.</p>
     <div class="single-item-container">
         <button
@@ -33,14 +33,34 @@
                 </a>
             </li>
             <li>
-                <a href="#Staff-Field-Procedures">
+                <a href="#Staff-Procedures">
                     <span class="title">3. How to calibrate barcode staves</span>
                     <!-- <span class="page"><span class="visually-hidden">Page&nbsp;</span>5</span> -->
                 </a>
+                <ol>
+                    <li>
+                        <a href="#Staff-Field-Procedures">
+                            <span class="title">3.1 Field Procedures</span>
+                            <!-- <span class="page"><span class="visually-hidden">Page&nbsp;</span>5</span> -->
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#Staff-Sample-Data">
+                            <span class="title">3.2 Sample data</span>
+                            <!-- <span class="page"><span class="visually-hidden">Page&nbsp;</span>5</span> -->
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#Staff-Medjil-Procedures">
+                            <span class="title">3.3 Medjil Procedures</span>
+                            <!-- <span class="page"><span class="visually-hidden">Page&nbsp;</span>5</span> -->
+                        </a>
+                    </li>
+                </ol>
             </li>
             <li>
-                <a href="#Staff-Sample-Data">
-                    <span class="title">4. Sample data to be uploaded</span>
+                <a href="#Staff-Conclusion">
+                    <span class="title">4. Conclusion</span>
                     <!-- <span class="page"><span class="visually-hidden">Page&nbsp;</span>5</span> -->
                 </a>
             </li>
@@ -143,219 +163,287 @@
                 </div>
             </div>
 
-            <div class="fl w-50-ns ph3" id="Staff-Field-Procedures">
+            <div class="fl w-50-ns ph3" id="Staff-Procedures">
                 <h2 class="mt0">3. How to calibrate barcode staves</h2>
-                <ol>
-                    <li>Use the barcode staff booking sheet to record the collimation details and range observations
-                        details in the field.</li>
-                    <li>Check the bubble of the digital level and the staff. Re-adjust them if necessary. The staff
-                        needs to be truly vertical for the best results.</li>
-                    <li>Perform a collimation test on the digital level and use its software to compute and store the
-                        constants calculated. For this purpose, four co-linear spikes in concrete 20 m apart have been
-                        established adjacent to the range (see the <a
-                            href="{% static 'images/CalibrationGuides/staff/boya/2017_Access-sketch-Boya-barcode-staff-calibration.pdf' %}"
-                            target="_blank">Access Sketch</a>)</li>
-                    <li>Configure the settings in the digital level to record mean and standard deviation of measurement
-                        from multiple readings (at least five), if possible. Otherwise, if the instrument does not allow
-                        means from multiple observations, a minimum of three complete sets of observations (see 8 – 10
-                        below) is required for redundancy</li>
-                    <li>Set the digital level on the high observing pillar (MV 83) and shade it from the sun. Pillar B
-                        (low pillar) is utilised by Landgate when calibrating the range.</li>
-                    <li>Position staff on the highest pin (Pin No 1) and allow at least 5 minutes to settle and adjust
-                        to the ambient air temperature. Record the air temperature in the booking sheet with a shaded
-                        thermometer. </li>
-                    <li>A set of observations for a standard <u>four</u> metre staff consist of:
-                        <ul>
-                            <li> Set up on Pillar MV 83
-                                <ul>
-                                    <li>backsight to the staff at Pin Number 1 </li>
-                                    <li>intermediate sights to the staff at Pin Numbers 2 to 20 </li>
-                                    <li>foresight to the staff at Pin Number 21 </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>A set of observations for a standard <u>three</u> metre staff consist of:
-                        <ul>
-                            <li>Setup on Pillar MV83
-                                <ul>
-                                    <li>backsight to the staff at Pin Number 1</li>
-                                    <li>intermediate sights to the staff at Pin Numbers 2 to 14</li>
-                                    <li>foresight to the staff at Pin Number 15</li>
-                                </ul>
-                            </li>
-                            <li>Setup on Pillar B
-                                <ul>
-                                    <li>backsight to the staff at Pin Number 7</li>
-                                    <li>intermediate sights to the staff at Pin Numbers 8 to 20</li>
-                                    <li>foresight to the staff at Pin Number 21</li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>Record the air temperature in the booking sheet at the end of each survey.</li>
-                    <li>Download the level data and create a csv file in the correct format (see below).</li>
-                    <li>Click <a href="/staffcalibration/calibrate/">here</a> to process your staff readings and
-                        print the pdf report.</li>
-                    <!-- <li>Landgate recommends that staves be re-calibrated at least every 5 years or more often if joints exhibit noticeable wear or any other repairs are made to the staff.</li> -->
-                </ol>
+
+                <div id="Staff-Field-Procedures">
+                    <h3>3.1 Field Procedures</h3>
+                    <ol>
+                        <li>Use the barcode staff booking sheet to record the collimation details and range observations
+                            details in the field.</li>
+                        <li>Check the bubble of the digital level and the staff. Re-adjust them if necessary. The staff
+                            needs to be truly vertical for the best results.</li>
+                        <li>Check <b>if the Digital Level has an existing staff calibration</b>. If so, delete it or disconnect it from this calibration session.</li>
+                        <li>Perform a collimation test on the digital level and use its software to compute and store the
+                            constants calculated. For this purpose, four co-linear spikes in concrete 20 m apart have been
+                            established adjacent to the range (see the <a
+                                href="{% static 'images/CalibrationGuides/staff/boya/2017_Access-sketch-Boya-barcode-staff-calibration.pdf' %}"
+                                target="_blank">Access Sketch</a>)</li>
+                        <li>Configure the settings in the digital level to record mean and standard deviation of measurement
+                            from multiple readings (at least five), if possible. Otherwise, if the instrument does not allow
+                            means from multiple observations, a minimum of three complete sets of observations (see 8 – 10
+                            below) is required for redundancy</li>
+                        <li>Set the digital level on the high observing pillar (MV 83) and shade it from the sun. Pillar B
+                            (low pillar) is utilised by Landgate when calibrating the range.</li>
+                        <li>Position staff on the highest pin (Pin No 1) and allow at least 5 minutes to settle and adjust
+                            to the ambient air temperature. Record the air temperature in the booking sheet with a shaded
+                            thermometer. </li>
+                        <li>A set of observations for a standard <u>four</u> metre staff consist of:
+                            <ul>
+                                <li> Set up on Pillar MV 83
+                                    <ul>
+                                        <li>backsight to the staff at Pin Number 1 </li>
+                                        <li>intermediate sights to the staff at Pin Numbers 2 to 20 </li>
+                                        <li>foresight to the staff at Pin Number 21 </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>A set of observations for a standard <u>three</u> metre staff consist of:
+                            <ul>
+                                <li>Setup on Pillar MV83
+                                    <ul>
+                                        <li>backsight to the staff at Pin Number 1</li>
+                                        <li>intermediate sights to the staff at Pin Numbers 2 to 14</li>
+                                        <li>foresight to the staff at Pin Number 15</li>
+                                    </ul>
+                                </li>
+                                <li>Setup on Pillar B
+                                    <ul>
+                                        <li>backsight to the staff at Pin Number 7</li>
+                                        <li>intermediate sights to the staff at Pin Numbers 8 to 20</li>
+                                        <li>foresight to the staff at Pin Number 21</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>Record the air temperature in the booking sheet at the end of each survey.</li>
+                        <li>Download the level data and copy it in a csv file in the correct format (see <a href="{% url 'calibrationguide:guide_view' %}#Staff-Sample-Data">Section 3.2</a>) without any headers.</li>
+                        <li>Click <a href="/staffcalibration/calibrate/">here</a> to process your staff readings and
+                            print the calibration report in a pdf format.</li>
+                        <!-- <li>Landgate recommends that staves be re-calibrated at least every 5 years or more often if joints exhibit noticeable wear or any other repairs are made to the staff.</li> -->
+                    </ol>
+                </div>
+                <div id="Staff-Sample-Data">
+                    <h3 class="mt0">3.2 Sample data </h3>
+                    <p>
+                        Data should be uploaded in a correctly formatted text or csv file as per the file format. File
+                        Format - All fields are separated by a comma (,) and must NOT contain the header line.
+                    <ul>
+                        <li>Field 1 = Pin number</li>
+                        <li>Field 2 = Staff reading</li>
+                        <li>Field 3 = Number of readings</li>
+                        <li>Field 4 = Standard deviations</li>
+                    </ul>
+                    </p>
+
+                    <p> Example of a text/csv file. The file can also be downloaded from <a
+                            href="{% static 'images/CalibrationGuides/staff/boya/Sample-staff-load-file-format.csv' %}"
+                            target="_blank">here</a>. </p>
+
+                    <table id="Sample-csv-Data">
+                        <tr>
+                            <th>Pin number,</th>
+                            <th>Staff reading,</th>
+                            <th>Number of readings,</th>
+                            <th>Standard deviations </th>
+                        </tr>
+                        <tr>
+                            <td>1,</td>
+                            <td>0.07417,</td>
+                            <td>10,</td>
+                            <td>0.000090</td>
+                        </tr>
+                        <tr>
+                            <td>2,</td>
+                            <td>0.16503,</td>
+                            <td>10,</td>
+                            <td>0.000070</td>
+                        </tr>
+                        <tr>
+                            <td>3,</td>
+                            <td>0.32868,</td>
+                            <td>10,</td>
+                            <td>0.000020</td>
+                        </tr>
+                        <tr>
+                            <td>4,</td>
+                            <td>0.47489,</td>
+                            <td>10,</td>
+                            <td>0.000090</td>
+                        </tr>
+                        <tr>
+                            <td>5,</td>
+                            <td>0.68799,</td>
+                            <td>10,</td>
+                            <td>0.000070</td>
+                        </tr>
+                        <tr>
+                            <td>6,</td>
+                            <td>0.87413,</td>
+                            <td>10,</td>
+                            <td>0.000040</td>
+                        </tr>
+                        <tr>
+                            <td>9,</td>
+                            <td>1.52628,</td>
+                            <td>10,</td>
+                            <td>0.000030</td>
+                        </tr>
+                        <tr>
+                            <td>7,</td>
+                            <td>1.07422,</td>
+                            <td>10,</td>
+                            <td>0.000030</td>
+                        </tr>
+                        <tr>
+                            <td>8,</td>
+                            <td>1.27955,</td>
+                            <td>10,</td>
+                            <td>0.000050</td>
+                        </tr>
+                        <tr>
+                            <td>10,</td>
+                            <td>1.79376,</td>
+                            <td>10,</td>
+                            <td>0.000040</td>
+                        </tr>
+                        <tr>
+                            <td>11,</td>
+                            <td>2.12703,</td>
+                            <td>10,</td>
+                            <td>0.000080</td>
+                        </tr>
+                        <tr>
+                            <td>12,</td>
+                            <td>2.3912,</td>
+                            <td>10,</td>
+                            <td>0.000050</td>
+                        </tr>
+                        <tr>
+                            <td>13,</td>
+                            <td>2.51647,</td>
+                            <td>10,</td>
+                            <td>0.000110</td>
+                        </tr>
+                        <tr>
+                            <td>14,</td>
+                            <td>2.64608,</td>
+                            <td>10,</td>
+                            <td>0.000050</td>
+                        </tr>
+                        <tr>
+                            <td>15,</td>
+                            <td>2.87513,</td>
+                            <td>10,</td>
+                            <td>0.000120</td>
+                        </tr>
+                        <tr>
+                            <td>16,</td>
+                            <td>3.05758,</td>
+                            <td>10,</td>
+                            <td>0.000060</td>
+                        </tr>
+                        <tr>
+                            <td>17,</td>
+                            <td>3.20978,</td>
+                            <td>10,</td>
+                            <td>0.000040</td>
+                        </tr>
+                        <tr>
+                            <td>18,</td>
+                            <td>3.36207,</td>
+                            <td>10,</td>
+                            <td>0.000120</td>
+                        </tr>
+                        <tr>
+                            <td>19,</td>
+                            <td>3.52057,</td>
+                            <td>10,</td>
+                            <td>0.000200</td>
+                        </tr>
+                        <tr>
+                            <td>20,</td>
+                            <td>3.6692,</td>
+                            <td>10,</td>
+                            <td>0.000070</td>
+                        </tr>
+                        <tr>
+                            <td>21,</td>
+                            <td>3.87885,</td>
+                            <td>10,</td>
+                            <td>0.000100 </td>
+                        </tr>
+                    </table>
+                    <p> Other information required are the staff and observation metadata which is recorded in the booking sheet
+                        at the time of observation. Retain a copy of the field booking sheet at least until a new calibration is
+                        done for the staff</p>
+                </div>
+
+                <div id="Staff-Medjil-Procedures">
+                    <h3 class="mt0">3.3 Medjil Procedures </h3>
+                    <ul style="list-style: none;">
+                        <li>
+                            <b>Step 1:</b> To start a new Staff Calibration, click on the <b>Staff Calibration</b> > <b>Staff Calibration</b>.
+                        </li>
+                        <br>
+                        <li>
+                            <b>Step 2:</b> Click on the <b>Start new calibration</b> button. 
+                            <ul>
+                                <li><b>Job Number</b>: enter a <b>Job Number</b> with a ten digit alphanumeric code. </li>
+                                <li><b>Calibration Site</b>: select <b>Boya</b> from the dropdown.</li>
+                                <li><b>Staff Number</b>: select the staff number or enter a new one by clicking on the + button. When entering (or creating) a new staff, a new window will pop up and users are advised to enter all the known fields - Make, Model, Owner, Staff Number, Type, Length and CoE. If the staff has been previously <b>calibrated</b>, users can tick the <strong><code>Is Calibrated</code></strong> box. A new window will appear to provide information about the calibration details. 
+                                <li><b>Level Number</b>: select the digital level (number) or enter a new one by clicking on the + button.</li>
+                                <li><b>Start temperature</b>: Temperature at the beginning of measurement.</li>
+                                <li><b>End temperature</b>: Temperature at the end of measurement.</li>
+                                <li><b>Field Data</b>: Click the <b>Choose File</b> button to select the csv file. A sample file is described <a href="#Staff-Sample-Data">here</a> for reference.</li>
+                                <li><b>Field Book</b>: Click the <b>Choose File</b> button to selec the field book (in pdf format).</li>
+                                <li>Enter an <b>Observer</b> name or tick the <b>I am the Observer</b>, if the observer is same as the person performing this procedure.</li>
+                                <li><b>Calibration date</b>: Choose a calibration date.</li>
+                                <li>Click the <b>Submit</b> button.</li>
+                                <li><b>Note:</b>  
+                                    <ul>
+                                        <li>Form errors will be shown in red text to help correctly fill the form.</li>
+                                        <li>Test data is provided <a href="{% static 'data/Staff Calibration/Staff213.csv' %}" target="_blank">here</a> with the corresponding <a href="{% static 'data/Staff Calibration/200317_Fieldnote.pdf' %}" target="_blank">Field Book</a> to assist with the Staff Calibration procedure.</li>
+                                    </ul>
+                                </li>
+                            </ul>                          
+                        </li>
+                        <br>
+                        <li><img src="{% static 'images/CalibrationGuides/staff/Staff-Medjil-Step1_2.png' %}" alt="Medjil Steps 1-2"></li>
+                        <br>
+                        <li>
+                            <b>Step 2:</b> By submitting the form in <b>Step 1</b>, the files will be read and processed to calibrate the staff. The Staff Calibration Report will be displayed in the next window - tabulating the Correction Factor (a multiplicative scale factor) and the graduation uncertainty at 95% confidence level at 25$^\circ$C, staff readings and corrections, the correction factors/errors at various tempeartures. <i>If the temperature exceeds +55$^\circ$C or -10$^\circ$C at Correction Factor = 1, users are advised to check for possible errors in metadata information provided. Wooden staves generally exceed this limit and are generally used for high precision levelling.</i>.   
+                            <p>
+                                Click on the <b>Print Report >></b> to print in a pdf format. The report has three pages. A formula is provided in Page 1 just below the <b>Correction Factor</b> on how to apply it to the future height differences (see below). 
+                            </p>
+                        </li>
+                        <br>
+                        <li>
+                            <img src="{% static 'images/CalibrationGuides/staff/Staff-Medjil-Step2.png' %}" height="500" alt="Staff Calibration report">
+                        </li>
+                        <br>
+                        <li>
+                            <b>Step 3:</b> Staff Calibration Record.
+                            <p>The staff calibration records are automatically stored in a database. Calibration reports can be retrieved from the <b>Levelling Staff Registry</b> under the <b>Staff Calibration</b> tab.</p>
+                            <p>Users are also able to <b>add</b> previous calibration record (s) here by clicking the <b>Add new calibration certificate</b>. <i>However, the form only accepts staffs calibrated at Boya Staff Calibration Range and it is also important to note that previous calibration has no impact on the current calibration as they are indpendent of each other.</i>
+                        </li>
+                        <br>
+                        <li>
+                            <img src="{% static 'images/CalibrationGuides/staff/Staff-Medjil-Step3.png' %}" height="650" alt="Staff Calibration Record Form">
+                        </li>
+                        <br>
+                    </ul>
+                </div>
             </div>
-            <div class="fl w-50-ns ph3" id="Staff-Sample-Data">
-                <h2 class="mt0">4. Sample data to be uploaded </h2>
+            <div class="fl w-50-ns ph3" id="Staff-Conclusion">
+                <h2>4. Conclusion</h2>
                 <p>
-                    Data should be uploaded in a correctly formatted text or csv file as per the file format. File
-                    Format - All fields are separated by a comma and must have a header line
-                <ul>
-                    <li>Field 1 = Pin number</li>
-                    <li>Field 2 = Staff reading</li>
-                    <li>Field 3 = Number of readings</li>
-                    <li>Field 4 = Standard deviations</li>
-                </ul>
+                    The Boya Staff Calibration Range and software developed by the then Department of Land Information (DLI) has enabled surveyors who use digital levels and barcode staves to calibrate their staves in a simple and cost effective manner for use in geodetic and other high order levelling. Both the calibration of the Range and Staves are based on the methods of least squares estimation, which is considered mathematically more rigorous. Medjil will update the estimated (monthly) average of the Staff Calibration Range whenever a new range measurement is added by Landgate. These (monthly) Range values are then used as a reference to calibrate other staves.
                 </p>
-
-                <p> Example of a text/csv file. The file can also be downloaded from <a
-                        href="{% static 'images/CalibrationGuides/staff/boya/Sample-staff-load-file-format.csv' %}"
-                        target="_blank">here</a>. </p>
-
-                <table id="Staff-Sample-Data">
-                    <tr>
-                        <th>Pin number,</th>
-                        <th>Staff reading,</th>
-                        <th>Number of readings,</th>
-                        <th>Standard deviations </th>
-                    </tr>
-                    <tr>
-                        <td>1,</td>
-                        <td>0.07417,</td>
-                        <td>10,</td>
-                        <td>0.000090</td>
-                    </tr>
-                    <tr>
-                        <td>2,</td>
-                        <td>0.16503,</td>
-                        <td>10,</td>
-                        <td>0.000070</td>
-                    </tr>
-                    <tr>
-                        <td>3,</td>
-                        <td>0.32868,</td>
-                        <td>10,</td>
-                        <td>0.000020</td>
-                    </tr>
-                    <tr>
-                        <td>4,</td>
-                        <td>0.47489,</td>
-                        <td>10,</td>
-                        <td>0.000090</td>
-                    </tr>
-                    <tr>
-                        <td>5,</td>
-                        <td>0.68799,</td>
-                        <td>10,</td>
-                        <td>0.000070</td>
-                    </tr>
-                    <tr>
-                        <td>6,</td>
-                        <td>0.87413,</td>
-                        <td>10,</td>
-                        <td>0.000040</td>
-                    </tr>
-                    <tr>
-                        <td>9,</td>
-                        <td>1.52628,</td>
-                        <td>10,</td>
-                        <td>0.000030</td>
-                    </tr>
-                    <tr>
-                        <td>7,</td>
-                        <td>1.07422,</td>
-                        <td>10,</td>
-                        <td>0.000030</td>
-                    </tr>
-                    <tr>
-                        <td>8,</td>
-                        <td>1.27955,</td>
-                        <td>10,</td>
-                        <td>0.000050</td>
-                    </tr>
-                    <tr>
-                        <td>10,</td>
-                        <td>1.79376,</td>
-                        <td>10,</td>
-                        <td>0.000040</td>
-                    </tr>
-                    <tr>
-                        <td>11,</td>
-                        <td>2.12703,</td>
-                        <td>10,</td>
-                        <td>0.000080</td>
-                    </tr>
-                    <tr>
-                        <td>12,</td>
-                        <td>2.3912,</td>
-                        <td>10,</td>
-                        <td>0.000050</td>
-                    </tr>
-                    <tr>
-                        <td>13,</td>
-                        <td>2.51647,</td>
-                        <td>10,</td>
-                        <td>0.000110</td>
-                    </tr>
-                    <tr>
-                        <td>14,</td>
-                        <td>2.64608,</td>
-                        <td>10,</td>
-                        <td>0.000050</td>
-                    </tr>
-                    <tr>
-                        <td>15,</td>
-                        <td>2.87513,</td>
-                        <td>10,</td>
-                        <td>0.000120</td>
-                    </tr>
-                    <tr>
-                        <td>16,</td>
-                        <td>3.05758,</td>
-                        <td>10,</td>
-                        <td>0.000060</td>
-                    </tr>
-                    <tr>
-                        <td>17,</td>
-                        <td>3.20978,</td>
-                        <td>10,</td>
-                        <td>0.000040</td>
-                    </tr>
-                    <tr>
-                        <td>18,</td>
-                        <td>3.36207,</td>
-                        <td>10,</td>
-                        <td>0.000120</td>
-                    </tr>
-                    <tr>
-                        <td>19,</td>
-                        <td>3.52057,</td>
-                        <td>10,</td>
-                        <td>0.000200</td>
-                    </tr>
-                    <tr>
-                        <td>20,</td>
-                        <td>3.6692,</td>
-                        <td>10,</td>
-                        <td>0.000070</td>
-                    </tr>
-                    <tr>
-                        <td>21,</td>
-                        <td>3.87885,</td>
-                        <td>10,</td>
-                        <td>0.000100 </td>
-                    </tr>
-                </table>
-
+                <p>Please contact Landgate at <a href="mailto:geodesy@landgate.wa.gov.au">geodesy@landgate.wa.gov.au</a>, if you encounter any issues when calibrating a staff. And users are advised to go through this user guide before contacting Landgate.</p>
+        
             </div>
-            <p> Other information required are the staff and observation metadata which is recorded in the booking sheet
-                at the time of observation. Retain a copy of the field booking sheet at least until a new calibration is
-                done for the staff</p>
         </div>
 
 
@@ -367,3 +455,17 @@
 
     </div>
 </div>
+
+<script>
+    MathJax = {
+       tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'ams'
+       },
+       svg: {
+          fontCache: 'global',
+          displayAlign: 'left',
+          displayIndent: '2.0em'
+       }
+    };
+ </script>
