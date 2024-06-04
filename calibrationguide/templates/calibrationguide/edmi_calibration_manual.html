@@ -16,7 +16,7 @@
    {% endif %}
 
    <h2 class="post-title">
-      EDMI Calibration Technical Manual
+      The Survey Instrumentation Calibration Technical Manual
    </h2>
 
    <div class="mt-5 mb-3 guide_view">
@@ -188,7 +188,7 @@
       <div class="cf nr3 nl3">
          <div class="fl w-50-ns ph3" id="EDMI-Chapter1">
             <h2>1. Introduction</h2>
-            <p>Medjil, means ‘accurate’ in the <i>Whadjuk Noongar</i> language.</p>
+            <p>We adopted the word 'Medjil' from <i>Whadjuk Noongar</i> language, which means ‘accurate’ as the name for the survey instrumentation calibration portal.</p>
             <p>The Medjil portal was developed by <a href="https://www.landgate.wa.gov.au/">Landgate</a> (the Western
                Australian Land Information Authority) in collaboration with the <a
                   href="https://www.icsm.gov.au" />Intergovernmental Committee on Surveying and Mapping</a> (ICSM)
@@ -197,8 +197,9 @@
             <ul>
                <li>EDM Instrumentation using standardised EDM Baselines</li>
                <li>EDM Baselines using standardised instruments</li>
-               <li>Barcode staff using staff calibration range facility</li>
+               <li>Barcode staff using staff calibration range facility (refer to Staff Calibration manual for details)</li>
             </ul>
+            <br>
             <p>The purpose of calibrating the EDM Instrumentation (EDMI) is to establish the legal traceability of a
                user's
                instrument to the national standard of length provided by the National Measurement Institute (NMI). This
@@ -240,6 +241,7 @@
                   (EDM)
                   Instruments prepared for the Surveyor General of New South Wales by J.M.Rüeger 2019</li>
             </ul>
+            <br>
             <p>The Draft Verifying Authorities (VA) Handbook 2001 is intended for use by verifying authorities which are
                appointed under the provisions of Regulation 73 of the National Measurement Regulations 1999 in
                accordance
@@ -269,6 +271,7 @@
                   <li>Aarau Design</li>
                   <li>Hobart Design</li>
                </ul>
+               <br>
                <p>Each EDM Baseline design aims to achieve an equal distribution of measured distances between the
                   shortest and
                   longest lines without any repetitions. They also allow EDMI calibration, with or without known
@@ -304,11 +307,9 @@
                <p>Where:</p>
                <p>&emsp;&emsp;D<sub>ij</sub> = Measured distance between pillars i and j (the observation)</p>
                <p>&emsp;&emsp;x<sub>i</sub> = Distance from the first pillar to pillar 'i'. Distance corrected for
-                  the
-                  pillar offsets and reduced to baseline reference height</p>
+                  the pillar offsets and reduced to baseline reference height</p>
                <p>&emsp;&emsp;x<sub>j</sub> = Distance from the first pillar to pillar 'j'. Distance corrected for
-                  the
-                  pillar offsets and reduced to baseline reference height</p>
+                  the pillar offsets and reduced to baseline reference height</p>
                <p>&emsp;&emsp;zpc = Zero point correction (an additive constant of the certified EDMI)</p>
             </div>
             <div id="EDMI-Chapter2_3">
@@ -342,8 +343,7 @@
                   This approach eliminates the need to provide approximate distances between pillars. In accordance
                   with <a href="{% url 'calibrationguide:manual_view' %}#EDMI-Chapter6">Section 6</a>, the observations, along with their a-priori uncertainties (P), undergo a least
                   squares adjustment to obtain the estimated certified distances d<sub>x</sub>, the zpc value, and
-                  the
-                  complete VCV matrix.
+                  the complete VCV matrix.
                </p>
             </div>
 
@@ -382,9 +382,9 @@
                   <li>pressure: pressure in Hectopascals or millibars</li>
                   <li>humidity: humidity in percentage</li>
                </ul>
-
+							 <br>
                <p>Refer to this <a
-                     href="{% static 'data/edmi calibration/BUSS_edm_calibration_edm_observations.csv' %}"
+                     href="{% static 'images/CalibrationGuides/edmi/BUSS_baseline_calibration_edm_observations.csv"
                      target="_self">sample dataset</a> required for an EDM baseline calibration survey data format.
                </p>
                <br>
@@ -764,6 +764,7 @@
                   <li>Correction to the specified reference height of the baseline</li>
                   <li>Chord-to-Arc correction</li>
                </ul>
+               <br>
                <p>Pillar coordinates and elevation are required and used to determine the baseline location to derive
                   geometric correction of the distances. Medjil computes an average value of the supplied
                   coordinates.</p>
@@ -867,6 +868,7 @@
                <li>‘Coverage factor’ numerical factor used as a multiplier of the standard uncertainty in order to
                   obtain an expanded uncertainty</li>
             </ul>
+            <br>
             <p>Medjil complies with the ISO 17123 (all parts) recommendations to evaluate individual precision
                (experimental standard deviation known as Type A standard uncertainty) of individual instrument but also
                to define uncertainty budget which allows for combining all uncertainty components (random or systematic
@@ -1929,6 +1931,9 @@
             <p>&emsp;&emsp;r = The vector of residuals</p>
             <p>The least square adjustment solution:</p>
             <div>$$ y=\left(A^TPA\right)^{-1}A^TPx\ \ \ (Eq. 6.3)$$ </div>
+            <p>Where:</p>
+            <p>&emsp;&emsp;P = The weight matrix</p>
+            <p>Please note detailed description of the least squares adjustment is out of scope of this manual. This method is widely used in surveying, geodesy and photogrammetry to solve overdetermined systems of equations based on the principle of minimising the sum of observation's residuals squares. User can explore this method in numerous available publications eg. "Practical Least Squares Adjustment of Surveying Measurements” by Alan R. Dragoo or “Adjustment Computations” by Charles D. Ghilani.</p>
          </div>
 
          <div class="fl w-50-ns ph3" id="EDMI-Chapter7">
