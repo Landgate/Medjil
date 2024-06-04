@@ -235,36 +235,73 @@
             </div>
 
             <div id="Staff-Tech-Range2">
-               <h3>3.2 Observation equations for each height interval between adjoining pins</h3>
+               <h3>3.2 Observation equations and the least squares solution</h3>
                <p>The observation equations are derived from the mathematical model where the residual is the difference
-                  between
-                  the observed and the most probable height difference between the pins. One observation equation is
-                  formed for
-                  each observation. The initial (most probabale) height difference is adopted from a previous range
-                  calibration.
+                  between the observed and the most probable height difference between the pins. One observation equation is     formed for each observation. The initial most probabale height difference is adopted as the average height difference between the adjoining pillars if there are more than one observations.
                </p>
 
                <div>$$ v_k=ΔH_{ij}-[M_{jk}-M_{ik} ]\ \ \ (Eq. 3.2) $$ </div>
                <p>Where:</p>
-               <p>&emsp;&emsp;v<sub>k</sub> = residual of the observation set between pins i and j in metres</p>
-               <p>The above equation can be expressed in a matrix notation as:</p>
-               <div>$$ v = AX+m\ \ \ (Eq. 3.3)$$ </div>
+               <p>&emsp;&emsp;v<sub>k</sub> = residual of the observation set between pins i and j in metres</p> 
+               <p>
+                  For example, to determine the height interval H between adjoining Pins i and j using 8 observations sets, the following equations can be used.
+                  $$v1 = \Delta H_{ij}   - [M_{j1} - M_{i1}]$$
+                  $$v1 = \Delta H_{ij}   - [M_{j2} - M_{i2}]$$
+                  $$v1 = \Delta H_{ij}   - [M_{j3} - M_{i3}]$$
+                  $$v1 = \Delta H_{ij}   - [M_{j4} - M_{i4}]$$
+                  $$v1 = \Delta H_{ij}   - [M_{j5} - M_{i5}]$$
+                  $$v1 = \Delta H_{ij}   - [M_{j6} - M_{i6}]$$
+                  $$v1 = \Delta H_{ij}   - [M_{j6} - M_{i7}]$$
+                  $$v1 = \Delta H_{ij}   - [M_{j8} - M_{i8}]$$  
+               </p> 
+               <p>Eq. 3.2 can be expressed in a matrix form:</p>
+               <div>$$ v = AX + w \ \ (Eq. 3.3)$$ </div>
                <p>Where:</p>
-               <p>&emsp;&emsp;A = [1]</p>
-               <p>&emsp;&emsp;X = [∆H<sub>ij</sub>]</p>
-               <p>&emsp;&emsp;m = [M<sub>jk</sub> - M<sub>ik</sub>]</p>
-
-               <p>The P is a diagonal weight matrix that can be constructed
-                  from
-                  a-priori standard daviations, undergo a least squares adjustment to obtain the estimated (calibrated)
-                  height
-                  differences ∆H<sub>ij</sub> between pins.</p>
+               <p>&emsp;&emsp; 
+                  $$A = 
+                  \begin{bmatrix}
+                      1 \\
+                      1 \\
+                      1 \\
+                      1 \\
+                      1 \\
+                      1 \\
+                      1 \\
+                      1
+                  \end{bmatrix} &emsp; &emsp;
+                  X = 
+                  \begin{bmatrix}
+                      \Delta H_{ij}
+                  \end{bmatrix}  &emsp; &emsp;
+                  w = 
+                  \begin{bmatrix}
+                     M_{j1} - M_{i1} \\
+                     M_{j2} - M_{i2} \\
+                     M_{j3} - M_{i3} \\
+                     M_{j4} - M_{i4} \\
+                     M_{j5} - M_{i5} \\
+                     M_{j6} - M_{i6} \\
+                     M_{j7} - M_{i7} \\
+                     M_{j8} - M_{i8}
+                  \end{bmatrix}
+                  $$
+               </p>
+               <div>
+                  <p>
+                     A least squares adjustment computes the most probable values for the height differences between the pins. Any changes to the observations should be as small as possible. A least squares adjustment minimises the sum of the squares of the weighted residuals. The observation matrix (Eq. 3.3) can be combined with a weight matrix, $P$ (Eq. 3.5) to derive the best estimate for $\Delta H_{ij}$, represented by $x$ in Eq. 3.3 as follows:
+                  </p>
+                  
+                  <p>
+                     $$x = (A^{T}PA)^{-1} A^{T}Pw  \ \ (Eq. 3.4) $$
+                  </p>
+               </div>
+               <p>The P is a diagonal weight matrix that can be constructed from a-priori standard daviations, undergo a least squares adjustment to obtain the estimated (calibrated) height differences ∆H<sub>ij</sub> between pins.</p>
                <div>$$ P=[ \frac{1}{σ_{k}^2}]\ \ \ (Eq. 3.4)$$ </div>
                <p>Where:</p>
                <div>$$ \sigma_{k}=\sqrt{(\sigma_{M_{i}}^2+\sigma_{M_{j}}^2+\sigma_{T_{ij}}^2)}\ \ \ (Eq. 3.5)$$ </div>
                <p>Where:</p>
-               <p>&emsp;&emsp;$\sigma$<sub>M<sub>i</sub></sub> = standard deviation of the observations to pin i
-               <p>&emsp;&emsp;$\sigma$<sub>M<sub>j</sub></sub> = standard deviation of the observations to pin j
+               <p>&emsp;&emsp;$\sigma$<sub>M<sub>i</sub></sub> = standard deviation of the observations to pin i </p>
+               <p>&emsp;&emsp;$\sigma$<sub>M<sub>j</sub></sub> = standard deviation of the observations to pin j </p>
                <p>&emsp;&emsp;$\sigma$<sub>T<sub>ij</sub></sub> = standard deviation of the temperature correction between
                   pin i and j
 
@@ -273,11 +310,7 @@
                   observations.
                </p>
 
-               <p>A posteriori uncertainties of the adjusted (calibrated) height differences are dervivied from the a
-                  posteriori
-                  standard deviations and expanded to achieve 95% confidence level by mupliplying them by coverage
-                  factor k =
-                  1.96:</p>
+               <p>The uncertainty of the calibrated height difference is the a posteriori standard deviation of the adjusted height difference is and can be expressed at 95% confidence level by mupliplying it by coverage factor k = 1.96:</p>
                <div>$ \sigma_{H_{ij}} = \sqrt{({A}^TPA)^{-1}} * 1.96\ \ \ (Eq. 3.6)$ </div>
             </div>
 
@@ -285,13 +318,10 @@
                <h3>3.3 Time dependant range</h3>
 
                <p>Regular measurements of the Boya calibration range carried out by Landgate over the years indicated
-                  seasonal
-                  variations of up to 1 mm, thereby mandating the development of the time-dependent range which are used
-                  for
-                  (time depandant) staff calibration.</p>
+                  seasonal variations of up to 1 mm, thereby mandating the development of the time-dependent range which are used
+                  for (time depandant) staff calibration.</p>
                <p>The range was measured every month over a period of two years and the observations used to estimate
-                  the
-                  folloing (see figure below) time dependant values of the range height differences.</p>
+                  the following (see figure below) time dependant values of the range height differences.</p>
                <img src="{% static 'images/CalibrationGuides/staff/staff_calibration_range_param.png' %}" height="30%"
                   style="border: 2px solid #888;" alt="Calibrated height differences at Boya staff calibration range">
 
