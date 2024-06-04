@@ -103,14 +103,14 @@
             <div class="button-container">
                 <div class="flexbox-item_800_IB flexbox-item-button_IB">
                     {% if pillar_survey %}
-                        <button onclick="window.location.href='{% url 'edm_calibration:calibrate2' id=pillar_survey.pk %}'" class="submit-button bg-green-500 hover:bg-green-400">Back</button>
+                        <button type="button" onclick="window.location.href='{% url 'edm_calibration:calibrate2' id=pillar_survey.pk %}'" class="submit-button bg-green-500 hover:bg-green-400">Back</button>
                         {% if pillar_survey.certificate %}
-                            <button onclick="window.location.href='{% url 'edm_calibration:pillar_survey_del' id=pillar_survey.pk %}'" class="submit-button bg-red-500 hover:bg-green-400"> Cancel</button>
+                            <button type="button" onclick="window.location.href='{% url 'edm_calibration:pillar_survey_del' id=pillar_survey.pk %}'" class="submit-button bg-red-500 hover:bg-green-400"> Cancel</button>
                         {% else %}
-                            <button onclick="window.location.href='{% url 'edm_calibration:edm_calibration_home' %}'" class="submit-button bg-red-500 hover:bg-green-400">Cancel</button>
+                            <button type="button" onclick="window.location.href='{% url 'edm_calibration:edm_calibration_home' %}'" class="submit-button bg-red-500 hover:bg-green-400">Cancel</button>
                         {% endif %}
                     {% else %}
-                        <button onclick="window.location.href='{% url 'edm_calibration:edm_calibration_home' %}'" class="submit-button bg-red-500 hover:bg-green-400">Cancel</button>
+                        <button type="button" onclick="window.location.href='{% url 'edm_calibration:edm_calibration_home' %}'" class="submit-button bg-red-500 hover:bg-green-400">Cancel</button>
                     {% endif %}
                     <button type="submit" class="submit-button bg-green-500 hover:bg-green-400" >Save</button>
                 </div>

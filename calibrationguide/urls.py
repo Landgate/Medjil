@@ -23,6 +23,7 @@ app_name = 'calibrationguide'
 urlpatterns = [
     path('', views.guide_view, name='guide_view'), 
     path('manuals/', views.manual_view, name='manual_view'), 
+    path('read_manual/<str:manual_name>', views.read_manual, name='read_manual'), 
     path('downloads/', views.guide_downloads, name='guide_downloads'), 
     path('guide_create/', views.guide_create, name='guide_create'),
     path('manual_create/', views.manual_create, name='manual_create'),

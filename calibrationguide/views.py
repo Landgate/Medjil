@@ -54,6 +54,9 @@ def manual_view(request):
     # }
     return render(request, 'calibrationguide/calibrationmanual_view.html', context={})
 
+def read_manual(request, manual_name):
+    return render(request, 'calibrationguide/' + manual_name, context={})
+
 @login_required(login_url="/accounts/login") 
 def guide_create(request):
     ImageFormSet = modelformset_factory(InstructionImage, fields=('photos',), extra=1, can_delete=True)

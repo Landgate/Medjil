@@ -111,10 +111,10 @@
                 {% endif %}
 
 				{% if wizard.steps.next %}
-					<button onclick="window.location.href='{% url 'rangecalibration:home' %}'" class="cancelbtn bg-red-500 hover:bg-red-300">Cancel</button>
+					<button type="button" onclick="window.location.href='{% url 'rangecalibration:home' %}'" class="cancelbtn bg-red-500 hover:bg-red-300">Cancel</button>
 					<button class="next-button bg-green-500 hover:bg-green-500" type="submit">Next</button>
 				{% else %}
-					<button onclick="window.location.href='{% url 'rangecalibration:home' %}'" class="cancelbtn bg-red-500 hover:bg-red-300">Cancel</button>
+					<button type="button" onclick="window.location.href='{% url 'rangecalibration:home' %}'" class="cancelbtn bg-red-500 hover:bg-red-300">Cancel</button>
 					<button class="next-button bg-green-500 hover:bg-green-500" type="submit">Save</button>
 				{% endif %}
 			</div>
