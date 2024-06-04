@@ -140,7 +140,7 @@
         <div id="Range-Field-Procedures">
             <h2 class="mt0">4. Range Calibration - Field Procedures</h2>
             <p>
-                For the purpose of calibrating the range, Landgate uses a <u>three</u> metre invar staff (calibrated at the Geodetic Laboratory at the Chair of Geodesy of the Technical University of Munich, Germany) and a Leica LS15 digital level. The advanced comparators used at the Geodetic Laboratory calculates the <strong>Index Correction</strong> of the graduation (l__0), the <strong>Scale Factor</strong> at a standard temperature, and the <strong>Coefficient of Expansion</strong> based on observations at various temperatures. 
+                For the purpose of calibrating the range, Landgate uses a <u>three</u> metre invar staff (calibrated at the Geodetic Laboratory at the Chair of Geodesy of the Technical University of Munich, Germany) and a Leica LS15 digital level. The advanced comparators used at the Geodetic Laboratory calculates the <strong>Index Correction</strong> of the graduation($l_{0}$), the <strong>Scale Factor</strong> at a standard temperature, and the <strong>Coefficient of Expansion</strong>($\alpha$) based on observations at various temperatures. 
             </p>
     
             <p>
@@ -166,7 +166,7 @@
                         </li>
                         <li>
                             <h4>Checking the Collimation Error (or line-of-sight) using the Two-Peg-Test.</h4>
-                            <p>The line-of-sight error (collimation error) is the vertical angle (&alpha;) between the actual line-of-sight and the ideal horizontal line. It is usually determined by a level test called a Two-Peg-Test. To facilitate this test, four collinear spikes in concrete, 20m apart, are available on the access track to the Calibration Range (see, <a href="{% static 'images/CalibrationGuides/staff/boya/2017_Access-sketch-Boya-barcode-staff-calibration.pdf" target="_blank">Access Diagram</a> ). The general procedure for the Two-Peg-Test is shown in the figure below.</p>
+                            <p>The line-of-sight error (collimation error) is the vertical angle (&theta;) between the actual line-of-sight and the ideal horizontal line. It is usually determined by a level test called a Two-Peg-Test. To facilitate this test, four collinear spikes in concrete, 20m apart, are available on the access track to the Calibration Range (see, <a href="{% static 'images/CalibrationGuides/staff/boya/2017_Access-sketch-Boya-barcode-staff-calibration.pdf" target="_blank">Access Diagram</a> ). The general procedure for the Two-Peg-Test is shown in the figure below.</p>
                             
                             <img src="{% static 'images/CalibrationGuides/staff/LS15-two-peg-test.png' %}" height="30%" style="border: 2px solid #888;" alt="Two Peg Test">
                             
@@ -305,7 +305,7 @@
                         </li>
                         <br>
                         <li>
-                            <b>Step 5:</b> Click the <b>Adjust</b> button at the to generate the Range calibration report/certificate. The Range Calibration report/Certicate contains four tables that is being printed on four pages respectively, by clicking the <b>Print Report >></b> button.
+                            <b>Step 5:</b> Click the <b>Adjust</b> button at the to right to generate the Range calibration report/certificate. The Range Calibration report/Certicate contains three tables that is being printed on four pages respectively, by clicking the <b>Print Report >></b> button.
                             <ul>
                                 <li>Staff Readings and calculated height differences</li>
                                 <li>Adjusted height differences and their uncertainties</li>
@@ -315,6 +315,17 @@
                         <br>
                         <li>
                             <b>Step 6:</b> Calculating the time-dependent Range. 
+                            <p>The time-dependent Range is calculated automatically once the <b>Adjust >></b> button is clicked. This is done through the function in <code>rangecalibration/views.py</code> as follows:</p>
+                            <code style="text-align: left; white-space: pre;">
+                                try:
+                                    update_range_table_current(thisRecord)
+                                    thisRecord.updated_to = True
+                                    messages(request, 'Successfully updated the Calibration Range.')
+                                except:
+                                    pass 
+                            </code>   
+                            <p>where, <code>thisRecord</code> refers to the Range being updated for that date.</p>
+                            <p>Further, any calibrated Range that are adjusted but may not have been udpated in the above script will be updated when an authorised Landgate user (usually <code>is_staff</code>) clicks the <b>RangeCalibration</b> tab > <code>Staff Calibration > Range Calibration</code>.</p>
                         </li>
                     </ul>
                     
@@ -326,7 +337,7 @@
         <div id="Range-Conclusion">
             <h2>6. Conclusion</h2>
             <p>
-                The barcode calibration range and software developed by the then Department of Land Information (DLI) has enabled surveyors who use digital levels and barcode staves to calibrate their staves in a simple and cost effective manner for use in geodetic and other high order levelling. Both the calibration of the Range and Staves are based on the methods of least squares estimation, which is considered mathematically more rigorous. This processing system will update the estimated monthly average of the range values when a new range measurement is done by Landgate. These monthly range values are then used as a reference to calibrate other staves.
+                The Boya Staff Calibration Range  and software developed by the then Department of Land Information (DLI) has enabled surveyors who use digital levels and barcode staves to calibrate their staves in a simple and cost effective manner for use in geodetic and other high order levelling. Both the calibration of the Range and Staves are based on the methods of least squares estimation, which is considered mathematically more rigorous. Medjil will update the estimated (monthly) average of the Staff Calibration Range whenever a new range measurement is added by Landgate. These (monthly) Range values are then used as a reference to calibrate other staves.
             </p>
     
         </div>
