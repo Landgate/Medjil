@@ -345,7 +345,7 @@
                   used</p>
                <div>$$ C_f=\frac{ΔH_{ij}}{(M_{j}-M_{i})}\ \ \ (Eq. 4.1) $$ </div>
                <p>Where:</p>
-               <p>&emsp;&emsp;∆H<sub>ij</sub> = certified range height difference between pins i and j</p>
+               <p>&emsp;&emsp;∆H<sub>ij</sub> = certified range (or height difference between pins i and j)</p>
                <p>&emsp;&emsp;M<sub>i</sub> = barcoded staff reading at pin i</p>
                <p>&emsp;&emsp;M<sub>j</sub> = barcoded staff reading at pin j</p>
             </div>
@@ -367,6 +367,30 @@
                <p>The above equation can be expressed in a matrix notation:</p>
                <div>$$ V=AX+w\ \ \ (Eq. 4.4) $$ </div>
                <p>Where:</p>
+               <p>&emsp;&emsp; 
+                  $$A = 
+                  \begin{bmatrix}
+                      1 \\
+                      1 \\
+                      .. \\
+                      .. \\
+                      1
+                  \end{bmatrix} &emsp; &emsp;
+                  X = 
+                  \begin{bmatrix}
+                      C_{f}
+                  \end{bmatrix}  &emsp; &emsp;
+                  w = 
+                  \begin{bmatrix}
+                     \Delta H_{1,2}/[M_{2} - M_{1}] \\
+                     [M_{3} - M_{1}] \\
+                     M_{j3} - M_{i3} \\
+                     .. \\
+                     .. \\
+                     M_{n} - M_{1}
+                  \end{bmatrix}
+                  $$
+
                <p>&emsp;&emsp;A = [1]</p>
                <p>&emsp;&emsp;X = [C<sub>f</sub>]</p>
                <p>&emsp;&emsp;w = [∆H<sub>1,n</sub>/(M<sub>n</sub>-M<sub>1</sub>)]</p>
