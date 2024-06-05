@@ -60,10 +60,17 @@ class HomeView(SuccessMessageMixin, generic.ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # Retrieve additional queryset for calibration records not updated to Range Param
-        if RangeCalibrationRecord.objects.filter(valid=True, updated_to = False).first():
-            context['update_param_yes'] = True
-            compute_range_parameters()
+        try:
+            if not BarCodeRangeParam.objects.first():
+                compute_range_parameters()
+                context['update_param_yes'] = True
+            elif RangeCalibrationRecord.objects.filter(valid=True, updated_to = False).first():
+                context['update_param_yes'] = True
+                compute_range_parameters()
             success_message  =  'Range table successfully updated!'
+        except:
+            context['update_param_yes'] = False
+        # print(context)
         return context
 ###############################################################################
 ########################## FILE HANDLING ######################################
