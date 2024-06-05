@@ -464,7 +464,7 @@ def adjust(request, id):
 # check if all BarCodeRangeParam month fields are null
 def is_field_blank(thisObj):
     monthCol = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-    if any(thisObj.values(mon) is None for mon in monthCol) is True:
+    if any(thisObj.values(mon) for mon in monthCol):
         return True
     else:
         return False
@@ -528,10 +528,8 @@ def range_param_process(request):
             }
             # Get the range
             rangeObj = BarCodeRangeParam.objects.filter(site_id = site_id)
-            # req_Cols = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']  # [field.name for field in BarCodeRangeParam._meta.fields]
             # List of fields 
             required_column = ['from_to', 'Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-
             # if there is data for any of the month
             if is_field_blank(rangeObj): 
                 range_values, range_param = range_display(rangeObj, required_column)
