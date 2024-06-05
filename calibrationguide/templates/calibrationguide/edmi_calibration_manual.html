@@ -610,7 +610,7 @@
                   <p>EDMI calibration sourced from the most recent instrument calibration certificate:</p>
                   <div>c<sub>EDMI</sub> = sfc * d + zpc</div>
                   <br>
-                  <p>If the meteorological corrections have not been applied to EDMI readings, corrections to
+                  <p>If the meteorological corrections have not been applied to EDMI readings, 
                      atmospheric
                      readings will be applied prior to calculating the first velocity correction.</p>
                </div>
@@ -650,7 +650,7 @@
                   <p>&emsp;&emsp;p = Atmospheric pressure in hectopascals</p>
                   <p>&emsp;&emsp;t = Dry temperature in degrees Celsius</p>
                		
-               		<p>Note term C and D were populated into the EDM specyfications Lookup Table from the following sources:</p>
+               		<p>Note terms C and D as well as Unith Length, Carrier Wavelength, Modulation Frequency and Refractive Index are instrumnt specyfic (manufacturers supplied) and were populated into the EDM Specyfications Lookup Table from the following sources:</p>
                		<ul>
                			 <li>Rüeger, J. M. 1996. Electronic Distance Measurement - An Introduction, 4th corrected edition</li>
                			 <li>Rüeger. J. M. 2007a. First Velocity Correction in EDM: How to get the Constants C and D, Azimuth</li>
@@ -661,31 +661,27 @@
                		<img src="{% static 'images/CalibrationGuides/edmi/Picture_4_4.png' %}"
                   alt="Creating EDM Model using EDM specyfication lookup table">
 									<br>               			 
-               		<p>These values are used for all pulse-type and phase measurement-type instruments. For unlisted instruments or missing values, the C-term (and reference refractive index) is derived from
-               			  the first velocity formula. All values can be manually overwritten.</p>
-               			 
+               		<p>These parameters are assigned to the EDM model and later used by Medjil to calculate atmospheric corrections. Users can modify the values of these parameters as needed. 
+               			For unlisted instruments or missing values, the C-term (and reference refractive index) is derived using the first velocity formula. Calculating and applying atmospheric corrections is optional 
+               			and not required if meteorological data were entered into the instrument and used during field procedures. Medjil treats phase and pulse measuring instruments equally, 
+               			and solving for cyclic errors can be performed for both types of instruments. Although this step is pre-selected by default it is optional. 
+               			Medjil uses a t-student test to determine whether the cyclic errors are statistically significant. If cyclic errors are deemed statistically insignificant, 
+               			Medjil will automatically modify the design matrix (from six parameters to two parameters) and solve for instrument scale and zpc only.</p>                  			          			
                </div>
                <div id="EDMI-Chapter4_2_2">
                   <h4>4.2.2 Reference Refractive Index (n<sub>REF</sub>)</h4>
-                  <p>The reference refractive index is instrument specific:</p>
+                  <p>The reference refractive index is instrument specific and it is preferred that the manufacturer supplied value is used rather than calculated as the rounding error of the calculated value can be significant. 
+                  	To calculate reference refractive index values such of Unit Length, Carrier Wavelength, Modulation Frequency stored in the instrument register can be used if the refractive index is not supplied.</p>
                   <div>
                      $$ n_{\mathrm{REF}}=\frac{C_O}{\lambda_{\mathrm{MOD\ }}f_{MOD}}=\frac{C_O}{2Uf_{MOD}}\ \ \ \
                      (Eq. 4.5)
                      $$
                   </div>
                   <p>Where:</p>
-                  <p>&emsp;&emsp;C<sub>O</sub> = Velocity of light in a vacuum = 299 792 458 m/s</p>
-                  <p>&emsp;&emsp;&#955<sub>MOD</sub> = Constant modulation wavelength of the fine measurements for
-                     which the
-                     instrument is designed</p>
-                  <p>&emsp;&emsp;f<sub>MOD</sub> = Constant modulation frequency of the fine measurements</p>
-                  <p>&emsp;&emsp;U = The exact half of &#955<sub>MOD</sub> , called the unit length of the
-                     instrument.</p>
-                  <p>The velocity of light in a vacuum is fixed at 299792458 m/s by the 1983 definition of the SI
-                     metre.</p>
-                  <p>The unit length of the instrument (U) and the constant modulation frequency of the fine
-                     measurements
-                     (f<sub>MOD</sub>) are instrument specific and are generally provided by the manufacturer.</p>
+                  <p>&emsp;&emsp;C<sub>O</sub> = Velocity of light in a vacuum = 299 792 458 m/s (SI definition)</p>
+                  <p>&emsp;&emsp;&#955<sub>MOD</sub> = Carrier wavelength of the instrument</p>
+                  <p>&emsp;&emsp;f<sub>MOD</sub> = Modulation frequency of the instrument</p>
+                  <p>&emsp;&emsp;U = The half of &#955<sub>MOD</sub> , called the unit length of the instrument.</p>                  
                </div>
                <div id="EDMI-Chapter4_2_3">
                   <h4>4.2.3 Group refractive Index of light in the atmosphere</h4>
