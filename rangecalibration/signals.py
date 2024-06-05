@@ -56,7 +56,7 @@ def update_range_table(range_obj, from_to_pillar, month_number):
         elif len(match_from_to) == 2: 
             dato = np.array(match_from_to[:,1:3], dtype=float)
             percent_change = (dato[:,0][0]-dato[:,0][1])/dato[:,0][1]*100
-            if abs(percent_change) < 0.5:
+            if abs(percent_change) < 1.:
                 paramObj['count'].append(len(dato))
                 paramObj['mean'].append('{:07.5f}'.format(dato[:, 0].mean()))
                 paramObj['std_dev'].append('{:04.3f}'.format(dato[:,1].mean()))
