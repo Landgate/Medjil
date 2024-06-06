@@ -203,9 +203,11 @@ def register_edit(request, inst_disp, tab, id):
                                             request.FILES or None, 
                                             instance = obj, 
                                             user = request.user)
-    makes_qs = InstrumentMake.objects.exclude(make='OTHERS')
-    makes = list(makes_qs.values())
+                
     models_qs = InstrumentModel.objects.filter(inst_type=inst_disp)
+    makes_qs = InstrumentMake.objects.filter(
+        id__in=models_qs.values('make')).exclude(make='OTHERS')
+    makes = list(makes_qs.values())
     models = list(models_qs.values())
     if not form.is_valid():
         context = {
@@ -497,9 +499,10 @@ def inst_level_create_popup(request):
     else:
         form = DigitalLevelCreateForm(user= request.user)
 
-    makes_qs = InstrumentMake.objects.exclude(make='OTHERS')
-    makes = list(makes_qs.values())
     models_qs = InstrumentModel.objects.filter(inst_type='level')
+    makes_qs = InstrumentMake.objects.filter(
+        id__in=models_qs.values('make')).exclude(make='OTHERS')
+    makes = list(makes_qs.values())
     models = list(models_qs.values())
     context = {
         'form':form,
@@ -516,9 +519,10 @@ class DigitalLevelCreateView(LoginRequiredMixin, generic.CreateView):
         return kwargs
 
     def get(self, request, *args, **kwargs):
-        makes_qs = InstrumentMake.objects.exclude(make='OTHERS')
-        makes = list(makes_qs.values())
         models_qs = InstrumentModel.objects.filter(inst_type='level')
+        makes_qs = InstrumentMake.objects.filter(
+            id__in=models_qs.values('make')).exclude(make='OTHERS')
+        makes = list(makes_qs.values())
         models = list(models_qs.values())
         context = {
             'form': DigitalLevelCreateForm(user=self.request.user),
@@ -568,9 +572,10 @@ class StaffCreationWizard(LoginRequiredMixin, NamedUrlSessionWizardView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        makes_qs = InstrumentMake.objects.exclude(make='OTHERS')
         models_qs = InstrumentModel.objects.filter(inst_type='staff')
-        
+        makes_qs = InstrumentMake.objects.filter(
+            id__in=models_qs.values('make')).exclude(make='OTHERS')
+                
         context['makes'] = list(makes_qs.values())
         context['models'] = list(models_qs.values())
         return context
@@ -652,8 +657,9 @@ class StaffCreationWizardPopUp(LoginRequiredMixin, NamedUrlSessionWizardView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        makes_qs = InstrumentMake.objects.exclude(make='OTHERS')
         models_qs = InstrumentModel.objects.filter(inst_type='staff')
+        makes_qs = InstrumentMake.objects.filter(
+            id__in=models_qs.values('make')).exclude(make='OTHERS')
         
         context['makes'] = list(makes_qs.values())
         context['models'] = list(models_qs.values())
@@ -727,9 +733,11 @@ def inst_staff_update(request, id):
     if form.is_valid():
         form.save()
         return redirect ('instruments:home', inst_disp='staff')
-    makes_qs = InstrumentMake.objects.exclude(make='OTHERS')
-    makes = list(makes_qs.values())
+    
     models_qs = InstrumentModel.objects.filter(inst_type='level')
+    makes_qs = InstrumentMake.objects.filter(
+        id__in=models_qs.values('make')).exclude(make='OTHERS')
+    makes = list(makes_qs.values())
     models = list(models_qs.values())
     context = {
         'form': form,

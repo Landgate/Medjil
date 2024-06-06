@@ -1352,6 +1352,10 @@ class Migration(migrations.Migration):
                 verbose_name="EDM Model",
             ),
         ),
+        migrations.AlterModelOptions(
+            name="edm_specification",
+            options={"ordering": ["edm_make_name", "edm_model_name"]},
+        ),
         migrations.CreateModel(
             name="Staff",
             fields=[
@@ -1497,7 +1501,7 @@ class Migration(migrations.Migration):
                 ),
             ],
             options={
-                "ordering": ["level_number", "level_model_name"],
+                "ordering": ["level_number", "level_make_name", "level_model_name"],
                 "unique_together": {("level_make_name","level_model_name","level_number", "level_owner")},
             },
         ),
