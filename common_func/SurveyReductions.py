@@ -799,8 +799,9 @@ def validate_survey(pillar_survey, baseline=None, calibrations=None,
                         + ' "std_dev"')
         
     # EDM upload File
-    if raw_edm_obs and baseline and edm_file_checked:
+    if 'pillars' in baseline.keys():
         pillars = [p.name for p in baseline['pillars']]
+    if raw_edm_obs and baseline and edm_file_checked:
         pop_list=[]
         for k, o in raw_edm_obs.items():
             #check the values of all data
