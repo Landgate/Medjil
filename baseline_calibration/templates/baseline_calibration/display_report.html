@@ -105,12 +105,12 @@
                 {% if pillar_survey %}
                     <button type="button" onclick="window.location.href='{% url 'baseline_calibration:calibrate2' id=pillar_survey.pk %}'" class="submit-button bg-green-500 hover:bg-green-400">Back</button>
                     {% if pillar_survey.variance is not null %}
-                        <button type="button" onclick="window.location.href='{% url 'baseline_calibration:calibration_home' %}'" class="submit-button bg-red-500 hover:bg-green-400"> Cancel</button>
+                        <button type="button" onclick="window.location.href='{% url 'baseline_calibration:calibration_home' %}'" class="cancelbtn bg-red-500 hover:bg-red-300">Cancel</button>
                     {% else %}
-                        <button type="button" onclick="window.location.href='{% url 'baseline_calibration:pillar_survey_del' id=pillar_survey.pk %}'" class="submit-button bg-red-500 hover:bg-green-400"> Cancel</button>
+                        <button type="button" onclick="window.location.href='{% url 'baseline_calibration:pillar_survey_del' id=pillar_survey.pk %}'" class="cancelbtn bg-red-500 hover:bg-red-300">Cancel</button>
                     {% endif %}
                 {% else %}
-                    <button type="button" onclick="window.location.href='{% url 'baseline_calibration:calibration_home' %}'" class="submit-button bg-red-500 hover:bg-green-400"> Cancel</button>
+                    <button type="button" onclick="window.location.href='{% url 'baseline_calibration:calibration_home' %}'" class="cancelbtn bg-red-500 hover:bg-red-300">Cancel</button>
                 {% endif %}
                 <button type="submit" class="submit-button bg-green-500 hover:bg-green-400" >Save</button>
             </div>
