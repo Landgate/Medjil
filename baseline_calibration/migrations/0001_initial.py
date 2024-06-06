@@ -44,7 +44,7 @@ class Migration(migrations.Migration):
                 ('LUM_constant', models.FloatField(validators=[django.core.validators.MinValueValidator(0), django.core.validators.MaxValueValidator(50.0)])),
                 ('LUM_ppm', models.FloatField(validators=[django.core.validators.MinValueValidator(0), django.core.validators.MaxValueValidator(50.0)])),
                 ('statement', models.TextField(help_text='eg. Accredited as a verifying authority for units of lenght according to ISO 17025:2012', verbose_name='Statement of accreditation')),
-                ('certificate_upload', models.FileField(blank=True, null=True, upload_to='accreditation_certificates/', validators=[common_func.validators.validate_file_size], verbose_name='Accreditation Certificate')),
+                ('certificate_upload', models.FileField(blank=True, null=True, max_length=1000, upload_to='accreditation_certificates/', validators=[common_func.validators.validate_file_size], verbose_name='Accreditation Certificate')),
                 ('accredited_company', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='accounts.company')),
             ],
             options={
@@ -72,7 +72,7 @@ class Migration(migrations.Migration):
                 ('hygro_calib_applied', models.BooleanField(default=True, help_text='The hygrometer correction has been applied prior to data import.', verbose_name='Hygrometer calibration corrections applied')),
                 ('psy_calib_applied', models.BooleanField(default=True, help_text='The psychrometer correction has been applied prior to data import.')),
                 ('outlier_criterion', models.DecimalField(decimal_places=1, default=2, help_text='Number of standard deviations for outlier detection threashold.', max_digits=2, validators=[django.core.validators.MinValueValidator(0), django.core.validators.MaxValueValidator(5)])),
-                ('fieldnotes_upload', models.FileField(blank=True, null=True, upload_to=baseline_calibration.models.get_upload_to_location, validators=[common_func.validators.validate_file_size], verbose_name='Scanned fieldnotes')),
+                ('fieldnotes_upload', models.FileField(blank=True, null=True, max_length=1000, upload_to=baseline_calibration.models.get_upload_to_location, validators=[common_func.validators.validate_file_size], verbose_name='Scanned fieldnotes')),
                 ('zero_point_correction', models.FloatField(blank=True, help_text='If: Instrument Correction (m) = 1.00000013.L + 0.0003, Zero Point Correction = 0.0003m', null=True, validators=[django.core.validators.MinValueValidator(-0.1), django.core.validators.MaxValueValidator(0.1)])),
                 ('zpc_uncertainty', models.FloatField(blank=True, help_text='Uncertainty of the zero point correction (m) at 95% Confidence Level', null=True, validators=[django.core.validators.MinValueValidator(0.0), django.core.validators.MaxValueValidator(0.1)], verbose_name='zero point correction uncertainty')),
                 ('variance', models.FloatField(blank=True, help_text='Variance of least squares adjustment of the calibration', null=True)),

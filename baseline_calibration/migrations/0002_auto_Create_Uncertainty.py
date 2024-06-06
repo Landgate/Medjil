@@ -27,6 +27,8 @@ from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.core.files import File
 
+from django.core.files.storage import FileSystemStorage
+
 Default_budget = {
     'name' : 'Default',
     'Company': 'Landgate',
@@ -86,7 +88,7 @@ def load_initial_data(apps, schema_editor):
             LUM_constant = accred['LUM_constant'],
             LUM_ppm = accred['LUM_ppm'],
             statement = accred['statement'],
-            certificate_upload = accred['certificate_upload'],
+            certificate_upload = File(open(accred['certificate_upload'], 'rb'), name = accred['certificate_upload'].split('/')[-1]),
             accredited_company = company_id,
             )
 
