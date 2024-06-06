@@ -23,5 +23,5 @@ app_name = 'calibrationguide'
 urlpatterns = [
     path('', views.guide_view, name='guide_view'), 
     path('manuals/', views.manual_view, name='manual_view'), 
-#     path('read_manual/<str:manual_name>', views.read_manual, name='read_manual'), 
+    path('read_manual/<str:manual_name>', views.read_manual, name='read_manual'), 
 ]
