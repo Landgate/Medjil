@@ -213,12 +213,12 @@ class EDM_SpecificationForm(forms.ModelForm):
         user = kwargs.pop('user', None)
         super(EDM_SpecificationForm, self).__init__(*args, **kwargs) 
         self.initial['edm_owner'] = user.company
-        self.base_fields['units_manu_unc_const'].initial = 'mm'
-        self.base_fields['units_manu_unc_ppm'].initial = 'ppm'
-        self.base_fields['units_frequency'].initial = 'Hz'
-        self.base_fields['units_unit_length'].initial = 'm'
-        self.base_fields['units_carrier_wavelength'].initial = 'nm'
-        self.base_fields['units_measurement_inc'].initial = 'm'
+        self.initial['units_manu_unc_const'] = 'mm'
+        self.initial['units_manu_unc_ppm'] = 'ppm'
+        self.initial['units_frequency'] = 'Hz'
+        self.initial['units_unit_length'] = 'm'
+        self.initial['units_carrier_wavelength'] = 'nm'
+        self.initial['units_measurement_inc'] = 'm'
         if not user.is_staff:
             self.fields['edm_owner'].disabled = True
 
