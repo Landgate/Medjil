@@ -18,6 +18,7 @@
 import csv
 from math import sqrt
 import numpy as np
+from django.conf import settings
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, FileResponse
@@ -399,8 +400,7 @@ def print_report(request, id):
         result = generate_pdf('staffcalibration/pdf_staff_report.html', file_object=resp, context=context)
         return result
     except ObjectDoesNotExist:
-        # filepath = '{}/{}'.format(settings.MEDIA_ROOT, thisRecord.calibration_report.url)
-        filepath = thisRecord.calibration_report.path
+        filepath = request.build_absolute_uri(thisRecord.calibration_report.path)
         result = FileResponse(open(filepath, 'rb'), content_type='application/pdf')
         return result
 ###############################################################################

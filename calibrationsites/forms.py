@@ -53,6 +53,7 @@ class CalibrationSiteForm(forms.ModelForm):
         user = kwargs.pop('user', None)
         super(CalibrationSiteForm, self).__init__(*args, **kwargs)
         self.fields['site_type'].required = True
+        self.fields['site_type'].choices = [(k, v) for k, v in CalibrationSite.site_types if k != 'staff_lab']
         # self.fields['state'].queryset = State.objects.none()
         # self.fields['locality'].queryset = Locality.objects.none()
         # self.fields['operator'].initial = user.company

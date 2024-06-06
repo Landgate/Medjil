@@ -412,7 +412,8 @@ def adjust(request, id):
         elif len(dato) == 2:
             interval = dato[0][1]
             # Prepare the required arrays
-            W = dato[:,-1].astype(np.float); P = np.diag(1/(dato[:,-3].astype(np.float))**2); A = np.ones(len(W))
+            # W = dato[:,-1].astype(np.float); P = np.diag(1/(dato[:,-3].astype(np.float))**2); A = np.ones(len(W))
+            W = dato[:,-1].astype(float); P = np.diag(1/(dato[:,-3].astype(float))**2); A = np.ones(len(W))
             
             # Perform Least squares - Refer to J.Klinge & B. Hugessen document on Calibration of Barcode staffs
             adj_hdiff = (np.matmul(np.transpose(A), np.matmul(P, W)))/(np.matmul(np.transpose(A), np.matmul(P, A))) # (A_T*P*A)^(-1)*A_T*P*W
