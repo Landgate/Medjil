@@ -252,7 +252,6 @@ def calibrate1(request, id):
             'qs':qs,
             'survey_files':upload_survey_files})
 
-import time
 @login_required(login_url="/accounts/login") 
 def calibrate2(request,id):
     # If this is a get request:
@@ -264,10 +263,8 @@ def calibrate2(request,id):
     
     #----------------- Query site, surveys, instruments and calibrations -----------------#
     # Get the pillar_survey in dict like cleaned form data
-    print("****************************************")
-    st_time = time.time()
-    cntr = 1
-    print(str(cntr) +" " + str(time.time()-st_time)+" secs"); cntr+=1
+
+    
     ps_qs = Pillar_Survey.objects.get(id=id)
     query_dict = QueryDict('', mutable=True)
     query_dict.update(model_to_dict(ps_qs))
@@ -276,14 +273,14 @@ def calibrate2(request,id):
     pillar_survey = pillar_survey_form.cleaned_data
     pillar_survey.update({'pk':id})
     pillar_survey.update({'variance':query_dict['variance']})
-    print(str(cntr) +" " + str(time.time()-st_time)+" secs"); cntr+=1
+    
     # Get the raw_edm_obs and the raw_lvl_obs in dict like cleaned form data
     formset = modelformset_factory(EDM_Observation,
                             form=EDM_ObservationForm, extra=0)
     qs = EDM_Observation.objects.filter(pillar_survey__pk=id)
     edm_obs_formset = formset(request.POST or None, queryset=qs)
     raw_edm_obs = {}
-    print(str(cntr) +" " + str(time.time()-st_time)+" secs"); cntr+=1
+    
     for o in qs:
         dct = model_to_dict(o)
         dct['from_pillar'] = o.from_pillar.name
@@ -292,14 +289,14 @@ def calibrate2(request,id):
 
     qs = Level_Observation.objects.filter(pillar_survey__pk=id)
     raw_lvl_obs = {}
-    print(str(cntr) +" " + str(time.time()-st_time)+" secs"); cntr+=1
+    
     for o in qs:
         dct = model_to_dict(o)
         dct['pillar'] = o.pillar.name
         dct['std_dev'] = dct['rl_standard_deviation']
         del dct['rl_standard_deviation']
         raw_lvl_obs[o.pillar.name] = dct
-    print(str(cntr) +" " + str(time.time()-st_time)+" secs"); cntr+=1
+    
     # Create formsets and forms
     cd_formset = formset_factory(Certified_DistanceForm, extra=0) 
     sdev_mat_formset = formset_factory(Std_Deviation_MatrixForm, extra=0)
@@ -307,18 +304,18 @@ def calibrate2(request,id):
         request.POST or None, instance=ps_qs)
     ps_approvals = PillarSurveyApprovalsForm(
         request.POST or None, instance=ps_qs)
-    print(str(cntr) +" " + str(time.time()-st_time)+" secs"); cntr+=1
+    
     calib = {}
     baseline={}
     uc_budget = {}
     calib = Calibrations_qry(pillar_survey)
     baseline = baseline_qry(pillar_survey)
-    print(str(cntr) +" " + str(time.time()-st_time)+" secs"); cntr+=1
+    
     # Set the C and D terms for atmospheric corrections
     get_mets_params(
         pillar_survey['edm'], 
         pillar_survey['mets_applied'])
-    print(str(cntr) +" " + str(time.time()-st_time)+" secs"); cntr+=1
+    
     for o in raw_edm_obs.values():
         #----------------- Instrument Corrections -----------------#
         o['Temp'],c = apply_calib(o['raw_temperature'],
@@ -356,14 +353,14 @@ def calibrate2(request,id):
             0, 0,
             float(o['hz_direction']),
             hz_dist)
-    print(str(cntr) +" " + str(time.time()-st_time)+" secs"); cntr+=1    
+       
     if request.method == 'GET':
         # Prepare Page 5 of 5
         alignment_survey = adjust_alignment_survey(
             raw_edm_obs, baseline['pillars'])        
         
         formset = zip(edm_obs_formset,raw_edm_obs.values())
-        print(str(cntr) +" " + str(time.time()-st_time)+" secs"); cntr+=1
+        
         return render(request, 'baseline_calibration/edm_rawdata.html', 
                       {'Page': 'Page 5 of 5',
                        'id': id,
@@ -393,7 +390,7 @@ def calibrate2(request,id):
         if len(Check_Errors['Errors']) > 0:
            return render(request, 'baseline_calibration/errors_report.html', 
                          {'Check_Errors':Check_Errors})
-        print(str(cntr) +" " + str(time.time()-st_time)+" secs"); cntr+=1   
+          
         if edm_obs_formset.is_valid() or not ps_approvals.is_valid():
             #----------------- Query related data -----------------#
             report_notes = report_notes_qry(
@@ -403,20 +400,20 @@ def calibrate2(request,id):
                 uc_budget['sources'],
                 calib,
                 pillar_survey)
-            print(str(cntr) +" this is 12 " + str(time.time()-st_time)+" secs"); cntr+=1
+            
             alignment_survey = adjust_alignment_survey(raw_edm_obs, 
                                                        baseline['pillars'])
-            print(str(cntr) +" " + str(time.time()-st_time)+" secs"); cntr+=1
+            
             for k, p in alignment_survey.items():
                 p['reduced_level'] = float(raw_lvl_obs[k]['reduced_level'])
                 p['rl_uncertainty'] = float(raw_lvl_obs[k]['std_dev'])*2
                 p['k_rl_uncertainty'] = 2
-            print(str(cntr) +" this is 14 " + str(time.time()-st_time)+" secs"); cntr+=1
+            
             edm_observations = reduce_sets_of_obs(raw_edm_obs)
-            print(str(cntr) +" " + str(time.time()-st_time)+" secs"); cntr+=1
+            
             edm_trend = edm_std_function(edm_observations,
                                          uc_budget['stddev_0_adj'])           #y = Ax + B
-            print(str(cntr) +" " + str(time.time()-st_time)+" secs"); cntr+=1
+            
             pillars = [p.name for p in baseline['pillars']]
                
             matrix_A = []
@@ -461,9 +458,9 @@ def calibrate2(request,id):
                 P_row[len(matrix_x)-1] = (1/
                                      o['uc_combined']['std_dev']**2)
                 matrix_P.append(P_row)
-            print(str(cntr) +" " + str(time.time()-st_time)+" secs"); cntr+=1      
+                 
             matrix_y, vcv_matrix, chi_test, residuals = LSA(matrix_A, matrix_x, matrix_P)
-            print(str(cntr) +" " + str(time.time()-st_time)+" secs"); cntr+=1
+            
             for o in edm_observations.values():
                 o['residual'] = residuals[o['id']]['residual']
                 o['std_residual'] = residuals[o['id']]['std_residual']
@@ -480,7 +477,7 @@ def calibrate2(request,id):
             
             #-------------- Extract pillar to pillar uncertainties from VCV---------------#
             # Formula 6.10 (6.13) - Adjustment Computation (Ghilani) 4th Edition
-            print(str(cntr) +" " + str(time.time()-st_time)+" secs"); cntr+=1
+            
             vcv_A = []
             bay = []
             for i0, p0 in enumerate(pillars[:-1]):
@@ -493,12 +490,12 @@ def calibrate2(request,id):
                     bay.append(p0+' - '+ p1)
                     vcv_A.append(A_row)
             
-            print(str(cntr) +" " + str(time.time()-st_time)+" secs"); cntr+=1
+            
             vcv_A = np.array(vcv_A, dtype=object)
             sigma_vv = vcv_A @ vcv_matrix @ vcv_A.T
             
             # populate hidden forms to hide and save after commit (form Submit)
-            print(str(cntr) +" " + str(time.time()-st_time)+" secs"); cntr+=1
+            
             ini_data=[]
             for b, vv in zip(bay, np.diagonal(sigma_vv)):
                 p0, p1 = b.split(' - ')
@@ -506,10 +503,10 @@ def calibrate2(request,id):
                                  'from_pillar':baseline['pillars'].get(name=p0),
                                  'to_pillar':baseline['pillars'].get(name=p1),
                                  'std_uncertainty':sqrt(vv)})
-            print(str(cntr) +" " + str(time.time()-st_time)+" secs"); cntr+=1
+            
             sdev_mat_formset = sdev_mat_formset(initial=ini_data, prefix='sdev_mat')
             # -- end populate sdev_mat_formset -- #
-            print(str(cntr) +" " + str(time.time()-st_time)+" secs"); cntr+=1
+            
             #----------------- Extract the certified distances from LSA results -----------------#
             # Calculate the average temp and pressure for survey #
             certified_dists={}
@@ -517,7 +514,7 @@ def calibrate2(request,id):
             avg_p = mean([float(o['Pres']) for o in edm_observations.values()])
             avg_h = mean([float(o['Humid']) for o in edm_observations.values()])
             ini_data =[]
-            print(str(cntr) +" " + str(time.time()-st_time)+" secs"); cntr+=1
+            
             for i, (p, d) in enumerate(zip(pillars[1:], matrix_y[:-1])):
                 cd={}
                 ini_cd={}
@@ -591,7 +588,7 @@ def calibrate2(request,id):
                     ini_data.insert(0,ini_cd0)                
             cd_formset = cd_formset(initial=ini_data)
             # -- end populate cd_formset -- #
-            print(str(cntr) +" " + str(time.time()-st_time)+" secs"); cntr+=1
+            
             #Prepare the context for the template
             od = OrderedDict(sorted(alignment_survey.items()))
             alignment_survey = list(od.values())
@@ -614,8 +611,9 @@ def calibrate2(request,id):
             edm_observations = list(edm_observations.values())
             n_rpt_shots = max([len(e['grp_Bay']) for e in edm_observations])
             for o in edm_observations:
-                while len(o['grp_Bay'])<n_rpt_shots:
-                    o['grp_Bay'].append('')
+                num_to_append = n_rpt_shots - len(o['grp_Bay'])
+                if num_to_append > 0:
+                    o['grp_Bay'].extend([''] * num_to_append)
     
             if 'edmi_drift' in calib.keys():
                 calib['edmi_drift']['xyValues'] = [
@@ -660,7 +658,7 @@ def calibrate2(request,id):
                 baseline['pillar_meta'].append(model_to_dict(p))
                 baseline['pillar_meta'][-1]['reduced_level'] = (
                     float(raw_lvl_obs[p.name]['reduced_level']))
-            print(str(cntr) +" " + str(time.time()-st_time)+" secs"); cntr+=1
+            
             context = {'pillar_survey':pillar_survey,
                        'calib':calib,
                        'baseline': baseline,
@@ -674,7 +672,7 @@ def calibrate2(request,id):
             
             html_report = render_to_string(
                 'baseline_calibration/calibrate_report.html', context)
-            print(str(cntr) +" " + str(time.time()-st_time)+" secs"); cntr+=1
+            
             # create update for pillar survey processing
             ini_data=[]
             n = len(matrix_y)-1
@@ -687,7 +685,7 @@ def calibrate2(request,id):
             
             pillar_survey_update = PillarSurveyUpdateForm(initial=ini_data)            
             # -- end populating the pillar_survey_update -- #            
-            print(str(cntr) +" " + str(time.time()-st_time)+" secs"); cntr+=1
+            
             context = {'pillar_survey': pillar_survey,
                        'html_report': html_report,
                        'ps_approvals':ps_approvals,

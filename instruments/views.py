@@ -325,12 +325,13 @@ def instrument_register(request, inst_disp):
                     'scale_correction_factor', 'zero_point_correction',
                     'html_report'))
         
-        table_headings['certificates']= ['EDM Number',
-                                         'Prism Number',
-                                         'Calibration Date',
-                                         'Scale Correction Factor',
-                                         'Zero Point Correction',
-                                         'Action']
+        table_headings['certificates']= [
+            'EDM Number',
+            'Prism Number',
+            'Calibration Date',
+            'Scale Correction Factor',
+            'Zero Point Correction',
+            'Action']
         
         if not request.user.is_staff:
             tabs['models_list'] = tabs['models_list'].filter(
@@ -372,7 +373,7 @@ def instrument_register(request, inst_disp):
             .order_by('inst_staff__staff_number', '-calibration_date')
             .values('pk', 'inst_staff__staff_number',
                     'calibration_date',
-                    'scale_factor', 'grad_uncertainty'))
+                    'scale_factor', 'grad_uncertainty','calibration_report'))
 
         if not request.user.is_staff:
             tabs['insts_list'] = tabs['insts_list'].filter(
