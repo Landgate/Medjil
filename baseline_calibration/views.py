@@ -379,9 +379,7 @@ def calibrate2(request,id):
                 frm =form.cleaned_data
                 raw_edm_obs[str(frm['id'].pk)]['use_for_distance']=frm['use_for_distance']
                 raw_edm_obs[str(frm['id'].pk)]['use_for_alignment']=frm['use_for_alignment']
-                # ************************************************#
-                # This loop took 0.3 Sec 
-        print(str(cntr) +" this is 10 " + str(time.time()-st_time)+" secs"); cntr+=1    
+  
         Check_Errors = validate_survey(pillar_survey=pillar_survey,
                                     baseline=baseline,
                                     calibrations=calib,
