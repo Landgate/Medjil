@@ -114,7 +114,7 @@
                 </tr>
                 <!-- Manufacturers Accuracy Statement -->
                 <tr title="{{ form.manu_unc_const.help_text }}">
-                    <td width="35%">{{ form.manu_unc_const.label|title }}<a href= "{% url 'calibrationguide:manual_view' %}#EDMI-Chapter5"> &#x1F6C8</a></td>
+                    <td width="35%">{{ form.manu_unc_const.label|title }} <a href= "{% url 'calibrationguide:read_manual' manual_name='edmi_calibration_manual.html' %}#EDMI-Chapter5" target="_blank" onclick="return showAddPopup(this);"> &#x1F6C8</a></td>
                     <td width="45%">{{ form.manu_unc_const }}
                         {% for error in form.manu_unc_const.errors %}
                             <p class="error error-danger">{{ error }}</p>
@@ -123,7 +123,7 @@
                     <td width="15%">{{ form.units_manu_unc_const }}</td>
                 </tr>
                 <tr title="{{ form.manu_unc_ppm.help_text }}">
-                    <td width="35%">{{ form.manu_unc_ppm.label|title }}<a href= "{% url 'calibrationguide:manual_view' %}#EDMI-Chapter5"> &#x1F6C8</a></td>
+                    <td width="35%">{{ form.manu_unc_ppm.label|title }} <a href= "{% url 'calibrationguide:read_manual' manual_name='edmi_calibration_manual.html' %}#EDMI-Chapter5" target="_blank" onclick="return showAddPopup(this);"> &#x1F6C8</a></td>
                     <td width="45%">{{ form.manu_unc_ppm }}
                         {% for error in form.manu_unc_ppm.errors %}
                             <p class="error error-danger">{{ error }}</p>
@@ -140,9 +140,9 @@
                     </td>
                     <td width="15%"></td>
                 </tr>
-                <!-- Unit Length -->
+                <!-- EDM type -->
                 <tr title="{{ form.edm_type.help_text }}">
-                    <td width="35%">{{ form.edm_type.label }}</td>
+                    <td width="35%">{{ form.edm_type.label }} <a href= "{% url 'calibrationguide:read_manual' manual_name='edmi_calibration_manual.html' %}#EDMI-Chapter4_2_1Note" target="_blank" onclick="return showAddPopup(this);"> &#x1F6C8</a></td>
                     <td width="45%">{{ form.edm_type }}
                         {% for error in form.edm_type.errors %}
                             <p class="error error-danger">{{ error }}</p>
@@ -152,7 +152,7 @@
                 </tr>
                 <!-- Unit Length -->
                 <tr title="{{ form.unit_length.help_text }}">
-                    <td width="35%">{{ form.unit_length.label|title }}</td>
+                    <td width="35%">{{ form.unit_length.label|title }} <a href= "{% url 'calibrationguide:read_manual' manual_name='edmi_calibration_manual.html' %}#EDMI-Chapter4_2_1Note" target="_blank" onclick="return showAddPopup(this);"> &#x1F6C8</a></td>
                     <td width="45%">{{ form.unit_length }}
                         {% for error in form.unit_length.errors %}
                             <p class="error error-danger">{{ error }}</p>
@@ -162,7 +162,7 @@
                 </tr>
                 <!-- Frequency -->
                 <tr title="{{ form.frequency.help_text }}">
-                    <td width="35%">{{ form.frequency.label|title }}</td>
+                    <td width="35%">{{ form.frequency.label|title }} <a href= "{% url 'calibrationguide:read_manual' manual_name='edmi_calibration_manual.html' %}#EDMI-Chapter4_2_1Note" target="_blank" onclick="return showAddPopup(this);"> &#x1F6C8</a></td>
                     <td width="45%">{{ form.frequency }}
                         {% for error in form.frequency.errors %}
                             <p class="error error-danger">{{ error }}</p>
@@ -172,7 +172,7 @@
                 </tr>
                 <!-- Wavelength -->
                 <tr title="{{ form.carrier_wavelength.help_text }}">
-                    <td width="35%">{{ form.carrier_wavelength.label|title }}</td>
+                    <td width="35%">{{ form.carrier_wavelength.label|title }} <a href= "{% url 'calibrationguide:read_manual' manual_name='edmi_calibration_manual.html' %}#EDMI-Chapter4_2_1Note" target="_blank" onclick="return showAddPopup(this);"> &#x1F6C8</a></td>
                     <td width="45%">{{ form.carrier_wavelength }}
                         {% for error in form.carrier_wavelength.errors %}
                             <p class="error error-danger">{{ error }}</p>
@@ -181,7 +181,7 @@
                     <td width="15%">{{ form.units_carrier_wavelength }}</td>
                 </tr>
                 <tr title="{{ form.manu_ref_refrac_index.help_text }}">
-                    <td width="35%">{{ form.manu_ref_refrac_index.label|title }}</td>
+                    <td width="35%">{{ form.manu_ref_refrac_index.label|title }} <a href= "{% url 'calibrationguide:read_manual' manual_name='edmi_calibration_manual.html' %}#EDMI-Chapter4_2_2" target="_blank" onclick="return showAddPopup(this);"> &#x1F6C8</a></td>
                     <td width="45%">{{ form.manu_ref_refrac_index }}
                         {% for error in form.manu_ref_refrac_index.errors %}
                             <p class="error error-danger">{{ error }}</p>
@@ -190,7 +190,7 @@
                     <td width="15%"></td>
                 </tr>
                 <tr title="{{ form.c_term.help_text }}">
-                    <td width="35%">{{ form.c_term.label|title }}</td>
+                    <td width="35%">{{ form.c_term.label|title }} <a href= "{% url 'calibrationguide:read_manual' manual_name='edmi_calibration_manual.html' %}#EDMI-Chapter4_2_1Note" target="_blank" onclick="return showAddPopup(this);"> &#x1F6C8</a></td>
                     <td width="45%">{{ form.c_term }}
                         {% for error in form.c_term.errors %}
                             <p class="error error-danger">{{ error }}</p>
@@ -199,7 +199,7 @@
                     <td width="15%"></td>
                 </tr>
                 <tr title="{{ form.d_term.help_text }}">
-                    <td width="35%">{{ form.d_term.label|title }}</td>
+                    <td width="35%">{{ form.d_term.label|title }} <a href= "{% url 'calibrationguide:read_manual' manual_name='edmi_calibration_manual.html' %}#EDMI-Chapter4_2_1Note" target="_blank" onclick="return showAddPopup(this);"> &#x1F6C8</a></td>
                     <td width="45%">{{ form.d_term }}
                         {% for error in form.d_term.errors %}
                             <p class="error error-danger">{{ error }}</p>
