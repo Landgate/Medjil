@@ -229,7 +229,7 @@
                                                 </svg>
                                             </a>
                                         {% elif certificate.calibration_report %}
-                                            <a href="{{ certificate.report_url|default_if_none:'#' }}" target="__blank">
+                                            <a href="{{ MEDIA_URL }}{{ certificate.calibration_report|default_if_none:'#' }}" target="__blank">
                                                 <svg version="1.0" xmlns="http://www.w3.org/2000/svg" id="report-view"
                                                  width="16.000000pt" height="14.500000pt" viewBox="0 0 50.000000 50.000000"
                                                  preserveAspectRatio="xMidYMid meet">                    

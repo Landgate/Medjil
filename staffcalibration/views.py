@@ -361,7 +361,8 @@ def print_report(request, id):
     thisRecord = StaffCalibrationRecord.objects.get(id=id)
     
     # Print the report using the adjusted data, if it exists, else print loaded pdf
-    try:
+    if AdjustedDataModel.objects.filter(calibration_id=thisRecord).exists():
+    # try:
         thisAdj = AdjustedDataModel.objects.get(calibration_id=thisRecord)
         average_temperature = thisRecord.observed_temperature
         thermal_coefficient = thisRecord.inst_staff.thermal_coefficient*10**-6
@@ -399,8 +400,8 @@ def print_report(request, id):
                 }
         result = generate_pdf('staffcalibration/pdf_staff_report.html', file_object=resp, context=context)
         return result
-    except ObjectDoesNotExist:
-        filepath = request.build_absolute_uri(thisRecord.calibration_report.path)
+    else:
+        filepath = thisRecord.calibration_report.path
         result = FileResponse(open(filepath, 'rb'), content_type='application/pdf')
         return result
 ###############################################################################
