@@ -650,7 +650,7 @@
                   <p>&emsp;&emsp;p = Atmospheric pressure in hectopascals</p>
                   <p>&emsp;&emsp;t = Dry temperature in degrees Celsius</p>
                		
-               		<p>Note terms C and D as well as Unith Length, Carrier Wavelength, Modulation Frequency and Refractive Index are instrumnt specyfic (manufacturers supplied) and were populated into the EDM Specyfications Lookup Table from the following sources:</p>
+               		<p id="EDMI-Chapter4_2_1Note">Note terms C and D as well as EDM type, Unith Length, Modulation Frequency, Carrier Wavelength and Refractive Index are instrumnt specyfic (manufacturers supplied) and were populated into the EDM Specyfications Lookup Table from the following sources:</p>
                		<ul>
                			 <li>Rüeger, J. M. 1996. Electronic Distance Measurement - An Introduction, 4th corrected edition</li>
                			 <li>Rüeger. J. M. 2007a. First Velocity Correction in EDM: How to get the Constants C and D, Azimuth</li>
@@ -669,8 +669,8 @@
                			Medjil will automatically modify the design matrix (from six parameters to two parameters) and solve for instrument scale and zpc only.</p>                  			          			
                </div>
                <div id="EDMI-Chapter4_2_2">
-                  <h4>4.2.2 Reference Refractive Index (n<sub>REF</sub>)</h4>
-                  <p>The reference refractive index is instrument specific and it is preferred that the manufacturer supplied value is used rather than calculated as the rounding error of the calculated value can be significant. 
+                  <h4>4.2.2 Reference Refractive Index</h4>
+                  <p>The reference refractive index (n<sub>REF</sub>) is instrument specific and it is preferred that the manufacturer supplied value is used rather than calculated as the rounding error of the calculated value can be significant. 
                   	If the refractive index is not provided Medjil uses Unit Length, Carrier Wavelength and Modulation Frequency stored in the instrument register to calculate this value.</p>
                   <div>
                      $$ n_{\mathrm{REF}}=\frac{C_O}{\lambda_{\mathrm{MOD\ }}f_{MOD}}=\frac{C_O}{2Uf_{MOD}}\ \ \ \
@@ -913,8 +913,7 @@
                      Medjil automatically populates the uncertainty sources (Table 5.1 and Table 5.2) when processing
                      the calibration of EDM baselines and EDM Instrumentation.
                   </p>
-                  <br>Table 5.1: Medjil uncertainty budget for calibration of EDM Baseline
-                  </br>
+                  <br>Table 5.1: Medjil uncertainty budget for calibration of EDM Baseline</br>
                   <img src="{% static 'images/CalibrationGuides/edmi/Picture_4_2.png' %}"
                      alt="Medjil uncertainty budget for calibration of EDM Baseline ">
                   <br>
