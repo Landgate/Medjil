@@ -15,6 +15,10 @@
    limitations under the License.
 
 '''
+
+from collections import defaultdict
+import csv
+from io import TextIOWrapper
 import numpy as np
 from statistics import mean, pstdev
 from django.db.models import Avg
@@ -74,7 +78,6 @@ def db_std_units(orig_val, orig_unit):
 
 
 def convert_headings(raw_headings):
-    converted_headings = []
     conversion_dict = {
         'height_of_instrument': 'inst_ht',
         'height_of_target': 'tgt_ht',
@@ -87,34 +90,21 @@ def convert_headings(raw_headings):
         'pillar_name': 'pillar'
     }
     
-    for raw_heading in raw_headings:
-        if raw_heading.lower() in conversion_dict.keys():
-            converted_headings.append(
-                conversion_dict[raw_heading.lower()].replace(' ', '_'))
-        else:
-            converted_headings.append(raw_heading.lower().replace(' ', '_'))
-    
-    return converted_headings
+    return [conversion_dict.get(heading.lower(), heading.lower().replace(' ', '_')) for heading in raw_headings]
 
 
 def csv2dict(csv_file, clms=None, key_names=-1):
-    dct={}
-    rows = csv_file.read().decode("utf-8-sig").replace("\r","").split("\n")
+    # No need to open csv_file as it's already an InMemoryUploadedFile object
+    csv_file = TextIOWrapper(csv_file, encoding='utf-8-sig')
+    reader = csv.reader(csv_file)
+    headers = next(reader)
     if not clms:
-        clms = convert_headings(rows[0].split(','))
-
+        clms = convert_headings(headers)
     clms.append('line')
-    for lne, row in enumerate(rows[1:]):
-        r = (row+','+str(lne+1)).replace('\r','').split(',')
-        if key_names != -1: ky = str(r[key_names])            
-        if key_names == -1: ky = str(lne + 1)
-        number_of_clms = len(clms)
-        try:
-            if len(r) >= number_of_clms:
-                dct[ky] = dict(zip(clms,r[:number_of_clms]))
-        except Exception as e:
-            raise ValueError (f'Invalid formating of csv file: {e}')              
-    return dct
+    
+    # Use dictionary comprehension for speed
+    return {str(row[key_names] if key_names != -1 else index + 1): dict(zip(clms, row + [str(index + 1)]))
+            for index, row in enumerate(reader) if len(row) >= len(clms)-1}
 
 
 def list2dict(lst, clms, key_names=-1, filter_key=None, filter_value=None):
@@ -179,38 +169,41 @@ def format_name(nme):
 
 
 def group_list(raw_list, group_by, labels_list=[], avg_list=[], sum_list=[], std_list=[], mask_by=''):
-    grouped = {}
-    group_ky = 'grp_' + group_by
+    grouped = defaultdict(lambda: {group_by: None, 'grp_' + group_by: []})
+    pop_list = set()
 
     for v in raw_list:
-        if not v[group_by] in grouped.keys():
-            grouped[v[group_by]] = {group_ky: [], group_by: v[group_by]}
+        group_value = v[group_by]
+        group = grouped[group_value]
+        
+        if group[group_by] is None:
+            group[group_by] = group_value
             for ky in labels_list:
-                grouped[v[group_by]][ky] = v.get(ky)
+                group[ky] = v.get(ky)
 
-        if len(mask_by) == 0 or v.get(mask_by):
-            grouped[v[group_by]][group_ky].append(v)
+        if not mask_by or v.get(mask_by):
+            group['grp_' + group_by].append(v)
 
-    pop_list = []
-    if len(avg_list) != 0 or len(std_list) != 0 or len(sum_list) != 0:
-        for i, group in grouped.items():
-            if len(group[group_ky]) == 0:
-                pop_list.append(i)
-            else:
-                for ky in avg_list:
-                    values = [float(v.get(ky, 0)) for v in group[group_ky]]
-                    group[ky] = mean(values)
+    for group_value, group in grouped.items():
+        group_ky = 'grp_' + group_by
+        if not group[group_ky]:
+            pop_list.add(group_value)
+            continue
 
-                for ky in std_list:
-                    values = [float(v.get(ky, 0)) for v in group[group_ky]]
-                    group['std_' + ky] = pstdev(values)
+        for ky in avg_list:
+            values = [float(v.get(ky, 0)) for v in group[group_ky]]
+            group[ky] = mean(values) if values else 0
 
-                for ky in sum_list:
-                    values = [float(v.get(ky, 0)) for v in group[group_ky]]
-                    group['sum_' + ky] = sum(values)
+        for ky in std_list:
+            values = [float(v.get(ky, 0)) for v in group[group_ky]]
+            group['std_' + ky] = pstdev(values) if len(values) > 1 else 0
 
-    for i in pop_list:
-        grouped.pop(i)
+        for ky in sum_list:
+            values = [float(v.get(ky, 0)) for v in group[group_ky]]
+            group['sum_' + ky] = sum(values)
+
+    for group_value in pop_list:
+        grouped.pop(group_value)
 
     return grouped
 

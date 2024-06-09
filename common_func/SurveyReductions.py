@@ -53,18 +53,20 @@ def reduce_sets_of_obs(raw_edm_obs):
 
 
 def adjust_alignment_survey(raw_edm_obs, pillars):
-    first_pillar_nme =pillars[0].name
-    last_pillar_nme = pillars[len(pillars)-1].name
+    first_pillar_nme = pillars.first().name
+    last_pillar_nme = pillars.last().name
     
-    setups = group_list(raw_edm_obs.values(),
-                        group_by='from_pillar',
-                        avg_list=['Est',
-                                  'Nth'],
-                        mask_by='use_for_alignment')
+    setups = group_list(
+        raw_edm_obs.values(),
+        group_by='from_pillar',
+        avg_list=['Est', 'Nth'],
+        mask_by='use_for_alignment')
+    
     at_pillar_os=[]
     for p in setups.values():
         pillars_in_setup = set([s['to_pillar']  for s in p['grp_from_pillar']])
         pillars_in_setup.add(p['from_pillar'])
+        
         if (first_pillar_nme not in pillars_in_setup 
             or last_pillar_nme not in pillars_in_setup):
             for single_obs in p['grp_from_pillar']:
@@ -114,10 +116,11 @@ def adjust_alignment_survey(raw_edm_obs, pillars):
                          mask_by='use_for_alignment')
     pillars={}
     for ky, tgt in targets.items():
-        pillars[ky]={'pillar':ky,
-                    'offset':tgt['observed_offset'],
-                    'OS_std_dev':tgt['std_observed_offset'],
-                    'sets':[o for o in offsets.values() if o['to_pillar']==ky]}
+        pillars[ky]={
+            'pillar':ky,
+            'offset':tgt['observed_offset'],
+            'OS_std_dev':tgt['std_observed_offset'],
+            'sets':[o for o in offsets.values() if o['to_pillar']==ky]}
     
     return pillars
 
@@ -137,11 +140,14 @@ def apply_calib(obs, applied, calib=[],scf=1,zpc=0,
         if hasattr(calib,'c2'): c3=calib.cyclic_two
         if hasattr(calib,'c3'): c3=calib.cyclic_three
         if hasattr(calib,'c4'): c4=calib.cyclic_four
+        
+        two_pi_obs0_unit_length = 2 * pi * obs0 / unit_length
+        four_pi_obs0_unit_length = 4 * pi * obs0 / unit_length
         obs1 = (zpc + obs0*scf
-                + c1 * sin(2*pi*obs0/unit_length) 
-                + c2 * cos(2*pi*obs0/unit_length)
-                + c3 * sin(4*pi*obs0/unit_length)
-                + c4 * cos(4*pi*obs0/unit_length))
+                + c1 * sin(two_pi_obs0_unit_length) 
+                + c2 * cos(two_pi_obs0_unit_length)
+                + c3 * sin(four_pi_obs0_unit_length)
+                + c4 * cos(four_pi_obs0_unit_length))
     correction = obs1 - obs0
     
     return obs1, correction
@@ -239,14 +245,19 @@ def edm_std_function(edm_observations, stddev_0_adj):
     #y = Ax + B
     dist = []
     std_dev = []
-    for k, o in edm_observations.items():
+    for o in edm_observations.values():
         dist.append(o['slope_dist'])
-        std = o['std_slope_dist']
-        if std == 0: std = stddev_0_adj
+        std = o['std_slope_dist'] if o['std_slope_dist'] != 0 else stddev_0_adj
         std_dev.append(std)
-    dist=np.array(dist, dtype=object).reshape((-1, 1))
-    std_dev=np.array(std_dev, dtype=object)
-    model = LinearRegression().fit(dist, std_dev)
+    
+    # Convert lists to numpy arrays for faster operations
+    dist = np.array(dist).reshape((-1, 1))
+    std_dev = np.array(std_dev)
+    
+    # Perform linear regression
+    model = LinearRegression()
+    model.fit(dist, std_dev)
+    
     #y = Ax + B
     A = model.coef_[0]
     B = model.intercept_
@@ -700,7 +711,7 @@ def validate_survey(pillar_survey, baseline=None, calibrations=None,
     if raw_lvl_obs: calibration_type = 'B'
     else: calibration_type = 'I'
     
-    #Baseline Calibration errors in instrument calibration
+    # Baseline Calibration errors in instrument calibration
     if calibration_type == 'I':
         if pillar_survey['auto_base_calibration']:
             site_pk = pillar_survey['site'].pk
@@ -799,8 +810,9 @@ def validate_survey(pillar_survey, baseline=None, calibrations=None,
                         + ' "std_dev"')
         
     # EDM upload File
-    if 'pillars' in baseline.keys():
-        pillars = [p.name for p in baseline['pillars']]
+    if baseline:
+        if 'pillars' in baseline.keys():
+            pillars = [p.name for p in baseline['pillars']]
     if raw_edm_obs and baseline and edm_file_checked:
         pop_list=[]
         for k, o in raw_edm_obs.items():
@@ -901,11 +913,6 @@ def validate_survey(pillar_survey, baseline=None, calibrations=None,
         for k, o in raw_lvl_obs.items():
             if not is_float(o['reduced_level']):
                  Errs.append(f"Reduced Level reading {o['reduced_level']} is invalid")
-            # if not is_float(o['std_dev']):
-            #      Errs.append(f"Reduced Level standard deviation '{o['std_dev']}' is invalid")
-            # else:
-            #     if float(o['std_dev'])==0:
-            #         o['std_dev']=0.00001
             
             if not o['pillar'] in lvl_nmes:
                 lvl_nmes.append(o['pillar'])

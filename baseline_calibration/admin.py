@@ -132,6 +132,11 @@ class AccreditationnAdmin(admin.ModelAdmin):
               ('LUM_constant','LUM_ppm'),
               'statement',
               'certificate_upload']
+
+
+    @admin.register(Std_Deviation_Matrix, site=admin_site)
+    class Std_Deviation_MatrixAdmin(admin.ModelAdmin):
+        list_display = ['from_pillar', 'to_pillar', 'std_uncertainty']
               
 ####################################################################
 ######################## REGISTER MODEL IN SUPER ADMIN #############
@@ -228,5 +233,10 @@ try:
                 ('LUM_constant','LUM_ppm'),
                 'statement',
                 'certificate_upload']
+
+
+    @admin.register(Std_Deviation_Matrix, site=medjil_super_site)
+    class Std_Deviation_MatrixAdmin(admin.ModelAdmin):
+        list_display = ['from_pillar', 'to_pillar', 'std_uncertainty']
 except:
     pass

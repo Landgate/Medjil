@@ -27,7 +27,7 @@ from django.template.loader import render_to_string
 from math import sqrt
 from statistics import mean
 import numpy as np
-
+import time
 
 from .forms import (
     PillarSurveyForm,
@@ -254,17 +254,16 @@ def calibrate1(request, id):
 
 @login_required(login_url="/accounts/login") 
 def calibrate2(request,id):
+    print(time.ctime(time.time()))
     # If this is a get request:
     #     select or deselect the edm observations for the calibration and offset
     # If this is a post request: and edm_obs_formset.is_valid
     #     calculate and generate the report. 
-    # If this is a post request: cd_formset.is_valid() and sdev_mat_formset.is_valid() and pillar_survey_update.is_valid()
+    # If this is a post request: and ps_approvals.is_valid()
     #     commit the calibration and return to home page.
     
     #----------------- Query site, surveys, instruments and calibrations -----------------#
-    # Get the pillar_survey in dict like cleaned form data
-
-    
+    # Get the pillar_survey in dict like cleaned form data    
     ps_qs = Pillar_Survey.objects.get(id=id)
     query_dict = QueryDict('', mutable=True)
     query_dict.update(model_to_dict(ps_qs))
@@ -298,10 +297,6 @@ def calibrate2(request,id):
         raw_lvl_obs[o.pillar.name] = dct
     
     # Create formsets and forms
-    cd_formset = formset_factory(Certified_DistanceForm, extra=0) 
-    sdev_mat_formset = formset_factory(Std_Deviation_MatrixForm, extra=0)
-    pillar_survey_update = PillarSurveyUpdateForm(
-        request.POST or None, instance=ps_qs)
     ps_approvals = PillarSurveyApprovalsForm(
         request.POST or None, instance=ps_qs)
     
@@ -417,7 +412,15 @@ def calibrate2(request,id):
             matrix_A = []
             matrix_x = []
             matrix_P = []
+            o_temp = []
+            o_pres = []
+            o_humi = []
+            len_alignment_survey = len(alignment_survey)
+            len_edm_observations = len(edm_observations)
             for i, o in enumerate(edm_observations.values()):
+                o_temp.append(o['Temp'])
+                o_pres.append(o['Pres'])
+                o_humi.append(o['Humid'])
                 o = offset_slope_correction(o,
                                           raw_lvl_obs,
                                           alignment_survey,
@@ -442,8 +445,8 @@ def calibrate2(request,id):
                 #----------------- Least Squares -----------------#
                 #Build the design matrix 'A' (ISO 17123-4:2012 eq.11)
                 o['id']= str(i+1)
-                A_row = [0]*len(alignment_survey)
-                A_row[len(alignment_survey)-1] = -1
+                A_row = [0]*len_alignment_survey
+                A_row[-1] = -1
                 bay = [pillars.index(o['from_pillar']),
                          pillars.index(o['to_pillar'])]
                 A_row[min(bay)-1] = -1
@@ -451,10 +454,10 @@ def calibrate2(request,id):
                 matrix_A.append(A_row)
                   
                 matrix_x.append(o['Reduced_distance'])
-                  
-                P_row = [0]*len(edm_observations)
-                P_row[len(matrix_x)-1] = (1/
-                                     o['uc_combined']['std_dev']**2)
+                
+                P_row = [0]*len_edm_observations
+                P_row[i] = (1/
+                            o['uc_combined']['std_dev']**2)
                 matrix_P.append(P_row)
                  
             matrix_y, vcv_matrix, chi_test, residuals = LSA(matrix_A, matrix_x, matrix_P)
@@ -492,27 +495,17 @@ def calibrate2(request,id):
             vcv_A = np.array(vcv_A, dtype=object)
             sigma_vv = vcv_A @ vcv_matrix @ vcv_A.T
             
-            # populate hidden forms to hide and save after commit (form Submit)
-            
-            ini_data=[]
-            for b, vv in zip(bay, np.diagonal(sigma_vv)):
-                p0, p1 = b.split(' - ')
-                ini_data.append({'pillar_survey':id,
-                                 'from_pillar':baseline['pillars'].get(name=p0),
-                                 'to_pillar':baseline['pillars'].get(name=p1),
-                                 'std_uncertainty':sqrt(vv)})
-            
-            sdev_mat_formset = sdev_mat_formset(initial=ini_data, prefix='sdev_mat')
-            # -- end populate sdev_mat_formset -- #
+            # save data to session and commit form Submit
+            request.session['bay_' + str(id)] = bay
+            request.session['sigma_vv_' + str(id)] = sigma_vv.diagonal().tolist()
             
             #----------------- Extract the certified distances from LSA results -----------------#
             # Calculate the average temp and pressure for survey #
             certified_dists={}
-            avg_t = mean([float(o['Temp']) for o in edm_observations.values()])
-            avg_p = mean([float(o['Pres']) for o in edm_observations.values()])
-            avg_h = mean([float(o['Humid']) for o in edm_observations.values()])
-            ini_data =[]
-            
+            avg_t = mean(o_temp)
+            avg_p = mean(o_pres)
+            avg_h = mean(o_humi)
+            sess_data =[]
             for i, (p, d) in enumerate(zip(pillars[1:], matrix_y[:-1])):
                 cd={}
                 ini_cd={}
@@ -558,9 +551,8 @@ def calibrate2(request,id):
                             'the LUM has been published in this report.')
                 
                 # populate a hidden formset to save after commit (form Submit)
-                ini_cd['pillar_survey'] = id
-                ini_cd['from_pillar'] = baseline['pillars'].get(name=pillars[0])
-                ini_cd['to_pillar'] = baseline['pillars'].get(name=p)
+                ini_cd['from_pillar'] = pillars[0]
+                ini_cd['to_pillar'] = p
                 ini_cd['distance'] = d['value']
                 ini_cd['a_uncertainty'] = cd['uc_budget']['07']['ui95']
                 ini_cd['k_a_uncertainty'] = cd['uc_budget']['07']['k']
@@ -574,18 +566,17 @@ def calibrate2(request,id):
                 ini_cd['rl_uncertainty'] = (cd['uc_budget']['10']['std_dev'] *
                                             cd['uc_budget']['10']['k'])
                 ini_cd['k_rl_uncertainty'] = cd['uc_budget']['10']['k']
-                ini_data.append(ini_cd)
+                sess_data.append(ini_cd)
                 # add an extra for the first pillar
                 if i==0:
                     ini_cd0 = ini_cd.copy()
-                    ini_cd0['to_pillar'] = baseline['pillars'].get(name=pillars[0])
+                    ini_cd0['to_pillar'] = pillars[0]
                     ini_cd0['distance'] = 0
                     ini_cd0['offset'] = 0
                     ini_cd0['reduced_level'] = float(raw_lvl_obs[pillars[0]]['reduced_level'])
                     ini_cd0['rl_uncertainty'] = float(raw_lvl_obs[pillars[0]]['std_dev'])
-                    ini_data.insert(0,ini_cd0)                
-            cd_formset = cd_formset(initial=ini_data)
-            # -- end populate cd_formset -- #
+                    sess_data.insert(0,ini_cd0)                
+            request.session['cd_formset_' + str(id)] = sess_data
             
             #Prepare the context for the template
             od = OrderedDict(sorted(alignment_survey.items()))
@@ -672,61 +663,82 @@ def calibrate2(request,id):
                 'baseline_calibration/calibrate_report.html', context)
             
             # create update for pillar survey processing
-            ini_data=[]
             n = len(matrix_y)-1
-            ini_data = {'zero_point_correction': matrix_y[n]['value'],
-                        'zpc_uncertainty': matrix_y[n]['std_dev'],
-                        'degrees_of_freedom': chi_test['dof'],
-                        'variance': chi_test['Variance'],
-                        'html_report': html_report
-                        }
-            
-            pillar_survey_update = PillarSurveyUpdateForm(initial=ini_data)            
-            # -- end populating the pillar_survey_update -- #            
+            request.session['pillar_survey_update_' + str(id)] = {
+                'zero_point_correction': matrix_y[n]['value'],
+                'zpc_uncertainty': matrix_y[n]['std_dev'],
+                'degrees_of_freedom': chi_test['dof'],
+                'variance': chi_test['Variance'],
+                'html_report': html_report
+                }           
             
             context = {'pillar_survey': pillar_survey,
                        'html_report': html_report,
                        'ps_approvals':ps_approvals,
-                       'hidden':[cd_formset,
-                                 sdev_mat_formset,
-                                 pillar_survey_update]}
+                       'hidden':[]}
+            
             return render(request, 'baseline_calibration/display_report.html', context)
         
         #----------------------- code for commiting the calibration and returning to home page -----------------------------#        
-        cd_formset = cd_formset(request.POST)
-        sdev_mat_formset = sdev_mat_formset(request.POST, prefix='sdev_mat')
-        #check to see if distances have been saved before and delete these from the database
-        delete_cd = Certified_Distance.objects.filter(pillar_survey__pk=id)
-        delete_cd.delete()
-        delete_sdev_mat = Std_Deviation_Matrix.objects.filter(pillar_survey__pk=id)
-        delete_sdev_mat.delete()
-        if (cd_formset.is_valid() and
-            sdev_mat_formset.is_valid() and
-            pillar_survey_update.is_valid() and
-            ps_approvals.is_valid()):
+
+        if ps_approvals.is_valid():
+            # Save signiture block
+            ps_obj = ps_approvals.save()
             
-            pillar_survey_update.save()
-            ps_approvals.save()
+            # pillar survey update
+            psu = request.session['pillar_survey_update_' + str(id)]
+            del request.session['pillar_survey_update_' + str(id)]
+            psu_obj = get_object_or_404(Pillar_Survey, id=id)
+            psu_obj.zero_point_correction = psu['zero_point_correction']
+            psu_obj.zpc_uncertainty = psu['zpc_uncertainty']
+            psu_obj.degrees_of_freedom = psu['degrees_of_freedom']
+            psu_obj.variance = psu['variance']
+            psu_obj.html_report = psu['html_report']
+            psu_obj.save()
             
-            for cd_form in cd_formset:
-                cd_form.save()
-                
-            for sdev_mat_form in sdev_mat_formset:
-                sdev_mat_form.save()
-                
+            # Commit the certified distances
+            cd_formset = request.session['cd_formset_' + str(id)]
+            del request.session['cd_formset_' + str(id)]
+            for cd in cd_formset:
+                cd['from_pillar'] = baseline['pillars'].get(name=cd['from_pillar'])
+                cd['to_pillar'] = baseline['pillars'].get(name=cd['to_pillar'])
+                cd_obj, created = Certified_Distance.objects.get_or_create(
+                    pillar_survey = ps_obj,
+                    from_pillar = cd['from_pillar'],
+                    to_pillar = cd['to_pillar'],
+                    defaults = cd)
+            if not created:
+                cd_obj.distance = cd['distance']
+                cd_obj.a_uncertainty = cd['a_uncertainty']
+                cd_obj.k_a_uncertainty = cd['k_a_uncertainty']
+                cd_obj.combined_uncertainty = cd['combined_uncertainty']
+                cd_obj.k_combined_uncertainty = cd['k_combined_uncertainty']
+                cd_obj.offset = cd['offset']
+                cd_obj.os_uncertainty = cd['os_uncertainty']
+                cd_obj.k_os_uncertainty = cd['k_os_uncertainty']
+                cd_obj.reduced_level = cd['reduced_level']
+                cd_obj.rl_uncertainty = cd['rl_uncertainty']
+                cd_obj.k_rl_uncertainty = cd['k_rl_uncertainty']
+                cd_obj.save()
+               
+            # Commit the standard deviations
+            bay = request.session['bay_' + str(id)]
+            sigma_vv = request.session['sigma_vv_' + str(id)]
+            del request.session['bay_' + str(id)]
+            del request.session['sigma_vv_' + str(id)]
+            for b, vv in zip(bay, sigma_vv):
+                p0, p1 = b.split(' - ')
+                vv_obj, created = Std_Deviation_Matrix.objects.get_or_create(
+                    pillar_survey=ps_obj,
+                    from_pillar=baseline['pillars'].get(name=p0),
+                    to_pillar=baseline['pillars'].get(name=p1),
+                    defaults = {
+                        'std_uncertainty':sqrt(vv)})
+            if not created:
+                vv_obj.std_uncertainty = sqrt(vv)
+                vv_obj.save()
+                                
             return redirect('baseline_calibration:calibration_home')
-        
-        else:
-            for e in cd_formset.errors:
-                print(e)
-            context = {'pillar_survey': pillar_survey,
-                       'html_report': html_report,
-                       'ps_approvals':ps_approvals,
-                       'hidden':[cd_formset,
-                                 sdev_mat_formset,
-                                 pillar_survey_update]}
-            
-            return render(request, 'baseline_calibration/display_report.html', context)
 
 
 @login_required(login_url="/accounts/login") 
