@@ -151,15 +151,16 @@ class uPillar_Survey(models.Model):
        constraints = [
            models.CheckConstraint(
                check=Q(site__isnull=False) | Q(calibrated_baseline__isnull=False),
-               name='Both site and calibrated basline fields can not be null')
+               name='Both site and calibrated baseline fields can not be null')
            ]
        verbose_name = "EDMI Calibration Surveys"
     
     def __str__(self):
        return f'{self.job_number} - {self.edm} ({self.survey_date})'
    
-    def delete(self):
+    def delete(self, *args, **kwargs):
         self.certificate.delete()
+        super().delete(*args, **kwargs)
     
 
 class uEDM_Observation(models.Model):
