@@ -930,12 +930,12 @@ def validate_survey(pillar_survey, baseline=None, calibrations=None,
     if not pillar_survey['mets_applied']:
         c = pillar_survey['edm'].edm_specs.c_term
         d = pillar_survey['edm'].edm_specs.d_term
-        if any([c,d]) == None:
+        if any(x is None for x in [c,d]) == None:
             inputs = [
                 pillar_survey['edm'].edm_specs.carrier_wavelength,
                 pillar_survey['edm'].edm_specs.frequency,
                 pillar_survey['edm'].edm_specs.manu_ref_refrac_index]
-            if any(inputs) == None:
+            if any(x is None for x in inputs) == None:
                 Errs.append(
                     'In order for Medjil to apply atmospheric corrections,'
                     ' either the C-term and D-term must be specified'
@@ -946,6 +946,16 @@ def validate_survey(pillar_survey, baseline=None, calibrations=None,
                 
     
     # Date Warnings
+    if pillar_survey['mets_applied']:
+        t = pillar_survey['thermo_calib_applied']
+        b = pillar_survey['baro_calib_applied']
+        h = pillar_survey['hygro_calib_applied']
+        if not t or not b or not h:
+            Wrns.append('No calibration correction has been applied for one or more ' +
+                        'of the Metrological Instruments. These calibration corrections have ' +
+                        'not been accounted of in the atmospheric corrections of EDM observations ' +
+                        'as atmospheric corrections were applied prior to data upload.')
+        
     if pillar_survey['survey_date'] > pillar_survey['computation_date']:
         Wrns.append('The date of computation entered is before the date of survey.')
         
