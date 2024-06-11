@@ -1,471 +1,210 @@
-{% load static %}
-<div class="post-content">
-    {% if not user.is_authenticated %}
-    <p>Please login or signup to manage and calibrate your staff.</p>
-    <div class="single-item-container">
-        <button
-            class="mr-4 px-3 py-1 border border-transparent text-sm font-small rounded text-white bg-blue-500 hover:bg-gray-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out"
-            onclick="location.href='/accounts/login/'">Log in</button>
-        or
-        <button
-            class="ml-4 px-3 py-1 border border-transparent text-sm font-small rounded text-white bg-blue-500 hover:bg-gray-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out"
-            onclick="location.href='/accounts/signup/'">Sign up</button>
-    </div>
-    <br>
-    {% endif %}
-    <h2 class="post-title">
-        Barcode Staff Calibration Guide
-    </h2>
+<!--
 
-    <div class="mt-5 mb-3 guide_view">
-        <ol class="toc-list" role="list">
+   © 2023 Western Australian Land Information Authority
 
-            <li>
-                <a href="#Staff-Introduction">
-                    <span class="title">1. Introduction</span>
-                    <!-- <span class="page"><span class="visually-hidden">Page&nbsp;</span>5</span> -->
-                </a>
-            </li>
-            <li>
-                <a href="#Staff-About">
-                    <span class="title">2. About the Boya Staff Calibration Range</span>
-                    <!-- <span class="page"><span class="visually-hidden">Page&nbsp;</span>5</span> -->
-                </a>
-            </li>
-            <li>
-                <a href="#Staff-Procedures">
-                    <span class="title">3. How to calibrate barcode staves</span>
-                    <!-- <span class="page"><span class="visually-hidden">Page&nbsp;</span>5</span> -->
-                </a>
-                <ol>
-                    <li>
-                        <a href="#Staff-Field-Procedures">
-                            <span class="title">3.1 Field Procedures</span>
-                            <!-- <span class="page"><span class="visually-hidden">Page&nbsp;</span>5</span> -->
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#Staff-Sample-Data">
-                            <span class="title">3.2 Sample data</span>
-                            <!-- <span class="page"><span class="visually-hidden">Page&nbsp;</span>5</span> -->
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#Staff-Medjil-Procedures">
-                            <span class="title">3.3 Medjil Procedures</span>
-                            <!-- <span class="page"><span class="visually-hidden">Page&nbsp;</span>5</span> -->
-                        </a>
-                    </li>
-                </ol>
-            </li>
-            <li>
-                <a href="#Staff-Conclusion">
-                    <span class="title">4. Conclusion</span>
-                    <!-- <span class="page"><span class="visually-hidden">Page&nbsp;</span>5</span> -->
-                </a>
-            </li>
-        </ol>
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
 
-        <br>
-        <hr style="border-top: 1px solid #ccc">
-        <div class="cf nr3 nl3">
-            <div class="fl w-50-ns ph3" id="Staff-Introduction">
-                <h2>1. Introduction</h2>
-                <p>
-                    Digital levelling systems have long been used by the surveying and engineering industry to determine
-                    height differences between any two or multiple locations for various applications. In Western
-                    Australia, Landgate is responsible for the national standard of measure for length, in this case,
-                    defined by the height difference or length measured in the vertical plane. In an effort to provide
-                    an accurate and a uniform system of levelling across the State, Landgate established a staff
-                    calibration range at Boya in 2002. The range comprises 2 observing pillars and 21 pins set in a
-                    granite outcrop. The pins have been placed at optimum distances from the pillars and cater for
-                    testing over a 4 metre height difference. The relative height differences between the pins have been
-                    accurately determined by repeat observations using precision levels in conjunction with calibrated
-                    invar staves.
-                </p>
-                <p>
-                    The Boya Barcode Staff Calibration Range is monitored on a regular basis. Medjil is an online
-                    platform developed by Landgate to ensure that the digital levelling systems, in particular, the
-                    barcoded staves are calibrated from time to time maintain its required accuracy. Please go through
-                    the following documents before commencing the field procedure:
-                <ul>
-                    <li><a href="{% static 'images/calibrationguides/staff/boya/2017_Access-sketch-Boya-barcode-staff-calibration.pdf' %}"
-                            target="_blank">Access details</a> of the Boya barcode staff calibration range</li>
-                    <li><a href="{% static 'images/calibrationguides/staff/boya/Boya%20Pin%20Configuration.pdf' %}"
-                            target="_blank">Diagram of the pin configuration</a></li>
-                    <li><a href="{% static 'images/calibrationguides/staff/boya/Barcoded_booking_sheet.pdf' %}"
-                            target="_blank">Barcode Staff Booking Sheet</a></li>
-                    <li><a href="{% static 'images/calibrationguides/staff/sample_data/Sample-staff-load-file-format.csv' %}"
-                            target="_blank">Sample CSV file</a></li>
-                </ul>
-                </p>
-            </div>
+       http://www.apache.org/licenses/LICENSE-2.0
 
-            <div class="fl w-50-ns ph3" id="Staff-About">
-                <h2>2. About the Boya Staff Calibration Range</h2>
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
 
-                <p> The Landgate barcode staff calibration range is located at the Land Surveyors Licensing Board's
-                    examination site at Boya and consists of 2 observing pillars and a series of 21 stainless steel pins
-                    set in a solid granite outcrop in a semi-arc rounding the two observing pillars.
-                </p>
+-->
+<h1>1. Introduction</h1>
 
-                <p> The two observing pillars were first constructed beside a large piece of sloping granite which had
-                    the required 4 metres of height difference between top and bottom. The highest pillar is set at a
-                    comfortable observing height and the lowest a metre lower and closer to the rock and range.
-                </p>
+<p>Under the Licensed Surveyors (General Surveying Practice) Regulations 1961, regulation 20, the Surveyor General is to arrange for a standard or standards to be available to enable surveyors to comply with sub regulation 20(1). This sub regulation requires a surveyor to calibrate measuring equipment at regular intervals, not exceeding 2 years, and in accordance with acceptable practices.
 
-                <p>The pins were glued into drilled holes in the granite while the observing pillars were concreted deep
-                    into the ground to ensure their stability. With the 3 metre invar staff, it was possible to observe
-                    from Pin 1 to 15 from the high pillar and from Pin 7 to Pin 21 from the lower pillar
-                </p>
+The Surveyor General has tasked Survey Services with providing the standards and acceptable practices enabling a surveyor to be able to comply with regulation 20.
 
-                <div class="grid-2">
-                    <div>
-                        <p>
-                            <img src="{% static 'images/CalibrationGuides/staff/observing-pillar 12.png' %}"
-                                alt="Observing Pillars" />
-                        </p>
-                        <h4>Digital level set on Pillar MV 83 (high pillar)</h4>
-                        <p>
-                            The low pillar or Pillar B can be seen just below the high pillar..
-                        </p>
-                    </div>
-                    <div>
-                        <p>
-                            <img src="{% static 'images/CalibrationGuides/staff/invar-staff.png' %}" alt="Invar staff" />
-                        </p>
-                        <h4>Invar staff set on Pin 2</h4>
-                        <p>
-                            Invar staves set up on the pins are levelled and is held firmly by a bipole to main
-                            stability during the course of reading.
-                        </p>
-                    </div>
-                    <div>
-                        <p>
-                            <img src="{% static 'images/CalibrationGuides/staff/pin-config.png' %}" alt="Pin configuration" />
-                        </p>
-                        <h4>Stainless steel pins glued in granite rock</h4>
-                        <p>
-                            The pins were glued into drilled holes in the granite outcrop in an arc shape with a
-                            distance of about 10 metres from the high pillar and 8.8 metres from the low one.
-                        </p>
-                    </div>
-                    <div>
-                        <p>
-                            <img src="{% static 'images/CalibrationGuides/staff/observing-pillar 11.png' %}"
-                                alt="Obsering from Pillar A" />
-                        </p>
-                        <h4>Observing from Pillar MV 83(high pillar).</h4>
-                        <p>
-                            With a 3 metre staff, readings can be done only for the first 15 pins using the high pillar.
-                        </p>
-                    </div>
-                </div>
-            </div>
+This procedure shall be applied whenever Landgate calibrates the Curtin, Kalgoorlie and Busselton EDM baselines (standards).</p>
 
-            <div class="fl w-50-ns ph3" id="Staff-Procedures">
-                <h2 class="mt0">3. How to calibrate barcode staves</h2>
+<ul STYLE="margin:30px">
+<li>Reason: Organises document management.</li>
+<li>Position: Geodesist.</li>
+</ul>
 
-                <div id="Staff-Field-Procedures">
-                    <h3>3.1 Field Procedures</h3>
-                    <ol>
-                        <li>Use the barcode staff booking sheet to record the collimation details and range observations
-                            details in the field.</li>
-                        <li>Check the bubble of the digital level and the staff. Re-adjust them if necessary. The staff
-                            needs to be truly vertical for the best results.</li>
-                        <li>Check <b>if the Digital Level has an existing staff calibration</b>. If so, delete it or disconnect it from this calibration session.</li>
-                        <li>Perform a collimation test on the digital level and use its software to compute and store the
-                            constants calculated. For this purpose, four co-linear spikes in concrete 20 m apart have been
-                            established adjacent to the range (see the <a
-                                href="{% static 'images/CalibrationGuides/staff/boya/2017_Access-sketch-Boya-barcode-staff-calibration.pdf' %}"
-                                target="_blank">Access Sketch</a>)</li>
-                        <li>Configure the settings in the digital level to record mean and standard deviation of measurement
-                            from multiple readings (at least five), if possible. Otherwise, if the instrument does not allow
-                            means from multiple observations, a minimum of three complete sets of observations (see 8 – 10
-                            below) is required for redundancy</li>
-                        <li>Set the digital level on the high observing pillar (MV 83) and shade it from the sun. Pillar B
-                            (low pillar) is utilised by Landgate when calibrating the range.</li>
-                        <li>Position staff on the highest pin (Pin No 1) and allow at least 5 minutes to settle and adjust
-                            to the ambient air temperature. Record the air temperature in the booking sheet with a shaded
-                            thermometer. </li>
-                        <li>A set of observations for a standard <u>four</u> metre staff consist of:
-                            <ul>
-                                <li> Set up on Pillar MV 83
-                                    <ul>
-                                        <li>backsight to the staff at Pin Number 1 </li>
-                                        <li>intermediate sights to the staff at Pin Numbers 2 to 20 </li>
-                                        <li>foresight to the staff at Pin Number 21 </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>
-                        <li>A set of observations for a standard <u>three</u> metre staff consist of:
-                            <ul>
-                                <li>Setup on Pillar MV83
-                                    <ul>
-                                        <li>backsight to the staff at Pin Number 1</li>
-                                        <li>intermediate sights to the staff at Pin Numbers 2 to 14</li>
-                                        <li>foresight to the staff at Pin Number 15</li>
-                                    </ul>
-                                </li>
-                                <li>Setup on Pillar B
-                                    <ul>
-                                        <li>backsight to the staff at Pin Number 7</li>
-                                        <li>intermediate sights to the staff at Pin Numbers 8 to 20</li>
-                                        <li>foresight to the staff at Pin Number 21</li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>
-                        <li>Record the air temperature in the booking sheet at the end of each survey.</li>
-                        <li>Download the level data and copy it in a csv file in the correct format (see <a href="{% url 'calibrationguide:guide_view' %}#Staff-Sample-Data">Section 3.2</a>) without any headers.</li>
-                        <li>Click <a href="/staffcalibration/calibrate/">here</a> to process your staff readings and
-                            print the calibration report in a pdf format.</li>
-                        <!-- <li>Landgate recommends that staves be re-calibrated at least every 5 years or more often if joints exhibit noticeable wear or any other repairs are made to the staff.</li> -->
-                    </ol>
-                </div>
-                <div id="Staff-Sample-Data">
-                    <h3 class="mt0">3.2 Sample data </h3>
-                    <p>
-                        Data should be uploaded in a correctly formatted text or csv file as per the file format. File
-                        Format - All fields are separated by a comma (,) and must NOT contain the header line.
-                    <ul>
-                        <li>Field 1 = Pin number</li>
-                        <li>Field 2 = Staff reading</li>
-                        <li>Field 3 = Number of readings</li>
-                        <li>Field 4 = Standard deviations</li>
-                    </ul>
-                    </p>
+<h1>2. Procedure</h1>
+<h2>2.1 Request a job to calibrate baselines</h2>
+<p>Curtin, Kalgoorlie and Busselton EDM baselines are calibrated every 2 years. The last date of calibration can be found on the current Regulation 13 certificate (see GS7/88/33). A geodetic job number is to be created for each of the baseline. </p>
 
-                    <p> Example of a text/csv file. The file can also be downloaded from <a
-                            href="{% static 'images/CalibrationGuides/staff/boya/Sample-staff-load-file-format.csv' %}"
-                            target="_blank">here</a>. </p>
+<p>High precision EDMI (EDM and prism) must be used to calibrate the EDM baselines. The EDMI must be calibrated by an accredited NATA laboratory and requires a current Regulation 13 certificate. 
+Baseline measurements must be performed in accordance with the ISO17123-4:2012 Optics and optical instruments – Field procedures for testing geodetic and surveying instruments – Part 4: Electro-optical distance meters (EDM measurements to reflectors).</p> 
+<p>The following EDMI should be used to calibrate EDM baselines:</p>
 
-                    <table id="Sample-csv-Data">
-                        <tr>
-                            <th>Pin number,</th>
-                            <th>Staff reading,</th>
-                            <th>Number of readings,</th>
-                            <th>Standard deviations </th>
-                        </tr>
-                        <tr>
-                            <td>1,</td>
-                            <td>0.07417,</td>
-                            <td>10,</td>
-                            <td>0.000090</td>
-                        </tr>
-                        <tr>
-                            <td>2,</td>
-                            <td>0.16503,</td>
-                            <td>10,</td>
-                            <td>0.000070</td>
-                        </tr>
-                        <tr>
-                            <td>3,</td>
-                            <td>0.32868,</td>
-                            <td>10,</td>
-                            <td>0.000020</td>
-                        </tr>
-                        <tr>
-                            <td>4,</td>
-                            <td>0.47489,</td>
-                            <td>10,</td>
-                            <td>0.000090</td>
-                        </tr>
-                        <tr>
-                            <td>5,</td>
-                            <td>0.68799,</td>
-                            <td>10,</td>
-                            <td>0.000070</td>
-                        </tr>
-                        <tr>
-                            <td>6,</td>
-                            <td>0.87413,</td>
-                            <td>10,</td>
-                            <td>0.000040</td>
-                        </tr>
-                        <tr>
-                            <td>9,</td>
-                            <td>1.52628,</td>
-                            <td>10,</td>
-                            <td>0.000030</td>
-                        </tr>
-                        <tr>
-                            <td>7,</td>
-                            <td>1.07422,</td>
-                            <td>10,</td>
-                            <td>0.000030</td>
-                        </tr>
-                        <tr>
-                            <td>8,</td>
-                            <td>1.27955,</td>
-                            <td>10,</td>
-                            <td>0.000050</td>
-                        </tr>
-                        <tr>
-                            <td>10,</td>
-                            <td>1.79376,</td>
-                            <td>10,</td>
-                            <td>0.000040</td>
-                        </tr>
-                        <tr>
-                            <td>11,</td>
-                            <td>2.12703,</td>
-                            <td>10,</td>
-                            <td>0.000080</td>
-                        </tr>
-                        <tr>
-                            <td>12,</td>
-                            <td>2.3912,</td>
-                            <td>10,</td>
-                            <td>0.000050</td>
-                        </tr>
-                        <tr>
-                            <td>13,</td>
-                            <td>2.51647,</td>
-                            <td>10,</td>
-                            <td>0.000110</td>
-                        </tr>
-                        <tr>
-                            <td>14,</td>
-                            <td>2.64608,</td>
-                            <td>10,</td>
-                            <td>0.000050</td>
-                        </tr>
-                        <tr>
-                            <td>15,</td>
-                            <td>2.87513,</td>
-                            <td>10,</td>
-                            <td>0.000120</td>
-                        </tr>
-                        <tr>
-                            <td>16,</td>
-                            <td>3.05758,</td>
-                            <td>10,</td>
-                            <td>0.000060</td>
-                        </tr>
-                        <tr>
-                            <td>17,</td>
-                            <td>3.20978,</td>
-                            <td>10,</td>
-                            <td>0.000040</td>
-                        </tr>
-                        <tr>
-                            <td>18,</td>
-                            <td>3.36207,</td>
-                            <td>10,</td>
-                            <td>0.000120</td>
-                        </tr>
-                        <tr>
-                            <td>19,</td>
-                            <td>3.52057,</td>
-                            <td>10,</td>
-                            <td>0.000200</td>
-                        </tr>
-                        <tr>
-                            <td>20,</td>
-                            <td>3.6692,</td>
-                            <td>10,</td>
-                            <td>0.000070</td>
-                        </tr>
-                        <tr>
-                            <td>21,</td>
-                            <td>3.87885,</td>
-                            <td>10,</td>
-                            <td>0.000100 </td>
-                        </tr>
-                    </table>
-                    <p> Other information required are the staff and observation metadata which is recorded in the booking sheet
-                        at the time of observation. Retain a copy of the field booking sheet at least until a new calibration is
-                        done for the staff</p>
-                </div>
+<ul STYLE="margin:30px">
+<li>TS30 s/n 364182 and GPH1P prism s/n 100</li>
+</ul>
 
-                <div id="Staff-Medjil-Procedures">
-                    <h3 class="mt0">3.3 Medjil Procedures </h3>
-                    <ul style="list-style: none;">
-                        <li>
-                            <b>Step 1:</b> To start a new Staff Calibration, click on the <b>Staff Calibration</b> > <b>Staff Calibration</b>.
-                        </li>
-                        <br>
-                        <li>
-                            <b>Step 2:</b> Click on the <b>Start new calibration</b> button. 
-                            <ul>
-                                <li><b>Job Number</b>: enter a <b>Job Number</b> with a ten digit alphanumeric code. </li>
-                                <li><b>Calibration Site</b>: select <b>Boya</b> from the dropdown.</li>
-                                <li><b>Staff Number</b>: select the staff number or enter a new one by clicking on the + button. When entering (or creating) a new staff, a new window will pop up and users are advised to enter all the known fields - Make, Model, Owner, Staff Number, Type, Length and CoE. If the staff has been previously <b>calibrated</b>, users can tick the <strong><code>Is Calibrated</code></strong> box. A new window will appear to provide information about the calibration details. 
-                                <li><b>Level Number</b>: select the digital level (number) or enter a new one by clicking on the + button.</li>
-                                <li><b>Start temperature</b>: Temperature at the beginning of measurement.</li>
-                                <li><b>End temperature</b>: Temperature at the end of measurement.</li>
-                                <li><b>Field Data</b>: Click the <b>Choose File</b> button to select the csv file. A sample file is described <a href="#Staff-Sample-Data">here</a> for reference.</li>
-                                <li><b>Field Book</b>: Click the <b>Choose File</b> button to selec the field book (in pdf format).</li>
-                                <li>Enter an <b>Observer</b> name or tick the <b>I am the Observer</b>, if the observer is same as the person performing this procedure.</li>
-                                <li><b>Calibration date</b>: Choose a calibration date.</li>
-                                <li>Click the <b>Submit</b> button.</li>
-                                <li><b>Note:</b>  
-                                    <ul>
-                                        <li>Form errors will be shown in red text to help correctly fill the form.</li>
-                                        <li>Test data is provided <a href="{% static 'data/Staff Calibration/Staff213.csv' %}" target="_blank">here</a> with the corresponding <a href="{% static 'data/Staff Calibration/200317_Fieldnote.pdf' %}" target="_blank">Field Book</a> to assist with the Staff Calibration procedure.</li>
-                                    </ul>
-                                </li>
-                            </ul>                          
-                        </li>
-                        <br>
-                        <li><img src="{% static 'images/CalibrationGuides/staff/Staff-Medjil-Step1_2.png' %}" alt="Medjil Steps 1-2"></li>
-                        <br>
-                        <li>
-                            <b>Step 2:</b> By submitting the form in <b>Step 1</b>, the files will be read and processed to calibrate the staff. The Staff Calibration Report will be displayed in the next window - tabulating the Correction Factor (a multiplicative scale factor) and the graduation uncertainty at 95% confidence level at 25$^\circ$C, staff readings and corrections, the correction factors/errors at various tempeartures. <i>If the temperature exceeds +55$^\circ$C or -10$^\circ$C at Correction Factor = 1, users are advised to check for possible errors in metadata information provided. Wooden staves generally exceed this limit and are generally used for high precision levelling.</i>.   
-                            <p>
-                                Click on the <b>Print Report >></b> to print in a pdf format. The report has three pages. A formula is provided in Page 1 just below the <b>Correction Factor</b> on how to apply it to the future height differences (see below). 
-                            </p>
-                        </li>
-                        <br>
-                        <li>
-                            <img src="{% static 'images/CalibrationGuides/staff/Staff-Medjil-Step2.png' %}" height="500" alt="Staff Calibration report">
-                        </li>
-                        <br>
-                        <li>
-                            <b>Step 3:</b> Staff Calibration Record.
-                            <p>The staff calibration records are automatically stored in a database. Calibration reports can be retrieved from the <b>Levelling Staff Registry</b> under the <b>Staff Calibration</b> tab.</p>
-                            <p>Users are also able to <b>add</b> previous calibration record (s) here by clicking the <b>Add new calibration certificate</b>. <i>However, the form only accepts staffs calibrated at Boya Staff Calibration Range and it is also important to note that previous calibration has no impact on the current calibration as they are indpendent of each other.</i>
-                        </li>
-                        <br>
-                        <li>
-                            <img src="{% static 'images/CalibrationGuides/staff/Staff-Medjil-Step3.png' %}" height="650" alt="Staff Calibration Record Form">
-                        </li>
-                        <br>
-                    </ul>
-                </div>
-            </div>
-            <div class="fl w-50-ns ph3" id="Staff-Conclusion">
-                <h2>4. Conclusion</h2>
-                <p>
-                    The Boya Staff Calibration Range and software developed by the then Department of Land Information (DLI) has enabled surveyors who use digital levels and barcode staves to calibrate their staves in a simple and cost effective manner for use in geodetic and other high order levelling. Both the calibration of the Range and Staves are based on the methods of least squares estimation, which is considered mathematically more rigorous. Medjil will update the estimated (monthly) average of the Staff Calibration Range whenever a new range measurement is added by Landgate. These (monthly) Range values are then used as a reference to calibrate other staves.
-                </p>
-                <p>Please contact Landgate at <a href="mailto:geodesy@landgate.wa.gov.au">geodesy@landgate.wa.gov.au</a>, if you encounter any issues when calibrating a staff. And users are advised to go through this user guide before contacting Landgate.</p>
-        
-            </div>
-        </div>
+<p>A current calibration report is also required for all meteorological instruments used in the process of EDM baselines calibration. These instruments are to be calibrated externally by an accredited NATA laboratory. he following meteorological instruments should be used to calibrate EDM baselines:</p>
 
+<ul STYLE="margin:30px">
+<li>Temperature and relative humidity meter s/n 21002807</li>
+<li>Temperature and relative humidity meter s/n 21002811</li>
+<li>Barometer s/n 74003848</li>
+<li>Barometer s/n 11945508</li>
+</ul>
 
-        <hr style="border-top: 1px solid #ccc">
-        <div class="mt-3 mb-3">
-            <p><strong>Copyright © 2020-2024 Western Australian Land Information Authority</strong></p>
-            <p>Last updated: 24 May 2024</p>
-        </div>
+<p>External calibrations are to be undertaken in accordance with CAL-02 document.</p>
+<ul STYLE="margin:30px">
+<li>Reason: Maintains legal traceability of equipment for baseline calibration.</li>
+<li>Position: Geodesist.</li>
+</ul>
 
-    </div>
-</div>
+<h2>2.3 Measure baselines</h2>
+<p>Prior to any EDM baseline calibration a notice (email) must be forwarded to the Land Surveyors Licensing Board for it to inform all relevant institutions and practicing licensed surveyors that the relevant EDM baseline will be closed between certain dates due to calibration activities.</p>
 
-<script>
-    MathJax = {
-       tex: {
-          inlineMath: [['$', '$'], ['\\(', '\\)']],
-          tags: 'ams'
-       },
-       svg: {
-          fontCache: 'global',
-          displayAlign: 'left',
-          displayIndent: '2.0em'
-       }
-    };
- </script>
+<p>All observation should commence only after the daily temperatures have stabilised. Temperature should not fluctuate more than 10ºC.</p>
+
+<p>The instrument is initially set up on pillar 1 and the prism on pillar 2. An umbrella must shade the EDM instrument and meteorological instruments. The height of the EDM instrument and prism are measured and recorded at each pillar.</p>
+
+<p>Meteorological observations of pressure, relative humidity and temperature are recorded for each distance measured. These measurements should be taken at the instrument and prism. Ensure meteorological equipment has stabilised before making observations.</p>
+
+<p>Meteorological observations should not fall outside of the range for which the instrument has been calibrated. Below are the current ranges.</p>
+
+<ul STYLE="margin:30px">
+<li>Temperature: +10 to +40ºC</li>
+<li>Pressure: 750.00 to 1150mbars</li>
+<li>Relative Humidity: 11 to 75 %RH</li>
+</ul>
+
+<p>Meteorological observations and the instrument and prism heights are entered into the EDM instrument. A minimum of four distances are measured at each setup and the prism is moved progressively through all pillars. The EDM instrument is then moved to pillar 2 and the prism is moved back through all pillars to pillar 1, measuring in the above manner. This process is repeated until the EDM instrument has occupied all pillars.</p>
+
+<p>Short distances of 10 metres were not measured prior to 2021, however these distances are now observed.</p>
+
+<p>The pillar alignment and height differences must be verified. All observations are recorded digitally and manually on booking sheets. Observations to be signed and stored by geodesist in an ECAL folder.</p>
+
+<ul STYLE="margin:30px">
+<li>Reason: Observe data to compute the new baseline distances.</li>
+<li>Output:  Completed observation booking sheets and digital file.</li>
+<li>Position: Geodesist.</li>
+</ul>
+
+<h2>2.4  EDM Baseline interlaboratory comparison</h2>
+<p>After completing the EDM Baseline survey and calibration as per 2.3, another EDM Baseline should be surveyed using the same instrument for the purpose of nterlaboratory comparison.</p>
+<p>In Western Australia the following instrument and prism must be used for calibration and interlaboratory comparison:</p>
+
+<p>S16 s/n 3012827 and GPH1P prism s/n 100</p>
+<p>This EDMI calibration is to be undertaken in accordance with CAL-03.</p>
+
+<ul STYLE="margin:30px">
+<li>Reason:  Capture data for evaluation of calibrations. Ref ISO 17025:2017 7.2.2.</li>
+<li>Position: Geodesist.</li>
+</ul>
+
+<h2>2.5 Import observations into the EDM Baseline calibration portal</h2>
+<p>Prior to importing, the EDM baseline observations must be corrected by the values provided in the Table 2 (results of measurement) of the NMI calibration report. Only the corrected observations are then imported into the "Baseline calibration" portal for processing to determine the new certified distances and uncertainties of the EDM Baseline.</p>
+
+<ul STYLE="margin:30px">
+<li>Reason:  Computation of Certified EDM Baseline distances.</li>
+<li>Position: Geodesist.</li>
+</ul>
+
+<h2>2.6 Data entry QA</h2>
+<p>All data must is verified by the Senior Geodesist (or another Senior Property Location Officer) by comparing a hardcopy print of the input data with the original baseline booking sheets.</p>
+
+<p>Any errors found must be corrected before the computation.</p>
+
+<ul STYLE="margin:30px">
+<li>Reason:  Data QA control.</li>
+<li>Position: Senior Geodesist</li>
+</ul>
+
+<p>Inspect the calibration report and certificate and compare the new certified distances against the previous certified distances. Large residuals may indicate pillar movement or an error in the calibration process. If differences between new and previous certified distances are found included in the final report potential reason for the difference (e.g. pillar movement).</p>
+
+<ul STYLE="margin:30px">
+<li>Reason:   Ensures no gross errors and/or pillar movement.</li>
+<li>Position: Geodesist</li>
+</ul>
+
+<h2>2.8 Estimate uncertainty of distances</h2>
+<p>The estimation of uncertainty is to be considered in conjunction with ISO 17123:4.</p>
+<p>The estimated EDM baseline distances are influenced by the following sources of uncertainty:</p>
+
+<ul STYLE="margin:30px">
+<li>Uncertainty of the EDM measurement</li>
+<li>Atmospheric measurements</li>
+<li>Error patterns from mechanical setup</li>
+<li>Eounding error quantities</li>
+</ul>
+
+<p>The following table lists the error budget used for the calculation of uncertainty of EDM Baseline's distances:</p>
+
+<table>
+<tr>
+<td><b>Sources of uncertainty</b></td>
+<td><b>Evaluation</b></td>
+<td><b>Distribution</b></td>
+</tr>
+<tr><td><b>Uncertainty of the EDM measurement</b></td></tr>
+<tr>
+<td>1. EDM scale factor</td>
+<td>B</td>
+<td>Normal</td>
+</tr>
+<td>2. EDM scale factor (temp. effect)</td>
+<td>B</td>
+<td>Rect.</td>
+</tr>
+<tr>
+<td>3. EDM scale factor (drift over time)</td>
+<td>B</td>
+<td>Rect.</td>
+</tr>
+<tr>
+<td>4. EDM zero offset</td>
+<td>A</td>
+<td>Normal</td>
+</tr>
+<tr>
+<td>5. LS fit unc fixed term</td>
+<td>A</td>
+<td>Normal</td>
+</tr>
+<tr>
+<td>6. LS fit unc proportional term</td>
+<td>A</td>
+<td>Normal</td>
+</tr>
+<tr><td><b>Uncertainty of atmospheric measurements</b></td></tr>
+<tr>
+<td>7. Temperature unc</td>
+<td>B</td>
+<td>Normal</td>
+</tr>
+<tr>
+<td>8. Pressure unc</td>
+<td>B</td>
+<td>Normal</td>
+</tr>
+<tr>
+<td>9. Humidity unc</td>
+<td>B</td>
+<td>Normal</td>
+</tr>
+<tr><td><b>Error patterns from mechanical setup</b></td></tr>
+<tr>
+<td>10. Levelling and centring (axial)</td>
+<td>B</td>
+<td>Normal</td>
+</tr>
+<tr>
+<td>11. Heights & offsets (transverse)</td>
+<td>B</td>
+<td>Normal</td>
+</tr>
+<tr><td><b>Rounding error quantities</b></td></tr>
+<td>12. Heights & offsets (transverse)</td>
+<td>B</td>
+<td>Rect.</td>
+</tr>
+</table>
+
+<p>Calculation of these uncertainties should be done with the template CAL-01E.</p>
+
+<h1></h1>
+<p></p>
