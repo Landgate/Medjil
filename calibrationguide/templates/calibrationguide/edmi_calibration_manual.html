@@ -650,7 +650,7 @@
                   <p>&emsp;&emsp;p = Atmospheric pressure in hectopascals</p>
                   <p>&emsp;&emsp;t = Dry temperature in degrees Celsius</p>
                		
-               		<p id="EDMI-Chapter4_2_1Note">The terms C and D as well as EDM type, Unit Length, Modulation Frequency, Carrier Wavelength and Refractive Index are instrument specific (manufacturers supplied) 
+               		<p id="EDMI-Chapter4_2_1Note">The terms C and D as well as EDM type, Unit Length, Modulation Frequency, Carrier Wavelength and Refractive Index are instrument specific (manufacturers supplied). 
                			Recommended values for common instruments are provided in the EDM Specifications Lookup Table. This table has been populated with information from the following sources:</p>
                		<ul>
                			 <li>Rüeger, J. M. 1996. Electronic Distance Measurement - An Introduction, 4th corrected edition</li>
@@ -663,16 +663,17 @@
                   alt="Creating EDM Model using EDM specification lookup table">
 									<br>               			 
                		<p>These parameters are assigned to the EDM model and are used for all instruments of that model associated with the company. The Manufacturers Uncertainty Constant, Manufacturers Parts Per Million Uncertainty
-               			 and Manufacturers Uncertainty Coverage Factor are required fields. These are used by Medjil to perform the statistical test recommended in ISO 17123-4:2012 (see Section 7) 
-               			 Medjil treats phase and pulse measuring instruments equally. Solving for cyclic errors can be performed for both types of instruments and is an option when performing and EDMI Calibration. 
+               			 and Manufacturers Uncertainty Coverage Factor are required fields. These are used by Medjil to perform the statistical test recommended in ISO 17123-4:2012 (see Section 7). </p>
+               		<p>Medjil treats phase and pulse measuring instruments equally. Solving for cyclic errors can be performed for both types of instruments and is an option when performing and EDMI Calibration. 
                			 When solving for cyclic errors, Medjil will use a t-student test for both the first and second order cyclic errors. If errors are statistically insignificant, the design matrix will be compiled for either six, 
-               			 four or two parameters. The Unit Lenth is a required field. It is used when test for cyclic errors, plotting the Return Phase Angle of Observed Distances plot at the end of the EDMI Calibration report and 
-               			 for calculation of the manufacturers reference refractive index when it has not been supplied in this form. (See Section 4.2.2) The Frequency, Carrier Wavelength, Manufacturers Reference Refractive Index, 
-               			 C Term and D Term are optional fields. These are used for calculating the atmospheric corrections for instruments. However, Medjil will refuse to process raw data where the atmospheric corrections have not been
-               			  applied prior to upload, if insufficient parameters are supplied to calculate the atmospheric corrections. The C Term and D Term are used to calculate the first velocity correction (See Section 4.2.1).  
-               			  If the C Term or D Term are not supplied, Medjil uses the carrier wavelength, frequency and Manufacturers Refractive index to calculate these terms. 
-               			  The Measurement Increments are a required field. Medjil will use this value for propagation of uncertainty when the selected Uncertainty Budget requests instrument rounding is included
-               			   from the Instrument Register Record – Uncertainty Budget Sources. </p>                  			          			
+               			 four or two parameters.</p> 
+               		<p>The Unit Lenth is a required field. It is used when test for cyclic errors, plotting the Return Phase Angle of Observed Distances plot at the end of the EDMI Calibration report and 
+               			 for calculation of the manufacturers reference refractive index when it has not been supplied in this form (See Section 4.2.2). </p>  
+               			 The Frequency, Carrier Wavelength, Manufacturers Reference Refractive Index, C Term and D Term are optional fields. These are used for calculating the atmospheric corrections for instruments. 
+               			 However, Medjil will refuse to process raw data where the atmospheric corrections have not been applied prior to upload, if insufficient parameters are supplied to calculate the atmospheric corrections. 
+               			 The C Term and D Term are used to calculate the first velocity correction (See Section 4.2.1). If the C or D Term are not supplied, Medjil uses the carrier wavelength, frequency and Manufacturers Refractive index to 
+               			 calculate these terms. The Measurement Increments are a required field. Medjil will use this value for propagation of uncertainty when the pre-selected Uncertainty Budget requests instrument rounding is included
+               			  from the Instrument Register Record – Uncertainty Budget Sources (See Section 5.2).</p>                  			          			
                </div>
                <div id="EDMI-Chapter4_2_2">
                   <h4>4.2.2 Reference Refractive Index</h4>
