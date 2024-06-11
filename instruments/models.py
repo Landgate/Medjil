@@ -348,7 +348,7 @@ class EDM_Inst(models.Model):
         return reverse('instruments:inst_edm_update', args=[str(self.id)])
 
     def __str__(self):
-        return f'{self.edm_specs} - {self.edm_number}'
+        return f'{self.edm_specs.edm_make_name} {self.edm_specs.edm_model_name} - {self.edm_number}'
 
     def delete(self, *args, **kwargs):
         super(EDM_Inst, self).delete(*args, **kwargs)
@@ -453,7 +453,7 @@ class Prism_Inst(models.Model):
         return reverse('instruments:inst_prism_update', args=[str(self.id)])
 
     def __str__(self):
-        return f'{self.prism_specs} - {self.prism_number}'
+        return f'{self.prism_specs.prism_make_name} {self.prism_specs.prism_model_name} - {self.prism_number}'
 
     def delete(self, *args, **kwargs):
         super(Prism_Inst, self).delete(*args, **kwargs)
@@ -575,7 +575,7 @@ class Mets_Inst(models.Model):
         return reverse('instruments:inst_mets_update', args=[str(self.id)])
 
     def __str__(self):
-        return f'{self.mets_specs} - {self.mets_number}'
+        return f'{self.mets_specs.mets_make_name} {self.mets_specs.mets_model_name} - {self.mets_number}'
 
     def delete(self, *args, **kwargs):
         super(Mets_Inst, self).delete(*args, **kwargs)

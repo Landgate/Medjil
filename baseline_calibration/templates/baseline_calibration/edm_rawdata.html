@@ -24,7 +24,7 @@
         <div class="text-center">
             <h1>Imported EDM Observations</h1>
         </div>
-        <form id="edm-rawDataForm" action="" style="font-size:10.0pt;width:4500px;" class="site-form" method="post" enctype="multipart/form-data">
+        <form id="edm-rawDataForm" action="" style="font-size:10.0pt;" class="site-form" method="post" enctype="multipart/form-data">
             <div class="flexbox-container_IB flexbox-item-left_IB">
                 <p>The pillar survey observations are used to calculate the baseline's 'certified distances' <a href= "{% url 'calibrationguide:read_manual' manual_name='edmi_calibration_manual.html' %}#EDMI-Chapter2_2" target="_blank" onclick="return showAddPopup(this);"> &#x1F6C8</a> and the pillar offsets from the first pillar to last pillar alignment <a href= "{% url 'calibrationguide:read_manual' manual_name='edmi_calibration_manual.html' %}#EDMI-Chapter2_5" target="_blank" onclick="return showAddPopup(this);"> &#x1F6C8</a>.
                     <br>Please select/deselect the observations in the following table to use for the alignment and/or distance calculations.</p>
@@ -79,12 +79,8 @@
             </div>
             <div class="button-container">
                 <button type="button" onclick="window.location.href='{% url 'baseline_calibration:calibrate1' id=id %}'" class="submit-button bg-green-500 hover:bg-green-400">Back</button>
-                    {% if pillar_survey.variance is not null %}
-                        <button type="button" onclick="window.location.href='{% url 'baseline_calibration:calibration_home' %}'" class="cancelbtn bg-red-500 hover:bg-red-300">Cancel</button>
-                    {% else %}
-                        <button type="button" onclick="window.location.href='{% url 'baseline_calibration:pillar_survey_del' id=pillar_survey.pk %}'" class="cancelbtn bg-red-500 hover:bg-red-300">Cancel</button>
-                    {% endif %}
-                    <button type="button" class="submit-button bg-green-500 hover:bg-green-400" onclick="submit_it()">Next</button>
+                <button type="button" onclick="window.location.href='{% url 'baseline_calibration:calibration_home' %}'" class="cancelbtn bg-red-500 hover:bg-red-300">Cancel</button>
+                <button type="button" class="submit-button bg-green-500 hover:bg-green-400" onclick="submit_it()">Next</button>
             </div>
         </form>
         <div class="loader" id="loading-icon" style="display:none;"></div>

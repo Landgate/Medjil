@@ -45,12 +45,12 @@ from geodepy.geodesy import grid2geo, rho
 
 
 def db_std_units(orig_val, orig_unit):
-    # function converts all values to scalar, m, Hz, °C or hPa
-    orig_val = float(orig_val)
-    new_val = orig_val
-    new_unit = orig_unit
-    
+    # function converts all values to scalar, m, Hz, °C or hPa    
     if orig_val:
+        orig_val = float(orig_val)
+        new_val = orig_val
+        new_unit = orig_unit
+
         if orig_unit == 'ppm': new_val = round(orig_val / 1e6, 20)
         if orig_unit == '%': new_val = orig_val / 100
         if orig_unit == 'nm': new_val = round(orig_val / 1e9, 20)
@@ -73,8 +73,10 @@ def db_std_units(orig_val, orig_unit):
             new_unit = 'a.x'
         if any([orig_unit == 'inHg', orig_unit == 'mmHg']):
             new_unit = 'hPa'
-
-    return new_val, new_unit
+        
+        return new_val, new_unit
+    else:
+        return orig_val, orig_unit
 
 
 def convert_headings(raw_headings):
