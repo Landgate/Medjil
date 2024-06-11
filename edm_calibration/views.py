@@ -262,6 +262,7 @@ def calibrate2(request,id):
         # Update the 'use_for_distance' and recheck errors
         if edm_obs_formset.is_valid():
             edm_obs_formset.save()
+            ps_approvals = PillarSurveyApprovals(instance=ps_qs)
             for form in edm_obs_formset:
                 frm =form.cleaned_data
                 raw_edm_obs[str(frm['id'].pk)]['use_for_distance']=frm['use_for_distance']
