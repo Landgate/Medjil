@@ -180,9 +180,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'assets'),]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-static_dir = settings.STATIC_URL
-UPLOAD_ROOT = os.path.abspath('/mnt/EFS')
-UPLOAD_URL = '/uploads/'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
