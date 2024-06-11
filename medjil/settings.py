@@ -130,6 +130,8 @@ TEMPLATES = [
 WSGI_APPLICATION = 'medjil.wsgi.application'
 OTP_TOTP_ISSUER = "Medjil - Survey Instrument Calibration"    # addition
 
+CORS_ALLOW_HEADERS = "access-control-allow-origin" # new addition
+
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
