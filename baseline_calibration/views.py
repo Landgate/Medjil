@@ -27,7 +27,6 @@ from django.template.loader import render_to_string
 from math import sqrt
 from statistics import mean
 import numpy as np
-import time
 
 from .forms import (
     PillarSurveyForm,
@@ -254,7 +253,6 @@ def calibrate1(request, id):
 
 @login_required(login_url="/accounts/login") 
 def calibrate2(request,id):
-    print(time.ctime(time.time()))
     # If this is a get request:
     #     select or deselect the edm observations for the calibration and offset
     # If this is a post request: and edm_obs_formset.is_valid

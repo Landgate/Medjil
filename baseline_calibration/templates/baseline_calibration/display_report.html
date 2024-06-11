@@ -24,110 +24,107 @@
 {{ html_report|safe }}
 <article class="post">
     <div class="post-content">
-	    <form class="approvals-form site-form" method="post" enctype="multipart/form-data">
+            <form class="approvals-form site-form" method="post" enctype="multipart/form-data">
         {% csrf_token %}   
-        <div class="text-center">
-            <h2>Approvals</h2>
-            <div class="flexbox-item_800_IB flexbox-item-left_IB">
-                <table>
-                    <colgroup>
-                        <col span="1" width="15%">
-                        <col span="1" width="22%">
-                        <col span="1" width="6%">
-                        <col span="1" width="15%">
-                        <col span="1" width="22%">
-                    </colgroup>
-                    <tr>
-                        <td>Data entry by:</td>
-                        <td>{{ ps_approvals.data_entered_person}}</td>
-                        <td style="border:none:"></td>
-                        <td>Data checked by:</td>
-                        <td>{{ ps_approvals.data_checked_person}}</td>
-                    </tr>
+                <div class="text-center">
+                    <h2>Approvals</h2>
+                    <div class="flexbox-item_800_IB flexbox-item-left_IB">
+                        <table>
+                            <colgroup>
+                                <col span="1" width="15%">
+                                    <col span="1" width="22%">
+                                        <col span="1" width="6%">
+                                            <col span="1" width="15%">
+                                                <col span="1" width="22%">
+                            </colgroup>
+                            <tr>
+                                <td>Data entry by:</td>
+                                <td>{{ ps_approvals.data_entered_person}}</td>
+                                <td style="border:none:"></td>
+                                <td>Data checked by:</td>
+                                <td>{{ ps_approvals.data_checked_person}}</td>
+                            </tr>
                     {% if ps_approvals.data_entered_person.errors or ps_approvals.data_checked_person.errors  %}                        
-                        <tr>
-                            <td></td>
-                            <td>
+                            <tr>
+                                <td></td>
+                                <td>
                             {% for error in ps_approvals.data_entered_person.errors %}
-                                <p class="error error-danger">{{ error }}</p>
+                                    <p class="error error-danger">{{ error }}</p>
                             {% endfor %}
-                            </td>
-                            <td></td>
-                            <td>
+                                </td>
+                                <td></td>
+                                <td>
                             {% for error in ps_approvals.data_checked_person.errors %}
-                                <p class="error error-danger">{{ error }}</p>
+                                    <p class="error error-danger">{{ error }}</p>
                             {% endfor %}
-                            </td>
-                        </tr>
+                                </td>
+                            </tr>
                     {% endif %}                        
-                    <tr>
-                        <td>Position:</td>
-                        <td>{{ ps_approvals.data_entered_position}}</td>
-                        <td style="border:none:"></td>
-                        <td>Position:</td>
-                        <td>{{ ps_approvals.data_checked_position}}</td>
-                    </tr>
+                            <tr>
+                                <td>Position:</td>
+                                <td>{{ ps_approvals.data_entered_position}}</td>
+                                <td style="border:none:"></td>
+                                <td>Position:</td>
+                                <td>{{ ps_approvals.data_checked_position}}</td>
+                            </tr>
                     {% if ps_approvals.data_entered_position.errors or ps_approvals.data_checked_position.errors  %}
-                        <tr>
-                            <td></td>
-                            <td>
+                            <tr>
+                                <td></td>
+                                <td>
                             {% for error in ps_approvals.data_entered_position.errors %}
-                                <p class="error error-danger">{{ error }}</p>
+                                    <p class="error error-danger">{{ error }}</p>
                             {% endfor %}
-                            </td>
-                            <td></td>
-                            <td>
+                                </td>
+                                <td></td>
+                                <td>
                             {% for error in ps_approvals.data_checked_position.errors %}
-                                <p class="error error-danger">{{ error }}</p>
+                                    <p class="error error-danger">{{ error }}</p>
                             {% endfor %}
-                            </td>
-                        </tr>
+                                </td>
+                            </tr>
                     {% endif %}
-                    <tr>
-                        <td>Signature:</td>
-                        <td> <input id='Signiturebox1' type='text' style="background:none;" readonly></td>
-                        <td style="border:none:"></td>
-                        <td>Signature:</td>
-                        <td> <input id='Signiturebox2' type='text' style="background:none;" readonly></td>
-                    </tr>
-                    <tr>
-                        <td>Date:</td>
-                        <td>{{ ps_approvals.data_entered_date}}</td>
-                        <td style="border:none:"></td>
-                        <td>Date:</td>
-                        <td>{{ ps_approvals.data_checked_date}}</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-        <div class="button-container">
-            <div class="flexbox-item_800_IB flexbox-item-button_IB">
-                {% if pillar_survey %}
-                    <button type="button" onclick="window.location.href='{% url 'baseline_calibration:calibrate2' id=pillar_survey.pk %}'" class="submit-button bg-green-500 hover:bg-green-400">Back</button>
-                    {% if pillar_survey.variance is not null %}
+                            <tr>
+                                <td>Signature:</td>
+                                <td>
+                                    <input id='Signiturebox1' type='text' style="background:none;" readonly>
+                                </td>
+                                <td style="border:none:"></td>
+                                <td>Signature:</td>
+                                <td>
+                                    <input id='Signiturebox2' type='text' style="background:none;" readonly>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Date:</td>
+                                <td>{{ ps_approvals.data_entered_date}}</td>
+                                <td style="border:none:"></td>
+                                <td>Date:</td>
+                                <td>{{ ps_approvals.data_checked_date}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="button-container">
+                        <div class="flexbox-item_800_IB flexbox-item-button_IB">
+                        {% if pillar_survey %}
+                            <button type="button" onclick="window.location.href='{% url 'baseline_calibration:calibrate2' id=pillar_survey.pk %}'" class="submit-button bg-green-500 hover:bg-green-400">Back</button>
+                        {% endif %}
                         <button type="button" onclick="window.location.href='{% url 'baseline_calibration:calibration_home' %}'" class="cancelbtn bg-red-500 hover:bg-red-300">Cancel</button>
-                    {% else %}
-                        <button type="button" onclick="window.location.href='{% url 'baseline_calibration:pillar_survey_del' id=pillar_survey.pk %}'" class="cancelbtn bg-red-500 hover:bg-red-300">Cancel</button>
-                    {% endif %}
-                {% else %}
-                    <button type="button" onclick="window.location.href='{% url 'baseline_calibration:calibration_home' %}'" class="cancelbtn bg-red-500 hover:bg-red-300">Cancel</button>
-                {% endif %}
-                <button type="submit" class="submit-button bg-green-500 hover:bg-green-400" >Save</button>
-            </div>
-        </div>
-        <div style="display:None;">
-            {% for form in hidden %}
-                {{ form.management_form }}
-                {% for field in form %}
-                    <p>{{ field }}</p>
-                    {% for error in field.errors %}
+                        <button type="submit" class="submit-button bg-green-500 hover:bg-green-400" >Save</button>
+                        </div>
+                    </div>
+                    <div style="display:None;">
+                {% for form in hidden %}
+                    {{ form.management_form }}
+                    {% for field in form %}
+                        <p>{{ field }}</p>
+                        {% for error in field.errors %}
                         <p style="color:Red;">{{ error }}</p>
+                        {% endfor %}
                     {% endfor %}
                 {% endfor %}
-            {% endfor %}
-        </div>
-    </form>
-    </div>
+                    </div>
+                </div>
+            </form>
 </article>
 <script>
 // Function to update the date input with today's date
