@@ -189,7 +189,7 @@ def user_signup(request):
         form2 = CompanyForm(data = request.POST)
         
         # if company is Others, both forms must validate
-        # if company is not Others only form2 does not need to validate
+        # if company is not Others, form2 does not need to validate
         if ((form.is_valid() and request.POST['company']!='1')
             or (form.is_valid() and form2.is_valid())
             ):

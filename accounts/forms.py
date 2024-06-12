@@ -71,15 +71,30 @@ class SignupForm(UserCreationForm):
         return user
 
 class CustomUserChangeForm(ModelForm):
-    # password = ReadOnlyPasswordHashField()
+   
+    csk = forms.CharField(
+        required=False,
+        label='Company Secret Key')
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['company'].queryset = Company.objects.exclude(
+            company_name='Others')
+        
     class Meta:
         model = CustomUser
         fields = ['email', 'company']
 
-    # def clean_password(self):
-    #     return self.initial["password"]
-
+    def clean_csk(self):
+        company = self.cleaned_data.get('company')
+        csk = self.cleaned_data.get('csk')
+        
+        if Company.company_name != "Others":
+            if not Company.objects.filter(id=company.id, company_secret_key=csk).exists():
+                raise forms.ValidationError("The Company Secret Key is incorrect. Existing users from this company with Medjil login's have access to this key.")
+        return csk
+    
+    
 class LoginForm(forms.ModelForm):
     '''
     Form for logging users
