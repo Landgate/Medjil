@@ -353,6 +353,8 @@ def calibrate(request):
 ######################### PRINT REPORT ########################################
 ###############################################################################
 from django_xhtml2pdf.utils import generate_pdf
+# from django.utils.path import join 
+import os
 @login_required(login_url="/accounts/login")
 def print_report(request, id):
     resp = HttpResponse(content_type='application/pdf')
@@ -401,9 +403,14 @@ def print_report(request, id):
         result = generate_pdf('staffcalibration/pdf_staff_report.html', file_object=resp, context=context)
         return result
     else:
-        filepath = thisRecord.calibration_report.path
-        result = FileResponse(open(filepath, 'rb'), content_type='application/pdf')
-        return result
+        # filepath = thisRecord.calibration_report.path
+        # result = FileResponse(open(filepath, 'rb'), content_type='application/pdf')
+        # return result
+                
+        filepath = os.path.join(settings.MEDIA_ROOT, thisRecord.calibration_report.path)          
+        result = FileResponse(open(filepath, 'rb'), content_type='application/pdf')  
+        
+        return result 
 ###############################################################################
 ######################### DELETE RECORD #######################################
 ###############################################################################

@@ -63,9 +63,11 @@
                             <li class="sub-item">
                                 <a href="{% url 'accounts:user_account'%}"> <i class="fa-solid fa-users-gear"></i> <span class="pxl-2">User Profile</span></a>
                             </li>
+                            {% if user.is_staff %}
                             <li class="sub-item">
                                 <a href="{% url 'instruments:inst_settings' %}"> <i class="fa-solid fa-gear"></i> <span class="pxl-2">Settings</span></a>
                             </li>
+                            {% endif %}  
                             <li class="sub-item">
                                 <a href="{% url 'accounts:logout'%}"><i class="fa-solid fa-right-from-bracket"></i> <span class="pxl-2">Logout</span></a>
                             </li>
