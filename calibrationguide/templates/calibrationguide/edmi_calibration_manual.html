@@ -917,7 +917,7 @@
                   <h4>5.2.1 Automatically populated uncertainty sources</h4>
                   <p>
                      Medjil automatically populates the uncertainty sources (Table 5.1 and Table 5.2) when processing
-                     the calibration of EDM baselines and EDM Instrumentation.
+                     the calibration of EDM Baselines and EDM Instrumentation.
                   </p>
                   <br>Table 5.1: Medjil uncertainty budget for calibration of EDM Baseline</br>
                   <img src="{% static 'images/CalibrationGuides/edmi/Picture_4_2.png' %}"
@@ -927,57 +927,43 @@
                   <img src="{% static 'images/CalibrationGuides/edmi/Picture_4_3.png' %}"
                      alt="Medjil uncertainty budget for calibration of EDM Instrumentation">
                   <br>
-                  <p>The values for these automatically populated uncertainty sources are derived as follows:</p>
+                  <p>The automatically populated uncertainty sources are defined as follows:</p>
 
                   <ul>
                      <li>Certified distances - Least Squares Adjustment (LSA) uncertainty - The uncertainty of each
-                        inter-pillar distance is uniquely assigned from the diagonal elements of the CoFactorMatrix
-                        derived
-                        from the least squares adjustment of the baseline calibration. The degrees of freedom is the
-                        equal
-                        to the degrees of freedom of the calibration of the baseline and the coverage factor is derived
-                        from
-                        t-student distribution at 95% and selected degrees of freedom t<sub>(95%,dof)</sub>
+                        inter-pillar distance is uniquely assigned from the diagonal elements of the variance-covariance matrix
+                        derived from the least squares adjustment of the baseline calibration. The degrees of freedom is
+                        equal to the degrees of freedom of the calibration of the baseline and the coverage factor is derived
+                        from t-student distribution at 95% and selected degrees of freedom t<sub>(95%,dof)</sub>
                      </li>
                      <li>EDM LS zero offset - Zero Point Correction (ZPC) uncertainty - The uncertainty of the zero
-                        point
-                        correction is assigned from last element of the CoFactorMatrix derived from the least squares
-                        adjustment of the baseline calibration. The degrees of freedom is the equal to the degrees of
+                        point correction is assigned from last element of the variance-covariance matrix derived from the least squares
+                        adjustment of the baseline calibration. The degrees of freedom is equal to the degrees of
                         freedom of the calibration of the baseline and the coverage factor is the t-student at 95% and
                         selected degrees of freedom (t<sub>(95%,dof)</sub>)</li>
                      <li>EDM scale factor - EDMI Reg13 Scale correction factor - The uncertainty, degrees of freedom and
                         coverage factor is assigned from the values specified in the register of calibration
-                        certificates of
-                        EDM instrument (EDMI). The selected values correspond to the most current certificate (at the
-                        time
-                        of survey) of the EDMI used for the calibration of the EDM Baseline</li>
+                        certificates of EDM instrument (EDMI). The selected values correspond to the most current certificate (at the
+                        time of survey) of the EDMI used for the calibration of the EDM Baseline</li>
                      <li>EDM scale factor - EDM scale factor (drift over time) - The uncertainty is derived using linear
                         regression of the scale factors from all available calibration certificates of the same EDM
-                        Baseline
-                        (certified distances). The scale factor is extrapolated at the time of calibration survey and
-                        the
-                        difference between this value and the last computed value (as per the most current certificate)
-                        is
-                        adopted as the uncertainty. This uncertainty source is assigned 30 degrees of freedom and a
-                        coverage
-                        factor of √3</li>
+                        Baseline (certified distances). The scale factor is extrapolated at the time of calibration survey and
+                        the difference between this value and the last computed value (as per the most current certificate)
+                        is adopted as the uncertainty. This uncertainty source is assigned 30 degrees of freedom and a
+                        coverage factor of √3</li>
                      <li>EDMI measurement - Distance Instrument Rounding - The uncertainty is equivalent to half of the
                         instrument measurement increment reading. This uncertainty source is assigned 100 degrees of
-                        freedom
-                        and a coverage factor of √3.</li>
+                        freedom and a coverage factor of √3.</li>
                      <li>EDMI measurement - Linear regression on EDM distance standard deviations - Table 5.3 shows an
                         example of a typical subset of EDMI measurements observed on a EDM Baseline. Measurements with
-                        the
-                        same ‘From’ and ‘To’ pillar are grouped into sets, then average and standard deviations of these
+                        the same ‘From’ and ‘To’ pillar are grouped into sets, then average and standard deviations of these
                         sets are tabulated. The ‘Std Dev Used when statistically zero’ field value defined in the
                         specified
                         Uncertainty Budget of the calibration can be used to exclude and overwrite experimental standard
                         deviations of measurement sets that have all the same values (eg. experimental standard
-                        deviations
-                        equal to zero).
+                        deviations equal to zero).
                         <br>Linear regression is used on the average ‘slope distance’ and ‘standard deviation’ to derive
-                        a
-                        formula for the experimental standard deviation of EDMI measurements in the calibration:
+                        a formula for the experimental standard deviation of EDMI measurements in the calibration:
                         s<sub>B</sub> = P mm + Q ppm. Where s<sub>B</sub> is the standard deviation of a baseline
                         interval.
                         <br>Uncertainties are uniquely assigned to each measurement set as calculated from the derived
