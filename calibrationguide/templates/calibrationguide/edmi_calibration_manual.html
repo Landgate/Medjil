@@ -271,26 +271,19 @@
                </ul>
                <br>
                <p>Each EDM Baseline design aims to achieve an equal distribution of measured distances between the
-                  shortest and
-                  longest lines without any repetitions. They also allow EDMI calibration, with or without known
-                  distances
-                  (certified baseline distances), except for the Hobart design, which requires the distances to be known
+                  shortest and longest lines without any repetitions. They also allow EDMI calibration, with or without known
+                  distances (certified baseline distances), except for the Hobart design, which requires the distances to be known
                   beforehand. Most EDM baseline designs aim to accommodate a variety of EDM instrument unit lengths. A
                   detailed explanation of baseline design concepts is beyond the scope of this manual. For comprehensive
                   information on baseline design, please refer to the book 'Electronic Distance Measurement' by J.M.
                   Rüeger.
                </p>
                <p>The current version of Medjil requires baseline distances to be known for all types of baselines to
-                  perform
-                  EDMI calibration. This approach is crucial for ensuring distance traceability to the national
-                  standard.
-                  Therefore, EDM Baselines must first be calibrated using NMI-certified instrument to determine the
-                  certified
-                  distances before proceeding with EDMI calibration. An additional module could potentially be developed
-                  to
-                  enable EDMI calibration without known distances. However, it is important to note that such
-                  calibrations
-                  cannot be certified under the NMI Act, and the EDMI distances obtained in this manner are not legally
+                  perform EDMI calibration. This approach is crucial for ensuring distance traceability to the national
+                  standard. Therefore, EDM Baselines must first be calibrated using NMI-certified instrument to determine the
+                  certified distances before proceeding with EDMI calibration. An additional module could potentially be developed
+                  to enable EDMI calibration without known distances. However, it is important to note that such
+                  calibrations cannot be certified under the NMI Act, and the EDMI distances obtained in this manner are not legally
                   traceable to the national standard. For Medjil development and contribution, please refer to the <a
                      href="https://github.com/Landgate/Medjil">GitHub</a>repository.</p>
             </div>
@@ -298,8 +291,7 @@
             <div id="EDMI-Chapter2_2">
                <h3>2.2 Mathematical model and observation equations for the calibration of EDM Baseline</h3>
                <p>Deriving two observation equations not only ensures that distances remain non-negative but also
-                  enhances the
-                  flexibility of the EDM Baseline survey:</p>
+                  enhances the flexibility of the EDM Baseline survey:</p>
                <div>$$ D_{ij}=x_j-x_i-zpc\ \ \ for\ j > i\ \ \ (Eq. 2.1)$$ </div>
                <div>$$ D_{ij}=x_i-x_j-zpc\ \ \ for\ j < i\ \ \ (Eq. 2.2)$$ </div>
                <p>Where:</p>
@@ -363,8 +355,7 @@
                   the propagation of uncertainty as well as the optional applying of atmospheric corrections when no
                   correction was applied by the instrument during the survey.</p>
                <p>It is recommended each distance (bay) d<sub>ij</sub> (where i = from_pillar; j = to_pillar) should
-                  be
-                  measured four times. However, Medjil allows the number of repeat measurements to vary between bays
+                  be measured four times. However, Medjil allows the number of repeat measurements to vary between bays
                   and between surveys. The pillar survey data is to be provided in an ASCII file and must contain the
                   following fields:</p>
                <ul>
@@ -392,22 +383,18 @@
             <div id="EDMI-Chapter2_5">
                <h3>2.5 Pillar offsets survey</h3>
                <p>The pillar offset survey determines the offset of each pillar from the alignment of the first (1)
-                  and
-                  last pillar (n). Medjil performs the required reduction of observations during the EDM Baseline
+                  and last pillar (n). Medjil performs the required reduction of observations during the EDM Baseline
                   calibration process. Distances observed from every pillar of the baseline can be included in the
-                  calculation of the pillar offset if the survey setup includes measurements to pillar 1 and pillar
-                  n.
+                  calculation of the pillar offset if the survey setup includes measurements to pillar 1 and pillar n.
                </p>
                <img src="{% static 'images/CalibrationGuides/edmi/Picture_1_2.png' %}" alt="Pillar Offsets">
 							 <br>               
                <p>For each pillar setup, an arbitrary set of coordinates (E<sub>j</sub>, N<sub>j</sub>) are
-                  calculated
-                  for all pillars observed according to the formula:</p>
+                  calculated for all pillars observed according to the formula:</p>
                <div>$$\left[E_j,N_j\right]=\ Polar2Reclangular\left(Hz_{ij},d_{ij}\right)\ \ \ (Eq. 2.5)$$ </div>
                <p>Where:</p>
                <p>&emsp;&emsp;d<sub>ij</sub> = horizontal distance (in metres) corrected for calibration parameters
-                  and
-                  atmospheric corrections between pillars i and j</p>
+                  and atmospheric corrections between pillars i and j</p>
                <p>&emsp;&emsp;Hz<sub>ij</sub> = angular direction observed at pillar i to pillar j</p>
                <p>&emsp;&emsp;[E<sub>j</sub>,N<sub>j</sub>] = set of arbitrary coordinates (Easting and Northing) of
                   pillar j</p>
@@ -421,8 +408,7 @@
                </p>
                <p>As the instrument moves between pillars, pillar 1 and pillar n are observed in each setup. This
                   allows the orientation of all setups in the survey and computation of an offset for each pillar
-                  from
-                  every pillar setup that included observations to pillar 1 and pillar n. Medjil computes the average
+                  from every pillar setup that included observations to pillar 1 and pillar n. Medjil computes the average
                   pillar offset and standard deviation redundancy of observations measured from multiple pillars.
                   These are used for a-priori estimation of uncertainties and the reduction of EDM measured distances
                   to the reference alignment and height. Table 5.4 demonstrates an example set of pillar offsets.</p>
@@ -450,17 +436,14 @@
                <h3>3.1 Systematic errors in EDM instruments</h3>
                <p>
                   There are three distinct systematic errors which may occur in EDM instruments. The calibration of
-                  an
-                  instrument on a certified baseline allows to determine the specific instrument - prism correction
-                  that
-                  can eliminate of the following errors:
+                  an instrument on a certified baseline allows to determine the specific instrument - prism correction
+                  that can eliminate of the following errors:
                </p>
 
                <div id="EDMI-Chapter3_1_1">
                   <h4>3.1.1 Zero Point Correction (zpc)</h4>
                   <p>All distances measured by a particular EDM instrument and reflector combination (EDMI) are
-                     subject to a
-                     constant error caused by the following factors:
+                     subject to a constant error caused by the following factors:
                   <ul>
                      <li>Electrical delays, geometrical detours and eccentricities in the instruments</li>
                      <li>Differences between the electronic centre and the mechanical centre of the instrument</li>
@@ -469,8 +452,7 @@
                   </p>
                   <p>
                      This errors may vary with changes of reflector, or after jolts, or with different instrument
-                     mountings.
-                     Zpc is an algebraic constant applied directly to every measurement.
+                     mountings. Zpc is an algebraic constant applied directly to every measurement.
                   <p>
                </div>
 
@@ -588,20 +570,15 @@
             <div id="EDMI-Chapter4_1">
                <h3>4.1 Calibration Correction</h3>
                <p>Medjil maintains an instrument register that catalogues all instruments used for calibrations.
-                  Instrument
-                  register belongs to an individual company. The registry includes the archive of calibration
-                  certificates
-                  for EDMI, Barometer, Thermometer and Hygrometer. If calibration corrections have not been applied
-                  to
-                  instrument readings, Medjil allows calibration corrections to be applied to the raw readings during
-                  the
-                  Medjil calibration.</p>
+                  Instrument register belongs to an individual company. The registry includes the archive of calibration
+                  certificates for EDMI, Barometer, Thermometer and Hygrometer. If calibration corrections have not been applied
+                  to instrument readings, Medjil allows calibration corrections to be applied to the raw readings during
+                  the Medjil calibration.</p>
 
                <div id="EDMI-Chapter4_1_1">
                   <h4>4.1.1 Meteorological instrumentation corrections</h4>
                   <p>All meteorological instruments (thermometer, barometer, hygrometer) corrections apply as zero
-                     point
-                     correction (zpc) to the EDMI readings (distance)</p>
+                     point correction (zpc) to the EDMI readings (distance)</p>
                   <div>c<sub>M</sub> = zpc</div>
                </div>
 
@@ -694,20 +671,15 @@
                <div id="EDMI-Chapter4_2_3">
                   <h4>4.2.3 Group refractive Index of light in the atmosphere</h4>
                   <p>In electro-optical EDM, the refractive index is dependent on the wavelength of the visible or
-                     infrared
-                     radiation. Different frequencies have the same propagation velocity in a vacuum, but not in air
-                     because
-                     of the interference occurrence between the different frequencies. The signal resulting from the
-                     sum of
-                     all frequencies will have the so-called group velocity, which is always smaller than the phase
+                     infrared radiation. Different frequencies have the same propagation velocity in a vacuum, but not in air
+                     because of the interference occurrence between the different frequencies. The signal resulting from the
+                     sum of all frequencies will have the so-called group velocity, which is always smaller than the phase
                      velocities of its individual frequencies.</p>
                   <p>Resolution 3 from the International Association of Geodesy (IAG) in 1999 at its XXIIth General
-                     Assembly
-                     in Birmingham, made the following recommendations.</p>
+                     Assembly in Birmingham, made the following recommendations.</p>
                   <ol>
                      <li>Subparagraphs (a) and (b) of Resolution No. 1 of the 13th General Assembly of IUGG (Berkeley
-                        1963)
-                        be cancelled</li>
+                        1963) be cancelled</li>
                      <li>The group refractive index in air for electronic distance measurement to better than one
                         part per
                         million (ppm) with visible and near-infrared waves in the atmosphere be computed using the
@@ -746,24 +718,18 @@
                   <div>
                      $$ N_G=\left(n_G-1\right)\mathrm{\mathrm{1}}\mathrm{0}^6\ =\mathrm{\mathrm{\ \ 2}87.6155\
                      }+\left(\frac{4.88660}{\lambda^2}\right)+\ \left(\frac{\mathrm{0.06800}}{\lambda^4}\right)\ \ \
-                     \ (Eq.
-                     4.7)$$
+                     \ (Eq. 4.7)$$
                   </div>
                   <p>Where:</p>
                   <p>&emsp;&emsp;&#955 = carrier wavelength in micrometres (&#956;m) in a vacuum
                   <p>These closed formulae (Eq. 4.6 and 4.7) deviate less than 0.25 ppm from the accurate formulae
-                     between -30
-                     C and +45 C, at 1000 hPa pressure, 100% relative humidity (without condensation) and for
-                     wavelengths
-                     between 650 nm and 850 nm.
+                     between -30 C and +45 C, at 1000 hPa pressure, 100% relative humidity (without condensation) and for
+                     wavelengths between 650 nm and 850 nm.
                      The 1.0 ppm stated in recommendation 3 of resolution 3 makes some allowance for anomalous
-                     refractivity
-                     and the uncertainty in the determination of the atmospheric parameters.</p>
+                     refractivity and the uncertainty in the determination of the atmospheric parameters.</p>
                   <p>Recommendation 2 and 3 have been applied in the Medjil software where atmospheric corrections
-                     have not
-                     been applied to the uploaded EDM observation data. The formulae for recommendation 2 are used
-                     for
-                     calibrating a baseline. The formulae for recommendation 3 are used for calibrating EDM
+                     have not been applied to the uploaded EDM observation data. The formulae for recommendation 2 are used
+                     for calibrating a baseline. The formulae for recommendation 3 are used for calibrating EDM
                      Instrumentation.
                   </p>
                </div>
@@ -849,17 +815,12 @@
                </p>
                <p>&emsp;&emsp;R = Mean radius of curvature of the Earth at the baseline location.</p>
                <p>The geometric correction equations 4.8 and 4.9 were derived from The Australian Geodetic Datum
-                  Technical
-                  Manual, National Mapping Council of Australia, Special Publication 10 and are suitable for
-                  baselines
-                  with steep gradients.</p>
+                  Technical Manual, National Mapping Council of Australia, Special Publication 10 and are suitable for
+                  baselines with steep gradients.</p>
                <p>Medjil uses the GRS80 spheroid for determining the mean radius of the earth (R) used in the
-                  calculation
-                  of the geometric correction. Medjil requires UTM coordinates to be specified for all EDMI
-                  calibration
-                  pillars. These coordinates are used along with the following formula to determine R for each
-                  geometric
-                  correction. (GDA2020 technical manual pp. 47)</p>
+                  calculation of the geometric correction. Medjil requires UTM coordinates to be specified for all EDMI
+                  calibration pillars. These coordinates are used along with the following formula to determine R for each
+                  geometric correction (GDA2020 technical manual pp. 47).</p>
                <div>$$ \mathrm{R\ }=\ \sqrt{pv}\ \ \ (Eq. 4.10) $$</div>
                <div>$$ \mathrm{p\ }=\ \frac{a\left(1-e^2\right)}{(1-e^2{sin}^2{Q})^{3/2}}\ \ \ (Eq. 4.11) $$</div>
                <div>$$ \mathrm{v\ }=\ \frac{a}{\sqrt{\left(1-e^2{sin}^2{Q}\right)}}\ \ \ (Eq. 4.12) $$</div>
@@ -931,13 +892,13 @@
 
                   <ul>
                      <li>Certified distances - Least Squares Adjustment (LSA) uncertainty - The uncertainty of each
-                        inter-pillar distance is uniquely assigned from the diagonal elements of the variance-covariance matrix
+                        inter-pillar distance is uniquely assigned from the diagonal elements of the CoFactorMatrix
                         derived from the least squares adjustment of the baseline calibration. The degrees of freedom is
                         equal to the degrees of freedom of the calibration of the baseline and the coverage factor is derived
                         from t-student distribution at 95% and selected degrees of freedom t<sub>(95%,dof)</sub>
                      </li>
                      <li>EDM LS zero offset - Zero Point Correction (ZPC) uncertainty - The uncertainty of the zero
-                        point correction is assigned from last element of the variance-covariance matrix derived from the least squares
+                        point correction is assigned from last element of the vCoFactorMatrix derived from the least squares
                         adjustment of the baseline calibration. The degrees of freedom is equal to the degrees of
                         freedom of the calibration of the baseline and the coverage factor is the t-student at 95% and
                         selected degrees of freedom (t<sub>(95%,dof)</sub>)</li>
@@ -970,16 +931,14 @@
                         linear regression equation. This uncertainty source is assigned 30 degrees of freedom and the
                         coverage factor is the t-student at 95% and 30 degrees of freedom t<sub>(95%,30)</sub>
                      </li>
-                     <li>Heights - Height Differences - During the ‘Calibrate an EDM Baseline’ process, a *.csv file is
+                     <li>Heights - Height differences - During the Calibrate an EDM Baseline process, a *.csv file is
                         required to upload the standard uncertainty (standard deviation) of the heights of each pillar.
                         These uncertainties are used to derive the uncertainty of the height differences according to
                         the equation 5.6.
                         <div>$$ {uc}_{\Delta H}=k\sqrt{\left(H_i^2+H_j^2\right)}\ \ \ (Eq. 5.6) $$</div>
                         <p>Where:</p>
                         <p>&emsp;&emsp;uc<sub>&#916;H</sub> = Expanded uncertainty of the height difference between
-                           pillar i
-                           and
-                           pillar j
+                           pillar i and pillar j
                         <p>&emsp;&emsp;uc<sub>o</sub> = Expanded uncertainty of the offset between pillar i and pillar j
                         </p>
                         <p>&emsp;&emsp;H<sub>i</sub> = Tabulated experimental standard deviation of the ‘From Pillar’
@@ -989,25 +948,18 @@
                         </p>
                      </li>
                      <li>Humidity - Hygrometer calibrated correction factor - Hygrometers used for baseline calibration
-                        surveys must have a calibration that indicates the uncertainty of the readings. Medjil will
+                        surveys must have a calibration certificate that indicates the uncertainty of the readings. Medjil will
                         automatically assign a current hygrometer calibration based on the survey date. The uncertainty,
                         coverage factor and degrees of freedom specified for that hygrometer calibration record will be
-                        used
-                        for the uncertainty ‘Humidity - Hygrometer calibrated correction factor’</li>
-                     <li>Humidity - Hygrometer Rounding - The uncertainty is equivalent to half the measurement
-                        increment
-                        reading of the instrument used for the calibration. This uncertainty source is assigned 100
-                        degrees
-                        of freedom and a coverage factor of √3.</li>
+                        used for the uncertainty ‘Humidity - Hygrometer calibrated correction factor’</li>
+                     <li>Humidity - Hygrometer rounding - The uncertainty is equivalent to half the measurement
+                        increment reading of the instrument used for the calibration. This uncertainty source is assigned 100
+                        degrees of freedom and a coverage factor of √3.</li>
                      <li>Offsets - Offsets - Table 5.4 shows the results of a typical alignment survey. The offset of
-                        each
-                        pillar is surveyed from multiple pillars. The offset results with the same ‘To Pillar’ are
-                        grouped
-                        into sets, then the average and experimental standard deviations of these sets are tabulated.
-                        The
-                        uncertainty of each offset is derived from the standard deviation of the offset measurements at
-                        both
-                        the ‘From Pillar’ and the ‘To Pillar’.
+                        each pillar is surveyed from multiple pillars. The offset results with the same ‘To Pillar’ are
+                        grouped into sets, then the average and experimental standard deviations of these sets are tabulated.
+                        The uncertainty of each offset is derived from the standard deviation of the offset measurements at
+                        both the ‘From Pillar’ and the ‘To Pillar’.
                         <div>$$ {\rm uc}_o=k\sqrt{\left(o_i^2+o_j^2\right)}\ \ \ (Eq. 5.7) $$ </div>
                         <p>Where:</p>
                         <p>&emsp;&emsp;uc<sub>o</sub> = Expanded uncertainty of the offset between pillar i and pillar j
@@ -1022,73 +974,53 @@
                         </p>
                      </li>
                      <li>Pressure - Barometer calibrated correction factor - Barometers used for calibration surveys
-                        must
-                        have a calibration that indicates the uncertainty of the readings. Medjil will automatically
-                        assign
-                        a current barometer calibration based on the survey date. The uncertainty, coverage factor and
+                        must have a calibration certificate that indicates the uncertainty of the readings. Medjil will automatically
+                        assign a current barometer calibration based on the survey date. The uncertainty, coverage factor and
                         degrees of freedom specified for that hygrometer calibration will be used for the uncertainty
                         ‘Pressure - Barometer calibrated correction factor’</li>
-                     <li>Pressure - Barometer Rounding - The uncertainty is equivalent to half the measurement increment
+                     <li>Pressure - Barometer rounding - The uncertainty is equivalent to half the measurement increment
                         reading of the instrument used for the calibration. This uncertainty source is assigned 100
-                        degrees
-                        of freedom and a coverage factor of √3.</li>
+                        degrees of freedom and a coverage factor of √3.</li>
                      <li>Temperature - Thermometer calibrated correction factor - Thermometers used for calibration
-                        surveys
-                        must have a calibration that indicates the uncertainty of the readings. Medjil will
-                        automatically
-                        assign a current thermometer calibration based on the survey date. The uncertainty, coverage
-                        factor
-                        and degrees of freedom specified for that hygrometer calibration will be used for the
-                        uncertainty
-                        ‘Temperature - Thermometer calibrated correction factor’</li>
+                        surveys must have a calibration that indicates the uncertainty of the readings. Medjil will
+                        automatically assign a current thermometer calibration based on the survey date. The uncertainty, coverage
+                        factor and degrees of freedom specified for that hygrometer calibration will be used for the
+                        uncertainty ‘Temperature - Thermometer calibrated correction factor’</li>
                      <li>Temperature - Thermometer Rounding - The uncertainty is equivalent to half the measurement
-                        increment
-                        reading of the instrument used for the calibration. This uncertainty source is assigned 100
-                        degrees
-                        of freedom and a coverage factor of √3.</li>
+                        increment reading of the instrument used for the calibration. This uncertainty source is assigned 100
+                        degrees of freedom and a coverage factor of √3.</li>
                      <li>Certified distances - Uncertainty of Certified Distances - The standard uncertainty of all
                         inter-pillar distances are calculated from the CoFactorMatrix of baseline calibrations. This is
-                        done
-                        by creating a design matrix for every combination of pillars and calculating another
-                        CoFactorMatrix
-                        according to the formula:
+                        done by creating a design matrix for every combination of pillars and calculating another
+                        CoFactorMatrix according to the formula:
                         <div>$$ Q_2=A_2QA_2^T\ \ \ (Eq. 5.8)$$ </div>
                         <p>Where:</p>
                         <p>&emsp;&emsp;Q<sub>2</sub> = The secondary CoFactorMatrix</p>
                         <p>&emsp;&emsp;Q = The CoFactorMatrix from the LSA of calibrating a baseline</p>
-                        <p>&emsp;&emsp;A<sub>2</sub> = A design matrix for every possible combination of from and to
-                           pillars
+                        <p>&emsp;&emsp;A<sub>2</sub> = A design matrix for every possible combination of from and to pillars
                         </p>
                         <p>The standard uncertainties of all inter-pillar distances are equivalent to the square root of
-                           the
-                           diagonals of the secondary CoFactorMatrix. These values are stored for each baseline
+                           the diagonals of the secondary CoFactorMatrix. These values are stored for each baseline
                            calibration.
                            The inter-pillar distance standard uncertainties that correspond to EDMI calibrations are
-                           used to
-                           calculate the ‘Uncertainty of Certified Distances’ according to the formula:</p>
+                           used to calculate the ‘Uncertainty of Certified Distances’ according to the formula:</p>
                         <p>&emsp;&emsp;uc<sub>ij</sub> = k * S<sub>ij</sub></p>
                         <p>Where:</p>
                         <p>&emsp;&emsp;uc<sub>ij</sub> = Expanded uncertainty of a distance between pillar i and pillar
                            j</p>
                         <p>&emsp;&emsp;k = Coverage factor of a baseline calibration determined by the t-student at 95%
-                           and
-                           LSA
-                           derived degree of freedom (dof) t<sub>(95%,dof)</sub>
+                           and LSA derived degree of freedom (dof) t<sub>(95%,dof)</sub>
                         </p>
                         <p>&emsp;&emsp;S<sub>ij</sub> = Standard uncertainty of a distance between pillar i and pillar j
                         </p>
                      </li>
                      <li>
                         EDM Calibration - Uncertainty of LSA EDMI Correction - This is a type A uncertainty output by
-                        the
-                        least squares adjustment used to determine calibration parameters for the calibration of EDM
+                        the least squares adjustment used to determine calibration parameters for the calibration of EDM
                         Instrumentation. The uncertainty of the parameters are equivalent to the diagonal elements of
-                        the
-                        CoFactorMatrix. The ‘Uncertainty of (LSA) EDMI Correction’ is calculated according to the
-                        following
-                        conditions:
-                        <p>(a) if the calibration of the EDMI has tested for cyclic errors and found them to be
-                           significant:
+                        the CoFactorMatrix. The ‘Uncertainty of (LSA) EDMI Correction’ is calculated according to the
+                        following conditions:
+                        <p>(a) if the calibration of the EDMI has tested for cyclic errors and found them to be significant:
                         </p>
                         <div>
                            $$
@@ -1105,16 +1037,14 @@
                         <p>&emsp;&emsp;S<sub>2</sub> = Standard uncertainty of the term 2 - Cyclic (1:x)</p>
                         <p>&emsp;&emsp;S<sub>3</sub> = Standard uncertainty of the term 3 - Cyclic (1:x)</p>
                         <p>&emsp;&emsp;S<sub>4</sub> = Standard uncertainty of the term 4 - Cyclic (1:x)</p>
-                        <p> (b) if the calibration of the EDMI has not tested for cyclic errors, has found them to be
-                           insignificant:</p>
+                        <p> (b) if the calibration of the EDMI has not tested for cyclic errors, has found them to be insignificant:</p>
                         <div>$$ S_{IC}=S_{zpc}+S_{scf}D\ \ \ (Eq. 5.10)$$ </div>
                         <p>The uncertainty is calculated according to the following formula:</p>
                         <div>$$ {uc}_{IC}=k * S_{IC}\ \ \ (Eq. 5.11) $$</div>
                         <p>Where:</p>
                         <p>&emsp;&emsp;u<sub>IC</sub> = Expanded uncertainty of the Instrument Correction</p>
                         <p>&emsp;&emsp;k = Coverage factor determined by the t-student at 95% and LSA derived degree of
-                           freedom
-                           (dof) t<sub>(95%,dof)</sub>
+                           freedom (dof) t<sub>(95%,dof)</sub>
                         </p>
                      </li>
                   </ul>
@@ -1687,41 +1617,30 @@
                <div id="EDMI-Chapter5_2_2">
                   <h4>5.2.2 Custom uncertainty budgets</h4>
                   <p>The Medjil ‘Default’ uncertainty budget is used during the calibration computation, and it
-                     encompasses
-                     typical sources of uncertainty along with their corresponding values. These values are obtained
-                     from the
-                     Instrument Register or are derived from survey data during computation.
+                     encompasses typical sources of uncertainty along with their corresponding values. These values are obtained
+                     from the Instrument Register or are derived from survey data during computation.
                   <p>Medjil also permits the creation of a 'Custom' (company-specific) uncertainty budget that can be
-                     used
-                     instead of the 'Default' sources of uncertainty. This 'Custom' uncertainty budget can be
-                     established by
-                     combining the following three uncertainty sources and values: (a) stored in the 'Instrument
-                     Register'
-                     records, (b) 'Derived' from data during computations, and (c) 'Custom' user defined uncertainty
-                     sources
-                     and values.</p>
+                     used instead of the 'Default' sources of uncertainty. This 'Custom' uncertainty budget can be
+                     established by combining the following three uncertainty sources and values: (a) stored in the 'Instrument
+                     Register' records, (b) 'Derived' from data during computations, and (c) 'Custom' user defined uncertainty
+                     sources and values.</p>
                   <img src="{% static 'images/CalibrationGuides/edmi/Picture_4_1.png' %}"
                      alt="Uncertainty budgets">
                   <p>Where:</p>
                   <p>
-                     <b>Name</b> = Custom uncertainty budget name. Uncertainty budgets are identified by a name that
-                     must be
-                     unique
+                     <b>Name</b> = Custom uncertainty budget name. Uncertainty budgets are identified by a name that must be unique.
                   </p>
                   <p>
                      <b>Company</b> = The owner of the new uncertainty budget. The new budget(s) are accessible to any
-                     user
-                     within that company.
+                     user within that company.
                   </p>
                   <p>
                      <b>Std Dev Used When Statistically Zero</b> = This value is used to overruled (overwrite) any
-                     standard
-                     deviation equal to zero. For example Medjil uses the sample standard deviation of observation sets
+                     standard deviation equal to zero. For example Medjil uses the sample standard deviation of observation sets
                      composed of measurements between the same pillars to calculate an uncertainty of the EDMI
                      measurements.
                      When all measurements in the one observation set are the same or if there is only one measurement
-                     in the
-                     observation set, the sample standard deviation is mathematically zero.
+                     in the observation set, the sample standard deviation is mathematically zero.
                   </p>
                   <p>
                      <b>Type</b> = Definition of uncertainty type. Type A means a statistically derived component or
@@ -1730,24 +1649,18 @@
                   </p>
                   <p>
                      <b>Distribution</b> = Definition of distribution associated with the uncertainty. A normal
-                     distribution
-                     is most associated with continuous univariate distributions such as many random variables.
+                     distribution is most associated with continuous univariate distributions such as many random variables.
                      A rectangular distribution represents an arbitrary outcome that lies between certain bound (equal
                      probability anywhere within the range). For example rounding of a physical quantity or a resolution
-                     of
-                     digital instrument.
+                     of digital instrument.
                   </p>
                   <p>
-                     <b>Uncertainty</b> = The expanded uncertainty at 95% confidence in the units specified for the
-                     uncertainty source.
+                     <b>Uncertainty</b> = The expanded uncertainty at 95% confidence in the units specified for the uncertainty source.
                   </p>
                   <p>
-                     <b>K</b> = The coverage factor used to scale and expand the uncertainty from one standard deviation
-                     (68%
-                     confidence) to 95% confidence level. Typically 2.0 for a normal distribution or sqrt(3) for a
-                     rectangular distribution. Medjil will auto complete this field as the distribution drop-down is
-                     changed
-                     but the user still has the ability to overwrite this field.
+                     <b>K</b> = The coverage factor is used to expand the uncertainty from 68% confidence level to 95% confidence level. 
+                     Typically k=2.0 for a normal distribution or sqrt(3) for a rectangular distribution. Medjil will auto complete this field as the distribution drop-down is
+                     changed but the user still has the ability to overwrite this field.
                   </p>
                   <p>
                      <b>Dof</b> = Degrees of freedom. For a Type A uncertainty this is equal to the number of
@@ -1772,8 +1685,7 @@
                   <p>
                      <b>EDM scale factor</b> = Uncertainty related to the EDM scale factor can be specified in parts per
                      million (ppm), percent (%), scalar(x:1) or a ratio (1:x). All error sources belonging to this group
-                     will
-                     be combined before the contribution to the total uncertainty of the calibration according to the
+                     will be combined before the contribution to the total uncertainty of the calibration according to the
                      following formula:
                   </p>
                   <div>$$ su_d = D*csu_g\ \ \ (Eq. 5.12)$$ </div>
@@ -1782,16 +1694,12 @@
                   <p>&emsp;&emsp;D = Distance</p>
                   <p>&emsp;&emsp;csu<sub>g</sub> = Combined standard uncertainty of the group</p>
                   <p>The 'Default' Uncertainty Budget lists an error source with the description 'EDM scale factor
-                     affected by
-                     Temp (Type B)'. The EDM scale factor can be affected by temperature. This uncertainty component is
-                     a
-                     Type B estimate based on previous knowledge.</p>
+                     affected by Temp (Type B)'. The EDM scale factor can be affected by temperature. This uncertainty component is
+                     a Type B estimate based on prior knowledge and experience.</p>
                   <p>
                      <b>EDMI measurement</b> = Uncertainty relating to the EDMI measurement can be specified in metres
-                     (m),
-                     millimetres (mm), parts per million (ppm), percent (%), scalar(x:1) or a ratio (1:x). All error
-                     sources
-                     belonging to this group will be combined before the contribution to the total uncertainty of the
+                     (m), millimetres (mm), parts per million (ppm), percent (%), scalar(x:1) or a ratio (1:x). All error
+                     sources belonging to this group will be combined before the contribution to the total uncertainty of the
                      calibration according to the following formula:
                   </p>
                   <div>$$ su_d = csu_g\ \ \ (Eq. 5.13)$$ </div>
@@ -1807,8 +1715,7 @@
                   </p>
                   <p>
                      <b>Temperature</b> = Uncertainty related to the temperature can be specified in degrees Celsius
-                     (°C) or
-                     degrees Fahrenheit (°F). All error sources belonging to this group will be combined before the
+                     (°C) or degrees Fahrenheit (°F). All error sources belonging to this group will be combined before the
                      contribution to the total uncertainty of the calibration according to the following formula:
                   </p>
                   <div>$$ su_d = D*K*csu_g*10^{-6}\ \ \ (Eq. 5.14)$$ </div>
@@ -1833,8 +1740,7 @@
                   <p>&emsp;&emsp;h = Relative humidity [%]</p>
                   <p>
                      <b>Pressure</b> = Uncertainty related to the pressure can be specified in millibars (mBar),
-                     hectopascals
-                     (hPa) or millimetres of mercury (mmHg). All error sources belonging to this group will be combined
+                     hectopascals (hPa) or millimetres of mercury (mmHg). All error sources belonging to this group will be combined
                      before the contribution to the total uncertainty of the calibration according to the following
                      formula:
                   </p>
@@ -1932,7 +1838,10 @@
             <div>$$ y=\left(A^TPA\right)^{-1}A^TPx\ \ \ (Eq. 6.3)$$ </div>
             <p>Where:</p>
             <p>&emsp;&emsp;P = The weight matrix</p>
-            <p>Please note detailed description of the least squares adjustment is out of scope of this manual. This method is widely used in surveying, geodesy and photogrammetry to solve overdetermined systems of equations based on the principle of minimising the sum of observation's residuals squares. User can explore this method in numerous available publications eg. "Practical Least Squares Adjustment of Surveying Measurements” by Alan R. Dragoo or “Adjustment Computations” by Charles D. Ghilani.</p>
+            <p>Please note detailed description of the least squares adjustment method is out of scope of this manual. This method is widely used in surveying, geodesy and photogrammetry 
+            	to solve overdetermined systems of equations based on the principle of minimising the sum of observation's residuals squares. 
+            	User can explore this method in numerous available publications eg. "Practical Least Squares Adjustment of Surveying Measurements” 
+            	by Alan R. Dragoo or “Adjustment Computations” by Charles D. Ghilani.</p>
          </div>
 
          <div class="fl w-50-ns ph3" id="EDMI-Chapter7">
@@ -1941,7 +1850,7 @@
             <div id="EDMI-Chapter7_1">
                <h3>7.1 Statistical tests</h3>
 
-               <p>Table 7.1 provides a lists of the ISO 17123-4:2012 recommended hypothesis testing to help the
+               <p>Table 7.1 provides a lists of the ISO 17123-4:2012 recommended hypothesis testing to help with the
                   interpretation of the calibration results.</p>
                <br>Table 7.1 Hypothesis tests
                <table border="1">
@@ -1972,8 +1881,7 @@
                <div id="EDMI-Chapter7_1_1">
                   <h4>7.1.1 Hypothesis A</h4>
                   <p>This null hypothesis states that the calculated experimental standard deviation, s, is smaller than
-                     or
-                     equal to the manufacturers specifications value &sigma;.</p>
+                     or equal to the manufacturers specifications value &sigma;.</p>
                   <p>The null hypothesis is not rejected if the following condition is fulfilled:</p>
                   <div>$$ s_0\le\sigma\times\sqrt{\frac{\chi_{1-\alpha}^2(\nu)}{\nu}}\ \ \ \ (Eq. 7.1) $$</div>
                   <p>Otherwise, the null hypothesis is rejected.</p>
@@ -1981,9 +1889,7 @@
                <div id="EDMI-Chapter7_1_2">
                   <h4>7.1.2 Hypothesis B</h4>
                   <p>The null hypothesis states that the experimental standard deviation, s belong to the same
-                     population
-                     as
-                     the standard deviation (&#x3B5;&#x303;) obtained in the previous calibrations using the same
+                     population as the standard deviation (&#x3B5;&#x303;) obtained in the previous calibrations using the same
                      instrumentation.</p>
                   <p>The null hypothesis is not rejected if the following condition is fulfilled:</p>
                   <div>$$ \frac{1}{F_{1-\alpha/2}\left(v,v\right)}\le\frac{s_0^2}{\widetilde{\varepsilon}_0^2}\le
@@ -1994,8 +1900,7 @@
                   <h4>7.1.3 Hypothesis C</h4>
                   <p>The null hypothesis states that the zero-point correction, δ, is equal to zero as supplied by the
                      manufacturer (δ = 0)? Or, if prisms with a given zero-point correction, δ<sub>0</sub> are used, is
-                     δ =
-                     δ<sub>0</sub>?</p>
+                     δ = δ<sub>0</sub>?</p>
                   <p>The null hypothesis is not rejected if the following condition is fulfilled:</p>
                   <div>$$ |δ-δ_0 |≤s_δ×t_{1-α/2} (ν)\ \ \ \ (Eq. 7.3) $$</div>
                   <p>Otherwise, the null hypothesis is rejected.</p>
@@ -2004,8 +1909,7 @@
             <div id="EDMI-Chapter7_2">
                <h3>7.2 Endnotes</h3>
                <p>The calibration reports displays a set of predefined endnotes. These notes can be specified for both
-                  EDMI
-                  and Baseline calibration and may be either mandatory or company's specific:</p>
+                  EDMI and Baseline calibration reports and may be either mandatory or company's specific:</p>
                <img src="{% static 'images/CalibrationGuides/edmi/Picture_6_2.png' %}" alt="End notes">
             </div>
             <div id="EDMI-Chapter7_3">
@@ -2039,7 +1943,7 @@
 
       <div class="mt-3 mb-3">
          <p><strong>Copyright © 2020-2024 Western Australian Land Information Authority</strong></p>
-         <p>Last updated: 07 June 2024</p>
+         <p>Last updated: 12 June 2024</p>
       </div>
    </div>
 </div>
