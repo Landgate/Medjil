@@ -1,6 +1,6 @@
 <!--
 
-   © 2023 Western Australian Land Information Authority
+   © 2024 Western Australian Land Information Authority
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -48,13 +48,13 @@
 			<div class="tab-wrap">
 		    	{% if 'models_list' in tabs.keys %}
     				<input id="tab1" type="radio" name="tabs">
-    				<label for="tab1">Models</label>
+    				<label for="tab1" style="width: 33.2%;">Models</label>
 		    	{% endif %}	
 				<input id="tab2" type="radio" name="tabs" checked="checked">
-				<label for="tab2">Instruments</label>
+				<label for="tab2" style="width: 33.2%;">Instruments</label>
 		    	{% if 'certificates_list' in tabs.keys %}
     				<input id="tab3" type="radio" name="tabs">
-    				<label for="tab3">Calibration Certificates</label>
+    				<label for="tab3" style="width: 33.6%;">Calibration Certificates</label>
 		    	{% endif %}
             
 				<section id="content1">
@@ -70,16 +70,16 @@
                     {% if tabs.models_list %}
                         <table  style="width:100%">
                             <tr>
-                                <th width="95%">Model</th>
-                                <th width="5%">&nbsp;Action</th>
+                                <th width="90%">Model</th>
+                                <th width="10%">Action</th>
                             </tr>
                             {% for model in tabs.models_list %}
                                 <tr>
                                     <td>{{ model }}</td>
                                     <td>
                                       <span class="flex justify-around items-center text-center">
-                                        <a href="{% url 'instruments:register_edit' inst_disp=inst_disp tab="models" id=model.pk %}" target="_blank"  onclick="return showAddPopup(this);" class="px-3" id="add_spec">
-                                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000" class="bi bi-pencil-fill" id = "edit-view" viewBox="0 0 16 16">
+                                        <a href="{% url 'instruments:register_edit' inst_disp=inst_disp tab="models" id=model.pk %}" target="_blank"  onclick="return showAddPopup(this);" class="px-2" id="add_spec">
+                                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="#000" class="bi bi-pencil-fill" id = "edit-view">
                                             <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"></path>
                                           </svg>
                                         </a>
@@ -116,16 +116,16 @@
     				{% if tabs.insts_list %}
                     <table style="width:100%">
                         <tr>
-                            <th width="95%">Instrument</th>
-                            <th width="5%">&nbsp Action</th>
+                            <th width="90%">Instrument</th>
+                            <th width="10%">Action</th>
                         </tr>
                         {% for inst in tabs.insts_list %}
                             <tr>
                                 <td>{{ inst }}</td>
                                 <td>
                                   <span class="flex justify-around items-center text-center">
-                                    <a href="{% url 'instruments:register_edit' inst_disp=inst_disp tab="insts" id=inst.pk %}?next={{request.path}}" class="px-3">
-                                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000" class="bi bi-pencil-fill" id = "edit-view" viewBox="0 0 16 16">
+                                    <a href="{% url 'instruments:register_edit' inst_disp=inst_disp tab="insts" id=inst.pk %}?next={{request.path}}" class="px-2">
+                                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="#000" class="bi bi-pencil-fill" id = "edit-view">
                                         <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"></path>
                                       </svg>
                                     </a>
@@ -159,7 +159,7 @@
                             <!--col span="1" style="width: 80%"-->
                             <tr>
                                 {% for lbl in table_headings.certificates %}
-                                    <th>{{ lbl }}</th>
+                                    <th style="justify-left">{{ lbl }}</th>
                                 {% endfor %}
                             </tr>
                             {% for certificate in tabs.certificates_list %}
@@ -180,60 +180,54 @@
                                     <td>
                                       <span class="flex justify-around items-center text-center">
                                         {% if certificate.html_report %}
-                                            <a class="px-2" href="{% url 'edm_calibration:certificate' id=certificate.pk %}" class="px-3">
-                                                <svg version="1.0" xmlns="http://www.w3.org/2000/svg" id="report-view"
-                                                 width="32" height="32" viewBox="0 0 700.000000 700.000000"
-                                                 preserveAspectRatio="xMidYMid meet">
-                                                
-                                                <g transform="translate(0.000000,700.000000) scale(0.100000,-0.100000)"
-                                                fill="#000000" stroke="none">
-                                                <path d="M1575 6240 c-119 -38 -220 -132 -268 -250 l-22 -55 0 -2055 0 -2055
-                                                21 -57 c45 -117 130 -205 241 -250 57 -22 63 -23 543 -26 l485 -3 95 96 c76
-                                                78 92 99 80 106 -8 5 -51 30 -94 54 l-79 45 -465 0 -464 0 -34 34 -34 34 0
-                                                2016 0 2016 29 32 29 33 1524 5 c1001 3 1535 2 1558 -5 21 -6 43 -23 57 -44
-                                                l23 -34 0 -1033 c0 -862 2 -1034 14 -1034 19 0 104 -47 140 -77 47 -39 95
-                                                -106 116 -160 19 -48 19 -36 17 1162 -2 950 -5 1218 -15 1247 -21 61 -94 160
-                                                -144 196 -26 18 -73 43 -105 55 l-58 22 -1565 2 c-1519 2 -1567 1 -1625 -17z"/>
-                                                <path d="M2043 5280 c-83 -50 -82 -180 1 -231 30 -18 72 -19 1134 -19 1223 0
-                                                1149 -4 1192 65 37 60 16 149 -44 186 -30 18 -73 19 -1141 19 -1083 0 -1111
-                                                -1 -1142 -20z"/>
-                                                <path d="M2051 4572 c-93 -50 -92 -188 1 -239 31 -17 95 -18 1121 -21 1060 -2
-                                                1089 -2 1132 17 111 49 113 190 3 247 -23 12 -202 14 -1125 14 -1045 0 -1100
-                                                -1 -1132 -18z"/>
-                                                <path d="M3909 3801 c-24 -16 -84 -70 -134 -121 -49 -50 -102 -98 -117 -106
-                                                -38 -19 -110 -18 -252 7 -138 23 -174 21 -223 -17 -46 -35 -61 -73 -79 -207
-                                                -22 -166 -37 -210 -82 -245 -20 -16 -89 -55 -153 -85 -120 -58 -172 -101 -185
-                                                -154 -12 -46 13 -130 66 -222 55 -98 80 -159 80 -201 0 -16 -34 -96 -75 -178
-                                                -80 -159 -90 -204 -61 -260 23 -44 54 -66 193 -136 181 -92 193 -109 213 -294
-                                                13 -119 17 -138 46 -188 44 -77 119 -90 304 -54 56 11 115 20 132 20 53 0 101
-                                                -32 203 -137 184 -189 234 -188 425 8 135 138 141 140 317 110 285 -47 326
-                                                -22 358 229 17 132 40 199 77 231 13 10 77 46 143 78 147 73 181 101 196 162
-                                                15 58 -2 117 -67 229 -51 89 -74 150 -74 195 0 22 27 86 75 181 79 156 89 198
-                                                61 252 -25 48 -69 80 -181 132 -189 89 -204 109 -229 307 -17 143 -40 204 -87
-                                                232 -52 32 -103 34 -219 12 -58 -12 -132 -21 -166 -21 -78 0 -120 27 -227 145
-                                                -119 130 -188 154 -278 96z m261 -357 c381 -72 677 -350 776 -729 37 -142 37
-                                                -327 1 -466 -113 -432 -467 -722 -912 -746 -596 -31 -1079 486 -1015 1085 53
-                                                492 468 868 961 871 59 1 144 -6 189 -15z"/>
-                                                <path d="M3867 3310 c-412 -69 -707 -415 -707 -826 0 -372 225 -678 587 -800
-                                                101 -34 299 -44 408 -21 321 68 557 289 647 605 30 102 31 312 4 417 -62 237
-                                                -224 438 -438 543 -160 78 -344 108 -501 82z"/>
-                                                <path d="M2748 1343 c-222 -222 -238 -241 -238 -274 0 -60 25 -74 198 -107 84
-                                                -16 155 -32 158 -35 3 -3 14 -55 24 -115 26 -152 38 -191 67 -218 57 -53 75
-                                                -39 448 336 l260 261 -33 30 c-37 33 -46 33 -195 3 -38 -8 -105 -14 -150 -14
-                                                -94 0 -144 18 -195 70 -55 54 -71 97 -99 258 l-8 42 -237 -237z"/>
-                                                <path d="M5000 1579 c0 -37 -35 -190 -51 -225 -28 -59 -97 -118 -156 -135 -64
-                                                -17 -128 -15 -279 12 l-126 22 -31 -32 -32 -31 280 -281 c154 -155 298 -294
-                                                319 -310 47 -35 72 -36 109 -6 25 20 30 37 57 176 16 85 33 158 37 161 5 4 67
-                                                17 138 29 72 12 146 30 165 39 38 19 56 55 47 93 -6 21 -477 503 -477 488z"/>
-                                                </g>
+                                            <a class="px-3" href="{% url 'edm_calibration:certificate' id=certificate.pk %}" class="px-3">
+                                                <svg id="report-view" width="22" height="22" viewBox="0 0 700 700">                                                
+		                                                <g transform="translate(200,750) scale(0.100000,-0.100000)"  ill="#000000" stroke="none">
+		                                                <path d="M1575 6240 c-119 -38 -220 -132 -268 -250 l-22 -55 0 -2055 0 -2055
+		                                                21 -57 c45 -117 130 -205 241 -250 57 -22 63 -23 543 -26 l485 -3 95 96 c76
+		                                                78 92 99 80 106 -8 5 -51 30 -94 54 l-79 45 -465 0 -464 0 -34 34 -34 34 0
+		                                                2016 0 2016 29 32 29 33 1524 5 c1001 3 1535 2 1558 -5 21 -6 43 -23 57 -44
+		                                                l23 -34 0 -1033 c0 -862 2 -1034 14 -1034 19 0 104 -47 140 -77 47 -39 95
+		                                                -106 116 -160 19 -48 19 -36 17 1162 -2 950 -5 1218 -15 1247 -21 61 -94 160
+		                                                -144 196 -26 18 -73 43 -105 55 l-58 22 -1565 2 c-1519 2 -1567 1 -1625 -17z"/>
+		                                                <path d="M2043 5280 c-83 -50 -82 -180 1 -231 30 -18 72 -19 1134 -19 1223 0
+		                                                1149 -4 1192 65 37 60 16 149 -44 186 -30 18 -73 19 -1141 19 -1083 0 -1111
+		                                                -1 -1142 -20z"/>
+		                                                <path d="M2051 4572 c-93 -50 -92 -188 1 -239 31 -17 95 -18 1121 -21 1060 -2
+		                                                1089 -2 1132 17 111 49 113 190 3 247 -23 12 -202 14 -1125 14 -1045 0 -1100
+		                                                -1 -1132 -18z"/>
+		                                                <path d="M3909 3801 c-24 -16 -84 -70 -134 -121 -49 -50 -102 -98 -117 -106
+		                                                -38 -19 -110 -18 -252 7 -138 23 -174 21 -223 -17 -46 -35 -61 -73 -79 -207
+		                                                -22 -166 -37 -210 -82 -245 -20 -16 -89 -55 -153 -85 -120 -58 -172 -101 -185
+		                                                -154 -12 -46 13 -130 66 -222 55 -98 80 -159 80 -201 0 -16 -34 -96 -75 -178
+		                                                -80 -159 -90 -204 -61 -260 23 -44 54 -66 193 -136 181 -92 193 -109 213 -294
+		                                                13 -119 17 -138 46 -188 44 -77 119 -90 304 -54 56 11 115 20 132 20 53 0 101
+		                                                -32 203 -137 184 -189 234 -188 425 8 135 138 141 140 317 110 285 -47 326
+		                                                -22 358 229 17 132 40 199 77 231 13 10 77 46 143 78 147 73 181 101 196 162
+		                                                15 58 -2 117 -67 229 -51 89 -74 150 -74 195 0 22 27 86 75 181 79 156 89 198
+		                                                61 252 -25 48 -69 80 -181 132 -189 89 -204 109 -229 307 -17 143 -40 204 -87
+		                                                232 -52 32 -103 34 -219 12 -58 -12 -132 -21 -166 -21 -78 0 -120 27 -227 145
+		                                                -119 130 -188 154 -278 96z m261 -357 c381 -72 677 -350 776 -729 37 -142 37
+		                                                -327 1 -466 -113 -432 -467 -722 -912 -746 -596 -31 -1079 486 -1015 1085 53
+		                                                492 468 868 961 871 59 1 144 -6 189 -15z"/>
+		                                                <path d="M3867 3310 c-412 -69 -707 -415 -707 -826 0 -372 225 -678 587 -800
+		                                                101 -34 299 -44 408 -21 321 68 557 289 647 605 30 102 31 312 4 417 -62 237
+		                                                -224 438 -438 543 -160 78 -344 108 -501 82z"/>
+		                                                <path d="M2748 1343 c-222 -222 -238 -241 -238 -274 0 -60 25 -74 198 -107 84
+		                                                -16 155 -32 158 -35 3 -3 14 -55 24 -115 26 -152 38 -191 67 -218 57 -53 75
+		                                                -39 448 336 l260 261 -33 30 c-37 33 -46 33 -195 3 -38 -8 -105 -14 -150 -14
+		                                                -94 0 -144 18 -195 70 -55 54 -71 97 -99 258 l-8 42 -237 -237z"/>
+		                                                <path d="M5000 1579 c0 -37 -35 -190 -51 -225 -28 -59 -97 -118 -156 -135 -64
+		                                                -17 -128 -15 -279 12 l-126 22 -31 -32 -32 -31 280 -281 c154 -155 298 -294
+		                                                319 -310 47 -35 72 -36 109 -6 25 20 30 37 57 176 16 85 33 158 37 161 5 4 67
+		                                                17 138 29 72 12 146 30 165 39 38 19 56 55 47 93 -6 21 -477 503 -477 488z"/>
+		                                                </g>
                                                 </svg>
                                             </a>
                                         {% elif certificate.calibration_report %}
-                                            <a href="{{ MEDIA_URL }}{{ certificate.calibration_report|default_if_none:'#' }}" target="__blank">
-                                                <svg version="1.0" xmlns="http://www.w3.org/2000/svg" id="report-view"
-                                                 width="16.000000pt" height="14.500000pt" viewBox="0 0 50.000000 50.000000"
-                                                 preserveAspectRatio="xMidYMid meet">                    
-                                                    <g transform="translate(0.000000,50.000000) scale(0.100000,-0.100000)" fill="#000000" stroke="none">
+                                            <a class="px-3" href="{{ MEDIA_URL }}{{ certificate.calibration_report|default_if_none:'#' }}" target="__blank" class="px-3">
+                                                <svg id="report-view" width="16" height="16" viewBox="0 0 50 50">                    
+                                                    <g transform="translate(0,50) scale(0.100000,-0.100000)" fill="#000000" stroke="none">
                                                     <path d="M92 493 c-34 -14 -42 -59 -42 -251 0 -176 1 -191 21 -216 l20 -26 149 0 150 0 17 27 c16 24 18 52 18 226 l0 199 -28 24 c-27 23 -34 24 -160 23 -73 0 -138 -3 -145 -6z m295 -53 c19 -35 14 -383 -5 -402 -9 -9 -52 -14 -137 -16 -173 -5 -165 -15 -165 221 0 242 -10 228 163 225 129 -3 132 -3 144 -28z"/>
                                                     <path d="M120 300 l0 -110 120 0 c100 0 120 3 120 15 0 12 -18 15 -105 15 l-105 0 0 95 c0 78 -3 95 -15 95 -12 0 -15 -19 -15 -110z"/>
                                                     <path d="M317 349 c-26 -20 -29 -20 -46 -5 -10 9 -22 16 -27 16 -14 0 -74 -63 -74 -78 0 -21 23 -13 46 15 21 27 23 27 42 10 19 -17 21 -17 66 10 43 26 53 43 30 50 -5 1 -22 -7 -37 -18z"/>
@@ -243,12 +237,12 @@
                                                 </svg>
                                             </a>
                                         {% else %}
-                                            <svg width="32" height="16" viewBox="0 0 42 42" xml:space="preserve"></svg>
+                                            <svg width="41" height="16" viewBox="0 0 16 16" xml:space="preserve"></svg>
                                         {% endif %}
-                                        <a href="{% url 'instruments:register_edit' inst_disp=inst_disp tab="certificates" id=certificate.pk %}?next={{request.path}}" class="px-3">
-                                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000" class="bi bi-pencil-fill" id = "edit-view" viewBox="0 0 16 16">
+                                        <a href="{% url 'instruments:register_edit' inst_disp=inst_disp tab="certificates" id=certificate.pk %}?next={{request.path}}" class="px-2">
+                                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="#000" class="bi bi-pencil-fill" id = "edit-view">
                                             <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"></path>
-                                          </svg>
+                                        </svg>
                                         </a>
                                         <a href="{% url 'instruments:register_delete' inst_disp=inst_disp tab="certificates" id=certificate.pk %}" class="px-2" onclick="return confirmation()">
                                           <svg width="16" height="16" viewBox="0 0 16 16" fill="red" class="bi bi-trash">
