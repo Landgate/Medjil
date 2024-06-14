@@ -17,15 +17,13 @@
 -->
 {% extends 'base_generic.html' %}
 {% load static %}
-
-
 {% block content %}
-<article>
-    <br>
-    <h2 class="text-center">List of Calibration Report Endnotes</h2>
-    <p><i>Select calibration report type on the left menu to display available report notes</i><a href= "{% url 'calibrationguide:read_manual' manual_name='edmi_calibration_manual.html' %}#EDMI-Chapter7_2" target="_blank" onclick="return showAddPopup(this);"> &#x1F6C8</a></p>
-    <hr>  
-    <div class="flex-with-sidebar">
+<article class="post">	 
+   <br>
+   <h2 class="text-center">List of Calibration Report Endnotes</h2>
+   <p class="text-center"><i>For more information about Report Endnotes, please refer to the user manual</i><a href= "{% url 'calibrationguide:read_manual' manual_name='edmi_calibration_manual.html' %}#EDMI-Chapter7_2" target="_blank" onclick="return showAddPopup(this);"> &#x1F6C8</a></p>
+   <hr>  
+   <div class="flex-with-sidebar">
         <div class="left-sidebar">
             {% for report_type in report_types %}
                 <a href="{% url 'accounts:calibration_report_notes_list' report_disp=report_type.abbr %}">                
@@ -35,18 +33,16 @@
                 </a> 
             {% endfor %}        
         </div>
-
-    <div class="post-content">
-    <div>
+   			<div>
         <div class="mt-2 flex justify-center">
-            <a href="{% url 'accounts:calibration_report_notes_edit' report_disp=report_disp id=None %}?next={{request.path}}">
-                <button class="px-3 py-2 border border-transparent text-lg leading-4 rounded text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
-                Add new endnote</button>
+            <a href="{% url 'accounts:calibration_report_notes_edit' report_disp=report_disp id=None %}?next={{request.path}}"class="px-3 py-2 border border-transparent text-lg leading-4 rounded text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+                Add new endnote
             </a>             
         </div>
         <br>
+        <div>
         {% if note_list %}        
-            <table class="table-fullwidth">
+            <table style="width:920px; margin-left:10px">
                 <tr>
                     <th width="12%">Company</th>
                     <th width="12%">Note Type</th>
@@ -76,21 +72,15 @@
                     </tr>
                 {% endfor %}
             </table>
-            
+         </div>   
         {% else %}
-            <p> There are currently no calibration report endnotes in our system </p>
-        {% endif %}
-    </div>
-    </div>
-    
-    
-</article>   
-
+        	<p> There are currently no calibration report endnotes in our system </p>
+        {% endif %}     
+</article>  
 
 <script type="text/javascript">
     function confirmation() {
       return confirm('Are you sure you want to delete this record? You will not be able to retreive the record later.');
     }
-</script>
-    
+</script> 
 {% endblock %}
