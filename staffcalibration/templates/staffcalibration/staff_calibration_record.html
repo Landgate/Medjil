@@ -19,18 +19,19 @@
 {% load static %}
 {% block content %}
 <article class="post">
-	<!-- <div class="flexbox-container_IB"> -->
+ <div class="post-content">
         {% if messages %}
             <ul class="message-list">
                 {% for message in messages %}
                     <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|safe }}</li>
                 {% endfor %}
             </ul>
-        <!-- <br> -->
+        <br>
         {% endif %}	
-        <div class="post-header">
-            <h2 class="post-title">Levelling Staves and Calibration Certificates</h2>
-        </div>    
+        <br>
+        <h2 class="text-center">List of Levelling Staves Calibration Certificates</h2>
+        <p class="text-center"></><i>Contains the most recent calibration certificates</i></p>
+        <hr> 
         <div class="mt-2 mb-5 flex justify-center">
             <a href="{% url 'staffcalibration:create_record' %}" class="px-3 py-2 border border-transparent text-lg leading-4 rounded text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
                 Add new certificate
@@ -108,11 +109,8 @@
                 {% endif %}             
                 {% endfor %}
             </table>
-
-            <br>
-            <br>
             <div class="post-header">
-                <h2 class="post-title">Invar Staves and Calibration Certificates</h2>
+                <h2 class="post-title">Invar Staves Calibration Certificates</h2>
             </div> 
 
             
@@ -186,18 +184,15 @@
                 {% endif %}             
                 {% endfor %}
             </table>
-
-            <p><i> <strong>Note:</strong> The most recent records only</i></p>
             {% else %}
             <br>
             <hr>
             <p class="py-2">
                 There is currently no staff calibration record! Click <a href="{% url 'staffcalibration:home' %}"></a> to start calibrating your levelling staff.
             </p>
-            {% endif %}
-        
+            {% endif %}        
     </div>
-	<!-- </div>	 -->
+ </div>
 </article>
 
 <script>
