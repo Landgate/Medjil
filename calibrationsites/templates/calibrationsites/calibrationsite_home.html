@@ -1,6 +1,6 @@
 <!--
 
-   © 2023 Western Australian Land Information Authority
+   © 2024 Western Australian Land Information Authority
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -21,10 +21,10 @@
 
 {% block content %}
 
-<article>
+<article class="post">
 	<br>
-  <h2 class="text-center">List of Available Instrument Calibration Sites</h2>
-  <p><i>Select location or a State on the left menu to display available calibration sites</i></p>
+  <h2 class="text-center">List of Instrument Calibration Sites</h2>
+  <p class="text-center"><i>Select location on the left menu to display available calibration sites</i></p>
   <hr>  
     {% if messages %}
 		<ul class="alert messages">
@@ -34,7 +34,6 @@
 		</ul>
 		<br>
 	{% endif %}	
-
 <div class="flex-with-sidebar">
 	<div class="left-sidebar px-3">
 		<div class="mt-5">
@@ -55,7 +54,7 @@
 		</div>
 	</div>	
 	<div class="main-post">
-		<div class="post-header mt-5 mb-5 px-6">
+		<div>
 			{% if not user.is_authenticated %}
 				<p>Please 
 					<a href="{% url 'accounts:login' %}" class="hover:a a-link">
@@ -66,23 +65,18 @@
 					</a> to register a Calibrate site.</p>
 			{% endif %}
 		</div>
-	
-		<div class="post-content" >	
-			<div>
-				<div>
-					<div class="mt-2 flex justify-center">
+		<div>
+				<div class="mt-2 flex justify-center">
 						{% if user.is_staff %}
 							<a class="px-3 py-2 border border-transparent text-lg leading-4 rounded text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out" href="{% url 'calibrationsites:create-site' %}?reset">
-								Add new calibration site 
+								Add new calibration site
 							</a>
 						{% endif %}
-					</div>
-				</div>  			 
+				</div> 
 				<div>
-					<br>
 					{% if baselines %}
 					<h3 class="text-center">EDM Baselines</h3>
-					<table id="site-table" style="width:800px;margin-left:20px">
+					<table id="site-table" style="width:920px; margin-left:10px">
 						<thead>
 							<tr>
 								<th class="text-left">Name</th>
@@ -101,7 +95,7 @@
 						</thead>
 						{% for element in baselines %}
 						<tbody>
-						<tr class="text-left" style="width:800px;margin-left:20px" >
+						<tr class="text-left" >
 							<td class="text-left"> {{ element.site_name }}</td>
 							<td class="text-left"> {{ element.no_of_pillars|floatformat:0 }} </td>
 							<td class="text-left">{{ element.locality }}</td>
@@ -174,11 +168,10 @@
 					</table>
 					{% endif %}
 				</div>
-				<br>
-				<div>
+				<div >
 					{% if staff_ranges %}
 					<h3 class="text-center">Staff Calibration Ranges</h3>
-					<table id="site-table" style="width:800px;margin-left:20px">
+					<table id="site-table" style="width:100%; margin-left:10px">
 						<thead>
 							<tr>
 								<th class="text-left">Name</th>
@@ -270,13 +263,11 @@
 						{% endfor %}
 					</table>
 					{% endif %}
-				</div>
-			</div>
+				</div>			
 		</div>
 	</div>
 </div>        
 </article>
-
 <script>
 	var tableElem = document.querySelector("#site-table > tbody > tr:nth-child(1) > td:nth-child(2)").innerHTML
 
