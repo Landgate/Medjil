@@ -42,18 +42,15 @@
       <div class="grid-2">
         <div>
           <div>Laboratory Name: <strong>{{ site_info.site_name }}</strong></div>
-          <div>Description: {{ site_info.site_type }} </div>
+          <div>Description: <strong>{{ site_info.site_type }}</strong> </div>
         </div>
         <div>
-          <div>Authority Name: <strong>{{ site_info.operator }}</strong></div>
-          <div>Location: {{ site_info.site_address }} </div>
+          <div>Operated by: <strong>{{ site_info.operator }}</strong></div>
+          <div>Address: <strong>{{ site_info.site_address }}</strong> </div>
         </div>
       </div>
-
       <br>
-
-      <h2 class="text-center">Mean monthly height differences between pillars</h2>
-
+      <h2 class="text-center">Monthly height differences between pillars</h2>
       <table style="table-layout: fixed; width: 100%"> 
         <!-- Header -->
         <tr class="text-center">
@@ -95,7 +92,7 @@
     <br> 
     
     <div id="range-chart" class="flex flex-col justify-end items-center">
-      <h2 class="text-center"> Monthly deviation from the mean height difference between first and last pin</h2>
+      <h2 class="text-center">Monthly height difference between first and last pin</h2>
       <canvas id="myChart"></canvas>
     </div>
     
