@@ -32,13 +32,10 @@
       <br>
       {% endif %}
     </div>
-		<br>
-    <header class="post-header mt-5">
-      <h2 class="post-title">Calibration Range Parameters</h2>
-      <p>The range calibration parameters consist of height differences between adjacent pins (e.g., 1-2, 2-3, etc.). Each height difference is an averaged value from several independent surveys conducted during a specific month (e.g., Jan, Feb, ...). </p>
-      <p>Laboratory calibrated state-of-the-art invar stave together with high precision digital level are used to measure the range height differences. The measurements are regularly carried out in order to monitor the stability of the Range calibration site and are used to update the range parameters.</p>
-    </header>
-    <!-- <hr> -->
+		<br>   
+      <h2 class="text-center">Range Calibration Parameters</h2>
+      <p>The range calibration parameters consist of height differences between adjacent pins (e.g., 1-2, 2-3, etc.). Each height difference is an averaged value from several independent surveys calibrations conducted during a specific month (e.g., Jan, Feb, ...). </p>
+    <hr>
     <br>
 
     <div class="post-content">
@@ -52,11 +49,10 @@
           <div>Location: {{ site_info.site_address }} </div>
         </div>
       </div>
-      <hr> 
 
       <br>
 
-      <h3>Mean monthly height differences between pillars </h3>
+      <h2 class="text-center">Mean monthly height differences between pillars</h2>
 
       <table style="table-layout: fixed; width: 100%"> 
         <!-- Header -->
@@ -99,7 +95,7 @@
     <br> 
     
     <div id="range-chart" class="flex flex-col justify-end items-center">
-      <h3> Monthly deviation from the mean height difference between Pin 1 and 21</h3>
+      <h2 class="text-center"> Monthly deviation from the mean height difference between first and last pin</h2>
       <canvas id="myChart"></canvas>
     </div>
     
