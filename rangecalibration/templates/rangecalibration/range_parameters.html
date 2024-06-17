@@ -1,6 +1,6 @@
 <!--
 
-   © 2023 Western Australian Land Information Authority
+   © 2024 Western Australian Land Information Authority
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -17,11 +17,9 @@
 -->
 {% extends 'base_generic.html' %}
 {% load static %}
-
 {% block content %}
 
-	<article class="post">
-    
+	<article class="post">    
     <div class="post-content">
       {% if messages %}
       <ul class="message-list">
@@ -30,34 +28,25 @@
           {% endfor %}
       </ul>
       <br>
-      {% endif %}
-    </div>
+      {% endif %} 
 		<br>
-    <header class="post-header mt-5">
-      <h2 class="post-title">Calibration Range Parameters</h2>
-      <p>The range calibration parameters consist of height differences between adjacent pins (e.g., 1-2, 2-3, etc.). Each height difference is an averaged value from several independent surveys conducted during a specific month (e.g., Jan, Feb, ...). </p>
-      <p>Laboratory calibrated state-of-the-art invar stave together with high precision digital level are used to measure the range height differences. The measurements are regularly carried out in order to monitor the stability of the Range calibration site and are used to update the range parameters.</p>
-    </header>
-    <!-- <hr> -->
+    <h2 class="text-center">Calibration Range Parameters</h2>
+    <hr>
+    <br> 
+    <p>The range calibration parameters consist of height differences between adjacent pins (e.g., 1-2, 2-3, etc.). Each height difference is an averaged of several independent survey calibrations conducted during a specific month (e.g., Jan, Feb, ...). </p>
     <br>
-
-    <div class="post-content">
-      <div class="grid-2">
-        <div>
-          <div>Laboratory Name: <strong>{{ site_info.site_name }}</strong></div>
-          <div>Description: {{ site_info.site_type }} </div>
-        </div>
-        <div>
-          <div>Authority Name: <strong>{{ site_info.operator }}</strong></div>
-          <div>Location: {{ site_info.site_address }} </div>
-        </div>
+      <div class="flex" style="width:100%">
+          <div style="width:100%">
+          	<p class="text-left">Staff Calibration Name: <strong>{{ site_info.site_name }}</strong></p> 
+          	<p class="text-left">Description:<strong>{{ site_info.site_type }}</strong></p> 
+          </div>
+          <div style="width:100%">
+          	<p class="text-right">Authority Name: <strong>{{ site_info.operator }}</strong></p>
+         	  <p class="text-right">Location: <strong>{{ site_info.site_address }}</strong></p>
+         	</div>
       </div>
-      <hr> 
-
       <br>
-
-      <h3>Mean monthly height differences between pillars </h3>
-
+      <h2 class="text-center">Mean monthly height differences between pillars</h2>
       <table style="table-layout: fixed; width: 100%"> 
         <!-- Header -->
         <tr class="text-center">
@@ -66,7 +55,6 @@
               <th class="text-center font-semibold text-base"> {{ month }}</th>
           {% endfor %}
         </tr>
-
         <!-- Values -->
         {% for row in range_values.mean %}
         <tr class="font-medium text-center">
@@ -95,15 +83,12 @@
           {% endfor %}
         </tr>
       </table>
-
-    <br> 
-    
-    <div id="range-chart" class="flex flex-col justify-end items-center">
-      <h3> Monthly deviation from the mean height difference between Pin 1 and 21</h3>
-      <canvas id="myChart"></canvas>
+    <br>     
+	    <div id="range-chart" class="flex flex-col justify-end items-center">
+	      <h2 class="text-center">Monthly deviation of the mean height difference between the first and last pin</h2>
+	      <canvas id="myChart"></canvas>
+	    </div>    
     </div>
-    
-  </div>
 </article>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
