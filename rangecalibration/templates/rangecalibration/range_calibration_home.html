@@ -33,7 +33,7 @@
      <hr></> 	
       <div class="mt-2 flex justify-center">
         <a href="{% url 'rangecalibration:calibrate' %}" class="px-3 py-2 border border-transparent text-lg leading-4 rounded text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
-            New calibration 
+            Start new calibration 
         </a>  
       </div>
       {% if user.is_authenticated %}
@@ -82,7 +82,7 @@
             {% endfor %}
           {% else %}
           <tr>
-            <td colspan="6">There is currently no range measurements listed. Start new range calibration by selecting 'Add new calibration'.</td>
+            <td colspan="6">There are no records to display. Start new calibration.</td>
           </tr>
           {% endif %}
       	</table>

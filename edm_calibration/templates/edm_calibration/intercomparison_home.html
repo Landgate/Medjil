@@ -35,7 +35,7 @@
         <div>
             <div class="mt-2 flex justify-center">
                 <a href="{% url 'edm_calibration:intercomparison' id=None %}" class="px-3 py-2 border border-transparent text-lg leading-4 rounded text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
-                     Start new Intercomparison
+                     Start new comparison
                 </a>
             </div>
             <br>
@@ -102,7 +102,7 @@
                     {% endfor %}
                 </table>
             {% else %}
-                <p>There are currently no Interlaboratory Comparisons</p>
+                <p>There are no records to display. Start new comparison.</p>
             {% endif %}
         </div>
 </article>
