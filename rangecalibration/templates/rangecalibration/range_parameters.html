@@ -1,6 +1,6 @@
 <!--
 
-   © 2023 Western Australian Land Information Authority
+   © 2024 Western Australian Land Information Authority
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,8 +20,7 @@
 
 {% block content %}
 
-	<article class="post">
-    
+	<article class="post">    
     <div class="post-content">
       {% if messages %}
       <ul class="message-list">
@@ -33,31 +32,24 @@
       {% endif %}
     </div>
 		<br>
-    <header class="post-header mt-5">
-      <h2 class="post-title">Calibration Range Parameters</h2>
-      <p>The range calibration parameters consist of height differences between adjacent pins (e.g., 1-2, 2-3, etc.). Each height difference is an averaged value from several independent surveys conducted during a specific month (e.g., Jan, Feb, ...). </p>
-      <p>Laboratory calibrated state-of-the-art invar stave together with high precision digital level are used to measure the range height differences. The measurements are regularly carried out in order to monitor the stability of the Range calibration site and are used to update the range parameters.</p>
-    </header>
-    <!-- <hr> -->
+    <h2 class="text-center">Calibration Range Parameters</h2>
+    <p>The range calibration parameters consist of height differences between adjacent pins (e.g., 1-2, 2-3, etc.). Each height difference is an averaged value obtained from several independent survey calibrations conducted during a specific month (e.g., Jan, Feb, ...). </p>
+    <hr>
     <br>
 
     <div class="post-content">
-      <div class="grid-2">
-        <div>
-          <div>Laboratory Name: <strong>{{ site_info.site_name }}</strong></div>
-          <div>Description: {{ site_info.site_type }} </div>
+      <div>
+        <div class="flexbox-container_IB">
+          <div class="flexbox-item_800_IB flexbox-item-left_IB">Calibration Site: <strong>{{ site_info.site_name }}</strong></div>
+          <div class="flexbox-item_800_IB flexbox-item-right_IB">Description: <strong>{{ site_info.site_type }}</strong></div>
         </div>
-        <div>
-          <div>Authority Name: <strong>{{ site_info.operator }}</strong></div>
-          <div>Location: {{ site_info.site_address }} </div>
+        <div class="flexbox-container_IB">
+          <div class="flexbox-item_800_IB flexbox-item-left_IB">Operated by: <strong>{{ site_info.operator }}</strong></div>
+          <div class="flexbox-item_800_IB flexbox-item-right_IB">Address: <strong>{{ site_info.site_address }}</strong></div>
         </div>
       </div>
-      <hr> 
-
       <br>
-
-      <h3>Mean monthly height differences between pillars </h3>
-
+      <h2 class="text-center">Monthly height variations between first and pins</h2>
       <table style="table-layout: fixed; width: 100%"> 
         <!-- Header -->
         <tr class="text-center">
@@ -99,7 +91,7 @@
     <br> 
     
     <div id="range-chart" class="flex flex-col justify-end items-center">
-      <h3> Monthly deviation from the mean height difference between Pin 1 and 21</h3>
+      <h2 class="text-center">Monthly height variations between first and last pin</h2>
       <canvas id="myChart"></canvas>
     </div>
     
