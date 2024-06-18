@@ -641,7 +641,8 @@
 									<br>               			 
                		<p>These parameters are assigned to the EDM model and are used for all instruments of that model associated with the company. The Manufacturers Uncertainty Constant, Manufacturers Parts Per Million Uncertainty
                			 and Manufacturers Uncertainty Coverage Factor are required fields. These are used by Medjil to perform the statistical test recommended in ISO 17123-4:2012 (see Section 7). </p>
-               		<p>Medjil treats phase and pulse measuring instruments equally. Solving for cyclic errors can be performed for both types of instruments and is an option when performing and EDMI Calibration. 
+               		<p>Medjil treats phase and pulse measuring instruments differently (first velocity correction is different) thus the pulse instruments must have mets applied before importing data to Medjil.</p>
+               		<p>Solving for cyclic errors can be performed for both types of instruments and is an option when performing and EDMI Calibration. 
                			 When solving for cyclic errors, Medjil will use a t-student test for both the first and second order cyclic errors. If errors are statistically insignificant, the design matrix will be compiled for either six, 
                			 four or two parameters.</p> 
                		<p>The Unit Lenth is a required field. It is used when test for cyclic errors, plotting the Return Phase Angle of Observed Distances plot at the end of the EDMI Calibration report and 
