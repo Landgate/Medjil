@@ -807,8 +807,8 @@ class EDMI_certificate (models.Model):
             + self.cyc_3_uncertainty * sin(4*pi*dist/unit_length)
             + self.cyc_4_uncertainty * cos(4*pi*dist/unit_length)
         )
-        corrected_obs = (self.zpc_uncertainty +
-            dist * self.scf_uncertainty +            
+        corrected_obs = (self.zero_point_correction +
+            dist * self.scale_correction_factor +            
             + self.cyclic_one * sin(2*pi*dist/unit_length) 
             + self.cyclic_two * cos(2*pi*dist/unit_length)
             + self.cyclic_three * sin(4*pi*dist/unit_length)
@@ -880,6 +880,15 @@ class Mets_certificate (models.Model):
 
     def get_absolute_url(self):
         return reverse('medjil:Mets-Certificate-detail', args=[str(self.id)])
+    
+    def apply_calibration(self, raw, applied=False):
+        if applied:
+            corrected_obs = raw
+        else:
+            corrected_obs = self.zero_point_correction + raw
+        
+        correction = corrected_obs - raw
+        return corrected_obs, correction
 
     def __str__(self):
         return f'{self.instrument} ({self.calibration_date.strftime("%Y-%m-%d")})'
