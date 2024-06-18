@@ -46,7 +46,11 @@ from calibrationsites.models import (Pillar,
 from .forms import RangeParamForm
 
 # functions
-from .signals import update_range_table_current, update_range_table, compute_range_parameters
+from .signals import (update_range_table_current, 
+                      update_range_table, 
+                      compute_range_site, 
+                      compute_range_parameters
+                    )
 
 
 # Home View
@@ -534,7 +538,11 @@ def range_param_process(request):
                         'operator': site_id.operator.company_name,
                         'site_address': site_id.site_address + ' ' + site_id.state.statecode + ' ' + str(site_id.locality.postcode)
             }
-            # Get the range
+            # Process Range Parameters
+            try:
+                compute_range_site(site_id)
+            except:
+                pass
             rangeObj = BarCodeRangeParam.objects.filter(site_id = site_id)
             # List of fields 
             required_column = ['from_to', 'Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
@@ -599,21 +607,6 @@ def print_record(request, id):
             }
     result = generate_pdf('rangecalibration/pdf_report.html', file_object=resp, context=context)
     return result   
-
-###############################################################################
-################################ USER GUIDE ###################################
-###############################################################################
-@login_required(login_url="/accounts/login") 
-def view_user_guide(request):
-    if request.method=="POST":
-        form = RangeParamForm(request.POST, user=request.user)
-        if form.is_valid():
-            siteid = form.cleaned_data['site_id']
-            sitename = siteid.site_name
-            return render(request, 'rangecalibration/'+sitename+'_range_calibration_guide.html')
-    else:
-        form = RangeParamForm(user=request.user)
-    return render(request, 'rangecalibration/range_param_form.html', {'form': form})
 ###############################################################################
 ######################### DELETE RECORD #######################################
 ###############################################################################

@@ -39,59 +39,70 @@
       </div>
       <br>
       {% if user.is_authenticated %}
-      {% if object_list %}
-        
-      	<table style="table-layout: fixed; width: 100%">
-      		<tr>
-      			<th class="text-left font-semibold text-base text-gray-900">Job Number</th>    	
-  	    		<th class="text-left font-semibold text-base text-gray-900">Calibration Date</th>
-  	    		<th class="text-left font-semibold text-base text-gray-900">Staff Number</th>
-  	    		<th class="text-left font-semibold text-base text-gray-900">Level Number</th>
-  	    		<th class="text-left font-semibold text-base text-gray-900">Observer</th>
-            <th class="text-left font-semibold text-base text-gray-900">Owner</th>
-  	    		<th class="text-center font-semibold text-base text-gray-900">Report</th>
-            <th class="text-center font-semibold text-base text-gray-900">Action</th>
-      		</tr>
+        {% if object_list %}
+          <table style="table-layout: fixed; width: 100%">
+            <tr>
+              <th class="text-left font-semibold text-base text-gray-900">Job Number</th>    	
+              <th class="text-left font-semibold text-base text-gray-900">Calibration Date</th>
+              <th class="text-left font-semibold text-base text-gray-900">Staff Number</th>
+              <th class="text-left font-semibold text-base text-gray-900">Level Number</th>
+              <th class="text-left font-semibold text-base text-gray-900">Observer</th>
+              <th class="text-left font-semibold text-base text-gray-900">Owner</th>
+              <th class="text-center font-semibold text-base text-gray-900">Report</th>
+              <th class="text-center font-semibold text-base text-gray-900">Action</th>
+            </tr>
             {% for item in object_list %}
-
-            {% if item.inst_staff.staff_type != 'invar' %}
-          		<tr>
-          			<td class="font-regular text-left"> {{ item.job_number }}</td>    	
-      	    		<td class="font-regular text-left"> {{ item.calibration_date|date:"d/m/Y" }} </td>
-      	    		<td class="font-regular text-left"> {{ item.inst_staff }} </td>
-      	    		<td class="font-regular text-left"> {{ item.inst_level }} </td>
-      	    		<td class="font-regular text-left"> {{ item.observer }} </td>
-                <td class="font-regular text-left"> {{ item.inst_staff.staff_owner }} </td>
-      	    		<td class="font-regular text-center"> 
-                  <a class="px-2" href="{% url 'staffcalibration:print_report' item.id %}" target="_blank" rel="noopener noreferrer">
-                    <svg id="report-view" width="16" height="16" viewBox="0 0 50 50">                    
-                       <g transform="translate(0,50) scale(0.100000,-0.100000)" fill="#000000" stroke="none">
-                       <path d="M92 493 c-34 -14 -42 -59 -42 -251 0 -176 1 -191 21 -216 l20 -26 149 0 150 0 17 27 c16 24 18 52 18 226 l0 199 -28 24 c-27 23 -34 24 -160 23 -73 0 -138 -3 -145 -6z m295 -53 c19 -35 14 -383 -5 -402 -9 -9 -52 -14 -137 -16 -173 -5 -165 -15 -165 221 0 242 -10 228 163 225 129 -3 132 -3 144 -28z"/>
-                       <path d="M120 300 l0 -110 120 0 c100 0 120 3 120 15 0 12 -18 15 -105 15 l-105 0 0 95 c0 78 -3 95 -15 95 -12 0 -15 -19 -15 -110z"/>
-                       <path d="M317 349 c-26 -20 -29 -20 -46 -5 -10 9 -22 16 -27 16 -14 0 -74 -63 -74 -78 0 -21 23 -13 46 15 21 27 23 27 42 10 19 -17 21 -17 66 10 43 26 53 43 30 50 -5 1 -22 -7 -37 -18z"/>
-                       <path d="M120 145 c0 -12 20 -15 120 -15 100 0 120 3 120 15 0 13 -20 15 -120 15 -100 0 -120 -2 -120 -15z"/>
-                       <path d="M120 85 c0 -12 20 -15 120 -15 100 0 120 3 120 15 0 13 -20 15 -120 15 -100 0 -120 -2 -120 -15z"/>
-                       </g>
-                    </svg>                                            
-                  </a>                
-                </td>
-                <td class="font-regular text-center">
-                  <a class="px-2" href="{% url 'staffcalibration:delete_record' item.id %}" onclick="return confirmation()">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="red" class="bi bi-trash">
-                      <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"></path>
-                          <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"></path>
-                  </svg>
-                  </a>
-                </td>
-              </tr>
-            {% endif %}
+              {% if item.inst_staff.staff_type != 'invar' %}
+                <tr>
+                  <td class="font-regular text-left"> {{ item.job_number }}</td>    	
+                  <td class="font-regular text-left"> {{ item.calibration_date|date:"d/m/Y" }} </td>
+                  <td class="font-regular text-left"> {{ item.inst_staff }} </td>
+                  <td class="font-regular text-left"> {{ item.inst_level }} </td>
+                  <td class="font-regular text-left"> {{ item.observer }} </td>
+                  <td class="font-regular text-left"> {{ item.inst_staff.staff_owner }} </td>
+                  <td class="font-regular text-center">
+                    {% if item.report_url %}
+                        <a href="{{ item.report_url|default_if_none:'#' }}" target="__blank" class="px-2">
+                        <svg id="report-view" width="16" height="16" viewBox="0 0 50 50">                    
+                        <g transform="translate(0,50) scale(0.100000,-0.100000)" fill="#000000" stroke="none">
+                        <path d="M92 493 c-34 -14 -42 -59 -42 -251 0 -176 1 -191 21 -216 l20 -26 149 0 150 0 17 27 c16 24 18 52 18 226 l0 199 -28 24 c-27 23 -34 24 -160 23 -73 0 -138 -3 -145 -6z m295 -53 c19 -35 14 -383 -5 -402 -9 -9 -52 -14 -137 -16 -173 -5 -165 -15 -165 221 0 242 -10 228 163 225 129 -3 132 -3 144 -28z"/>
+                        <path d="M120 300 l0 -110 120 0 c100 0 120 3 120 15 0 12 -18 15 -105 15 l-105 0 0 95 c0 78 -3 95 -15 95 -12 0 -15 -19 -15 -110z"/>
+                        <path d="M317 349 c-26 -20 -29 -20 -46 -5 -10 9 -22 16 -27 16 -14 0 -74 -63 -74 -78 0 -21 23 -13 46 15 21 27 23 27 42 10 19 -17 21 -17 66 10 43 26 53 43 30 50 -5 1 -22 -7 -37 -18z"/>
+                        <path d="M120 145 c0 -12 20 -15 120 -15 100 0 120 3 120 15 0 13 -20 15 -120 15 -100 0 -120 -2 -120 -15z"/>
+                        <path d="M120 85 c0 -12 20 -15 120 -15 100 0 120 3 120 15 0 13 -20 15 -120 15 -100 0 -120 -2 -120 -15z"/>
+                        </g>
+                        </svg>
+                        </a>
+                    {% elif item.field_book %}
+                        <a href="{% url 'staffcalibration:print_report' item.id %}" target="__blank" class="px-2">
+                            <svg id="report-view" width="16" height="16" viewBox="0 0 50 50">                    
+                                <g transform="translate(0,50) scale(0.100000,-0.100000)" fill="#000000" stroke="none">
+                                <path d="M92 493 c-34 -14 -42 -59 -42 -251 0 -176 1 -191 21 -216 l20 -26 149 0 150 0 17 27 c16 24 18 52 18 226 l0 199 -28 24 c-27 23 -34 24 -160 23 -73 0 -138 -3 -145 -6z m295 -53 c19 -35 14 -383 -5 -402 -9 -9 -52 -14 -137 -16 -173 -5 -165 -15 -165 221 0 242 -10 228 163 225 129 -3 132 -3 144 -28z"/>
+                                <path d="M120 300 l0 -110 120 0 c100 0 120 3 120 15 0 12 -18 15 -105 15 l-105 0 0 95 c0 78 -3 95 -15 95 -12 0 -15 -19 -15 -110z"/>
+                                <path d="M317 349 c-26 -20 -29 -20 -46 -5 -10 9 -22 16 -27 16 -14 0 -74 -63 -74 -78 0 -21 23 -13 46 15 21 27 23 27 42 10 19 -17 21 -17 66 10 43 26 53 43 30 50 -5 1 -22 -7 -37 -18z"/>
+                                <path d="M120 145 c0 -12 20 -15 120 -15 100 0 120 3 120 15 0 13 -20 15 -120 15 -100 0 -120 -2 -120 -15z"/>
+                                <path d="M120 85 c0 -12 20 -15 120 -15 100 0 120 3 120 15 0 13 -20 15 -120 15 -100 0 -120 -2 -120 -15z"/>
+                                </g>
+                            </svg>
+                        </a>
+                    {% endif %} 
+                  </td>
+                  <td class="font-regular text-center">
+                    <a class="px-2" href="{% url 'staffcalibration:delete_record' item.id %}" onclick="return confirmation()">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="red" class="bi bi-trash">
+                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"></path>
+                            <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"></path>
+                    </svg>
+                    </a>
+                  </td>
+                </tr>
+              {% endif %}
             {% endfor %}
-          {% else %}
-          <tr>
-            <td colspan="6">There are no records to display. Start new calibration.</td>
-          </tr>
-          {% endif %}
-      	</table>
+          </table>
+        {% else %}
+          <p style="color:red">There are no records to display. Start a new calibration.</p>
+        {% endif %}
+
         {% if is_paginated %}
           <div class="grid-3">
             <!-- <ul class="pagination pg-blue"> -->
@@ -122,8 +133,8 @@
               {% endif %}
             </div>
             <!-- </ul> -->
+          </div>
         {% endif %}
-      </div>
       {% else %}
         <div class="flex flex-col justify-around items-center"></div>
           <p class="text-center">Please <a href="{% url 'accounts:login' %}">login</a> or <a href="{% url 'accounts:signup' %}">sign up</a> to view or calibrate a staff range.</p>

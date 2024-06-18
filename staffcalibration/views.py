@@ -29,7 +29,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
 from django.db.models import Case, When, Value, IntegerField, Max, OuterRef, Subquery
-
+from django.db.models import Q
 # Import Models
 from common_func.validators import try_delete_protected
 from calibrationsites.models import (Pillar, 
@@ -52,8 +52,10 @@ class HomeView(generic.ListView, LoginRequiredMixin):
     # ordering = ['--calibration_date']
     def get_queryset(self):
         queryset = StaffCalibrationRecord.objects.all()
-        if not self.request.user.is_staff:
-            queryset = queryset.filter(inst_staff__staff_owner = self.request.user.company)
+        if self.request.user.is_staff:
+            queryset = queryset.filter(~Q(inst_staff__staff_type = 'invar'))
+        else:
+            queryset = queryset.filter(Q(inst_staff__staff_owner = self.request.user.company))
        
         # Annotate the queryset so that staffs can see their records at the top
         queryset = queryset.annotate(
@@ -69,9 +71,10 @@ class HomeView(generic.ListView, LoginRequiredMixin):
 
 @login_required(login_url="/accounts/login")
 def user_staff_registry(request):
-    
+    queryset_refs = StaffCalibrationRecord.objects.none()
     if request.user.is_staff:
-        queryset = StaffCalibrationRecord.objects.all()
+        # all staffs excluding reference staves
+        queryset = StaffCalibrationRecord.objects.filter(~Q(inst_staff__staff_type = 'invar'))
         queryset = queryset.annotate(
             is_top=Case(
                 When(inst_staff__staff_owner = request.user.company, then=Value(1)),
@@ -80,14 +83,19 @@ def user_staff_registry(request):
             )
         )
         queryset = queryset.order_by('-is_top', '-calibration_date')
+        # only reference staves
+        queryset_refs = StaffCalibrationRecord.objects.filter(Q(inst_staff__staff_type = 'invar'))
     else:
         queryset = StaffCalibrationRecord.objects.filter(inst_staff__staff_owner = request.user.company)
     
     subQuery = queryset.filter(inst_staff = OuterRef('inst_staff')).order_by('-calibration_date').values('calibration_date')[:1]
     queryset = queryset.filter(calibration_date = Subquery(subQuery)) #(latest_date=Max('calibration_date')).filter(calibration_date=F('latest_date')).order_by('inst_staff__number')
     
+    subQueryRef = queryset_refs.filter(inst_staff = OuterRef('inst_staff')).order_by('-calibration_date').values('calibration_date')[:1]
+    queryset_refs = queryset_refs.filter(calibration_date = Subquery(subQueryRef)) #(latest_date=Max('calibration_date')).filter(calibration_date=F('latest_date')).order_by('inst_staff__number')
     context = {
         'queryset': queryset,
+        'queryset_refs': queryset_refs,
     }
     return render(request, 'staffcalibration/staff_calibration_record.html', context)
 ################################################################################    
@@ -232,7 +240,6 @@ def calibrate(request):
             
             # Read data and start computing
             staff_reading, message = reading_data(field_file)
-            print(len(staff_reading))
             if len(staff_reading) > 0:
                 # Get the reference data from BarCodeRangeParam
                 if BarCodeRangeParam.objects.filter(site_id = site_id).exists():
@@ -348,7 +355,6 @@ def calibrate(request):
     else:
         form = StaffCalibrationForm(user=request.user)
     return render(request, 'staffcalibration/staff_calibration_form.html', {'form':form})
-
 ###############################################################################
 ######################### PRINT REPORT ########################################
 ###############################################################################
@@ -403,14 +409,17 @@ def print_report(request, id):
         result = generate_pdf('staffcalibration/pdf_staff_report.html', file_object=resp, context=context)
         return result
     else:
-        # filepath = thisRecord.calibration_report.path
-        # result = FileResponse(open(filepath, 'rb'), content_type='application/pdf')
-        # return result
-                
-        filepath = os.path.join(settings.MEDIA_ROOT, thisRecord.calibration_report.path)          
-        result = FileResponse(open(filepath, 'rb'), content_type='application/pdf')  
+        return None
+    # else:
+    #     # filepath = thisRecord.calibration_report.path
+    #     # result = FileResponse(open(filepath, 'rb'), content_type='application/pdf')
+    #     # return result
+    #     # filepath = os.path.join(settings.MEDIA_ROOT, thisRecord.calibration_report.path)  
+    #     filepath = thisRecord.calibration_report.path 
+    #     print(filepath)   
+    #     result = FileResponse(open(filepath, 'rb'), content_type='application/pdf')  
         
-        return result 
+    #     return result 
 ###############################################################################
 ######################### DELETE RECORD #######################################
 ###############################################################################
