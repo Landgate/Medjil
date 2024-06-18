@@ -123,6 +123,43 @@ def compute_range_parameters():
                 obj2.updated_to = True
                 obj2.save()
 
+def compute_range_site(site):
+    # Get the pillars
+    pillarList = Pillar.objects.filter(site_id = site).values_list('name')
+    pillarList = np.sort(np.array([x for y in pillarList for x in y], dtype=int))
+    from_to_pillar = {'from_to': []}
+    i = 0
+    while i < len(pillarList)-1:
+        from_to_pillar['from_to'].append(str(pillarList[i]) + '-' + str(pillarList[i+1]))
+        i += 1
+    
+    CalibrationList = None
+    # If BarCodeRangeParam table does not exists 
+    if not BarCodeRangeParam.objects.filter(site_id=site).exists():                                                
+        obj, created = BarCodeRangeParam.objects.get_or_create(site_id = site, from_to =  from_to_pillar)
+        rangeObj = BarCodeRangeParam.objects.filter(site_id = obj.site_id)
+        CalibrationList = RangeCalibrationRecord.objects.filter(site_id = site, valid=True)
+    # if table exists but range needs to be updated - updated_to=False in RangeCalibrationRecord table
+    elif RangeCalibrationRecord.objects.filter(site_id = site, valid=True, updated_to = False).exists():  
+        rangeObj = BarCodeRangeParam.objects.filter(site_id = site)
+        CalibrationList = RangeCalibrationRecord.objects.filter(site_id = site, valid=True, updated_to = False)
+
+    if CalibrationList:
+        # get the dates and months list
+        obsDateList = np.array(CalibrationList.values_list('job_number', 'calibration_date'), dtype=object)
+        allMonList = [[x.strftime('%b'), x.month] for x in obsDateList[:,1]]
+        updatedObsDateList = np.append(obsDateList,np.c_[allMonList], axis=1)
+        monthNoList, ind  = np.unique(updatedObsDateList[:,-1], return_index=True)
+
+        # for each month in a year, loop to height differences and calculate the range parameters        
+        for m_no in monthNoList:
+            update_range_table(rangeObj, from_to_pillar, m_no)
+            # print('Successfully updated for month_number: ', m_no)
+        for obj2 in CalibrationList:
+            obj2.updated_to = True
+            obj2.save()
+
+
 def update_range_table_current(calib_id):
     # Get Pillar Site from Calibration Site
     if Pillar.objects.filter(site_id = calib_id.site_id).first():

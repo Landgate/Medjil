@@ -33,7 +33,6 @@ FORMS = [("prefill_form", RangeForm1),
         
 urlpatterns = [
     path('', views.HomeView.as_view(), name='home'),
-    path('range-guide/', views.view_user_guide, name='user_guide'),
     path('calibrate/', views.RangeCalibrationWizard.as_view(FORMS), name='calibrate'),
     path('adjust/<str:id>/', views.adjust, name='adjust'),
     path('print-record/<str:id>/', views.print_record, name='print_record'),
