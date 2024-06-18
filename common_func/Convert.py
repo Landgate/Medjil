@@ -88,6 +88,9 @@ def convert_headings(raw_headings):
         'temperature': 'raw_temperature',
         'pressure': 'raw_pressure',
         'humidity': 'raw_humidity',
+        'temperature2': 'raw_temperature2',
+        'pressure2': 'raw_pressure2',
+        'humidity2': 'raw_humidity2',
         'pillar_rl': 'reduced_level',
         'pillar_name': 'pillar'
     }
@@ -276,6 +279,29 @@ def Calibrations_qry(frm_data):
                     ).order_by('-calibration_date').first()
     else:
         calib['hygro'] = None
+    if frm_data['thermometer2']:
+        calib['them2'] = Mets_certificate.objects.filter(
+                    calibration_date__lte = frm_data['survey_date'] ,
+                    instrument__pk = frm_data['thermometer2'].pk
+                    ).order_by('-calibration_date').first()
+    else:
+        calib['them2'] = None 
+    
+    if frm_data['barometer2']:
+        calib['baro2'] = Mets_certificate.objects.filter(
+                    calibration_date__lte = frm_data['survey_date'] ,
+                    instrument__pk = frm_data['barometer2'].pk
+                    ).order_by('-calibration_date').first()
+    else:
+        calib['baro2'] = None
+        
+    if frm_data['hygrometer2']:
+        calib['hygro2'] = Mets_certificate.objects.filter(
+                    calibration_date__lte = frm_data['survey_date'] ,
+                    instrument__pk = frm_data['hygrometer2'].pk
+                    ).order_by('-calibration_date').first()
+    else:
+        calib['hygro2'] = None   
         
     return calib
 

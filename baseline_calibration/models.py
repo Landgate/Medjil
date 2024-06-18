@@ -331,7 +331,8 @@ class Pillar_Survey(models.Model):
     edmi_calib_applied = models.BooleanField(
         default=False,
         verbose_name= 'EDMI calibration corrections applied',
-        help_text="The EDMI calibration correction has been applied prior to data import.")
+        help_text="The EDMI calibration correction"
+        " has been applied prior to data import.")
 
     level = models.ForeignKey(
         DigitalLevel, on_delete = models.PROTECT,
@@ -355,6 +356,19 @@ class Pillar_Survey(models.Model):
         verbose_name= 'thermometer calibration corrections applied',
         help_text="The thermometer calibration correction"
          " has been applied prior to data import.")
+    thermometer2 = models.ForeignKey(
+        Mets_Inst, on_delete = models.PROTECT, 
+        null = True, blank = True,
+        limit_choices_to={'mets_specs__inst_type': 'thermo'},
+        verbose_name= 'Thermometer 2',
+        help_text="Thermometer 2 used for survey",
+        related_name="field_thermometer2")
+    thermo2_calib_applied = models.BooleanField(
+        default=True,
+        verbose_name= 'thermometer 2 calibration corrections applied',
+        help_text="The thermometer 2 calibration correction"
+         " has been applied prior to data import.")
+    
     barometer = models.ForeignKey(
         Mets_Inst, on_delete = models.PROTECT, 
         limit_choices_to={'mets_specs__inst_type': 'baro'},
@@ -363,16 +377,43 @@ class Pillar_Survey(models.Model):
     baro_calib_applied = models.BooleanField(
         default=True,
         verbose_name= 'barometer calibration corrections applied',
-        help_text="The barometer calibration correction has been applied prior to data import.")
+        help_text="The barometer calibration correction"
+        " has been applied prior to data import.")
+    barometer2 = models.ForeignKey(
+        Mets_Inst, on_delete = models.PROTECT, 
+        null = True, blank = True,
+        limit_choices_to={'mets_specs__inst_type': 'baro'},
+        verbose_name= 'Barometer 2',
+        help_text="Barometer 2 used for survey",
+        related_name="field_barometer2")
+    baro2_calib_applied = models.BooleanField(
+        default=True,
+        verbose_name= 'barometer 2 calibration corrections applied',
+        help_text="The barometer 2 calibration correction"
+        " has been applied prior to data import.")
+    
     hygrometer = models.ForeignKey(
         Mets_Inst, on_delete = models.PROTECT, blank=True, null = True,
         limit_choices_to={'mets_specs__inst_type': 'hygro'},
-        help_text="Hygrometer, if used for survey",
+        help_text="Hygrometer used for survey",
         related_name="field_hygrometer")
     hygro_calib_applied = models.BooleanField(
         default=True,
         verbose_name= 'Hygrometer calibration corrections applied',
-        help_text="The hygrometer correction has been applied prior to data import.")
+        help_text="The hygrometer correction"
+        " has been applied prior to data import.")
+    hygrometer2 = models.ForeignKey(
+        Mets_Inst, on_delete = models.PROTECT, blank=True, null = True,
+        limit_choices_to={'mets_specs__inst_type': 'hygro'},
+        verbose_name= 'Hygrometer 2',
+        help_text="Hygrometer 2 used for survey",
+        related_name="field_hygrometer2")
+    hygro2_calib_applied = models.BooleanField(
+        default=True,
+        verbose_name= 'Hygrometer 2 calibration corrections applied',
+        help_text="The hygrometer 2 correction has"
+        " been applied prior to data import.")
+    
     psychrometer = models.ForeignKey(
         Mets_Inst, on_delete = models.PROTECT, blank=True, null = True,
         limit_choices_to={'mets_specs__inst_type': 'psy'},
@@ -475,6 +516,16 @@ class EDM_Observation(models.Model):
         validators = [MinValueValidator(0), MaxValueValidator(1500.0)],
         null = True, blank = True)
     raw_humidity = models.FloatField(
+        validators = [MinValueValidator(0), MaxValueValidator(100.0)],
+        null = True, blank = True)
+    
+    raw_temperature2 = models.FloatField(
+        validators = [MinValueValidator(0), MaxValueValidator(50.0)],
+        null = True, blank = True)
+    raw_pressure2 = models.FloatField(
+        validators = [MinValueValidator(0), MaxValueValidator(1500.0)],
+        null = True, blank = True)
+    raw_humidity2 = models.FloatField(
         validators = [MinValueValidator(0), MaxValueValidator(100.0)],
         null = True, blank = True)
 

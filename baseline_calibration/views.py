@@ -209,7 +209,10 @@ def calibrate1(request, id):
             for o in raw_edm_obs.values():
                 from_pillar_id = baseline['pillars'].get(name=o['from_pillar'])
                 to_pillar_id = baseline['pillars'].get(name=o['to_pillar'])
-        
+                if 'raw_temperature2' not in o.keys(): o['raw_temperature2']=None
+                if 'raw_pressure2' not in o.keys(): o['raw_pressure2']=None
+                if 'raw_humidity2' not in o.keys(): o['raw_humidity2']=None
+                
                 EDM_Observation.objects.create(
                     pillar_survey=ps_instance,
                     from_pillar=from_pillar_id,
@@ -221,6 +224,9 @@ def calibrate1(request, id):
                     raw_temperature=o['raw_temperature'],
                     raw_pressure=o['raw_pressure'],
                     raw_humidity=o['raw_humidity'],
+                    raw_temperature2=o['raw_temperature2'],
+                    raw_pressure2=o['raw_pressure2'],
+                    raw_humidity2=o['raw_humidity2'],
                     use_for_alignment=o['use_for_alignment'],
                     use_for_distance=o['use_for_distance'],
                 )
@@ -311,15 +317,45 @@ def calibrate2(request,id):
     
     for o in raw_edm_obs.values():
         #----------------- Instrument Corrections -----------------#
-        o['Temp'],c = apply_calib(o['raw_temperature'],
-                                    pillar_survey['thermo_calib_applied'], 
-                                    calib['them'])
-        o['Pres'],c = apply_calib(o['raw_pressure'],
-                                    pillar_survey['baro_calib_applied'],
-                                    calib['baro'])
-        o['Humid'],c = apply_calib(o['raw_humidity'],
-                                    pillar_survey['hygro_calib_applied'],
-                                    calib['hygro'])
+        if pillar_survey['thermometer2']:
+            o['Temp1'], _ = calib['them'].apply_calibration(
+                o['raw_temperature'],
+                pillar_survey['thermo_calib_applied'])
+            o['Temp2'], _ = calib['them2'].apply_calibration(
+                o['raw_temperature2'],
+                pillar_survey['thermo2_calib_applied'])
+            o['Temp'] = (o['Temp1']+o['Temp2'])/2
+        else:
+            o['Temp'], _ = calib['them'].apply_calibration(
+                o['raw_temperature'],
+                pillar_survey['thermo_calib_applied'])
+            
+        if pillar_survey['barometer2']:
+            o['Pres1'], _ = calib['baro'].apply_calibration(
+                o['raw_pressure'],
+                pillar_survey['baro_calib_applied'])
+            o['Pres2'], _ = calib['baro2'].apply_calibration(
+                o['raw_pressure2'],
+                pillar_survey['baro2_calib_applied'])
+            o['Pres'] = (o['Pres1']+o['Pres2'])/2
+        else:
+            o['Pres'], _ = calib['baro'].apply_calibration(
+                o['raw_pressure'],
+                pillar_survey['baro_calib_applied'])
+            
+        if pillar_survey['hygrometer2']:
+            o['Humid1'], _ = calib['hygro'].apply_calibration(
+                o['raw_humidity'],
+                pillar_survey['hygro_calib_applied'])
+            o['Humid2'], _ = calib['hygro2'].apply_calibration(
+                o['raw_humidity2'],
+                pillar_survey['hygro2_calib_applied'])
+            o['Humid'] = (o['Humid1']+o['Humid2'])/2
+        else:
+            o['Humid'], _ = calib['hygro'].apply_calibration(
+                o['raw_humidity'],
+                pillar_survey['hygro_calib_applied'])
+            
         c, o['Calibration_Correction'] = apply_calib(
             o['raw_slope_dist'],
             pillar_survey['edmi_calib_applied'],

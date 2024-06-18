@@ -70,6 +70,9 @@ class Pillar_SurveyAdmin(admin.ModelAdmin):
               (('thermometer','thermo_calib_applied'),
               ('barometer','baro_calib_applied'),
               ('hygrometer','hygro_calib_applied'),
+              ('thermometer2','thermo2_calib_applied'),
+              ('barometer2','baro2_calib_applied'),
+              ('hygrometer2','hygro2_calib_applied'),
               ('psychrometer','psy_calib_applied'))
               }),
               ('Statistical parameters', { 
@@ -100,11 +103,10 @@ class EDM_ObservationAdmin(admin.ModelAdmin):
     fields = ['pillar_survey',
               ('from_pillar','to_pillar'),
               ('inst_ht','tgt_ht'),
-              ('hz_direction','slope_dist'),
-              'temperature',
-              'wet_temp',
-              'pressure',
-              'humidity']
+              ('hz_direction','raw_slope_dist'),
+              ('raw_temperature','raw_temperature2'),
+              ('raw_pressure','raw_pressure2'),
+              ('raw_humidity','raw_humidity2')]
 
 
 #admin.site.register(Level_Observation)
@@ -171,6 +173,9 @@ try:
                 (('thermometer','thermo_calib_applied'),
                 ('barometer','baro_calib_applied'),
                 ('hygrometer','hygro_calib_applied'),
+                ('thermometer2','thermo2_calib_applied'),
+                ('barometer2','baro2_calib_applied'),
+                ('hygrometer2','hygro2_calib_applied'),
                 ('psychrometer','psy_calib_applied'))
                 }),
                 ('Statistical parameters', { 
@@ -199,13 +204,12 @@ try:
         list_display = ('pillar_survey','from_pillar','to_pillar')
         list_filter = ('pillar_survey',)
         fields = ['pillar_survey',
-                ('from_pillar','to_pillar'),
-                ('inst_ht','tgt_ht'),
-                ('hz_direction','slope_dist'),
-                'temperature',
-                'wet_temp',
-                'pressure',
-                'humidity']
+                  ('from_pillar','to_pillar'),
+                  ('inst_ht','tgt_ht'),
+                  ('hz_direction','raw_slope_dist'),
+                  ('raw_temperature','raw_temperature2'),
+                  ('raw_pressure','raw_pressure2'),
+                  ('raw_humidity','raw_humidity2')]
 
 
     #admin.site.register(Level_Observation)
