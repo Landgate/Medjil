@@ -41,7 +41,7 @@ try:
         list_display = ['job_number','inst_staff', 'staff_type', 'staff_length', \
                         'inst_level', 'calibration_date', 'site_id']
 
-        ordering = ['inst_staff__staff_number', '-calibration_date']
+        ordering = ['-calibration_date', 'inst_staff__staff_number']
         list_filter = ['inst_staff__staff_model_name', 'site_id']
 
     @admin.register(AdjustedDataModel, site=medjil_super_site)

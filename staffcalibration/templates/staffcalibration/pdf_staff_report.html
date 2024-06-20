@@ -18,7 +18,7 @@
 {% load static %}
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<!-- <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> -->
 	<meta charset="UTF-8">
 	<style>
 		*, html {
@@ -52,7 +52,7 @@
 	            left: 50pt; width: 512pt; top: 20pt; height: 70pt;
 	        }
 	        @frame content_frame {          /* Content Frame */
-	            left: 50pt; width: 512pt; top: 90pt; height: 610pt;
+	            left: 50pt; width: 512pt; top: 90pt; height: 650pt;
 	        }
 	        @frame footer_frame {           /* Another static Frame */
 	            -pdf-frame-content: footer_content;
@@ -136,12 +136,12 @@
     	<hr>
 	    <table>
 	        <tr>
-	          <td>Laboratory Name: <strong> {{ site_id }} </strong> </td>
-	          <td>Authority: <strong> {{ site_id.operator }} </strong> </td>
+	          <td>Laboratory Name: <strong> {{ calibration.site_id }} </strong> </td>
+	          <td>Authority: <strong> {{ calibration.site_id.operator }} </strong> </td>
 	        </tr>	
 	        <tr>
-	          <td>Description: {{ site_type }} </td>
-	          <td>Location: {{ site_id.site_address }}, {{ site_id.state.statecode }} {{ site_id.locality.postcode }} </td>
+	          <td>Description: {{ calibration.site_type }} </td>
+	          <td>Location: {{ calibration.site_id.site_address }}, {{ calibration.site_id.state.statecode }} {{ calibration.site_id.locality.postcode }} </td>
 	        </tr>
 	    </table>	
 	    <hr>
@@ -151,28 +151,28 @@
 	          <th><u>Level &amp; staff details</u> </th>
 	        </tr>
 	        <tr>
-	          <td> Job Number : <strong>{{ job_number }} </strong> </td>
-	          <td> Staff Number: <strong> {{ staff_number }} </strong> ({{ staff_number.staff_type|title }}, {{ staff_number.staff_length }} m)</td>
+	          <td> Job Number : <strong>{{ calibration.job_number }} </strong> </td>
+	          <td> Staff Number: <strong> {{ calibration.inst_staff.staff_number }} </strong> ({{ calibration.inst_staff.staff_type|title }}, {{ calibration.inst_staff.staff_length }} m)</td>
 	        </tr>
 			<tr>
-	        	<td>Observation Date: {{ calibration_date }}</td>
-	        	<td>Staff Owner: <strong> {{ staff_number.staff_owner }} </strong></td>
+	        	<td>Observation Date: {{ calibration.calibration_date }}</td>
+	        	<td>Staff Owner: <strong> {{ calibration.inst_staff.staff_owner }} </strong></td>
 	        </tr>	
 	        <tr>
 	        	<td> </td>
-	        	<td>Level Number: <strong> {{ level_number }} </strong></td>
+	        	<td>Level Number: <strong> {{ calibration.inst_level.level_number }} </strong></td>
 	        </tr>
 	    	<tr></tr>
 	    	<tr>
-	    		<td>Average Temperature: <strong> {{ average_temperature|floatformat:1 }}°C</strong></td>
-	    		<td>Observer: <strong> {{ observer }} </strong></td>
+	    		<td>Average Temperature: <strong> {{ calibration.observed_temperature|floatformat:1 }}°C</strong></td>
+	    		<td>Observer: <strong> {{ calibration.observer }} </strong></td>
 	    	</tr>
 	    <table>
 	    <hr>
-	    <p>Correction Factor: <strong>{{scale_factor|floatformat:6}} </strong>at 25.0°C. Note that Correction Factor is temperature dependent.</p>
+	    <p>Correction Factor: <strong>{{calibration.scale_factor|floatformat:6}} </strong>at 25.0°C. Note that Correction Factor is temperature dependent.</p>
 		<p>Apply the correction factor to your observed height difference (&Delta;H<sub>obs</sub>) as &rarr; &Delta;H<sub>corrected</sub> = ((((T<sub>ave</sub> - 25.0) * {{ thermal_coefficient|floatformat:7 }})+1) * {{ scale_factor|floatformat:6}}) * &Delta;H<sub>obs</sub>, where T<sub>ave</sub> is the observed temperature during the measurement.
 		</p>
-		<p>Graduation Uncertainty: <strong>{{ grad_uncertainty|floatformat:5 }} </strong> metres at 95% confidence interval</p>
+		<p>Graduation Uncertainty: <strong>{{ calibration.grad_uncertainty|floatformat:5 }} </strong> metres at 95% confidence interval</p>
 		<p class="text-red">**Check for possible warnings on the next page.**</p>
 		<hr>
 	    <table>
@@ -235,25 +235,25 @@
 	          <th><u>Level &amp; staff details</u> </th>
 	        </tr>
 	        <tr>
-				<td> Job Number : <strong>{{ job_number }} </strong> </td>
-	          <td> Staff Number: <strong> {{ staff_number }} </strong> ({{ staff_number.staff_type|title }}, {{ staff_number.staff_length }} m)</td>
+				<td> Job Number : <strong>{{ calibration.job_number }} </strong> </td>
+	          <td> Staff Number: <strong> {{ calibration.inst_staff.staff_number }} </strong> ({{ calibration.inst_staff.staff_type|title }}, {{ calibration.inst_staff.staff_length }} m)</td>
 	        </tr>	
 	        <tr>
-	        	<td>Observation Date: {{ calibration_date }}</td>
-	        	<td>Staff Owner: <strong> {{ staff_number.staff_owner }} </strong></td>
+	        	<td>Observation Date: {{ calibration.calibration_date }}</td>
+	        	<td>Staff Owner: <strong> {{ calibration.inst_staff.staff_owner }} </strong></td>
 	        </tr>	
 	        <tr>
 	        	<td> </td>
-	        	<td>Level Number: <strong> {{ level_number }} </strong></td>
+	        	<td>Level Number: <strong> {{ calibration.inst_level.level_number }} </strong></td>
 	        </tr>
 	    	<tr></tr>
 	    	<tr>
-	    		<td>Average Temperature: <strong> {{ average_temperature|floatformat:1 }}°C</strong></td>
-	    		<td>Observer: <strong> {{ observer }} </strong></td>
+	    		<td>Average Temperature: <strong> {{ calibration.observed_temperature|floatformat:1 }}°C</strong></td>
+	    		<td>Observer: <strong> {{ calibration.observer }} </strong></td>
 	    	</tr>
 	    <table>
 	    <hr>
-		<p>Correction Factor = <strong> 1.00000 </strong> when the temperature is <strong>{{ temp_at_sf1|floatformat:1 }}°C</strong>. 
+		<p>Correction Factor = <strong> 1.00000 </strong> when the temperature is <strong>{{ calib_adj.temp_at_sf1|floatformat:1 }}°C</strong>. 
 		{% if temp_at_sf1 > 55.0 or temp_at_sf1 < -10.0%} 
 			<p class="warning"> 
 				Warning! The correction factor appears to exceed the expected temperature range between -10°C and 55°C. Please check for any possible errors in metadata information and staff readings.
@@ -283,10 +283,93 @@
 	    </table>
 	    <hr>
 	 </div>
+	 <pdf:nextpage />
+	<hr>
+	<div id="content3">
+	
+		<table>
+			<tr>
+				<th><u>This test information</u></th>
+				<th><u>Level &amp; staff details</u> </th>
+			</tr>
+			<tr>
+				<td> Job Number : <strong>{{ calibration.job_number }} </strong> </td>
+				<td> Staff Number: <strong> {{ calibration.inst_staff.staff_number }} </strong> ({{ calibration.inst_staff.staff_type|title }}, {{ calibration.inst_staff.staff_number.staff_length }} m)</td>
+			</tr>	
+			<tr>
+				<td>Observation Date: {{ calibration.calibration_date }}</td>
+				<td>Staff Owner: <strong> {{ calibration.inst_staff.staff_owner }} </strong></td>
+			</tr>	
+			<tr>
+				<td> </td>
+				<td>Level Number: <strong> {{ calibration.inst_level.level_number }} </strong></td>
+			</tr>
+			<tr></tr>
+			<tr>
+				<td>Average Temperature: <strong> {{ calibration.observed_temperature|floatformat:1 }}°C</strong></td>
+				<td>Observer: <strong> {{ calibration.observer }} </strong></td>
+			</tr>
+		<table>
+		<hr>
+		<p>Correction Factor = <strong> 1.00000 </strong> when the temperature is <strong>{{ calib_adj.temp_at_sf1|floatformat:1 }}°C</strong>. 
+		{% if temp_at_sf1 > 55.0 or temp_at_sf1 < -10.0%} 
+			<p class="warning"> 
+				Warning! The correction factor appears to exceed the expected temperature range between -10°C and 55°C. Please check for any possible errors in metadata information and staff readings.
+				
+			</p> 
+		{% endif %}
+		<hr>
+		<br>
+		{% if calibration.error_url %}
+			<div>
+				<img src="{{ calibration.error_url|default_if_none:'#' }}" alt="Staff Errors" width="90%">
+				<br>
+				<br>
+				<p>
+					This figure is produced based on the table given in the next page (on Page 4). 
+				</p>
+			</div>
+		{% endif %}
+	</div>
+
+	<pdf:nextpage />
+
+	<div id="content4">
+		<h3  style="text-align:center;">Estimated Staff Errors at Regular Intervals</h3>
+	    <table width=90%>
+			<tr style="text-align:center;" class="tr-top">
+	    		<td></td>
+	    		<td></td>
+	    		<td></td>
+				<td>Corrected</td>
+	    	</tr>
+	    	<tr style="text-align:center;">
+	    		<td>From</td>
+	    		<td>To</td>
+	    		<td>Error</td>
+				<td>Inverval</td>
+	    	</tr>
+	    	<tr style="text-align:center;" class="tr-bottom">
+	    		<td>(metres)</td>
+	    		<td>(metres)</td>
+	    		<td>(metres)</td>
+				<td>(metres)</td>
+	    	</tr>
+	    	{% for a,b,c,d,e in staff_errors_intervals.data %}
+				<tr style="text-align:center;">   
+				<td> {{a|floatformat:2}}</td>
+				<td> {{b|floatformat:2}}</td>
+				<td> {{d|floatformat:2}}</td>
+				<td> {{e|floatformat:5}}</td>
+				</tr>
+	        {% endfor %}
+
+	    </table>
+	    <hr>
+	</div>
 	 <!-- <pdf:nextpage /> -->
 
-	 <!-- <pdf:nextpage /> -->
-	<script type="text/javascript">
+	<script>
     	var today = new Date();
       	document.getElementById('current_time').innerHTML=today.toLocaleString('en-AU');
     </script>

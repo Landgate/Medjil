@@ -40,6 +40,10 @@ def get_upload_to_calibreport(instance, filename):
     filename = instance.calibration_date.strftime('%Y%m%d') + '-' + filename
     return 'StaffCalibration/%s/%s/CalibrationReport/%s' % (instance.inst_staff.staff_owner.company_abbrev, instance.inst_staff.staff_type, filename)
 
+def get_upload_to_starrerror(instance, filename):
+    filename = filename + '-' + instance.inst_staff.staff_number + '-' + instance.calibration_date.strftime('%Y%m%d') + '.svg'
+    return 'StaffCalibration/%s/%s/CalibrationReport/%s' % (instance.inst_staff.staff_owner.company_abbrev, instance.inst_staff.staff_type, filename)
+
 class StaffCalibrationRecord(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, help_text='Unique ID for this calibration record')
     site_id = models.ForeignKey(
@@ -111,6 +115,11 @@ class StaffCalibrationRecord(models.Model):
         validators=[validate_file_size],
         help_text = "Calibration report/certificate in pdf/jpg/tif format.",
         verbose_name= 'Calibration certificate')
+    calibration_error = models.ImageField(
+        upload_to = get_upload_to_starrerror,
+        null = True, blank = True,
+        help_text = "Staff errors svg format.",
+        verbose_name= 'Staff Errors')
     created_on = models.DateTimeField(auto_now_add=True, null=True)
     modified_on = models.DateTimeField(auto_now=True, null=True)
 
@@ -121,7 +130,6 @@ class StaffCalibrationRecord(models.Model):
 
     def __str__(self):
         return f'{self.inst_staff.staff_number} ({self.calibration_date.strftime("%Y-%m-%d")})'
-
     def staff_type(self):
         return self.inst_staff.staff_type
     def staff_length(self):
@@ -146,7 +154,15 @@ class StaffCalibrationRecord(models.Model):
         if self.field_book:
             return getattr(self.field_book, 'url', None)
         return None
-
+    @property
+    def error_url(self):
+        """
+        Return url if self.calibration_error is not None, 
+        'url' exist and has a value, else, return None.
+        """
+        if self.calibration_error:
+            return getattr(self.calibration_error, 'url', None)
+        return None
 # Adjustment
 class AdjustedDataModel(models.Model):
     calibration_id = models.ForeignKey(

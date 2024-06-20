@@ -50,6 +50,7 @@ class Migration(migrations.Migration):
                 ('observer', models.CharField(blank=True, max_length=50, null=True)),
                 ('calibration_date', models.DateField(help_text='Date of observation/measurement taken.', null=True)),
                 ('calibration_report', models.FileField(blank=True, help_text='Calibration report/certificate in pdf/jpg/tif format.', null=True, max_length=1000, upload_to=staffcalibration.models.get_upload_to_calibreport, validators=[common_func.validators.validate_file_size], verbose_name='Calibration certificate')),
+                ('calibration_error', models.ImageField(blank=True, help_text="Staff errors svg format.", null=True, upload_to=staffcalibration.models.get_upload_to_starrerror, verbose_name="Staff Errors",)),
                 ('created_on', models.DateTimeField(auto_now_add=True, null=True)),
                 ('modified_on', models.DateTimeField(auto_now=True, null=True)),
                 ('inst_level', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, to='instruments.digitallevel', verbose_name='Level Number')),

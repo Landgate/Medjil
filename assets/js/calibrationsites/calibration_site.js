@@ -77,7 +77,7 @@ countryInput.addEventListener('change', e => {
 
 stateInput.addEventListener('change', e => {
     stateId = e.target.value
-    console.log(stateId)
+    // console.log(stateId)
     var url = `get-locality-json/${stateId}/`
 
     // Set option to empty and fill in with default text
@@ -89,7 +89,7 @@ stateInput.addEventListener('change', e => {
             type: 'GET',
             url: url,
             success: function(response) {
-                console.log(response.data)
+                // console.log(response.data)
                 const localityData = response.data;
                 localityData.map(item=> {
                 const option = document.createElement('option');
