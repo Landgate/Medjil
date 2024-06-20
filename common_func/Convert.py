@@ -279,7 +279,7 @@ def Calibrations_qry(frm_data):
                     ).order_by('-calibration_date').first()
     else:
         calib['hygro'] = None
-    if frm_data['thermometer2']:
+    if 'thermometer2' in  frm_data.keys():
         calib['them2'] = Mets_certificate.objects.filter(
                     calibration_date__lte = frm_data['survey_date'] ,
                     instrument__pk = frm_data['thermometer2'].pk
@@ -287,15 +287,15 @@ def Calibrations_qry(frm_data):
     else:
         calib['them2'] = None 
     
-    if frm_data['barometer2']:
+    if 'barometer2' in  frm_data.keys():
         calib['baro2'] = Mets_certificate.objects.filter(
                     calibration_date__lte = frm_data['survey_date'] ,
                     instrument__pk = frm_data['barometer2'].pk
                     ).order_by('-calibration_date').first()
     else:
         calib['baro2'] = None
-        
-    if frm_data['hygrometer2']:
+    
+    if 'hygrometer2' in  frm_data.keys():
         calib['hygro2'] = Mets_certificate.objects.filter(
                     calibration_date__lte = frm_data['survey_date'] ,
                     instrument__pk = frm_data['hygrometer2'].pk
