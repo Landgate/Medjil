@@ -58,8 +58,7 @@
             <div class="mb-3 px-2 site-form-header">
                 <p class="text-center text-lg"><u>Step {{ wizard.steps.step1 }} of  {{ wizard.steps.count }}</u></p>
             </div>
-            {% csrf_token %}
-            <!-- <table> -->
+            {% csrf_token %} 
             <table>
                 {{ wizard.management_form }}
                 {% if wizard.form.forms %}
