@@ -370,7 +370,7 @@ def instrument_register(request, inst_disp):
 
         tabs['insts_list'] = Staff.objects.all()
         tabs['certificates_list'] = (StaffCalibrationRecord.objects.all()
-            .order_by('inst_staff__staff_number', '-calibration_date')
+            .order_by('-calibration_date', 'inst_staff__staff_number')
             .values('pk', 'inst_staff__staff_number',
                     'calibration_date',
                     'scale_factor', 'grad_uncertainty','calibration_report'))

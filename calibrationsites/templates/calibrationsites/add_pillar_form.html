@@ -89,7 +89,7 @@
   addButton.addEventListener('click', function(){
     let newForm = pillarForm[0].cloneNode(true)
     let formRegex = RegExp(`form-(\\d){1}-`,'g')
-    console.log(formRegex)
+    // console.log(formRegex)
     formNum++
     newForm.innerHTML = newForm.innerHTML.replace(formRegex, `form-${formNum}-`)
     container.insertBefore(newForm, addButton)

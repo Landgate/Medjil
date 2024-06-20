@@ -37,7 +37,7 @@
       <h1 class="post-title">Staff Calibration Report</h1>
 
       <div class="flex items-center justify-between">
-        <a href="{% url 'staffcalibration:print_report' calibration_id %}" target="__blank">
+        <a href="{% url 'staffcalibration:print_report' calibration.id %}" target="__blank">
           <button class="mr-3 px-3 py-1 border border-transparent leading-4 font-small rounded text-white bg-red-600 hover:bg-red-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out" >Print Report &raquo;</button>
         </a>
   
@@ -54,24 +54,24 @@
     <div class="grid-2">
       <div>
         <div>
-          Staff Number: <strong>{{ staff_number }} </strong>
+          Staff Number: <strong>{{ calibration.inst_staff.staff_number }} </strong>
         </div>
         <div>
           Staff Owner: <strong> {{ request.user.company }} </strong>
         </div>
         <div>
-          Level Number: <strong> {{ level_number }} </strong>
+          Level Number: <strong> {{ calibration.inst_level.level_number }} </strong>
         </div>
       </div>
       <div>
         <div>
-          Length: <strong> {{ staff_number.staff_length }} </strong> meters
+          Length: <strong> {{ calibration.inst_staff.staff_length }} </strong> meters
         </div>
         <div>
-          Staff Type: <strong> {{ staff_number.staff_type|title }} </strong>
+          Staff Type: <strong> {{ calibration.inst_staff.staff_type|title }} </strong>
         </div>
         <div>
-          Thermal Coefficient: <strong> {{ thermal_coefficient|floatformat:2 }} ppm </strong>
+          Thermal Coefficient: <strong> {{ calibration.inst_staff.thermal_coefficient|floatformat:2 }} ppm </strong>
         </div>
       </div>
     </div>
@@ -80,43 +80,44 @@
       <div>
         <h3>This test information</h3>
         <div>
-          Job Number: <strong>{{ job_number }} </strong>
+          Job Number: <strong>{{ calibration.job_number }} </strong>
         </div>
         <div>
-          Calibration Date: <strong> {{ calibration_date }} </strong>
+          Calibration Date: <strong> {{ calibration.calibration_date }} </strong>
         </div>
         <br>
         <div>
-          Observer: <strong> {{ observer }} </strong>
+          Observer: <strong> {{ calibration.observer }} </strong>
         </div>
       </div>
       <div>
         <h3> Site Information </h3>
         <div>
-          Name: <strong> {{ site_id.site_name}} {{site_type}} </strong>
+          Name: <strong> {{ calibration.site_id.site_name}} {{calibration.site_id.staff_type}} </strong>
         </div>
         <div>
-          Location: {{ site_id.site_address}} {{site_id.state.statecode}} {{site_id.locality.postcode }} </strong>
+          Location: {{ calibration.site_id.site_address}} {{calibration.site_id.state.statecode}} {{calibration.site_id.locality.postcode }} </strong>
         </div>
         <br>
         <div>
-          Average Temperature: <strong> {{ average_temperature|floatformat:1 }}&#8451; </strong>
+          Average Temperature: <strong> {{ calibration.observed_temperature|floatformat:1 }}&#8451; </strong>
         </div>
       </div>
     </div>
   </div>
   <hr>
-  <div>
-    <p>
-      Correction Factor: <strong>{{ scale_factor1|floatformat:6 }}</strong> at 25.0&#8451;. Note that Correction Factor is temperature dependent.
-    </p>
-    <p>
-      Graduation Uncertainty: <strong>{{ grad_uncertainty|floatformat:5 }}</strong> metres at 95% confidence interval
-    </p>
-  </div>
-
-  <hr>
+  
   <div class="post-content">
+    <div>
+      <p>
+        Correction Factor: <strong>{{ calibration.scale_factor|floatformat:6 }}</strong> at 25.0&#8451;. Note that Correction Factor is temperature dependent.
+      </p>
+      <p>
+        Graduation Uncertainty: <strong>{{ calibration.grad_uncertainty|floatformat:5 }}</strong> metres at 95% confidence interval
+      </p>
+    </div>
+  
+    <hr>
     <h3>Staff readings/corrections </h3>
     <table style="table-layout: fixed; width: 85%"> 
       <tr>
@@ -142,15 +143,16 @@
   
   <hr>
   <br>
-  <div>
-    <!-- <p>
-      Correction Factor: <strong>{{ scale_factor0|floatformat:8 }} (1+({{ thermal_coefficient |floatformat:5 }}(Temperature-{{ average_temperature|floatformat:1 }})))</strong> -->
-    <p>
-      Correction Factor = 1.00000 when the temperature is <strong>{{ temp_at_sf1|floatformat:1 }}&#8451;</strong>
-    </p>
-  </div>
-  <hr class="style1">
   <div class="post-content">
+    <div>
+      <p>
+        Correction Factor: <strong>{{ calib_adj.uscale_factor|floatformat:8 }} (1+({{ calibration.inst_staff.thermal_coefficient |floatformat:5 }}(T-{{ calibration.observed_temperature|floatformat:1 }})))</strong>
+      </p>
+      <p>
+        Correction Factor = <strong>1.00000</strong> when the temperature is <strong>{{ calib_adj.temp_at_sf1|floatformat:1 }}&#8451;</strong>
+      </p>
+    </div>
+    <hr class="style1">
     <h2>Staff corrections </h2>
     <table style="table-layout: fixed; width: 75%"> 
       <tr>
@@ -169,6 +171,49 @@
       </tr>
     </table>
   </div>
+  <br>
+  <hr class="style1">
+  <br>
+  {% if calibration.error_url %}
+    <div class="post-content">
+      <h2>Staff Errors </h2>
+      <div>
+        <img src="{{ calibration.error_url|default_if_none:'#' }}" alt="Staff Errors" width="90%">
+        <p>This figure is produced based on the table given below.
+        </p>
+      </div>
+      <br>
+      <table style="table-layout: fixed; width: 75%"> 
+        <tr>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th class="text-center font-semibold text-base">Corrected</th>
+        </tr>
+        <tr>
+          <th class="text-center font-semibold text-base">From</th>
+          <th class="text-center font-semibold text-base">To</th>
+          <th class="text-center font-semibold text-base">Error</th>
+          <th class="text-center font-semibold text-base">Inverval</th>
+        </tr>
+        <tr class="tr-bottom" >
+          <th class="text-center font-semibold text-base">(metres)</th>
+          <th class="text-center font-semibold text-base">(metres)</th>
+          <th class="text-center font-semibold text-base">(metres)</th>
+          <th class="text-center font-semibold text-base">(metres)</th>
+        </tr>
+
+        {% for a,b,c,d,e in staff_errors_intervals.data %}
+          <tr style="text-align:center;">   
+            <td> {{a|floatformat:2}}</td>
+            <td> {{b|floatformat:2}}</td>
+            <td> {{d|floatformat:2}}</td>
+            <td> {{e|floatformat:5}}</td>
+          </tr>
+        {% endfor %}
+      </table>
+    </div>
+  {% endif %}
 </article>
 
 {% endblock content %}

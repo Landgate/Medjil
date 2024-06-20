@@ -116,13 +116,13 @@
         e.preventDefault()
 
         let newForm = birdForm[0].cloneNode(true)
-        console.log(newForm)
+        // console.log(newForm)
         let formRegex = RegExp(`form-(\\d){1}-`,'g')
-        console.log(formRegex)
+        // console.log(formRegex)
         formNum++
         newForm.innerHTML = newForm.innerHTML.replace(formRegex, `form-${formNum}-`)
         container.insertBefore(newForm, addButton)
-        console.log(newForm)
+        // console.log(newForm)
         totalForms.setAttribute('value', `${formNum+1}`)
     }
 </script>

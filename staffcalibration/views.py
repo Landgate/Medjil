@@ -110,7 +110,7 @@ def create_record(request):
         form = StaffCalibrationRecordForm(user=request.user)
     return render(request, 'staffcalibration/staff_calibration_record_form.html', {'form':form})
 ################################################################################
-############################## STAFF CALIBRATION ###############################
+############################## STAFF FILE READING ##############################
 ################################################################################
 # Handle Data
 def reading_data(csv_file):
@@ -144,8 +144,94 @@ def preprocess_reading(dataset):
                             '{:.5f}'.format(dMeasuredLength), 
                             '{:.7f}'.format(dStdDeviation)])
     return np.array(obs_set, dtype=object)
+###############################################################################
+######################### STAFF ERRORS REPORT #################################
+###############################################################################
+def staff_errors_at_regular_intervals(calib_id):
+    '''
+        staff_reading: adjusted staff reading stored in the Adj Model 
+    '''
+    thisAdj = AdjustedDataModel.objects.get(calibration_id = calib_id)
+    # Get the staff readings
+    staff_reading = np.array([value for value in thisAdj.staff_reading.values()], dtype=object).T
+    # Convert to floats where applicable - col 2 to end
+    staff_reading[:,1:] = [[float(x) for x in y] for y in staff_reading[:,1:]]
     
+    # Get Staff Length from data
+    dStaffLength = round(float(staff_reading[:,2][-1]), 1)
+    # Prepare Interval
+    dFrom = 0.1; dTo = 0.2; 
+    dInterval = dTo- dFrom
 
+    fromToInterval = []
+    while dTo < dStaffLength:
+        try:
+            tmp = staff_reading[(staff_reading[:,1] <= dTo) & (staff_reading[:,2] >= dFrom)]
+            dValue = 0
+            if len(tmp) > 1:
+                dSumValue = 0
+                dSumWeight = 0
+                for i in range(len(tmp)):
+                    dMeasuredInterval = tmp[i][2] - tmp[i][1] 
+                    dValue = dInterval/dMeasuredInterval * (tmp[i][3]-tmp[i][4])
+            
+                    dTop = 0
+                    dBottom = 0
+                    
+                    dTop = tmp[i][2] - dTo
+                    dBottom =dFrom - tmp[i][1]
+                    
+                    dInsideInterval = dMeasuredInterval - dTop - dBottom
+                    dWeight = (dInsideInterval*dInsideInterval)/(dMeasuredInterval*dInterval);
+                    
+                    dSumValue = dSumValue + dValue*dWeight;
+                    dSumWeight = dSumWeight+dWeight;
+                dValue = dSumValue/dSumWeight    
+                
+            else:
+                dMeasuredInterval = tmp[0][2] - tmp[0][1] 
+                dValue = dInterval/dMeasuredInterval * (tmp[0][3]-tmp[0][4])
+            fromToInterval.append(['{:3.2f}'.format(dFrom), '{:3.2f}'.format(dTo), '{:3.2f}'.format((dFrom+dTo)/2), '{:4.2f}'.format(dValue * 1000), '{:7.5f}'.format(dInterval + dValue,5)])
+        except Exception:
+            pass
+        
+        dFrom = round(dFrom + dInterval,1)
+        dTo = round(dTo + dInterval,1)    
+    return np.array(fromToInterval, dtype=float)
+
+# Generate graph
+def save_render_figure(staff_interval, tmp_sf1, calib_id):
+    # Import libraries
+    from io import BytesIO
+    import matplotlib.pyplot as plt
+    from matplotlib.ticker import AutoMinorLocator, MultipleLocator, FormatStrFormatter
+    from django.core.files.uploadedfile import SimpleUploadedFile
+    
+    if not calib_id.calibration_error:
+        # Plot figure
+        buffer = BytesIO()
+        xs = staff_interval[:,0:2].mean(axis=1)
+        ys = staff_interval[:,3]
+        fig, ax = plt.subplots(figsize=(15,5))
+        ax.bar(xs, ys, label=xs, width=0.1, color='#DB1111', edgecolor = 'black')
+        ax.set_ylabel('Staff Errors (mm)')
+        ax.set_xlabel('Staff Length (m)')
+        ax.set_title('Staff Errors at ' + '{:3.1f}'.format(tmp_sf1) + '$^\circ$C', fontsize=14)     
+        ax.set_xlim(0, xs[-1] + 0.5)
+        ax.set_ylim(-0.1, 0.1)
+        ax.grid(color='green', linestyle = '--', linewidth = 0.3)
+        # Axis Locator
+        ax.xaxis.set_minor_locator(MultipleLocator(0.1))
+        ax.yaxis.set_major_formatter(FormatStrFormatter('% 1.2f'))
+        fig.savefig(buffer, bbox_inches='tight', format='svg', dpi=300)
+        buffer.seek(0)
+        image_file = SimpleUploadedFile('StaffError', buffer.read())
+        # Save the figure to model
+        calib_id.calibration_error = image_file
+        calib_id.save()  
+###############################################################################
+######################### STAFF CALIBRATION ###################################
+###############################################################################
 # Calculate the correction factor
 def compute_correction_factor(newdataset, refdataset, coef, ave_temp, std_temp):
 
@@ -293,25 +379,23 @@ def calibrate(request):
                         temp_at_sf1 = ((1/scaleFactor0)-1)/(thermal_coefficient)+average_temperature
                         # reformat adjusted data
                         data_adj = np.array(diff_correction['data'], dtype=object)
-                        StaffCalibrationRecord.objects.update_or_create(
-                            job_number = job_number,
-                            site_id = site_id,
-                            inst_staff = staff_number,
-                            inst_level = level_number,
-                            scale_factor = scaleFactor1,
-                            grad_uncertainty = grad_uncertainty,
-                            observed_temperature = average_temperature,
-                            observer = observer,
-                            calibration_date = calibration_date, 
-                            field_book = field_book,
-                            field_file = field_file
-                        )
-                        this_calibration = StaffCalibrationRecord.objects.get(job_number=job_number,
-                                                                            inst_staff=staff_number,
-                                                                            calibration_date=calibration_date)
-                        AdjustedDataModel.objects.update_or_create(
-                            # calibration_id = StaffCalibrationRecord.objects.get(job_number = job_number),
-                            calibration_id = this_calibration,
+                        # Update Calibration Record
+                        thisRecord, created = StaffCalibrationRecord.objects.update_or_create(
+                                                                    job_number = job_number,
+                                                                    site_id = site_id,
+                                                                    inst_staff = staff_number,
+                                                                    inst_level = level_number,
+                                                                    scale_factor = scaleFactor1,
+                                                                    grad_uncertainty = grad_uncertainty,
+                                                                    observed_temperature = average_temperature,
+                                                                    observer = observer,
+                                                                    calibration_date = calibration_date, 
+                                                                    field_book = field_book,
+                                                                    field_file = field_file
+                                                                )
+                        # Update Adjustment Record
+                        thisAdj, created = AdjustedDataModel.objects.update_or_create(
+                            calibration_id = thisRecord,
                             uscale_factor = scaleFactor0,
                             temp_at_sf1 = temp_at_sf1,
                             staff_reading = {
@@ -323,24 +407,18 @@ def calibrate(request):
                                         'correction': data_adj[:,5].tolist(),
                             }
                         )
+                        # Calculate Staff Errors
+                        staff_errors_intervals = staff_errors_at_regular_intervals(thisRecord)
+                        save_render_figure(staff_errors_intervals, temp_at_sf1, thisRecord)
+                        staff_errors_intervals = {'headers': ['FROM','TO', 'LENGHT', 'ERROR', 'CORRECTED_INTERVAL'], 
+                                        'data': staff_errors_intervals}
                         context = {
-                                'calibration_id': this_calibration.id,
-                                'job_number': job_number,
-                                'site_id': site_id,
-                                'site_type': site_id.get_site_type_display(),
-                                'staff_number': staff_number,
-                                'thermal_coefficient': thermal_coefficient/10**-6,
-                                'level_number': level_number,
-                                'observer': observer,
-                                'calibration_date': calibration_date.strftime('%d/%m/%Y'),
-                                'average_temperature': average_temperature,
-                                'scale_factor0': scaleFactor0,
-                                'scale_factor1': scaleFactor1,
-                                'temp_at_sf1': temp_at_sf1,
-                                'grad_uncertainty': grad_uncertainty,
-                                'diff_correction': diff_correction,
-                                'temp_correction_factors': temp_correction_factors
-                            }
+                            'calibration': thisRecord,
+                            'calib_adj': thisAdj,
+                            'diff_correction': diff_correction,
+                            'temp_correction_factors':temp_correction_factors,
+                            'staff_errors_intervals': staff_errors_intervals,
+                        }
                             
                         return render(request, 'staffcalibration/staff_calibration_report.html', context)
                     else:
@@ -355,6 +433,48 @@ def calibrate(request):
     else:
         form = StaffCalibrationForm(user=request.user)
     return render(request, 'staffcalibration/staff_calibration_form.html', {'form':form})
+###############################################################################
+########################## VIEW REPORT ########################################
+###############################################################################
+@login_required(login_url="/accounts/login")
+def view_report(request, id):
+    # Calibration ID
+    thisRecord = StaffCalibrationRecord.objects.get(id=id)
+    
+    # Print the report using the adjusted data, if it exists, else print loaded pdf
+    if AdjustedDataModel.objects.filter(calibration_id=thisRecord).exists():
+    # try:
+        thisAdj = AdjustedDataModel.objects.get(calibration_id=thisRecord)
+        average_temperature = thisRecord.observed_temperature
+        thermal_coefficient = thisRecord.inst_staff.thermal_coefficient*10**-6
+
+        pin_from_to = thisAdj.staff_reading['pin']
+        from_reading = thisAdj.staff_reading['from']
+        to_reading = thisAdj.staff_reading['to']
+        known_length = thisAdj.staff_reading['reference']
+        measured_length = thisAdj.staff_reading['measured']
+        correction = thisAdj.staff_reading['correction']
+
+        diff_correction = np.array([pin_from_to, from_reading, to_reading, known_length, measured_length, correction], dtype=object).T
+        diff_correction = {'headers': ['PIN','FROM','TO', 'REFERENCE', 'MEASURED', 'CORRECTIONS'], 
+                        'data': diff_correction}
+        # Temperature Corrections
+        scaleFactor0 = thisAdj.uscale_factor
+        temp_correction_factors = compute_factor_corrections(thermal_coefficient, average_temperature, scaleFactor0) 
+        # Staff Errors
+        staff_errors_intervals = staff_errors_at_regular_intervals(thisRecord)
+        save_render_figure(staff_errors_intervals, thisAdj.temp_at_sf1, thisRecord)
+        staff_errors_intervals = {'headers': ['FROM','TO', 'LENGHT', 'ERROR', 'CORRECTED_INTERVAL'], 
+                        'data': staff_errors_intervals}
+        # Build Context
+        context = {
+                'calibration': thisRecord,
+                'calib_adj': thisAdj,
+                'diff_correction': diff_correction,
+                'temp_correction_factors':temp_correction_factors,
+                'staff_errors_intervals': staff_errors_intervals,
+        }
+        return render(request, 'staffcalibration/staff_calibration_report.html', context)
 ###############################################################################
 ######################### PRINT REPORT ########################################
 ###############################################################################
@@ -388,38 +508,23 @@ def print_report(request, id):
         # Temperature Corrections
         scaleFactor0 = thisAdj.uscale_factor
         temp_correction_factors = compute_factor_corrections(thermal_coefficient, average_temperature, scaleFactor0) 
-        # Prepare the context to be rendered
-        context = {
-                'job_number': thisRecord.job_number,
-                'site_id': thisRecord.site_id,
-                'site_type': thisRecord.site_id.get_site_type_display(),
-                'staff_number': thisRecord.inst_staff,
-                'thermal_coefficient': thermal_coefficient,
-                'level_number': thisRecord.inst_level,
-                'observer': thisRecord.observer,
-                'calibration_date': thisRecord.calibration_date,
-                'average_temperature': thisRecord.observed_temperature,
-                'scale_factor': thisRecord.scale_factor,
-                'grad_uncertainty': thisRecord.grad_uncertainty,
-                'adj_correction': adj_correction,
-                'temp_at_sf1': thisAdj.temp_at_sf1,
-                'temp_correction_factors':temp_correction_factors
-                # 'today': datetime.now().strftime('%d/%m/%Y  %I:%M:%S %p'),
-                }
-        result = generate_pdf('staffcalibration/pdf_staff_report.html', file_object=resp, context=context)
-        return result
-    else:
-        return None
-    # else:
-    #     # filepath = thisRecord.calibration_report.path
-    #     # result = FileResponse(open(filepath, 'rb'), content_type='application/pdf')
-    #     # return result
-    #     # filepath = os.path.join(settings.MEDIA_ROOT, thisRecord.calibration_report.path)  
-    #     filepath = thisRecord.calibration_report.path 
-    #     print(filepath)   
-    #     result = FileResponse(open(filepath, 'rb'), content_type='application/pdf')  
+        # Staff Errors
+        staff_errors_intervals = staff_errors_at_regular_intervals(thisRecord)
+        save_render_figure(staff_errors_intervals, thisAdj.temp_at_sf1, thisRecord)
+        staff_errors_intervals = {'headers': ['FROM','TO', 'LENGHT', 'ERROR', 'CORRECTED_INTERVAL'], 
+                        'data': staff_errors_intervals}
         
-    #     return result 
+        # Prepare the context to be rendered
+        
+        context = {
+                'calibration': thisRecord,
+                'calib_adj': thisAdj,
+                'adj_correction': adj_correction,
+                'temp_correction_factors':temp_correction_factors,
+                'staff_errors_intervals': staff_errors_intervals,
+        }
+        result = generate_pdf('staffcalibration/pdf_staff_report.html', file_object=resp, context=context)
+        return result 
 ###############################################################################
 ######################### DELETE RECORD #######################################
 ###############################################################################

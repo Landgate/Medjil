@@ -112,7 +112,7 @@
     function showAddPopup(triggeringLink) {
         var name = triggeringLink.id.replace(/^update_/, '');
         href = triggeringLink.href;
-        console.log(href)
+        // console.log(href)
         // var win = window.open("{% url 'instruments:inst_model_createby_inst_type' 'level' %}", "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=850,width=500,height=400");
         var win = window.open(href, name, "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=850,width=500,height=400");
         win.focus();
