@@ -19,7 +19,7 @@
 {% load static %}
 {% block content %}
 <article class="post">
-      <div class="post-content">
+    <div class="post-content">
         {% if messages %}
         <ul class="message-list">
         {% for message in messages %}
@@ -35,7 +35,7 @@
 			<div class="mt-2 flex justify-center">
 				<a href="{% url 'baseline_calibration:uc_budget_create' %}?next={{request.path}}" class="px-3 py-2 border border-transparent text-lg leading-4 rounded text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
 						Add new uncertainty budget
-				</a> 
+				</a>
 			</div>
 			<br>
 			{% if messages %}
@@ -44,17 +44,17 @@
 				<li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|safe }}</li>
 				{% endfor %}
 			</ul>
-			{% endif %}	
+			{% endif %}
 				<div class="post-content">
 					<div id="uncertainty-budget-list">
 						{% if uc_budget_list %}
-						<table style="width:100%"> 
+						<table style="width:100%">
 							<tr >
 								<th width="35%" class="text-left font-semibold text-base text-gray-900">Name</th>
 								<th width="30%" class="text-left font-semibold text-base text-gray-900">Created by</th>
 								<th width="30%" class="text-left font-semibold text-base text-gray-900">Std Dev used when statistically zero</th>
 								<th width="5%" class="text-left font-semibold text-base text-gray-900">Action</th>
-							</tr>			
+							</tr>
 							{% for budget in uc_budget_list %}
 								<tr>
 									<td>{{ budget.name }}</td>
@@ -81,12 +81,13 @@
 									{% endif %}
 								</tr>
 								{% endfor %}
-						</table>									
+						</table>
 						{% else %}
 							<p>There are currently no uncertainy budgets!</p>
-						{% endif %}					
+						{% endif %}
 					</div>
 				</div>
+    </div>
 </article>
 <script>
 	function confirmation() {

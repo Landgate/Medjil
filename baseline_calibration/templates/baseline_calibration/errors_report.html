@@ -20,7 +20,7 @@
 {% load custom_filter_tags %}
 
 
-{% block content %} 
+{% block content %}
 
 <article class="post">
     <div class="post-content">
@@ -36,24 +36,24 @@
         <div class="site-form">
             {% if Check_Errors.Errors|length > 0 %}
                 <div class="text-center">
-                    <h1><B>Data Errors</B></h1>       
+                    <h1><B>Data Errors</B></h1>
                 </div>
                 <div class="flexbox-container_IB">
-                    <div class="flexbox-item_800_IB flexbox-item-left_IB">                       
+                    <div class="flexbox-item_800_IB flexbox-item-left_IB">
                         {% for e in Check_Errors.Errors %}
-                            <p>{{e}}</p> 
-                        {% endfor %}               
+                            <p>{{e}}</p>
+                        {% endfor %}
                     </div>
                 </div>
             {% endif %}
-            
+
             {% if Check_Errors.Warnings|length > 0 %}
                 <h2>Data Warnings</h2>
                 <div class="flexbox-container_IB">
-                    <div class="flexbox-item_800_IB flexbox-item-left_IB">                       
+                    <div class="flexbox-item_800_IB flexbox-item-left_IB">
                         {% for w in Check_Errors.Warnings %}
-                            <p>{{forloop.counter}}. {{w}}</p> 
-                        {% endfor %}               
+                            <p>{{forloop.counter}}. {{w}}</p>
+                        {% endfor %}
                     </div>
                 </div>
             {% endif %}

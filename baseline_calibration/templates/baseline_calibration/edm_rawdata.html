@@ -17,7 +17,7 @@
 -->
 {% extends 'base_generic.html' %}
 {% load static %}
-{% block content %} 
+{% block content %}
 
 <article class="post">
     <div class="page-content">
@@ -109,7 +109,7 @@ function sortTable(n) {
   table = document.getElementById("obsTable");
   switching = true;
   //Set the sorting direction to ascending:
-  dir = "asc"; 
+  dir = "asc";
   /*Make a loop that will continue until
   no switching has been done:*/
   while (switching) {
@@ -118,7 +118,7 @@ function sortTable(n) {
     rows = table.rows;
     /*Loop through all table rows (except the
     first, which contains table headers):*/
-    for (i = 1; i 
+    for (i = 1; i
     < (rows.length - 1); i++) {
       //start by saying there should be no switching:
       shouldSwitch = false;
@@ -135,7 +135,7 @@ function sortTable(n) {
           break;
         }
       } else if (dir == "desc") {
-        if (x.innerHTML.toLowerCase() 
+        if (x.innerHTML.toLowerCase()
         < y.innerHTML.toLowerCase()) {
           //if so, mark as a switch and break the loop:
           shouldSwitch = true;
@@ -149,7 +149,7 @@ function sortTable(n) {
       rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
       switching = true;
       //Each time a switch is done, increase this count by 1:
-      switchcount ++;      
+      switchcount ++;
     } else {
       /*If no switching has been done AND the direction is "asc",
       set the direction to "desc" and run the while loop again.*/

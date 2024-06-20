@@ -19,19 +19,10 @@
 {% load i18n %}
 {% load static %}
 
-{% block content %} 
+{% block content %}
 
 <article class="post">
-    <!-- <div class="post-header mt-10 text-center mb-3">
-        <h1>Welcome to Landgate's Survey Instrument Calibration website.</h1>
-        <p>You can now easily calibrate your Digital Levelling Staves and Electronic Distance Measurements using this web application.</p>
-        <p>
-			<u> Step {{ wizard.steps.step1 }} of  {{ wizard.steps.count }} </u>
-		</p>
-    </div> -->
-
     <div class="post-content">
-        
         <form action="" class="site-form" method="post">
             {% csrf_token %}
             <div class="mb-5 site-form-header bg-indigo-300 rounded px-2">
@@ -45,7 +36,7 @@
                         {% if 'make_name' in field.name %}
                             <datalist id="makes">
                                 <!-- Options will be populated here by JavaScript -->
-                            </datalist>                            
+                            </datalist>
                         {% elif 'model_name' in field.name %}
                             <datalist id="models">
                                 <!-- Options will be populated here by JavaScript -->
@@ -82,9 +73,10 @@
 <script>
     const db_makes = {{ makes|safe }};
     const db_models = {{ models|safe }};
-    
+
 </script>
 
 <body onunload="javascript:refreshParent()">
+</body>
 
 {% endblock %}

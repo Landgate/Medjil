@@ -19,27 +19,27 @@
 {% load i18n %}
 {% load static %}
 
-{% block content %} 
+{% block content %}
 
 <article class="post">
     <!-- <div class="post-header mt-10 text-center mb-3">
         <h1>Welcome to Landgate's Survey Instrument Calibration website.</h1>
         <p>You can now easily calibrate your Digital Levelling Staves and Electronic Distance Measurements using this web application.</p>
         <p>
-			<u> Step {{ wizard.steps.step1 }} of  {{ wizard.steps.count }} </u>
-		</p>
+      <u> Step {{ wizard.steps.step1 }} of  {{ wizard.steps.count }} </u>
+    </p>
     </div> -->
 
     <div class="post-content">
         <div class="mt-5 mb-3">
             {% if form.errors or form.non_field_errors %}
                 <!-- {{ form.errors }} -->
-                {% for error in form.non_field_errors %} 
+                {% for error in form.non_field_errors %}
                     <p class="error error-danger">** {{ error }}</p>
                 {% endfor %}
-		    {% endif %}
+        {% endif %}
         </div>
-        
+
         <form action="" class="site-form" method="post">
             {% csrf_token %}
             <div class="mb-5 site-form-header bg-indigo-300 rounded px-2">
@@ -59,11 +59,11 @@
                     {% for field in wizard.form %}
                     <tr>
                         <td width="25%"><strong>{{ field.label_tag }}</strong></td>
-                        <td width="70%"> {{ field }} 
+                        <td width="70%"> {{ field }}
                             {% if 'make_name' in field.name %}
                                 <datalist id="makes">
                                     <!-- Options will be populated here by JavaScript -->
-                                </datalist>                            
+                                </datalist>
                             {% elif 'model_name' in field.name %}
                                 <datalist id="models">
                                     <!-- Options will be populated here by JavaScript -->
@@ -87,10 +87,10 @@
                                 {% elif 'length' in field.name %}
                                     <span>m</span>
                                 {% endif %}
-                                
+
                         </td>
                     </tr>
-                    {% endfor %}               
+                    {% endfor %}
                 {% endif %}
             </table>
 
@@ -101,22 +101,22 @@
                 <button class="submit-button bg-green-500 hover:bg-green-400" type="submit" >Submit</button>
             </div> -->
             <div class="wizard-button-container">
-				{% if wizard.steps.prev %}
-					<button class="next-button bg-indigo-400 hover:bg-indigo-300" name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}" formnovalidate> {% trans "<span>&#171;</span> Previous" %}</button>
+        {% if wizard.steps.prev %}
+          <button class="next-button bg-indigo-400 hover:bg-indigo-300" name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}" formnovalidate> {% trans "<span>&#171;</span> Previous" %}</button>
                     <!-- <button class="next-button bg-green-500 hover:bg-green-300" name="wizard_goto_step" type="submit" value="{{ wizard.steps.first }}" formnovalidate>{% trans "First" %}</button> -->
                 {% endif %}
 
-				{% if wizard.steps.next %}
-					<button class="next-button bg-green-500 hover:bg-green-400" type="submit">Next</button>
-				{% else %}
-					<button class="next-button bg-green-500 hover:bg-green-400" type="submit">Save</button>
-				{% endif %}
-				{% if request.GET.next %}
-    				<button type="button" onclick="window.location.href='{{ request.GET.next }}'" class="cancelbtn bg-red-500 hover:bg-red-300">Cancel</button>
-				{% else %}
-    				<button type="button" onclick="window.location.href='{% url  'instruments:home' inst_disp='staff' %}'" class="cancelbtn bg-red-500 hover:bg-red-300">Cancel</button>
+        {% if wizard.steps.next %}
+          <button class="next-button bg-green-500 hover:bg-green-400" type="submit">Next</button>
+        {% else %}
+          <button class="next-button bg-green-500 hover:bg-green-400" type="submit">Save</button>
         {% endif %}
-			</div>
+        {% if request.GET.next %}
+            <button type="button" onclick="window.location.href='{{ request.GET.next }}'" class="cancelbtn bg-red-500 hover:bg-red-300">Cancel</button>
+        {% else %}
+            <button type="button" onclick="window.location.href='{% url  'instruments:home' inst_disp='staff' %}'" class="cancelbtn bg-red-500 hover:bg-red-300">Cancel</button>
+        {% endif %}
+      </div>
         </form>
     </div>
 </article>
@@ -125,9 +125,9 @@
 <script>
     const db_makes = {{ makes|safe }};
     const db_models = {{ models|safe }};
-    
+
     modelOptions = document.querySelector("#id_inst_staff_form-staff_model")
-   
+
 
     var staffCoefficients = {
         'invar': 0.81,
@@ -158,6 +158,6 @@
 </script>
 
 <body onunload="javascript:refreshParent()">
-
+</body>
 
 {% endblock %}

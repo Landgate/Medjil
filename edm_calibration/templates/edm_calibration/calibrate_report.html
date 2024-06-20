@@ -89,7 +89,7 @@
         <div class="flexbox-item_400_IB  flexbox-item-right_IB">
             <br>
             <br>
-            <B>Manufacturers Uncertainty: </B>{{ pillar_survey.prism.prism_specs.manu_unc_const }}mm, k={{ pillar_survey.prism.prism_specs.manu_unc_k }}                
+            <B>Manufacturers Uncertainty: </B>{{ pillar_survey.prism.prism_specs.manu_unc_const }}mm, k={{ pillar_survey.prism.prism_specs.manu_unc_k }}
         </div>
     </div>
     <div class="flexbox-container_IB">
@@ -133,7 +133,7 @@
         <div class="flexbox-item_400_IB  flexbox-item-right_IB">
             <br>
             <br>
-            <B>Manufacturers Uncertainty: </B>{{ pillar_survey.barometer.mets_specs.manu_unc_const }} hPa, k={{ pillar_survey.barometer.mets_specs.manu_unc_k }}                  
+            <B>Manufacturers Uncertainty: </B>{{ pillar_survey.barometer.mets_specs.manu_unc_const }} hPa, k={{ pillar_survey.barometer.mets_specs.manu_unc_k }}
             <br>
             <B>Calibration Date: </B>{{ calib.baro.calibration_date }}
             {% if calib.baro.certificate_upload %}
@@ -151,7 +151,7 @@
             <br>
             <B>Make: </B>{{ pillar_survey.hygrometer.mets_specs.mets_make_name }}
             <br>
-            <B>Model: </B>{{ pillar_survey.hygrometer.mets_specs.mets_model_name }} 
+            <B>Model: </B>{{ pillar_survey.hygrometer.mets_specs.mets_model_name }}
             <br>
             <B>Serial Number: </B>{{ pillar_survey.hygrometer.mets_number }}
         </div>
@@ -160,7 +160,7 @@
             <br>
             <B>Manufacturers Uncertainty: </B>{{ pillar_survey.hygrometer.mets_specs.manu_unc_const }} &#37, k={{ pillar_survey.hygrometer.mets_specs.manu_unc_k }}
             <br>
-            <B>Calibration Date: </B>{{ calib.hygro.calibration_date }}     
+            <B>Calibration Date: </B>{{ calib.hygro.calibration_date }}
             {% if calib.hygro.certificate_upload %}
                 <br>
                 <a href="{{ calib.hygro.certificate_upload.url }}" target="_blank" rel="noopener noreferrer">Download Calibration Certificate &#10515</a>
@@ -179,7 +179,7 @@
         <div class="flexbox-item_400_IB flexbox-item-left_IB">
             <B>Date of Accreditation: </B>{{ baseline.calibrated_baseline.accreditation.valid_from_date }}
             <br>
-            <B>Accreditation Valid Until: </B>{{ baseline.calibrated_baseline.accreditation.valid_to_date }}  
+            <B>Accreditation Valid Until: </B>{{ baseline.calibrated_baseline.accreditation.valid_to_date }}
             <br>
             <B>Accredited Agency: </B>{{ baseline.calibrated_baseline.accreditation.accredited_company }}
         </div>
@@ -196,7 +196,7 @@
     <div class="flexbox-container_IB">
         <div class="flexbox-item_800_IB flexbox-item-left_IB">
             <br>
-            <B>Accreditation Statement: </B>{{ baseline.calibrated_baseline.accreditation.statement }} 
+            <B>Accreditation Statement: </B>{{ baseline.calibrated_baseline.accreditation.statement }}
         </div>
     </div>
 </div>
@@ -695,7 +695,7 @@
             <th>Value</th>
             <th>UC</th>
         </tr>
-        
+
         {% with hidden.0 as form %}
          <tr class="text-left">
             <td>{{ form.calibration_date.value }}</td>
@@ -715,9 +715,9 @@
             {% else %}
                 <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
             {% endif %}
-         </tr>   
+         </tr>
         {% endwith %}
-        
+
         {% for certificate in calib.edmi %}
          <tr class="text-left">
             <td>{{ certificate.calibration_date }}</td>
@@ -737,7 +737,7 @@
             {% else %}
                 <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
             {% endif %}
-         </tr>                
+         </tr>
         {% endfor %}
     </table>
 </div>
@@ -760,7 +760,7 @@
         <div class="flexbox-item_800_IB flexbox-item-left_IB">
             {% for w in Check_Errors.Warnings %}
                 <p>{{forloop.counter}}. {{w}}</p>
-            {% empty %} 
+            {% empty %}
                 <p>No data warnings to display.</p>
             {% endfor %}
         </div>
@@ -803,10 +803,10 @@ let bay = "";
       backgroundColor: [
         {% for uc in o.uc_budget.values %}'{{ uc.chart_colour }}', {% endfor %}],
       data: [
-        {% for uc in o.uc_budget.values %} 
+        {% for uc in o.uc_budget.values %}
           {{ uc.ui95|multiply:1000|sigfigs:2 }},{% endfor %}]
     });
-    
+
     // "Surveyed-vs-certified-Chart"
     lbls2.push(bay + " " + ({{ o.diff_to_certified_sd }}*1000).toFixed(2));
     Data2.push({x: {{ o.slope_dist }}.toFixed(5),
@@ -919,9 +919,9 @@ new Chart(document.getElementById("surveyed-vs-certified-Chart"), {
 </script>
 <script>
 // Script to produce the Return Phase Angle Chart
-    
+
 let Sinewave = [];
-for (let a = 0; a 
+for (let a = 0; a
     <= 360; a+=5) {
     let r = a * Math.PI/180;
     Sinewave.push({x:a, y:Math.sin(r)});
@@ -993,7 +993,7 @@ function sortTable(n) {
   table = document.getElementById("myTable");
   switching = true;
   //Set the sorting direction to ascending:
-  dir = "asc"; 
+  dir = "asc";
   /*Make a loop that will continue until
   no switching has been done:*/
   while (switching) {
@@ -1002,7 +1002,7 @@ function sortTable(n) {
     rows = table.rows;
     /*Loop through all table rows (except the
     first, which contains table headers):*/
-    for (i = 2; i 
+    for (i = 2; i
             < (rows.length - 1); i++) {
       //start by saying there should be no switching:
       shouldSwitch = false;
@@ -1019,7 +1019,7 @@ function sortTable(n) {
           break;
         }
       } else if (dir == "desc") {
-        if (x.innerHTML.toLowerCase() 
+        if (x.innerHTML.toLowerCase()
                 < y.innerHTML.toLowerCase()) {
           //if so, mark as a switch and break the loop:
           shouldSwitch = true;
@@ -1033,7 +1033,7 @@ function sortTable(n) {
       rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
       switching = true;
       //Each time a switch is done, increase this count by 1:
-      switchcount ++;      
+      switchcount ++;
     } else {
       /*If no switching has been done AND the direction is "asc",
       set the direction to "desc" and run the while loop again.*/
@@ -1062,14 +1062,14 @@ function certificate(){
         "Table of Observations, Corrections, Uncertainties and Residuals",
         "Residuals From Least Squares Fit of The Baseline Measurements",
         "Return Phase Angle of Observed Distances"];
-    
-    // Get all <h> elements
+
+    // Get all <h> elements </h>
     var h2Elements = document.querySelectorAll("h2");
     var h1Elements = document.querySelectorAll("h1");
-    
+
     h1Elements[0].innerHTML = "<B>EDMI Calibration Certificate</B>";
 
-    // Check if the content of the <h2> element is in the array of headers
+    // Check if the content of the <h2></h2> element is in the array of headers
     h2Elements.forEach(function(h2Element) {
         if (hide_heading.includes(h2Element.textContent.trim())) {
             var parentElement = h2Element.parentNode;

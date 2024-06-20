@@ -36,10 +36,10 @@
         <div>
                 <div>
                 {% if not user.is_authenticated %}
-                    <p class="text-lg">Please 
+                    <p class="text-lg">Please
                         <a href="{% url 'accounts:login' %}" class="hover:a">
                         login
-                        </a> or 
+                        </a> or
                         <a href="{% url 'accounts:signup' %}" class="hover:a">
                         sign up
                         </a> to manage and calibrate your surveying instruments.
@@ -48,7 +48,7 @@
                 <div class="mt-2 flex justify-center">
                     <a href="{% url 'baseline_calibration:accreditation_edit' id=None %}?next={{request.path}}" class="px-3 py-2 border border-transparent text-lg leading-4 rounded text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
                         Add new accreditation
-                    </a>             
+                    </a>
                 </div>
                 <br>
                 {% if messages %}
@@ -57,18 +57,18 @@
                     <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|safe }}</li>
                     {% endfor %}
                 </ul>
-                {% endif %}    
+                {% endif %}
                 <div>
                     <div id="uncertainty-budget-list">
                         {% if accreditation_list %}
-                            <table style="width:100%"> 
+                            <table style="width:100%">
                                 <tr>
                                     <th width="20%" class="text-left font-semibold text-base text-gray-900">Accredited Company</th>
                                     <th width="20%" class="text-left font-semibold text-base text-gray-900">Valid From</th>
                                     <th width="20%" class="text-left font-semibold text-base text-gray-900">Valid To</th>
                                     <th width="20%" class="text-left font-semibold text-base text-gray-900">LUM*</th>
                                     <th width="10%" class="text-left font-semibold text-base text-gray-900">Action</th>
-                                </tr>            
+                                </tr>
                                 {% for accreditation in accreditation_list %}
                                 <tr>
                                     <td>{{ accreditation.accredited_company }}</td>
@@ -96,11 +96,12 @@
                         {% else %}
                             <p>There are no records to display. Add new accreditation.</p>
                         {% endif %}
-                                </div>                      
+                                </div>
                         <p><i>* LUM - Least Uncertainty of Measurement</i></p>
                     </div>
-                </div>  
+                </div>
       </div>
+    </div>
 </article>
 <script>
     function confirmation() {

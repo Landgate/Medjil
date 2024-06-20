@@ -19,13 +19,13 @@
 {% load static %}
 
 
-{% block content %} 
+{% block content %}
 
 <article class="post">
 
     {% if form.errors %}
        {% for field in form %}
-           {% for error in field.errors %} 
+           {% for error in field.errors %}
               <div class="alert alert-danger">
                    <strong>{{ error|escape }}</strong>
               </div>
@@ -34,7 +34,7 @@
     {% endif %}
 
     <div class="post-content">
-        
+
         <form action="" class="site-form" method="post">
             <div class="mb-5 site-form-header bg-indigo-300 rounded px-2">
                 <h2 class="text-center">Create/Edit an Instrument Model</h2>
@@ -75,7 +75,7 @@
                     {% else %}
                         <tr title="{{ field.help_text|safe }}">
                             <td width="30%">{{ field.label_tag }}</td>
-                            <td width="70%"> {{ field }} 
+                            <td width="70%"> {{ field }}
                                 {% for error in field.errors %}
                                     <p class="error error-danger">{{ error }}</p>
                                 {% endfor %}
@@ -88,7 +88,7 @@
                 {% endfor %}
                 <tr title="{{ field.help_text|safe }}">
                     <td width="30%">{{ form.model.label_tag }}</td>
-                    <td width="70%"> {{ form.model }} 
+                    <td width="70%"> {{ form.model }}
                         {% for error in form.model.errors %}
                             <p class="error error-danger">{{ error }}</p>
                         {% endfor %}
@@ -114,18 +114,18 @@
     </div>
 </article>
 <script>
-    // Make Option 
+    // Make Option
     defaultMakeOptions = document.getElementById("id_make")
 
     // New Make and Abbrev Container
     const newMakeName = document.getElementById("id_make_name")
     const newAbbrName = document.getElementById("id_make_abbrev")
 
-    // Dont display the make/abbrev container 
+    // Dont display the make/abbrev container
     newMakeName.style.display = "none"
     newAbbrName.style.display = "none"
 
-        
+
     defaultMakeOptions.addEventListener(`change`, (e) => {
         // log(`e.target`, e.target);
         const select = e.target;
@@ -133,21 +133,21 @@
         const desc = select.options[select.selectedIndex].text;
 
         if (desc.includes("OTHERS")) {
-            newMakeName.style.display = "table-row"; 
+            newMakeName.style.display = "table-row";
             document.getElementById('id_inst_make').required = true;
-            newAbbrName.style.display = "table-row"; 
+            newAbbrName.style.display = "table-row";
             document.getElementById('id_inst_abbrev').required = true;
         } else {
-            newMakeName.style.display = "none"; 
+            newMakeName.style.display = "none";
             document.getElementById('id_inst_make').required = false;
-            newAbbrName.style.display = "none"; 
+            newAbbrName.style.display = "none";
             document.getElementById('id_inst_abbrev').required = false;
         }
     });
-            
+
     const newModelName = document.getElementById("id_inst_model")
     modelValue.addEventListener('input', () => {
-        modelValue.value = modelValue.value ? modelValue.value.trim() : '' 
+        modelValue.value = modelValue.value ? modelValue.value.trim() : ''
     })
 </script>
 

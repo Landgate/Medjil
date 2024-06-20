@@ -28,7 +28,7 @@
         </ul>
         <br>
         {% endif %}
-        <br>  
+        <br>
         <h2 class="text-center">List of Baseline Calibrations</h2>
         <p class="text-center"></><i>For more information about Baselines Calibration, please refer to the technical manual <a href= "{% url 'calibrationguide:read_manual' manual_name='edmi_calibration_manual.html' %}#EDMI-Chapter2" target="_blank" onclick="return showAddPopup(this);"> &#x1F6C8</a></i></p>
         <hr>
@@ -37,7 +37,7 @@
              Start new calibration
           </a>
         </div>
-        <br>        
+        <br>
         {% if pillar_surveys %}
         <table>
             <tr>
@@ -48,7 +48,7 @@
               <th width="10%" class="text-left font-semibold text-base text-gray-900">Observed By</th>
               <th width="20%" class="text-left font-semibold text-base text-gray-900">Certified Distances Modified</th>
               <th width="5%" class="text-left font-semibold text-base text-gray-900">Action</th>
-            </tr>            
+            </tr>
             {% for pillar_survey in pillar_surveys %}
                 <tr>
                   <td>{{ pillar_survey.baseline }} </td>
@@ -58,14 +58,14 @@
                   <td>{{ pillar_survey.observer }} </td>
                   {% if pillar_survey.variance is not null %}
                       <td>{{ pillar_survey.modified_on }}</td>
-                  {% else %}  
+                  {% else %}
                       <td>In progress ..</td>
                   {% endif %}
                   <td>
                     <span class="flex justify-around">
                       {% if pillar_survey.html_report %}
                           <a class="px-2" href="{% url 'baseline_calibration:report' id=pillar_survey.pk %}" class="px-3">
-                            <svg id="report-view" width="16" height="16" viewBox="0 0 50 50">                            
+                            <svg id="report-view" width="16" height="16" viewBox="0 0 50 50">
 	                            <g transform="translate(0,50) scale(0.100000,-0.100000)" fill="#000000" stroke="none">
 	                            <path d="M92 493 c-34 -14 -42 -59 -42 -251 0 -176 1 -191 21 -216 l20 -26
 	                            149 0 150 0 17 27 c16 24 18 52 18 226 l0 199 -28 24 c-27 23 -34 24 -160 23
@@ -102,7 +102,7 @@
                 </tr>
             {% endfor %}
         </table>
-                
+
         {% else %}
             <p>There are no records to display. Start new calibration.</p>
         {% endif %}

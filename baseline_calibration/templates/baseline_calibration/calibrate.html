@@ -19,14 +19,14 @@
 {% load static %}
 
 
-{% block content %} 
+{% block content %}
 
 <article class="post">
     <div class="post-content">
         <form id="PillarSurveyForm" action="" class="site-form" method="post" enctype="multipart/form-data">
             {% for pg, Header in Headers.items %}
                 <div class="tgl-{{ pg }} mb-5 px-2 site-form-header bg-indigo-300 rounded" style="display:none;">
-                    <h2 class="text-center">{{ Header }}</h1>
+                    <h2 class="text-center">{{ Header }}</h2>
                 </div>
             {% endfor %}
 
@@ -57,38 +57,38 @@
                             <td> {{ field }}
                                 {% if field.name == "fieldnotes_upload" and qs.fieldnotes_upload.file != none %}
                                     <label id="fieldnotes_link" for="id_fieldnotes_upload"><a href= "{{ qs.fieldnotes_upload.url }}" target="_blank" rel="noopener noreferrer" style="color:blue; cursor: pointer; cursor: hand;"> {% if qs.fieldnotes_upload.name|length > 50 %} ...{% endif %}{{ qs.fieldnotes_upload.name|slice:"-50:" }}</a></label>
-                                {% endif %} 
+                                {% endif %}
                             </td>
                         {% endif %}
                         <td>
                             {% if field.name == "edm" or field.name == "prism" or field.name == "level" %}
-                                <button style="width:35px; height:35px" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" type="button" id="id_add_btn" 
+                                <button style="width:35px; height:35px" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" type="button" id="id_add_btn"
                                 onclick="cacheInputs();window.location.href='{% url "instruments:register_edit" inst_disp=field.name tab="insts" id=None %}?next={{request.path}}'">&#43;</button>
                             {% endif %}
-                           
+
                             {% if field.name == "thermometer" %}
-                                <button style="width:35px; height:35px" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" type="button" id="id_add_btn" 
+                                <button style="width:35px; height:35px" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" type="button" id="id_add_btn"
                                 onclick="cacheInputs();window.location.href='{% url "instruments:register_edit" inst_disp="thermo" tab="insts" id=None %}?next={{request.path}}'">&#43;</button>
                             {% endif %}
                             {% if field.name == "barometer" %}
-                                <button style="width:35px; height:35px" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" type="button" id="id_add_btn" 
+                                <button style="width:35px; height:35px" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" type="button" id="id_add_btn"
                                 onclick="cacheInputs();window.location.href='{% url "instruments:register_edit" inst_disp="baro" tab="insts" id=None %}?next={{request.path}}'">&#43;</button>
                             {% endif %}
                             {% if field.name == "hygrometer" %}
-                                <button style="width:35px; height:35px" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" type="button" id="id_add_btn" 
+                                <button style="width:35px; height:35px" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" type="button" id="id_add_btn"
                                 onclick="cacheInputs();window.location.href='{% url "instruments:register_edit" inst_disp="hygro" tab="insts" id=None %}?next={{request.path}}'">&#43;</button>
                             {% endif %}
                             {% if field.name == "accreditation" %}
-                                <button style="width:35px; height:35px" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" type="button" id="id_add_btn" 
+                                <button style="width:35px; height:35px" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" type="button" id="id_add_btn"
                                 onclick="cacheInputs();window.location.href='{% url "baseline_calibration:accreditation_edit" id=None%}?next={{request.path}}'">&#43;</button>
                             {% endif %}
                             {% if field.name == "uncertainty_budget" %}
-                                <button style="width:35px; height:35px" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" type="button" id="id_add_btn" 
+                                <button style="width:35px; height:35px" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" type="button" id="id_add_btn"
                                 onclick="cacheInputs();window.location.href='{% url "baseline_calibration:uc_budget_create" %}?next={{request.path}}'">&#43;</button>
                             {% endif %}
                         </td>
                     </tr>
-                            
+
                     {% for error in field.errors %}
                     <tr class="tgl-{{ field.field.widget.attrs.class }}" style="display:none;">
                         <td></td>
@@ -105,7 +105,7 @@
                         <td>
                             {{ field }}
                         </td>
-                    </tr>                 
+                    </tr>
                 {% endfor %}
             </table>
             <div class="button-container">
@@ -134,7 +134,7 @@
         currentTab = parseInt('{{ field.field.widget.attrs.class }}'.replace('page',''));{% endif %}{% if forloop.last %}
         lastTab = parseInt('{{ field.field.widget.attrs.class }}'.replace('page',''));{% endif %}
     {% endfor %}
-    
+
     var Thermo2_box = document.getElementById("id_thermometer2");
     var Thermo2_Tr = document.getElementById("id_thermometer2_tr");
     var Thermo2_applied_Tr = document.getElementById("id_thermo2_calib_applied_tr");
@@ -142,7 +142,7 @@
         Thermo2_Tr.className = '';
         Thermo2_applied_Tr.className = ''
     };
-    
+
     var Baro2_box = document.getElementById("id_barometer2");
     var Baro2_Tr = document.getElementById("id_barometer2_tr");
     var Baro2_applied_Tr = document.getElementById("id_baro2_calib_applied_tr");
@@ -150,7 +150,7 @@
         Baro2_Tr.className = '';
         Baro2_applied_Tr.className = ''
     };
-    
+
     var Hygro2_box = document.getElementById("id_hygrometer2");
     var Hygro2_Tr = document.getElementById("id_hygrometer2_tr");
     var Hygro2_applied_Tr = document.getElementById("id_hygro2_calib_applied_tr");
@@ -158,9 +158,9 @@
         Hygro2_Tr.className = '';
         Hygro2_applied_Tr.className = ''
     };
-    
+
     showTab(currentTab); // Display the current tab
-    
+
     function showTab(n) {
       // This function will display the specified tab of the form...
       var x = document.getElementsByClassName("tgl-page"+(n));
@@ -168,7 +168,7 @@
        x[i].style.display = '';
       }
       tglCO2();
-      
+
       if (n == 0) {
         document.getElementById("prevBtn").style.display = "none";
       } else {
@@ -181,18 +181,18 @@
       }
       document.getElementById("pgOfpgs").innerHTML = "Page "+ (n+1) + " of " + (lastTab+1);
     }
-    
+
     function nextPrev(n) {
       // This function will figure out which tab to display
       var x = document.getElementsByClassName("tgl-page"+(currentTab));
       // Exit the function if any field in the current tab is invalid:
       if (n == 1 && !validateForm()) return false;
-      
+
       for (var i = 0; i < x.length; i++) {
        x[i].style.display = 'none';
        }
       currentTab = currentTab + n;
-      
+
       if (currentTab > lastTab) {
         document.getElementById("loading-icon").style.display = "block";
         document.getElementById("PillarSurveyForm").style.display = "none";
@@ -201,28 +201,28 @@
       }
       showTab(currentTab);
     }
-    
+
     function validateForm() {
       // This function deals with validation of the form fields
       var y, i, valid = true;
       y = document.getElementsByClassName("page"+(currentTab));
-    
+
       for (i = y.length-1; i > -1; i--) {
           if (!y[i].checkValidity()) {
             y[i].reportValidity();
             valid = false;
           }
         }
-    
+
       return valid; // return the valid status
     }
-    
+
     function tglEdmFile() {
       // This function will hide/unhide the EDM file select
       var chk = document.getElementById("id_change_edm");
       var slct = document.getElementById("id_edm_file");
       var e = document.getElementsByClassName("tgl-edm_file");
-      
+
       for (var i = 0; i < e.length; i++) {
          if (chk.checked) {
               e[i].style.display = '';
@@ -233,13 +233,13 @@
           }
       }
     }
-    
+
     function tglLvlFile() {
       // This function will hide/unhide the Level file select
       var chk = document.getElementById("id_change_lvl");
       var slct = document.getElementById("id_lvl_file");
       var e = document.getElementsByClassName("tgl-lvl_file");
-      
+
       for (var i = 0; i < e.length; i++) {
          if (chk.checked) {
               e[i].style.display = '';
@@ -256,7 +256,7 @@
       var CO2_Tr = document.getElementById("id_co2_content_tr");
       var chk_mets = document.getElementById("id_mets_applied");
       var mets_Tr = chk_mets.parentNode.parentNode;
-      
+
       if (mets_Tr.style.display!=='none'){
           if (chk_mets.checked) {
               CO2_Tr.style.display = 'none';
@@ -273,7 +273,7 @@
         var Mets2_Tr = document.getElementById("id_"+inst+"2_tr");
         var Mets_calib_applied_Tr = document.getElementById("id_"+abb+"_calib_applied_tr");
         var Mets2_calib_applied_Tr = document.getElementById("id_"+abb+"2_calib_applied_tr");
-        
+
         if (Mets_Tr.style.display !== 'none' ) {
             if (Mets2_Tr.className !== 'tgl-page1') {
                 Mets2_Tr.style.display = '';
@@ -287,27 +287,27 @@
             }
         }
     }
-        
+
     function ChgNoteFile() {
       var lnk = document.getElementById("fieldnotes_link");
-      
+
       lnk.textContent = '';
     }
-    
+
     function cacheInputs() {
         var inputs, i;
         window.sessionStorage.clear()
-        
+
         tbl = document.getElementById("PillarSurveyTable");
         inputs = tbl.querySelectorAll("input,select");
         for (i = 0; i < inputs.length; ++i) {
             let el = inputs[i];
             window.sessionStorage.setItem(el.attributes["name"].value, el.value);
             }
-            
+
         window.sessionStorage.setItem("currentTab", currentTab);
     }
-    
+
     //Load Form inputs from Cache
     window.onload = function () {
         tbl = document.getElementById("PillarSurveyTable");

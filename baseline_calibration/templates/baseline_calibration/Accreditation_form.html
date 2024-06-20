@@ -19,23 +19,23 @@
 {% load static %}
 
 
-{% block content %} 
+{% block content %}
 
 <article class="post">
-   
+
     <div class="flexbox-container_IB">
-    		<div class="flexbox-item_800_IB">   
+    		<div class="flexbox-item_800_IB">
 		       <form id='id_html_form' style="font-size:10.0pt;width:4500px;" action="" class="site-form" method="post" enctype="multipart/form-data">
 		       		<div class="mb-5 site-form-header bg-indigo-300 rounded px-2">
         					<h1 style="text-align:center">{{ Header }}</h1>
-    					</div>		
+    					</div>
 		       {% if form.non_field_errors %}
 		            <div class="mt-1 mb-2 non-field-errors">
 		              {% for error in form.non_field_errors %}
 		                <p style="color:Red;">{{ error }}</p>
 		              {% endfor %}
 		            </div>
-		        {% endif %}    
+		        {% endif %}
 		            {% csrf_token %}
 		            <div class="flexbox-item_800_IB">
 		                <table style="font-size:10pt;width:100%">
@@ -45,8 +45,8 @@
 		                    </colgroup>
 		                    {% for field in form %}
 		                        <tr>
-		                            {% if field.field.is_checkbox %}                        
-		                                <td>{{ field }}</td>                                        
+		                            {% if field.field.is_checkbox %}
+		                                <td>{{ field }}</td>
 		                                <td>{{ field.label|title }}</td>
 		                            {% else %}
 		                                <td>{{ field.label_tag|title }}</td>
@@ -60,7 +60,7 @@
 		                                <p style="color:Red;">{{ error }}</p>
 		                            </td>
 		                        </tr>
-		                        {% endfor %}                            
+		                        {% endfor %}
 		                    {% endfor %}
 		                </table>
 		            </div>
@@ -72,9 +72,9 @@
                           <button type="button" onclick="window.location.href='{{ request.GET.next }}'" class="cancelbtn bg-red-500 hover:bg-red-300">Cancel</button>
                       {% endif %}
                       <button class="submit-button bg-green-500 hover:bg-green-400" type="submit" >Save</button>
-		            </div>                 
+		            </div>
 		       </form>
-      	</div>    
+      	</div>
     </div>
 </article>
 

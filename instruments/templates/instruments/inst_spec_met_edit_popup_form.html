@@ -20,7 +20,7 @@
 {% load }
 {% load static %}
 
-{% block content %} 
+{% block content %}
 
 <article class="post">
     <div class="post-content">
@@ -41,7 +41,7 @@
             <div class="mt-5 mb-3">
                 {% if form.errors or form.non_field_errors %}
                     <!-- {{ form.errors }} -->
-                    {% for error in form.non_field_errors %} 
+                    {% for error in form.non_field_errors %}
                         <p class="error error-danger">** {{ error }}</p>
                     {% endfor %}
                 {% endif %}
@@ -126,7 +126,7 @@
     const inst_type = "{{ form.inst_type.value|safe }}";
     const db_makes = {{ makes|safe }};
     const db_models = {{ models|safe }};
-    
+
     const units = [{typ:"temp", u:"°C"},
                    {typ:"pres", u:"hPa"},
                    {typ:"pres", u:"mBar"},
@@ -136,11 +136,11 @@
 
     const  uc_units_slt = document.getElementById("id_units_manu_unc_const")
     const  inc_units_slt = document.getElementById("id_units_measurement_inc")
-    
+
     window.addEventListener('load', function() {
         ChgUnits();
     });
-    
+
     // On dropdown change, Change unit options
     function ChgUnits() {
         if (inst_type=="thermo"||inst_type=="psy") {
@@ -177,7 +177,7 @@
             }
         }
     }
-  
+
 </script>
 	<body onunload="javascript:refreshParent()">
 

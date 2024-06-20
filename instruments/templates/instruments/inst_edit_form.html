@@ -19,7 +19,7 @@
 {% load i18n %}
 {% load static %}
 
-{% block content %} 
+{% block content %}
 
 <article class="post">
     <div class="post-content">
@@ -43,7 +43,7 @@
             </div>
             <div class="mt-5 mb-3">
                 {% if form.errors or form.non_field_errors %}
-                    {% for error in form.non_field_errors %} 
+                    {% for error in form.non_field_errors %}
                         <p class="error error-danger">** {{ error }}</p>
                     {% endfor %}
                     <br>
@@ -59,7 +59,7 @@
                             {% if 'make_name' in field.name %}
                                 <datalist id="makes">
                                     <!-- Options will be populated here by JavaScript -->
-                                </datalist>                            
+                                </datalist>
                             {% elif 'model_name' in field.name %}
                                 <datalist id="models">
                                     <!-- Options will be populated here by JavaScript -->
@@ -72,7 +72,7 @@
                         </td>
                         <td width="10%">
                             {% if '_specs' in field.name %}
-                                <a href="{% url 'instruments:register_edit' inst_disp=inst_type tab="models" id=None %}" target="_blank"  onclick="return showAddPopup(this);" id="add_spec" 
+                                <a href="{% url 'instruments:register_edit' inst_disp=inst_type tab="models" id=None %}" target="_blank"  onclick="return showAddPopup(this);" id="add_spec"
                                 class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer">&#43;</a>
                             {% endif %}
                         </td>
@@ -99,7 +99,7 @@
 <script>
     const db_makes = {{ makes|safe }};
     const db_models = {{ models|safe }};
-    
+
 </script>
 
 {% endblock %}

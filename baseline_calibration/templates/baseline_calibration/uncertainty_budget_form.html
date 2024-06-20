@@ -19,10 +19,10 @@
 {% load static %}
 
 
-{% block content %} 
+{% block content %}
 
 <article class="post">
-   
+
     <div class="flexbox-container_IB">
           <div class="flexbox-item_1600_IB">
              <template id="id_formset_empty_form">
@@ -42,12 +42,16 @@
                       </td>
                       <td>{{ form.id }}</td>
                  </tr>
-             </template>     
+             </template>
              <form id='id_html_form' style="font-size:10.0pt;width:4500px;" action="" class="site-form" method="post" autocomplete="off">
                 <div class="flexbox-item_1600_IB">
                     <h1 style="text-align:center">{{ Header }}</h1>
-                    <p style="text-align:center"><i>For more information about creating Custom Uncertainty Budget, please refer to the technical manual <a href= "{% url 'calibrationguide:read_manual' manual_name='edmi_calibration_manual.html' %}#EDMI-Chapter5_2" target="_blank" onclick="return showAddPopup(this);"> &#x1F6C8</a></i>
-                </div>      
+                    <p style="text-align:center">
+                    	<i>
+                    		For more information about creating Custom Uncertainty Budget, please refer to the technical manual <a href= "{% url 'calibrationguide:read_manual' manual_name='edmi_calibration_manual.html' %}#EDMI-Chapter5_2" target="_blank" onclick="return showAddPopup(this);"> &#x1F6C8</a>
+                    	</i>
+                    </p>
+                </div>
                 {% if form.non_field_errors %}
                      <div class="mt-1 mb-2 non-field-errors">
                        {% for error in form.non_field_errors %}
@@ -69,7 +73,7 @@
                                   <tr Title="{{ field.help_text }}">
                                       <td></td>
                                       <td>{{ field.label_tag }}</td>
-                                      <td>{{ field }}</td>                               
+                                      <td>{{ field }}</td>
                                       <td></td>
                                   </tr>
                                   {% for error in field.errors %}
@@ -84,7 +88,7 @@
                           {% endfor %}
                       </table>
                 </div>
-                <div class="flexbox-item_1600_IB"> 
+                <div class="flexbox-item_1600_IB">
                       <h1 style="text-align:center" Title="Select or deselect uncertainty source propogated from the Instrument Register record.">
                       Instrument Register Record - Uncertainty Budget Sources
                       </h1>
@@ -102,7 +106,7 @@
                                   {% if field.label.origin == "Instument Register" %}
                                   <tr Title="{{ field.help_text }}">
                                       <td style="width: 5%">{{ field }}</td>
-                                      <td style="width: 10%">{{ field.label.group }}</td>   
+                                      <td style="width: 10%">{{ field.label.group }}</td>
                                       <td style="width: 35%">{{ field.label.description }}</td>
                                       <td style="width: 12%">{{ field.label.units }}</td>
                                       <td style="width: 5%">{{ field.label.type }}</td>
@@ -116,13 +120,13 @@
                                           <p style="color:Red;">{{ error }}</p>
                                       </td>
                                   </tr>
-                                  {% endfor %}  
+                                  {% endfor %}
                                   {% endif %}
-                              {% endif %}                          
+                              {% endif %}
                           {% endfor %}
                       </table>
                   </div>
-                  <div class="flexbox-item_1600_IB"> 
+                  <div class="flexbox-item_1600_IB">
                         <h1 style="text-align:center" Title="Select or deselect uncertainty source derived uncertainty in uncertainty budget.">
                         Derived - Uncertainty Budget Sources
                         </h1>
@@ -140,7 +144,7 @@
                                     {% if field.label.origin == "Derived" %}
                                     <tr Title="{{ field.help_text }}">
                                         <td style="width: 5%">{{ field }}</td>
-                                        <td style="width: 10%">{{ field.label.group }}</td>   
+                                        <td style="width: 10%">{{ field.label.group }}</td>
                                         <td style="width: 35%">{{ field.label.description }}</td>
                                         <td style="width: 12%">{{ field.label.units }}</td>
                                         <td style="width: 5%">{{ field.label.type }}</td>
@@ -156,7 +160,7 @@
                                         <p style="color:Red;">{{ error }}</p>
                                     </td>
                                 </tr>
-                                {% endfor %}                            
+                                {% endfor %}
                             {% endfor %}
                         </table>
                     </div>
@@ -217,18 +221,19 @@
                                               {% for error in field.errors %}
                                                   <p style="color:Red;">{{ error }}</p>
                                               {% endfor %}
-                                          </td>   
+                                          </td>
                                       {% endfor %}
                                   </tr>
                               {% endif %}
-                      {% endfor %}                
-                      </table>  
+                      </tr>
+                      {% endfor %}
+                      </table>
                       <div>
                             <a onclick="addRow()" style="color:blue;cursor:pointer;cursor:hand;">&nbsp&nbsp&#x2B Add new uncertainty</a>
                             <p></p>
                             <hr style="border-bottom: 1px solid #e0e0e1;">
                             <p></p>
-                      </div>             
+                      </div>
                   </div>
                   {% if request.GET.next %}
                       <input type="hidden" name="next" value="{{ request.GET.next }}">
@@ -238,9 +243,9 @@
                           <button type="button" onclick="window.location.href='{{ request.GET.next }}'" class="cancelbtn bg-red-500 hover:bg-red-300">Cancel</button>
                       {% endif %}
                       <button class="submit-button bg-green-500 hover:bg-green-400" type="submit" >Save</button>
-                  </div>                 
+                  </div>
              </form>
-         </div>    
+         </div>
     </div>
 </article>
 <script src="{% static 'js/instrument/popups.js' %}"></script>
@@ -260,7 +265,7 @@ function deleteRow(r) {
     var TotalForms = Number(inputTotalForms.value);
     const inputInitialForms = document.querySelector('input[id$="-INITIAL_FORMS"]');
     var InitialForms = Number(inputInitialForms.value);
-    
+
     var idx = r.parentNode.parentNode.rowIndex;
     pk_id = document.getElementById("id_form-"+(idx-1)+"-id");
     if (pk_id != null) {
@@ -268,7 +273,7 @@ function deleteRow(r) {
             inputInitialForms.value = InitialForms -1;
         }
     }
-    
+
     containerFormSet.deleteRow(idx);
     inputTotalForms.value = TotalForms -1;
 
@@ -300,21 +305,21 @@ function deleteRow(r) {
 function addRow() {
     const inputTotalForms = document.querySelector('input[id$="-TOTAL_FORMS"]');
     var TotalForms = Number(inputTotalForms.value);
-    
+
     inputTotalForms.value = TotalForms +1;
-    
+
     const formFragment = templateForm.content.cloneNode(true);
-    
+
     for (let element of formFragment.children) {
         element.innerHTML = element.innerHTML.replace(
             /(?<=\w+-)(__prefix__|\d+)(?=-\w+)/g,
             TotalForms.toString());
         element.id = "data-form-index_"+TotalForms.toString();
     }
-    
+
     containerFormSet.appendChild(formFragment);
     FilterUnits(document.getElementById("id_form-"+(TotalForms).toString()+"-group"));
-    
+
 }
 
 function FilterUnits(group_slct) {
@@ -330,47 +335,47 @@ function FilterUnits(group_slct) {
                    {typ:"pres", u:"mBar"},
                    {typ:"pres", u:"mmHg"},
                    {typ:"humi", u:"%"}];
-                   
+
     let units_slct  = document.getElementById(group_slct.id.replace("-group","-units"));
     let desc = group_slct.options[group_slct.selectedIndex].text;
     orig_indx = units_slct.selectedIndex;
     if (orig_indx != -1){
         orig_units = units_slct.options[orig_indx].value;
     }
-    
+
     //Remove all options to start fresh
     while (units_slct.options.length > 0) {
         units_slct.remove(0);
     }
-    
+
     let uLen = units.length;
     if (desc.includes("Temperature")) {
         for (let i = 0; i < uLen; i++) {
           if (units[i].typ.includes("temp")) {
               let newOption = new Option(units[i].u, units[i].u);
               units_slct.add(newOption, undefined);
-              }        
+              }
         }
     } else if (desc.includes("Pressure")) {
         for (let i = 0; i < uLen; i++) {
           if (units[i].typ.includes("pres")) {
               let newOption = new Option(units[i].u, units[i].u);
               units_slct.add(newOption, undefined);
-              }        
+              }
         }
     } else if (desc.includes("Humidity")) {
         for (let i = 0; i < uLen; i++) {
           if (units[i].typ.includes("humi")) {
               let newOption = new Option(units[i].u, units[i].u);
               units_slct.add(newOption, undefined);
-              }        
+              }
         }
     } else if (desc.includes("scale")) {
         for (let i = 0; i < uLen; i++) {
           if (units[i].typ.includes("scal")) {
               let newOption = new Option(units[i].d, units[i].u);
               units_slct.add(newOption, undefined);
-              }        
+              }
         }
     } else {
        for (let i = 0; i < uLen; i++) {
@@ -392,10 +397,10 @@ function FilterUnits(group_slct) {
 }
 
 function RectCoverFctr(dist_slct) {
-                   
+
     let k_input  = document.getElementById(dist_slct.id.replace("-distribution","-k"));
     let desc = dist_slct.options[dist_slct.selectedIndex].text;
-        
+
     if (desc.includes("Rectangular")) {
         k_input.value = Math.sqrt(3);
     } else {

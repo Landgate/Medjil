@@ -20,7 +20,7 @@
 {% load }
 {% load static %}
 
-{% block content %} 
+{% block content %}
 
 <article class="post">
     <div class="post-content">
@@ -108,8 +108,8 @@
 <script>
     const db_makes = {{ makes|safe }};
     const db_models = {{ models|safe }};
-    
-</script>
-	<body onunload="javascript:refreshParent()">
 
+</script>
+<body onunload="javascript:refreshParent()">
+</body>
 {% endblock %}

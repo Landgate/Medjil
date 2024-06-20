@@ -24,11 +24,11 @@
     <div class="post-content">
     <form method = 'POST' action= '' enctype = "multipart/form-data" class="site-form" name="model_form">
         {% if form.errors or form.non_field_errors %}
-            {% for error in form.non_field_errors %} 
+            {% for error in form.non_field_errors %}
                 <p class="error error-danger">** {{ error }}</p>
             {% endfor %}
             <br>
-        {% endif %}    
+        {% endif %}
         {% csrf_token %}
         <div class="mb-5 site-form-header bg-indigo-300 rounded px-2">
                 <h2 class="text-center">Instrument Model</h2>
@@ -68,7 +68,7 @@
                 {% else %}
                     <tr>
                         <td width="30%">{{ field.label_tag }}</td>
-                        <td width="70%"> {{ field }} 
+                        <td width="70%"> {{ field }}
                             {% for error in field.errors %}
                                 <p class="error error-danger">{{ error }}</p>
                             {% endfor %}
@@ -80,8 +80,8 @@
                             {% endif %}
                         </td>
                         {% if field.name == 'make' %}
-                            <td width="10%"> 
-                                <button style="width:35px; height:35px" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" type="button" 
+                            <td width="10%">
+                                <button style="width:35px; height:35px" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" type="button"
                                 onclick="NewMake()"</button>
                             </td>
                         {% endif %}
@@ -102,22 +102,22 @@
 </article>
 
 <script>
-     // Make Option 
+     // Make Option
      defaultMakeOptions = document.getElementById("id_make");
 
     // New Make and Abbrev Container
     const newMakeName = document.getElementById("id_make_name");
     const newAbbrName = document.getElementById("id_make_abbrev");
-    const toggleButton = document.getElementById("NewMakeBtn"); 
+    const toggleButton = document.getElementById("NewMakeBtn");
 
-    // Dont display the make/abbrev container 
+    // Dont display the make/abbrev container
     newMakeName.style.display = "none";
     newAbbrName.style.display = "none";
 
-    function NewMake(){   
+    function NewMake(){
         const idInstMake = document.getElementById("id_inst_make");
         const idInstAbbrev = document.getElementById("id_inst_abbrev");
-        
+
         if (toggleButton.innerText === "-") {
             newMakeName.style.display = "none";
             idInstMake.required = false;
@@ -134,12 +134,12 @@
             newAbbrName.style.display = "table-row";
             idInstAbbrev.required = true;
             toggleButton.innerText = "-"; // Set the button text to "-"
-            
+
             defaultMakeOptions.selectedIndex = defaultMakeOptions.options.length - 1;
         }
         adjustWindowHeight();
     }
-    
+
     // On dropdown change - if others - extend table row to Make Form
     defaultMakeOptions.addEventListener(`change`, (e) => {
         const select = e.target;
@@ -156,9 +156,9 @@
         }
         adjustWindowHeight();
     });
-    
+
     //  Refresh Parent Function
-    function refreshParent() 
+    function refreshParent()
     {
         window.opener.location.reload(true);
     }
