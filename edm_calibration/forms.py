@@ -142,12 +142,12 @@ class UploadSurveyFiles(forms.Form):
 class ChangeSurveyFiles(forms.Form):
     change_edm = forms.BooleanField(
         widget = forms.CheckboxInput(attrs={'class': 'page2', 
-                                            'onclick':'tglEdmFile()'}),
+                                            'onclick':'tglFile("edm")'}),
         required = False, 
         label = 'Change EDM File')
     edm_file = forms.FileField(
         widget = forms.FileInput(attrs={'accept' : '.csv, .asc',
-                                        'class': 'edm_file'}),
+                                        'class': 'page2'}),
         required = False, 
         label = 'EDM File (*.csv)')
     

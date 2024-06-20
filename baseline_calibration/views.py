@@ -209,9 +209,9 @@ def calibrate1(request, id):
             for o in raw_edm_obs.values():
                 from_pillar_id = baseline['pillars'].get(name=o['from_pillar'])
                 to_pillar_id = baseline['pillars'].get(name=o['to_pillar'])
-                if 'raw_temperature2' not in o.keys(): o['raw_temperature2']=None
-                if 'raw_pressure2' not in o.keys(): o['raw_pressure2']=None
-                if 'raw_humidity2' not in o.keys(): o['raw_humidity2']=None
+                if not frm['thermometer2']: o['raw_temperature2']=None
+                if not frm['barometer2']: o['raw_pressure2']=None
+                if not frm['hygrometer2']: o['raw_humidity2']=None
                 
                 EDM_Observation.objects.create(
                     pillar_survey=ps_instance,

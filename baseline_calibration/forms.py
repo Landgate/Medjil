@@ -168,22 +168,22 @@ class ChangeSurveyFiles(forms.Form):
         
     change_edm = forms.BooleanField(
         widget = forms.CheckboxInput(attrs={'class': 'page3', 
-                                            'onclick':'tglEdmFile()'}),
+                                            'onclick':'tglFile("edm")'}),
         required = False, 
         label = 'Change EDM File')
     edm_file = forms.FileField(
         widget = forms.FileInput(attrs={'accept' : '.csv, .asc',
-                                        'class': 'edm_file'}),
+                                        'class': 'page3'}),
         required = False, 
         label = 'EDM File (*.csv)')
     change_lvl = forms.BooleanField(
         widget = forms.CheckboxInput(attrs={'class': 'page3',
-                                            'onclick':'tglLvlFile()'}),
+                                            'onclick':'tglFile("lvl")'}),
         required = False,
         label = 'Change Level File')
     lvl_file  = forms.FileField(
         widget = forms.FileInput(attrs={'accept' : '.csv, .asc',
-                                        'class': 'lvl_file'}),
+                                        'class': 'page3'}),
         required = False,
         label = 'Reduced Levels File (*.csv)')
     

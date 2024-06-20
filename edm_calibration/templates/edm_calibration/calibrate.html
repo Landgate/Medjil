@@ -96,7 +96,7 @@
                     {% endif %}
                 {% endfor %}
                 {% for field in survey_files %}
-                    <tr class="tgl-{{ field.field.widget.attrs.class }}" style="display:none;">
+                    <tr id="id_{{ field.name }}_tr" class="tgl-{{ field.field.widget.attrs.class }}" style="display:none;">
                         <td>{{ field.label_tag }}</td>
                         <td>
                             {{ field }}
@@ -158,6 +158,7 @@
       }
       document.getElementById("pgOfpgs").innerHTML = "Page "+ (n+1) + " of " + (lastTab+1);
       tglCalibBase();
+      tglFile("edm");
     }
 
     function nextPrev(n) {
@@ -195,36 +196,20 @@
       return valid; // return the valid status
     }
 
-    function tglEdmFile() {
-      // This function will hide/unhide the EDM file select
-      var chk = document.getElementById("id_change_edm");
-      var slct = document.getElementById("id_edm_file");
-      var e = document.getElementsByClassName("tgl-edm_file");
-
-      for (var i = 0; i < e.length; i++) {
-         if (chk.checked) {
-              e[i].style.display = '';
-              slct.type = "text";
-              slct.type = "file";
-          } else {
-              e[i].style.display = 'none';
-          }
-      }
-    }
-
-    function tglLvlFile() {
+    function tglFile(typ) {
       // This function will hide/unhide the Level file select
-      var chk = document.getElementById("id_change_lvl");
-      var slct = document.getElementById("id_lvl_file");
-      var e = document.getElementsByClassName("tgl-lvl_file");
-
-      for (var i = 0; i < e.length; i++) {
-         if (chk.checked) {
-              e[i].style.display = '';
+      var chk = document.getElementById("id_change_"+typ);
+      var slct = document.getElementById("id_"+typ+"_file");
+      var chk_Tr = document.getElementById("id_change_"+typ+"_tr");
+      var slct_tr = document.getElementById("id_"+typ+"_file_tr");
+      console.log(chk_Tr)
+      if (chk_Tr.style.display!=='none'){
+          if (chk.checked) {
+              slct_tr.style.display = '';
               slct.type = "text";
               slct.type = "file";
           } else {
-              e[i].style.display = 'none';
+              slct_tr.style.display = 'none';
           }
       }
     }

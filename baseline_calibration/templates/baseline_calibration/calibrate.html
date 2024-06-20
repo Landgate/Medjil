@@ -100,7 +100,7 @@
                     {% endfor %}
                 {% endfor %}
                 {% for field in survey_files %}
-                    <tr class="tgl-{{ field.field.widget.attrs.class }}" style="display:none;" title={{ field.help_text }}>
+                    <tr id="id_{{ field.name }}_tr" class="tgl-{{ field.field.widget.attrs.class }}" style="display:none;" title={{ field.help_text }}>
                         <td>{{ field.label }}</td>
                         <td>
                             {{ field }}
@@ -168,6 +168,8 @@
        x[i].style.display = '';
       }
       tglCO2();
+      tglFile("edm");
+      tglFile("lvl");
 
       if (n == 0) {
         document.getElementById("prevBtn").style.display = "none";
@@ -217,36 +219,20 @@
       return valid; // return the valid status
     }
 
-    function tglEdmFile() {
-      // This function will hide/unhide the EDM file select
-      var chk = document.getElementById("id_change_edm");
-      var slct = document.getElementById("id_edm_file");
-      var e = document.getElementsByClassName("tgl-edm_file");
-
-      for (var i = 0; i < e.length; i++) {
-         if (chk.checked) {
-              e[i].style.display = '';
-              slct.type = "text";
-              slct.type = "file";
-          } else {
-              e[i].style.display = 'none';
-          }
-      }
-    }
-
-    function tglLvlFile() {
+    function tglFile(typ) {
       // This function will hide/unhide the Level file select
-      var chk = document.getElementById("id_change_lvl");
-      var slct = document.getElementById("id_lvl_file");
-      var e = document.getElementsByClassName("tgl-lvl_file");
-
-      for (var i = 0; i < e.length; i++) {
-         if (chk.checked) {
-              e[i].style.display = '';
+      var chk = document.getElementById("id_change_"+typ);
+      var slct = document.getElementById("id_"+typ+"_file");
+      var chk_Tr = document.getElementById("id_change_"+typ+"_tr");
+      var slct_tr = document.getElementById("id_"+typ+"_file_tr");
+      
+      if (chk_Tr.style.display!=='none'){
+          if (chk.checked) {
+              slct_tr.style.display = '';
               slct.type = "text";
               slct.type = "file";
           } else {
-              e[i].style.display = 'none';
+              slct_tr.style.display = 'none';
           }
       }
     }
@@ -271,7 +257,6 @@
         var Mets2_box = document.getElementById("id_"+inst+"2");
         var Mets_Tr = document.getElementById("id_"+inst+"_tr");
         var Mets2_Tr = document.getElementById("id_"+inst+"2_tr");
-        var Mets_calib_applied_Tr = document.getElementById("id_"+abb+"_calib_applied_tr");
         var Mets2_calib_applied_Tr = document.getElementById("id_"+abb+"2_calib_applied_tr");
         console.log(Mets2_box)
         if (Mets_Tr.style.display !== 'none' ) {
