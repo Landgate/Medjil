@@ -279,29 +279,33 @@ def Calibrations_qry(frm_data):
                     ).order_by('-calibration_date').first()
     else:
         calib['hygro'] = None
+    
     if 'thermometer2' in  frm_data.keys():
-        calib['them2'] = Mets_certificate.objects.filter(
-                    calibration_date__lte = frm_data['survey_date'] ,
-                    instrument__pk = frm_data['thermometer2'].pk
-                    ).order_by('-calibration_date').first()
-    else:
-        calib['them2'] = None 
+        if frm_data['barometer2']:   
+            calib['them2'] = Mets_certificate.objects.filter(
+                        calibration_date__lte = frm_data['survey_date'] ,
+                        instrument__pk = frm_data['thermometer2'].pk
+                        ).order_by('-calibration_date').first()
+        else:
+            calib['them2'] = None 
     
     if 'barometer2' in  frm_data.keys():
-        calib['baro2'] = Mets_certificate.objects.filter(
-                    calibration_date__lte = frm_data['survey_date'] ,
-                    instrument__pk = frm_data['barometer2'].pk
-                    ).order_by('-calibration_date').first()
-    else:
-        calib['baro2'] = None
-    
+        if frm_data['barometer2']:
+            calib['baro2'] = Mets_certificate.objects.filter(
+                        calibration_date__lte = frm_data['survey_date'] ,
+                        instrument__pk = frm_data['barometer2'].pk
+                        ).order_by('-calibration_date').first()
+        else:
+            calib['baro2'] = None
+        
     if 'hygrometer2' in  frm_data.keys():
-        calib['hygro2'] = Mets_certificate.objects.filter(
-                    calibration_date__lte = frm_data['survey_date'] ,
-                    instrument__pk = frm_data['hygrometer2'].pk
-                    ).order_by('-calibration_date').first()
-    else:
-        calib['hygro2'] = None   
+        if frm_data['hygrometer2']:
+            calib['hygro2'] = Mets_certificate.objects.filter(
+                        calibration_date__lte = frm_data['survey_date'] ,
+                        instrument__pk = frm_data['hygrometer2'].pk
+                        ).order_by('-calibration_date').first()
+        else:
+            calib['hygro2'] = None   
         
     return calib
 
