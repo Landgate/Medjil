@@ -574,22 +574,25 @@
                   certificates for EDMI, Barometer, Thermometer and Hygrometer. If calibration corrections have not been applied
                   to instrument readings, Medjil allows calibration corrections to be applied to the raw readings during
                   the Medjil calibration.</p>
+                  
+                  <p>Data from one or two meteorological instruments (e.g. two thermometers, two barometers) can be recorded and imported to Medjil. 
+                  	If a set of two instruments have been used along the observed distance (e.g. at the instrument and target locations) Medjil will compute and apply averaged values.</p>
 
                <div id="EDMI-Chapter4_1_1">
                   <h4>4.1.1 Meteorological instrumentation corrections</h4>
-                  <p>All meteorological instruments (thermometer, barometer, hygrometer) corrections apply as zero
-                     point correction (zpc) to the EDMI readings (distance)</p>
+                  <p>All meteorological instruments (thermometer, barometer, hygrometer) can reference calibration certificates to apply corrections to raw readings. 
+                  	These corrections are sourced from the most recent instrument calibration certificate current prior to the date of pillar survey. 
+                  	Calibration corrections are applied as zero point correction (zpc) to the raw meteorological instruments readings:</p>
                   <div>c<sub>M</sub> = zpc</div>
                </div>
 
                <div id="EDMI-Chapter4_1_2">
                   <h4>4.1.2 EDMI correction</h4>
-                  <p>EDMI calibration sourced from the most recent instrument calibration certificate:</p>
+                  <p>EDMI calibration corrections are sourced from the most recent instrument calibration certificate current prior to the date of baseline survey:</p>
                   <div>c<sub>EDMI</sub> = sfc * d + zpc</div>
                   <br>
-                  <p>If the meteorological corrections have not been applied to EDMI readings, 
-                     atmospheric
-                     readings will be applied prior to calculating the first velocity correction.</p>
+                  <p>If the meteorological corrections have not been applied to EDMI readings prior to upload, 
+                  	atmospheric calibration corrections will be applied prior to calculating the first velocity correction.</p>
                </div>
             </div>
 
