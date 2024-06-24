@@ -41,13 +41,13 @@
         {% if pillar_surveys %}
         <table>
             <tr>
-              <th width="15%" class="text-left font-semibold text-base text-gray-900">Baseline</th>
-              <th width="15%" class="text-left font-semibold text-base text-gray-900">Job Number</th>
-              <th width="15%" class="text-left font-semibold text-base text-gray-900">Survey Date</th>
-              <th width="15%" class="text-left font-semibold text-base text-gray-900">Company</th>
-              <th width="10%" class="text-left font-semibold text-base text-gray-900">Observed By</th>
-              <th width="20%" class="text-left font-semibold text-base text-gray-900">Certified Distances Modified</th>
-              <th width="5%" class="text-left font-semibold text-base text-gray-900">Action</th>
+              <th width="15%" class="text-left font-semibold text-base text-gray-900" onclick="sortTable(this)">Baseline</th>
+              <th width="15%" class="text-left font-semibold text-base text-gray-900" onclick="sortTable(this)">Job Number</th>
+              <th width="15%" class="text-left font-semibold text-base text-gray-900" onclick="sortTable(this)">Survey Date</th>
+              <th width="15%" class="text-left font-semibold text-base text-gray-900" onclick="sortTable(this)">Company</th>
+              <th width="10%" class="text-left font-semibold text-base text-gray-900" onclick="sortTable(this)">Observed By</th>
+              <th width="20%" class="text-left font-semibold text-base text-gray-900" onclick="sortTable(this)">Certified Distances Modified</th>
+              <th width="5%" class="text-left font-semibold text-base text-gray-900" onclick="sortTable(this)">Action</th>
             </tr>
             {% for pillar_survey in pillar_surveys %}
                 <tr>
@@ -108,6 +108,8 @@
         {% endif %}
       </div>
 </article>
+<script src="{% static 'js/tables.js' %}"></script>
+
 <script>
   function confirmation() {
     return confirm('Are you sure you want to delete this record? You will not be able to retreive the record later.');

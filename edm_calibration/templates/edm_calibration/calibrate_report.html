@@ -565,36 +565,36 @@
                     <th class="text-center" colspan = '2'>Residuals (mm)</th>
                 </tr>
                 <tr>
-                    <th onclick="sortTable(0)" class="text-center">From</th>
-                    <th onclick="sortTable(1)" class="text-center">To</th>
+                    <th onclick="sortTable(this)" class="text-center">From</th>
+                    <th onclick="sortTable(this)" class="text-center">To</th>
                     {% for s in edm_observations.0.grp_Bay %}
                         <th onclick="sortTable({{ forloop.counter0 }}+2)" class="text-center">Slope Dist. {{ forloop.counter }}</th>
                     {% endfor %}
                     {% with edm_observations|first as o %}
-                        <th onclick="sortTable({{ o.grp_Bay|length }}+2)" class="text-center">Slope Dist. (m)</th>
-                        <th onclick="sortTable({{ o.grp_Bay|length }}+3)" class="text-center">Dist. Std Dev (mm)</th>
-                        <th onclick="sortTable({{ o.grp_Bay|length }}+4)" class="text-center">Difference to Certified (mm)</th>
-                        <th onclick="sortTable({{ o.grp_Bay|length }}+5)" class="text-center">Offset</th>
-                        <th onclick="sortTable({{ o.grp_Bay|length }}+6)" class="text-center">Delta Height</th>
+                        <th onclick="sortTable(this)" class="text-center">Slope Dist. (m)</th>
+                        <th onclick="sortTable(this)" class="text-center">Dist. Std Dev (mm)</th>
+                        <th onclick="sortTable(this)" class="text-center">Difference to Certified (mm)</th>
+                        <th onclick="sortTable(this)" class="text-center">Offset</th>
+                        <th onclick="sortTable(this)" class="text-center">Delta Height</th>
                         <!-- Corrections -->
-                        <th onclick="sortTable({{ o.grp_Bay|length }}+7)" class="text-center">Atmospheric</th>
-                        <th onclick="sortTable({{ o.grp_Bay|length }}+8)" class="text-center">Offset</th>
-                        <th onclick="sortTable({{ o.grp_Bay|length }}+9)" class="text-center">Slope</th>
-                        <th onclick="sortTable({{ o.grp_Bay|length }}+10)" class="text-center">Reduced Distance (m)</th>
+                        <th onclick="sortTable(this)" class="text-center">Atmospheric</th>
+                        <th onclick="sortTable(this)" class="text-center">Offset</th>
+                        <th onclick="sortTable(this)" class="text-center">Slope</th>
+                        <th onclick="sortTable(this)" class="text-center">Reduced Distance (m)</th>
                         <!-- Uncertainty -->
-                        <th onclick="sortTable({{ o.grp_Bay|length }}+11)" class="text-center">EDM Scale Factor</th>
-                        <th onclick="sortTable({{ o.grp_Bay|length }}+12)" class="text-center">EDMI Measurement</th>
-                        <th onclick="sortTable({{ o.grp_Bay|length }}+13)" class="text-center">Temperature</th>
-                        <th onclick="sortTable({{ o.grp_Bay|length }}+14)" class="text-center">Pressure</th>
-                        <th onclick="sortTable({{ o.grp_Bay|length }}+15)" class="text-center">Humidity</th>
-                        <th onclick="sortTable({{ o.grp_Bay|length }}+16)" class="text-center">Certified Distance</th>
-                        <th onclick="sortTable({{ o.grp_Bay|length }}+17)" class="text-center">Centring</th>
-                        <th onclick="sortTable({{ o.grp_Bay|length }}+18)" class="text-center">Heights</th>
-                        <th onclick="sortTable({{ o.grp_Bay|length }}+19)" class="text-center">Offsets</th>
-                        <th onclick="sortTable({{ o.grp_Bay|length }}+20)" class="text-center">Total</th>
+                        <th onclick="sortTable(this)" class="text-center">EDM Scale Factor</th>
+                        <th onclick="sortTable(this)" class="text-center">EDMI Measurement</th>
+                        <th onclick="sortTable(this)" class="text-center">Temperature</th>
+                        <th onclick="sortTable(this)" class="text-center">Pressure</th>
+                        <th onclick="sortTable(this)" class="text-center">Humidity</th>
+                        <th onclick="sortTable(this)" class="text-center">Certified Distance</th>
+                        <th onclick="sortTable(this)" class="text-center">Centring</th>
+                        <th onclick="sortTable(this)" class="text-center">Heights</th>
+                        <th onclick="sortTable(this)" class="text-center">Offsets</th>
+                        <th onclick="sortTable(this)" class="text-center">Total</th>
                         <!--LSA residuals -->
-                        <th onclick="sortTable({{ o.grp_Bay|length }}+21)" class="text-center">Residual (mm)</th>
-                        <th onclick="sortTable({{ o.grp_Bay|length }}+22)" class="text-center">Standard Residual</th>
+                        <th onclick="sortTable(this)" class="text-center">Residual (mm)</th>
+                        <th onclick="sortTable(this)" class="text-center">Standard Residual</th>
                     {% endwith %}
                 </tr>
             </thead>
@@ -770,7 +770,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@0.1.2"></script>
-
+<script src="{% static 'js/tables.js' %}"></script>
 
 <script>
 // "Populate the javascript lists and arrays for all the charts"
@@ -986,65 +986,7 @@ new Chart("return-phase-angle-Chart", {
 });
 
 </script>
-<script>
-// function for sorting tables called 'myTable'
-function sortTable(n) {
-  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-  table = document.getElementById("myTable");
-  switching = true;
-  //Set the sorting direction to ascending:
-  dir = "asc";
-  /*Make a loop that will continue until
-  no switching has been done:*/
-  while (switching) {
-    //start by saying: no switching is done:
-    switching = false;
-    rows = table.rows;
-    /*Loop through all table rows (except the
-    first, which contains table headers):*/
-    for (i = 2; i
-            < (rows.length - 1); i++) {
-      //start by saying there should be no switching:
-      shouldSwitch = false;
-      /*Get the two elements you want to compare,
-      one from current row and one from the next:*/
-      x = rows[i].getElementsByTagName("TD")[n];
-      y = rows[i + 1].getElementsByTagName("TD")[n];
-      /*check if the two rows should switch place,
-      based on the direction, asc or desc:*/
-      if (dir == "asc") {
-        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-          //if so, mark as a switch and break the loop:
-          shouldSwitch= true;
-          break;
-        }
-      } else if (dir == "desc") {
-        if (x.innerHTML.toLowerCase()
-                < y.innerHTML.toLowerCase()) {
-          //if so, mark as a switch and break the loop:
-          shouldSwitch = true;
-          break;
-        }
-      }
-    }
-    if (shouldSwitch) {
-      /*If a switch has been marked, make the switch
-      and mark that a switch has been done:*/
-      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-      switching = true;
-      //Each time a switch is done, increase this count by 1:
-      switchcount ++;
-    } else {
-      /*If no switching has been done AND the direction is "asc",
-      set the direction to "desc" and run the while loop again.*/
-      if (switchcount == 0 && dir == "asc") {
-        dir = "desc";
-        switching = true;
-      }
-    }
-  }
-}
-</script>
+
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     // certificate()

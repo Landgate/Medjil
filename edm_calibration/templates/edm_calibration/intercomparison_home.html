@@ -44,12 +44,12 @@
             {% if intercomparisons %}
                 <table>
                     <tr>
-                        <th class="text-left font-semibold text-base text-gray-900">Job Reference</th>
-                        <th class="text-left font-semibold text-base text-gray-900">EDM</th>
-                        <th class="text-left font-semibold text-base text-gray-900">Prism</th>
-                        <th width="12%" class="text-left font-semibold text-base text-gray-900">From Date</th>
-                        <th width="12%" class="text-left font-semibold text-base text-gray-900">To Date</th>
-                        <th width="5%" class="text-center font-semibold text-base text-gray-900">Action</th>
+                        <th class="text-left font-semibold text-base text-gray-900" onclick="sortTable(this)">Job Reference</th>
+                        <th class="text-left font-semibold text-base text-gray-900" onclick="sortTable(this)">EDM</th>
+                        <th class="text-left font-semibold text-base text-gray-900" onclick="sortTable(this)">Prism</th>
+                        <th width="12%" class="text-left font-semibold text-base text-gray-900" onclick="sortTable(this)">From Date</th>
+                        <th width="12%" class="text-left font-semibold text-base text-gray-900" onclick="sortTable(this)">To Date</th>
+                        <th width="5%" class="text-center font-semibold text-base text-gray-900" onclick="sortTable(this)">Action</th>
                     </tr>
                     {% for intercomparison in intercomparisons %}
                         <tr>
@@ -109,6 +109,9 @@
         </div>
     </div>
 </article>
+
+<script src="{% static 'js/tables.js' %}"></script>
+
 <script>
     function confirmation() {
         return confirm('Are you sure you want to delete this record? You will not be able to retreive the record later.');

@@ -21,12 +21,15 @@
 
 <article class="post">
     <div class="page-content">
-        <h2 class="text-center">Imported EDM Observations</h2>
-
-        <form id="edm-rawDataForm" style="font-size:10.0pt;" class="site-form" method="post" enctype="multipart/form-data">
-            <div >
-                <p>The pillar survey observations are used to calculate the baseline's 'certified distances' <a href= "{% url 'calibrationguide:read_manual' manual_name='edmi_calibration_manual.html' %}#EDMI-Chapter2_2" target="_blank" onclick="return showAddPopup(this);"> &#x1F6C8</a> and the pillar offsets from the first pillar to last pillar alignment <a href= "{% url 'calibrationguide:read_manual' manual_name='edmi_calibration_manual.html' %}#EDMI-Chapter2_5" target="_blank" onclick="return showAddPopup(this);"> &#x1F6C8</a>.
-                Select/deselecte observations in the following table to use for the alignment and/or distance calculations.</p>
+        <div class="text-center">
+            <h1>Imported EDM Observations</h1>
+        </div>
+        <form id="edm-rawDataForm" action="" style="font-size:10.0pt;max-width: 100%;" class="site-form" method="post" enctype="multipart/form-data">
+            <div class="flexbox-container_IB flexbox-item-left_IB">
+                <p>The pillar survey observations are used to calculate the baseline's 'certified distances' 
+                	<a href= "{% url 'calibrationguide:read_manual' manual_name='edmi_calibration_manual.html' %}#EDMI-Chapter2_2" target="_blank" onclick="return showAddPopup(this);"> &#x1F6C8</a> and the pillar offsets from the first pillar to last pillar alignment <a href= "{% url 'calibrationguide:read_manual' manual_name='edmi_calibration_manual.html' %}#EDMI-Chapter2_5" target="_blank" onclick="return showAddPopup(this);"> &#x1F6C8</a>.
+                	<br>Please select/deselect the observations in the following table to use for the alignment and/or distance calculations.
+                </p>
             </div>
             <div class="flexbox-container_IB" style="width: 100%;">
                 <div class="flexbox-item_400_IB">
@@ -36,30 +39,33 @@
                     <a href="#bottom">Scroll to bottom &#128317</a>
                 </div>
             </div>
-            <div class="flexbox-container_IB flexbox-item_IB">
+            <div class="flexbox-container_IB flexbox-item_IB" style="min-width: 600px;max-width: 100%;">
                 {% csrf_token %}
                 <table id="obsTable">
                     {{ edm_obs_formset.management_form }}
                     {% for form, raw in formset %}
                         {% if forloop.first %}
+                        <thead>
                             <tr>
-                                <th onclick="sortTable(0)"> Obs # </th>
-                                <th onclick="sortTable(1)"> From Pillar </th>
-                                <th onclick="sortTable(2)"> To Pillar </th>
-                                <th onclick="sortTable(3)"> Instrument Height (m)</th>
-                                <th onclick="sortTable(4)"> Target Height (m)</th>
-                                <th onclick="sortTable(5)"> Slope Distance (m)</th>
-                                <th onclick="sortTable(6)"> Offset (m)</th>
-                                <th onclick="sortTable(7)"> Raw Temperature (°C) </th>
-                                <th onclick="sortTable(8)"> Raw Pressure (mBar) </th>
-                                <th onclick="sortTable(9)"> Raw Humidity (%) </th>
-                                {% if raw.raw_temperature2 %}<th onclick="sortTable(10)"> Raw Temperature2 (°C) </th>{% endif %}
-                                {% if raw.raw_pressure2 %}<th onclick="sortTable(11)"> Raw Pressure2 (°C) </th>{% endif %}
-                                {% if raw.raw_humidity2 %}<th onclick="sortTable(12)"> Raw Humidity2 (°C) </th>{% endif %}
+                                <th onclick="sortTable(this)"> Obs # </th>
+                                <th onclick="sortTable(this)"> From Pillar </th>
+                                <th onclick="sortTable(this)"> To Pillar </th>
+                                <th onclick="sortTable(this)"> Instrument Height (m)</th>
+                                <th onclick="sortTable(this)"> Target Height (m)</th>
+                                <th onclick="sortTable(this)"> Slope Distance (m)</th>
+                                <th onclick="sortTable(this)"> Offset (m)</th>
+                                <th onclick="sortTable(this)"> Raw Temperature (°C)</th>
+                                {% if raw.raw_temperature2 %}<th onclick="sortTable(this)"> Raw Temperature2 (°C)</th>{% endif %}
+                                <th onclick="sortTable(this)"> Raw Pressure (mBar)</th>
+                                {% if raw.raw_pressure2 %}<th onclick="sortTable(this)"> Raw Pressure2 (mBar)</th>{% endif %}
+                                <th onclick="sortTable(this)"> Raw Humidity (%)</th>
+                                {% if raw.raw_humidity2 %}<th onclick="sortTable(this)"> Raw Humidity2 (%)</th>{% endif %}
                                 <th> Select for Alignment Survey </th>
                                 <th> Select for Certified Distances </th>
                                 <td style="display: none;"></td>
                             </tr>
+                        </thead>
+                        <tbody>
                         {% endif %}
                         <tr>
                             <td>{{ forloop.counter|stringformat:"03d" }}</td>
@@ -80,6 +86,7 @@
                             <td style="display: none;">{{ form.id }}</td>
                         </tr>
                     {% endfor %}
+                    </tbody>
                 </table>
             </div>
             <div class="button-container">
@@ -95,69 +102,15 @@
     </div>
 </article>
 
+<script src="{% static 'js/tables.js' %}"></script>
+
 <script>
 function submit_it() {
     document.getElementById("loading-icon").style.display = "block";
     document.getElementById("edm-rawDataForm").style.display = "none";
     document.getElementById("edm-rawDataForm").submit();
 }
-
-
-function sortTable(n) {
-  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-  table = document.getElementById("obsTable");
-  switching = true;
-  //Set the sorting direction to ascending:
-  dir = "asc";
-  /*Make a loop that will continue until
-  no switching has been done:*/
-  while (switching) {
-    //start by saying: no switching is done:
-    switching = false;
-    rows = table.rows;
-    /*Loop through all table rows (except the
-    first, which contains table headers):*/
-    for (i = 1; i
-    < (rows.length - 1); i++) {
-      //start by saying there should be no switching:
-      shouldSwitch = false;
-      /*Get the two elements you want to compare,
-      one from current row and one from the next:*/
-      x = rows[i].getElementsByTagName("TD")[n];
-      y = rows[i + 1].getElementsByTagName("TD")[n];
-      /*check if the two rows should switch place,
-      based on the direction, asc or desc:*/
-      if (dir == "asc") {
-        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-          //if so, mark as a switch and break the loop:
-          shouldSwitch= true;
-          break;
-        }
-      } else if (dir == "desc") {
-        if (x.innerHTML.toLowerCase()
-        < y.innerHTML.toLowerCase()) {
-          //if so, mark as a switch and break the loop:
-          shouldSwitch = true;
-          break;
-        }
-      }
-    }
-    if (shouldSwitch) {
-      /*If a switch has been marked, make the switch
-      and mark that a switch has been done:*/
-      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-      switching = true;
-      //Each time a switch is done, increase this count by 1:
-      switchcount ++;
-    } else {
-      /*If no switching has been done AND the direction is "asc",
-      set the direction to "desc" and run the while loop again.*/
-      if (switchcount == 0 && dir == "asc") {
-        dir = "desc";
-        switching = true;
-      }
-    }
-  }
-}
 </script>
+
+
 {% endblock %}

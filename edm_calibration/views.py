@@ -1,6 +1,6 @@
 '''
 
-   © 2023 Western Australian Land Information Authority
+   © 2024 Western Australian Land Information Authority
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -134,7 +134,7 @@ def calibrate1(request, id):
         # Check the baseline has a valid calibration
         Check_Errors = validate_survey(pillar_survey = frm)
         if len(Check_Errors['Errors']) > 0:
-            return render(request, 'baseline_calibration/errors_report.html', 
+            return render(request, 'edm_calibration/errors_report.html', 
                           {'Check_Errors': Check_Errors})
     #----------------- Query related fields -----------------#
         calib = Calibrations_qry(frm)

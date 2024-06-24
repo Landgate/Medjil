@@ -157,7 +157,7 @@
                             <!--col span="1" style="width: 80%"-->
                             <tr>
                                 {% for lbl in table_headings.certificates %}
-                                    <th style="justify-left;">{{ lbl }}</th>
+                                    <th style="justify-left;" onclick="sortTable(this)">{{ lbl }}</th>
                                 {% endfor %}
                             </tr>
                             {% for certificate in tabs.certificates_list %}
@@ -277,6 +277,7 @@
   </div>
 </article>
 
+<script src="{% static 'js/tables.js' %}"></script>
 
 <script type="text/javascript">
     function confirmation() {

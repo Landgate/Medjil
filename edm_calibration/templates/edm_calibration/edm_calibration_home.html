@@ -42,14 +42,14 @@
             {% if pillar_surveys %}
                 <table>
                     <tr>
-                        <th class="text-left font-semibold text-base text-gray-900">EDM</th>
-                        <th class="text-left font-semibold text-base text-gray-900">Prism</th>
-                        <th width="8%" class="text-left font-semibold text-base text-gray-900">Company</th>
-                        <th width="12%" class="text-left font-semibold text-base text-gray-900">Survey Date</th>
-                        <th width="12%" class="text-left font-semibold text-base text-gray-900">Site</th>
-                        <th width="12%" class="text-left font-semibold text-base text-gray-900">Observed By</th>
-                        <th width="12%" class="text-left font-semibold text-base text-gray-900">Job Number</th>
-                        <th width="5%" class="text-left font-semibold text-base text-gray-900">Action</th>
+                        <th class="text-left font-semibold text-base text-gray-900" onclick="sortTable(this)">EDM</th>
+                        <th class="text-left font-semibold text-base text-gray-900" onclick="sortTable(this)">Prism</th>
+                        <th width="8%" class="text-left font-semibold text-base text-gray-900" onclick="sortTable(this)">Company</th>
+                        <th width="12%" class="text-left font-semibold text-base text-gray-900" onclick="sortTable(this)">Survey Date</th>
+                        <th width="12%" class="text-left font-semibold text-base text-gray-900" onclick="sortTable(this)">Site</th>
+                        <th width="12%" class="text-left font-semibold text-base text-gray-900" onclick="sortTable(this)">Observed By</th>
+                        <th width="12%" class="text-left font-semibold text-base text-gray-900" onclick="sortTable(this)">Job Number</th>
+                        <th width="5%" class="text-left font-semibold text-base text-gray-900" onclick="sortTable(this)">Action</th>
                     </tr>
                     {% for pillar_survey in pillar_surveys %}
                         <tr>
@@ -107,6 +107,9 @@
         </div>
     </div>
 </article>
+
+<script src="{% static 'js/tables.js' %}"></script>
+
 <script>
     function confirmation() {
         return confirm('Are you sure you want to delete this record? You will not be able to retreive the record later.');
