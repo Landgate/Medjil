@@ -213,8 +213,8 @@ def upload_range_data(apps, schema_editor):
     BarCodeRangeParam = apps.get_model("rangecalibration", "BarCodeRangeParam")
 
     # Starting to read the files
-    range_dir = os.path.join(settings.MEDIA_ROOT, 'InitialData/Staff Range/Australia/WA/Boya/Range Calibration')
-    FileDir = os.path.join(settings.MEDIA_ROOT, 'InitialData/Staff Range/Australia/WA/Boya/Range Calibration/20172297')
+    range_dir = os.path.join(settings.STATIC_ROOT, 'data/InitialData/Staff Range/Australia/WA/Boya/Range Calibration')
+    FileDir = os.path.join(settings.STATIC_ROOT, 'data/InitialData/Staff Range/Australia/WA/Boya/Range Calibration/20172297')
 
     # Reading the temperature record
     if os.path.exists(os.path.join(range_dir, 'calibration_record.csv')):

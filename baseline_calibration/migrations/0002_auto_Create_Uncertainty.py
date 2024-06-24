@@ -50,7 +50,7 @@ lg_accreditation = [
     'LUM_constant':0.5,
     'LUM_ppm':1.3,
     'statement':r'Accredited for compliance with ISO/IEC 17025 - Calibration.  The results of the tests, calibrations and/or measurements included in  this document are traceable to the international System of Units (SI) units and Australian/national standards. This document shall not be reproduced except in full.',
-    'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData/Accreditation/2021_LG_Accreditation.pdf')
+    'certificate_upload':os.path.join(settings.STATIC_ROOT, 'data/InitialData/Accreditation/2021_LG_Accreditation.pdf')
      }]
     
 #########################################################################

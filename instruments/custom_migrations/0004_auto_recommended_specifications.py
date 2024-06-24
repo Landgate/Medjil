@@ -23,7 +23,7 @@ import os
 # Start migration
 
 import_file = os.path.join(
-    settings.MEDIA_ROOT, 'InitialData/Specification Recommendations/Edm Specification Recommendations.csv')
+    settings.STATIC_ROOT, 'data/InitialData/Specification Recommendations/Edm Specification Recommendations.csv')
 
 edms_specs = []
 with open(import_file, 'r', encoding='cp1252') as file:

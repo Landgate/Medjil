@@ -50,7 +50,7 @@ def add_default_instruments(apps, schema_editor):
         obj.save()
 
     # try:
-    with open(os.path.join(settings.MEDIA_ROOT, 'InitialData/Default Instruments/Default Instrument Models.csv'), 'r', encoding='cp1252') as f:
+    with open(os.path.join(settings.STATIC_ROOT, 'data/InitialData/Default Instruments/Default Instrument Models.csv'), 'r', encoding='cp1252') as f:
         reader = csv.reader(f)
         header = next(reader)
         k = 0

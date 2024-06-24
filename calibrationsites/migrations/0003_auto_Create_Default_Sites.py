@@ -39,8 +39,8 @@ boya = {
     'locality': 'Boya',
     'no_of_pillars': '21',
     'operator' : 'Landgate',
-    'site_access' : os.path.join(settings.MEDIA_ROOT, 'InitialData/Staff Range/Australia/WA/Boya/Access/Boya Access Sketch.pdf'),
-    'site_config' : os.path.join(settings.MEDIA_ROOT, 'InitialData/Staff Range/Australia/WA/Boya/Access/Boya Pin Configuration.pdf'),
+    'site_access' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/Staff Range/Australia/WA/Boya/Access/Boya Access Sketch.pdf'),
+    'site_config' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/Staff Range/Australia/WA/Boya/Access/Boya Pin Configuration.pdf'),
 }    
 
 muncheng = {
@@ -66,8 +66,8 @@ edm_sites = [{
     'locality': 'Bentley',
     'no_of_pillars': 11,
     'operator' : 'Landgate',
-    'site_access' : os.path.join(settings.MEDIA_ROOT, 'InitialData/EDM Baseline/Australia/WA/Curtin/Curtin EDM Baseline Access Sketch.pdf'),
-    'site_config' : os.path.join(settings.MEDIA_ROOT, 'InitialData/EDM Baseline/Australia/WA/Curtin/Curtin EDM Baseline Pillar Configuration.pdf')
+    'site_access' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/WA/Curtin/Curtin EDM Baseline Access Sketch.pdf'),
+    'site_config' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/WA/Curtin/Curtin EDM Baseline Pillar Configuration.pdf')
 },{
     'site_type' : 'baseline',
     'site_name' : 'Curtin 12 Pillar',
@@ -77,8 +77,8 @@ edm_sites = [{
     'locality': 'Bentley',
     'no_of_pillars': 12,
     'operator' : 'Landgate',
-    'site_access' : os.path.join(settings.MEDIA_ROOT, 'InitialData/EDM Baseline/Australia/WA/Curtin/Curtin EDM Baseline Access Sketch.pdf'),
-    'site_config' : os.path.join(settings.MEDIA_ROOT, 'InitialData/EDM Baseline/Australia/WA/Curtin/Curtin EDM Baseline Pillar Configuration.pdf')
+    'site_access' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/WA/Curtin/Curtin EDM Baseline Access Sketch.pdf'),
+    'site_config' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/WA/Curtin/Curtin EDM Baseline Pillar Configuration.pdf')
 },{
     'site_type' : 'baseline',
     'site_name' : 'Busselton',
@@ -88,8 +88,8 @@ edm_sites = [{
     'locality': 'Busselton-Vasse',
     'no_of_pillars': 6,
     'operator' : 'Landgate',
-    'site_access' : os.path.join(settings.MEDIA_ROOT, 'InitialData/EDM Baseline/Australia/WA/Busselton/Busselton EDM Baseline Access Sketch.pdf'),
-    'site_config' : os.path.join(settings.MEDIA_ROOT, 'InitialData/EDM Baseline/Australia/WA/Busselton/Busselton EDM Baseline Pillar Configuration.pdf'),
+    'site_access' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/WA/Busselton/Busselton EDM Baseline Access Sketch.pdf'),
+    'site_config' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/WA/Busselton/Busselton EDM Baseline Pillar Configuration.pdf'),
 },{
    'site_type' : 'baseline',
     'site_name' : 'Kalgoorlie',
@@ -99,8 +99,8 @@ edm_sites = [{
     'locality': 'Kalgoorlie-Boulder',
     'no_of_pillars': 8,
     'operator' : 'Landgate',
-    'site_access' : os.path.join(settings.MEDIA_ROOT, 'InitialData/EDM Baseline/Australia/WA/Kalgoorlie/Kalgoorlie EDM Baseline Access Sketch.pdf'),
-    'site_config' : os.path.join(settings.MEDIA_ROOT, 'InitialData/EDM Baseline/Australia/WA/Kalgoorlie/Kalgoorlie EDM Baseline Pillar Configuration.pdf')
+    'site_access' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/WA/Kalgoorlie/Kalgoorlie EDM Baseline Access Sketch.pdf'),
+    'site_config' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/WA/Kalgoorlie/Kalgoorlie EDM Baseline Pillar Configuration.pdf')
 }]
 
 site_types = (

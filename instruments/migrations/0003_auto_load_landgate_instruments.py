@@ -96,7 +96,7 @@ lg_edmi_certs = [
     'zpc_std_dev':0.000080952380952381,
     'standard_deviation':0.00015,
     'degrees_of_freedom':14,
-    'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate/EDMIs/364182/2013_TS30_Calibration_Report.pdf'),
+    'certificate_upload':os.path.join(settings.STATIC_ROOT, 'data/InitialData/Landgate/EDMIs/364182/2013_TS30_Calibration_Report.pdf'),
     'edm_number':364182,
     'prism_number':100},
     {'calibration_date':'2015-06-17',
@@ -110,7 +110,7 @@ lg_edmi_certs = [
     'zpc_std_dev':0.00012,
     'standard_deviation':0.00022,
     'degrees_of_freedom':14,
-    'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate/EDMIs/364182/2015_TS30_Calibration_Report.pdf'),
+    'certificate_upload':os.path.join(settings.STATIC_ROOT, 'data/InitialData/Landgate/EDMIs/364182/2015_TS30_Calibration_Report.pdf'),
     'edm_number':364182,
     'prism_number':100},
     {'calibration_date':'2017-06-14',
@@ -124,7 +124,7 @@ lg_edmi_certs = [
     'zpc_std_dev':0.0001,
     'standard_deviation':0.0001,
     'degrees_of_freedom':14,
-    'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate/EDMIs/364182/2017_TS30_Calibration_Report.pdf'),
+    'certificate_upload':os.path.join(settings.STATIC_ROOT, 'data/InitialData/Landgate/EDMIs/364182/2017_TS30_Calibration_Report.pdf'),
     'edm_number':364182,
     'prism_number':100},
     {'calibration_date':'2019-05-16',
@@ -138,7 +138,7 @@ lg_edmi_certs = [
     'zpc_std_dev':0.00017,
     'standard_deviation':0.00032,
     'degrees_of_freedom':14,
-    'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate/EDMIs/364182/2019_TS30_Calibration_Report.pdf'),
+    'certificate_upload':os.path.join(settings.STATIC_ROOT, 'data/InitialData/Landgate/EDMIs/364182/2019_TS30_Calibration_Report.pdf'),
     'edm_number':364182,
     'prism_number':100},
     {'calibration_date':'2021-04-29',
@@ -152,7 +152,7 @@ lg_edmi_certs = [
     'zpc_std_dev':7.61904761904762E-05,
     'standard_deviation':0.0003,
     'degrees_of_freedom':27,
-    'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate/EDMIs/364182/2021_TS30_Calibration_Report.pdf'),
+    'certificate_upload':os.path.join(settings.STATIC_ROOT, 'data/InitialData/Landgate/EDMIs/364182/2021_TS30_Calibration_Report.pdf'),
     'edm_number':364182,
     'prism_number':100}
     ]
@@ -182,21 +182,21 @@ lg_mets_models = [
 lg_mets_insts = [
     {'mets_number':74003848,
     'comment':'EDM Baseline Calibration Baro',
-    'photo':os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate/Mets Photos/DRUCK_DPI_740.pdf'),
+    'photo':os.path.join(settings.STATIC_ROOT, 'data/InitialData/Landgate/Mets Photos/DRUCK_DPI_740.pdf'),
     'mets_custodian_id':'',
     'type':'baro',
     'mets_make_name':'DRUCK',
     'mets_model_name':'DPI740'},
     {'mets_number':20013647,
     'comment':'EDM Baseline Calibration Them',
-    'photo':os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate/Mets Photos/DELTA_OHM.pdf'),
+    'photo':os.path.join(settings.STATIC_ROOT, 'data/InitialData/Landgate/Mets Photos/DELTA_OHM.pdf'),
     'mets_custodian_id':'',
     'type':'thermo',
     'mets_make_name':'DELTA OHMS',
     'mets_model_name':'HD 2301.0R - HP472ACR'},
     {'mets_number':20013647,
     'comment':'EDM BaselineExternal Temperature/RH Probe',
-    'photo':os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate/Mets Photos/DELTA_OHM.pdf'),
+    'photo':os.path.join(settings.STATIC_ROOT, 'data/InitialData/Landgate/Mets Photos/DELTA_OHM.pdf'),
     'mets_custodian_id':'',
     'type':'hygro',
     'mets_make_name':'DELTA OHMS',
@@ -209,7 +209,7 @@ lg_mets_certs = [
     'zpc_coverage_factor':2,
     'zpc_std_dev':0.065,
     'degrees_of_freedom':30,
-    'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate/Mets Certificates/2021_74003848_Barometer_Calibration.pdf'),
+    'certificate_upload':os.path.join(settings.STATIC_ROOT, 'data/InitialData/Landgate/Mets Certificates/2021_74003848_Barometer_Calibration.pdf'),
     'type':'baro',
     'mets_number':74003848},
     {'calibration_date':'2021-04-14',
@@ -218,7 +218,7 @@ lg_mets_certs = [
     'zpc_coverage_factor':2,
     'zpc_std_dev':0.1,
     'degrees_of_freedom':30,
-    'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate/Mets Certificates/2021_20013647_Temperature_and_RH.pdf'),
+    'certificate_upload':os.path.join(settings.STATIC_ROOT, 'data/InitialData/Landgate/Mets Certificates/2021_20013647_Temperature_and_RH.pdf'),
     'type':'thermo',
     'mets_number':20013647},
     {'calibration_date':'2021-04-14',
@@ -227,7 +227,7 @@ lg_mets_certs = [
     'zpc_coverage_factor':2,
     'zpc_std_dev':1.15,
     'degrees_of_freedom':30,
-    'certificate_upload':os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate/Mets Certificates/2021_20013647_Temperature_and_RH.pdf'),
+    'certificate_upload':os.path.join(settings.STATIC_ROOT, 'data/InitialData/Landgate/Mets Certificates/2021_20013647_Temperature_and_RH.pdf'),
     'type':'hygro',
     'mets_number':20013647},
     ]
@@ -235,7 +235,7 @@ lg_mets_certs = [
         
 #########################################################################
 
-file_storage = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'media')) #
+file_storage = FileSystemStorage(location=os.path.join(settings.STATIC_ROOT, 'static/data')) #
 
 def add_landgate_instruments(apps, schema_editor):
     Company = apps.get_model("accounts", "Company")    
@@ -253,7 +253,7 @@ def add_landgate_instruments(apps, schema_editor):
     medjil_mets_certs = apps.get_model('instruments', 'Mets_certificate')
 
     # Add digital levels
-    with open(os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate/Digital Levels/digital_levels.csv'), 'r', encoding='cp1252') as f:
+    with open(os.path.join(settings.STATIC_ROOT, 'data/InitialData/Landgate/Digital Levels/digital_levels.csv'), 'r', encoding='cp1252') as f:
         reader = csv.reader(f)
         _ = next(reader)
         k = 0
@@ -270,7 +270,7 @@ def add_landgate_instruments(apps, schema_editor):
                     level_number = level_number,
                     )
     # Add bar-coded staves
-    with open(os.path.join(settings.MEDIA_ROOT, 'InitialData/Landgate/Staves/staves.csv'), 'r', encoding='cp1252') as f:
+    with open(os.path.join(settings.STATIC_ROOT, 'data/InitialData/Landgate/Staves/staves.csv'), 'r', encoding='cp1252') as f:
         reader = csv.reader(f)
         _ = next(reader)
         k = 0
@@ -318,7 +318,7 @@ def add_landgate_instruments(apps, schema_editor):
                     # observer = observer,
                     calibration_date = calibration_date, 
                     # field_book = File(open(field_book, 'rb'), name = field_book.split('/')[-1]),
-                    calibration_report = File(open(os.path.join(settings.MEDIA_ROOT, calibration_report), 'rb'), name = calibration_report.split('/')[-1]),
+                    calibration_report = File(open(os.path.join(settings.STATIC_ROOT, calibration_report), 'rb'), name = calibration_report.split('/')[-1]),
                 )
                 if level_model:
                         record_obj.inst_level = DigitalLevel.objects.get(level_model_name__exact = level_model)
@@ -327,7 +327,7 @@ def add_landgate_instruments(apps, schema_editor):
                 if observer:
                         record_obj.observer = observer
                 if field_book and (record_obj.field_book == '' or not record_obj.field_book):
-                        record_obj.field_book = File(open(os.path.join(settings.MEDIA_ROOT, field_book), 'rb'), name = field_book.split('/')[-1])
+                        record_obj.field_book = File(open(os.path.join(settings.STATIC_ROOT, field_book), 'rb'), name = field_book.split('/')[-1])
                 record_obj.save()
     
     # Add Landgate Prism
