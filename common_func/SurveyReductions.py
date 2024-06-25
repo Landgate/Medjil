@@ -832,11 +832,10 @@ def validate_survey(pillar_survey, baseline=None, calibrations=None,
             if pillar_survey['barometer2']: required_clms.append('raw_pressure2')
             if pillar_survey['hygrometer2']: required_clms.append('raw_humidity2')
                 
-        file_clms = list(raw_edm_obs.values())[0]
-        print(raw_edm_obs['1'].values())
-        if (all(key in file_clms for key in required_clms) 
-            and None not in raw_edm_obs['1'].values()):
-                edm_file_checked = True
+        first_o = next(iter(raw_edm_obs.values()))
+        file_clms = [k for k, v in first_o.items() if v is not None]
+        if all(key in file_clms for key in required_clms):
+            edm_file_checked = True
         else:
             Errs.append(
                 'The column headings in the "EDM File  file csv"'
