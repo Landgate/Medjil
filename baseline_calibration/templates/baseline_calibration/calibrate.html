@@ -226,15 +226,17 @@
       var chk_Tr = document.getElementById("id_change_"+typ+"_tr");
       var slct_tr = document.getElementById("id_"+typ+"_file_tr");
       
-      if (chk_Tr.style.display!=='none'){
-          if (chk.checked) {
-              slct_tr.style.display = '';
-              slct.type = "text";
-              slct.type = "file";
-          } else {
-              slct_tr.style.display = 'none';
+      if (chk_Tr !== null) {
+          if (chk_Tr.style.display!=='none'){
+              if (chk.checked) {
+                  slct_tr.style.display = '';
+                  slct.type = "text";
+                  slct.type = "file";
+              } else {
+                  slct_tr.style.display = 'none';
+              }
           }
-      }
+        }
     }
 
     function tglCO2() {
