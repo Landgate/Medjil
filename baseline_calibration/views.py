@@ -189,16 +189,16 @@ def calibrate1(request, id):
         calib = Calibrations_qry(frm)
         baseline = baseline_qry(frm)
         
-        if survey_files['edm_file'] or survey_files['lvl_file']:                            
-            Check_Errors = validate_survey(pillar_survey=frm,
-                                        baseline=baseline,
-                                        calibrations=calib,
-                                        raw_edm_obs=raw_edm_obs,
-                                        raw_lvl_obs=raw_lvl_obs)
-            
-            if len(Check_Errors['Errors']) > 0:
-                return render(request, 'baseline_calibration/errors_report.html', 
-                              {'Check_Errors':Check_Errors})
+        # Check for exceptions that will break the processing
+        Check_Errors = validate_survey(pillar_survey=frm,
+                                    baseline=baseline,
+                                    calibrations=calib,
+                                    raw_edm_obs=raw_edm_obs,
+                                    raw_lvl_obs=raw_lvl_obs)
+        
+        if len(Check_Errors['Errors']) > 0:
+            return render(request, 'baseline_calibration/errors_report.html', 
+                          {'Check_Errors':Check_Errors})
         
         ps_instance = pillar_survey.save()
         id = ps_instance.pk

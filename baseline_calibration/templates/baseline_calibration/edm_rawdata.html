@@ -76,10 +76,10 @@
                             <td>{{ raw.raw_slope_dist|floatformat:4 }}</td>
                             <td>{{ raw.observed_offset|floatformat:3 }}</td>
                             <td>{{ raw.raw_temperature|floatformat:1 }}</td>
-                            <td>{{ raw.raw_pressure|floatformat:1 }}</td>
-                            <td>{{ raw.raw_humidity|floatformat:1 }}</td>
                             {% if raw.raw_temperature2 %}<td>{{ raw.raw_temperature2|floatformat:1 }}</td>{% endif %}
+                            <td>{{ raw.raw_pressure|floatformat:1 }}</td>
                             {% if raw.raw_pressure2 %}<td>{{ raw.raw_pressure2|floatformat:1 }}</td>{% endif %}
+                            <td>{{ raw.raw_humidity|floatformat:1 }}</td>
                             {% if raw.raw_humidity2 %}<td>{{ raw.raw_humidity2|floatformat:1 }}</td>{% endif %}
                             <td style="text-align:center">{{ form.use_for_alignment }}</td>
                             <td style="text-align:center">{{ form.use_for_distance }}</td>

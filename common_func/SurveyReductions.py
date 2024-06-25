@@ -820,7 +820,7 @@ def validate_survey(pillar_survey, baseline=None, calibrations=None,
                     Errs.append('There is no calibration record for ' + str(pillar_survey['hygrometer2']))
                     Errs.append('Hygrometer calibration certificates need to be current for the date of survey: '
                                 + pillar_survey['survey_date'].strftime("%d %b, %Y"))
-                
+
     if raw_edm_obs:
         # check all the upload file headings are correct
         required_clms = ['from_pillar','to_pillar','inst_ht', 'tgt_ht', 
@@ -832,9 +832,11 @@ def validate_survey(pillar_survey, baseline=None, calibrations=None,
             if pillar_survey['barometer2']: required_clms.append('raw_pressure2')
             if pillar_survey['hygrometer2']: required_clms.append('raw_humidity2')
                 
-        file_clms = list(raw_edm_obs.values())[0] 
-        if all(key in file_clms for key in required_clms):
-            edm_file_checked = True
+        file_clms = list(raw_edm_obs.values())[0]
+        print(raw_edm_obs['1'].values())
+        if (all(key in file_clms for key in required_clms) 
+            and None not in raw_edm_obs['1'].values()):
+                edm_file_checked = True
         else:
             Errs.append(
                 'The column headings in the "EDM File  file csv"'
