@@ -38,6 +38,7 @@ import qrcode.image.svg
 
 from django.contrib.auth.models import Group
 from django.db.models.functions import Lower
+from django.db.models import Q
 # from django_otp.plugins.otp_totp.models import TOTPDevice
 from io import BytesIO
 from base64 import b64encode, b32decode
@@ -456,18 +457,17 @@ def user_account(request):
 @login_required(login_url="/accounts/login")
 def calibration_report_notes_list(request, report_disp):
 
-    report_types = [{'abbr':x[0], 'name':x[1]} 
-                  for x in Calibration_Report_Notes.report_type.field.choices]
-    
-    if report_disp == 'B':
-        note_list = (Calibration_Report_Notes.objects.filter(
-            report_type = 'B')
-            .order_by('note_type', 'company'))
-        
-    if report_disp == 'E':
-        note_list = (Calibration_Report_Notes.objects.filter(
-            report_type = 'E')
-            .order_by('note_type', 'company'))
+    report_types = [
+        {'abbr':x[0], 'name':x[1]} 
+        for x in Calibration_Report_Notes.report_type.field.choices]
+
+    note_list = (Calibration_Report_Notes.objects.filter(
+        report_type = report_disp)
+        .order_by('note_type', 'company'))
+            
+    if not request.user.is_staff:
+        note_list = note_list.filter(company = request.user.company)
+        report_types = [{'abbr': 'E', 'name': 'EDMI Calibration'}]
         
     context = {
         'report_disp': report_disp,
