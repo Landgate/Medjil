@@ -159,7 +159,10 @@ class uPillar_Survey(models.Model):
        return f'{self.job_number} - {self.edm} ({self.survey_date})'
    
     def delete(self, *args, **kwargs):
-        self.certificate.delete()
+        try:
+            self.certificate.delete()
+        except:
+            pass
         super().delete(*args, **kwargs)
     
 
