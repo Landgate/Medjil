@@ -226,7 +226,7 @@ def save_render_figure(staff_interval, tmp_sf1, calib_id):
         ax.yaxis.set_major_formatter(FormatStrFormatter('% 1.2f'))
         fig.savefig(buffer, bbox_inches='tight', format='svg', dpi=300)
         buffer.seek(0)
-        image_file = SimpleUploadedFile('StaffError', buffer.read())
+        image_file = SimpleUploadedFile('StaffError', buffer.read(), content_type = 'image/svg+xml')
         # Save the figure to model
         calib_id.calibration_error = image_file
         calib_id.save()  
