@@ -46,7 +46,7 @@ class CalibrateEdmForm(forms.ModelForm):
             Q(name = 'Default', company__company_name = 'Landgate'))
         self.fields['auto_base_calibration'].required = False
         self.fields['calibrated_baseline'].required = False
-        if user.is_staff:
+        if user.is_superuser:
             self.fields['edm'].queryset = EDM_Inst.objects.all()
             self.fields['prism'].queryset = Prism_Inst.objects.all()
             self.fields['thermometer'].queryset = Mets_Inst.objects.filter(
@@ -187,12 +187,14 @@ class Inter_ComparisonForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
         super(Inter_ComparisonForm, self).__init__(*args, **kwargs)
-        if not user.is_staff:
+        if not user.is_superuser:
             self.fields['edm'].queryset = EDM_Inst.objects.filter(
                 edm_specs__edm_owner = user.company)
+            self.fields['prism'].queryset = Prism_Inst.objects.filter(
+                prism_specs__prism_owner = user.company)
         else:
             self.fields['edm'].queryset = EDM_Inst.objects.all()
-        self.fields['edm'].queryset = EDM_Inst.objects.all()
+            self.fields['prism'].queryset = Prism_Inst.objects.all()
             
     class Meta:
         model = Inter_Comparison
