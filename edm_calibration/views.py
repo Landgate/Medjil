@@ -150,7 +150,8 @@ def calibrate1(request, id):
                       'raw_temperature',
                       'raw_pressure',
                       'raw_humidity']
-            raw_edm_obs = csv2dict(survey_files['edm_file'],edm_clms)
+            raw_edm_obs = csv2dict(survey_files['edm_file'])
+            print(raw_edm_obs)
             for v in raw_edm_obs.values():
                 v['use_for_distance'] = True
                                    
