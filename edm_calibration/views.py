@@ -141,7 +141,7 @@ def calibrate1(request, id):
         baseline = baseline_qry(frm)
         
         # read new edm file
-        if survey_files['edm_file']:
+        if survey_files['edm_file']:    #!!!
             edm_clms=['from_pillar',
                       'to_pillar',
                       'inst_ht',
