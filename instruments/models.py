@@ -304,6 +304,12 @@ def get_upload_to_edm_photos(instance, filename):
 
 
 class EDM_Inst(models.Model):
+    edm_specs = models.ForeignKey(
+        EDM_Specification,
+        on_delete=models.PROTECT,
+        null=False, blank=False,
+        verbose_name="EDM Model"
+    )
     edm_number = models.CharField(
         max_length=15,
         validators=[validate_profanity],
@@ -330,12 +336,6 @@ class EDM_Inst(models.Model):
         validators=[validate_profanity],
         max_length=256, 
         null=True, blank=True)
-    edm_specs = models.ForeignKey(
-        EDM_Specification,
-        on_delete=models.PROTECT,
-        null=False, blank=False,
-        verbose_name="EDM Model"
-    )
     created_on = models.DateTimeField(auto_now_add=True, null=True)
     modified_on = models.DateTimeField(auto_now=True, null=True)
 
@@ -410,6 +410,11 @@ def get_upload_to_prism_photos(instance, filename):
 
 
 class Prism_Inst(models.Model):
+    prism_specs = models.ForeignKey(
+        Prism_Specification,
+        on_delete=models.PROTECT,
+        verbose_name='Prism Model'
+    )
     prism_number = models.CharField(
         validators=[validate_profanity],
         max_length=15,
@@ -436,11 +441,6 @@ class Prism_Inst(models.Model):
         validators=[validate_profanity],
         max_length=265, 
         null=True, blank=True)
-    prism_specs = models.ForeignKey(
-        Prism_Specification,
-        on_delete=models.PROTECT,
-        verbose_name='Prism Model'
-    )
     created_on = models.DateTimeField(auto_now_add=True, null=True)
     modified_on = models.DateTimeField(auto_now=True, null=True)
 

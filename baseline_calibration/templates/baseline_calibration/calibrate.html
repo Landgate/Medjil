@@ -63,28 +63,28 @@
                         <td>
                             {% if field.name == "edm" or field.name == "prism" or field.name == "level" %}
                                 <button style="width:35px; height:35px" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" type="button" id="id_add_btn"
-                                onclick="cacheInputs();window.location.href='{% url "instruments:register_edit" inst_disp=field.name tab="insts" id=None %}?next={{request.path}}'">&#43;</button>
+                                onclick="cacheForm(this);window.location.href='{% url "instruments:register_edit" inst_disp=field.name tab="insts" id=None %}?next={{request.path}}'">&#43;</button>
                             {% endif %}
 
                             {% if field.name == "thermometer" %}
                                 <button style="width:35px; height:35px" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" type="button" id="id_add_btn"
-                                onclick="cacheInputs();window.location.href='{% url "instruments:register_edit" inst_disp="thermo" tab="insts" id=None %}?next={{request.path}}'">&#43;</button>
+                                onclick="cacheForm(this);window.location.href='{% url "instruments:register_edit" inst_disp="thermo" tab="insts" id=None %}?next={{request.path}}'">&#43;</button>
                             {% endif %}
                             {% if field.name == "barometer" %}
                                 <button style="width:35px; height:35px" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" type="button" id="id_add_btn"
-                                onclick="cacheInputs();window.location.href='{% url "instruments:register_edit" inst_disp="baro" tab="insts" id=None %}?next={{request.path}}'">&#43;</button>
+                                onclick="cacheForm(this);window.location.href='{% url "instruments:register_edit" inst_disp="baro" tab="insts" id=None %}?next={{request.path}}'">&#43;</button>
                             {% endif %}
                             {% if field.name == "hygrometer" %}
                                 <button style="width:35px; height:35px" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" type="button" id="id_add_btn"
-                                onclick="cacheInputs();window.location.href='{% url "instruments:register_edit" inst_disp="hygro" tab="insts" id=None %}?next={{request.path}}'">&#43;</button>
+                                onclick="cacheForm(this);window.location.href='{% url "instruments:register_edit" inst_disp="hygro" tab="insts" id=None %}?next={{request.path}}'">&#43;</button>
                             {% endif %}
                             {% if field.name == "accreditation" %}
                                 <button style="width:35px; height:35px" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" type="button" id="id_add_btn"
-                                onclick="cacheInputs();window.location.href='{% url "baseline_calibration:accreditation_edit" id=None%}?next={{request.path}}'">&#43;</button>
+                                onclick="cacheForm(this);window.location.href='{% url "baseline_calibration:accreditation_edit" id=None%}?next={{request.path}}'">&#43;</button>
                             {% endif %}
                             {% if field.name == "uncertainty_budget" %}
                                 <button style="width:35px; height:35px" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" type="button" id="id_add_btn"
-                                onclick="cacheInputs();window.location.href='{% url "baseline_calibration:uc_budget_create" %}?next={{request.path}}'">&#43;</button>
+                                onclick="cacheForm(this);window.location.href='{% url "baseline_calibration:uc_budget_create" %}?next={{request.path}}'">&#43;</button>
                             {% endif %}
                         </td>
                     </tr>
@@ -120,6 +120,8 @@
         </div>
     </div>
 </article>
+
+<script src="{% static 'js/instrument/popups.js' %}"></script>
 
 <script>
     // Find Current tab and Last tab
@@ -280,34 +282,19 @@
 
       lnk.textContent = '';
     }
-
-    function cacheInputs() {
-        var inputs, i;
-        window.sessionStorage.clear()
-
-        tbl = document.getElementById("PillarSurveyTable");
-        inputs = tbl.querySelectorAll("input,select");
-        for (i = 0; i < inputs.length; ++i) {
-            let el = inputs[i];
-            window.sessionStorage.setItem(el.attributes["name"].value, el.value);
-            }
+    
+    function cacheForm(triggeringLink) {
+        cacheInputs(triggeringLink);
 
         window.sessionStorage.setItem("currentTab", currentTab);
     }
-
-    //Load Form inputs from Cache
-    window.onload = function () {
-        tbl = document.getElementById("PillarSurveyTable");
-        inputs = tbl.querySelectorAll("input,select");
-        for (let i = 0; i < inputs.length; i++) {
-            let el = inputs[i];
-            let cachedVal = sessionStorage.getItem(el.attributes["name"].value)
-            if (cachedVal != null) {
-                el.value = cachedVal;
-            }
-            sessionStorage.removeItem(el.attributes["name"].value);
-        }
+    
+    {% if request.session.new_instance %}
+    let new_instance_id = sessionStorage.getItem('adding_id');
+    if (new_instance_id){
+        window.sessionStorage.setItem("new_instance", {{request.session.new_instance}});
     }
+    {% endif %}
 </script>
 
 

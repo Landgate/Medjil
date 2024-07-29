@@ -817,6 +817,8 @@ def uc_budget_create(request):
             user=request.user)
         if uc_budget.is_valid() and uc_sources.is_valid():
             uc_budget.save()
+            # Save the pk if this has been called during calibration with add_btn.
+            request.session['new_instance'] = uc_budget.instance.pk
             for uc_source in uc_sources:
                 f = uc_source.save(commit=False)
                 f.uncertainty_budget = uc_budget.instance
@@ -949,7 +951,9 @@ def accreditation_edit(request, id=None):
         context['Header'] = 'Edit Accreditation Details'
     
     if accreditation.is_valid():
-        accreditation.save()            
+        accreditation.save()
+        # Save the pk if this has been called during calibration with add_btn.
+        request.session['new_instance'] = accreditation.instance.pk
         next_url = request.POST.get('next')
         if next_url:
             return redirect(next_url)

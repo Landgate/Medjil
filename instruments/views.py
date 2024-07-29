@@ -254,7 +254,8 @@ def register_edit(request, inst_disp, tab, id):
             if inst_type == 'mets': instance.mets_owner = request.user.company
             
         instance.save()
-        
+        if tab == 'insts':
+            request.session['new_instance'] = instance.pk
 
         if tab == 'models':
             return HttpResponse('<script>opener.closePopup(window, "%s", "%s");</script>' % (instance.pk, instance))
