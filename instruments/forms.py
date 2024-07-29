@@ -114,9 +114,11 @@ class DigitalLevelCreateForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user')
         super(DigitalLevelCreateForm, self).__init__(*args, **kwargs)   
-        self.base_fields['level_owner'].initial = user.company
+        self.fields['level_owner'].initial = user.company
         if not user.is_staff:
-            self.fields['level_owner'].disabled = True
+            # self.fields['level_owner'].disabled = True
+            self.fields['level_owner'].queryset = Company.objects.filter(company_name=user.company.company_name)
+        self.fields['level_owner'].empty_label = '--- Select one ---'
 
         # self.fields['level_owner'].queryset = Company.objects.exclude(company_abbrev__iexact='OTH')
         self.fields['level_number'].widget.attrs['placeholder'] = 'Level number, e.g., Serial number'
@@ -143,6 +145,7 @@ class StaffCreateForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user')
         super(StaffCreateForm, self).__init__(*args, **kwargs) 
+        self.fields['staff_owner'].initial = user.company
         if not user.is_staff:
             self.fields['staff_owner'].queryset = Company.objects.filter(company_name=user.company.company_name)
         
