@@ -50,7 +50,9 @@ class uPillar_Survey(models.Model):
     site = models.ForeignKey(
         CalibrationSite, on_delete = models.PROTECT, null = True, blank = True,
         help_text="Baseline certified distances")   
-    auto_base_calibration = models.BooleanField(default=True)
+    auto_base_calibration = models.BooleanField(
+        default=True,
+        verbose_name = 'Auto select corresponding calibration of this baseline')
     calibrated_baseline = models.ForeignKey(
         Pillar_Survey, on_delete = models.PROTECT, null = True,
         help_text="Baseline certified distances")
@@ -118,7 +120,8 @@ class uPillar_Survey(models.Model):
               help_text="a-priori standard uncertainties are multiplied by the a-priori scalar")
     outlier_criterion = models.DecimalField(max_digits=2, decimal_places=1, default=2,
               validators=[MinValueValidator(0), MaxValueValidator(5)],
-              help_text="Number of standard deviations for outlier detection threashold.")
+              help_text="Number of standard deviations for outlier detection threashold.",
+              verbose_name = 'Rejection Criteria for outlier detection')
     test_cyclic = models.BooleanField(default=False,
               verbose_name= 'Test for cyclic errors',
               help_text="Test Instrument For Cyclic Errors (Nb. Instrument Parameters Require 'Unit Lenght'")

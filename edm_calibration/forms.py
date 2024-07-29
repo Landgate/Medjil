@@ -115,9 +115,6 @@ class CalibrateEdmForm(forms.ModelForm):
            'fieldnotes_upload': forms.FileInput(attrs={'accept' : '.jpg, .pdf',
                                                          'class': 'page2'})
             }
-        labels = {'auto_base_calibration':'Auto select corresponding calibration of this baseline',
-                  'outlier_criterion': 'Rejection Criteria for outlier detection',
-                  'fieldnotes_upload': 'Scanned Fieldnotes'}
         
     def clean_survey_date(self):
         survey_date = self.cleaned_data['survey_date']
