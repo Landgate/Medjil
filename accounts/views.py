@@ -18,6 +18,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.views import PasswordResetConfirmView
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes
@@ -65,6 +66,7 @@ from .forms import (
     LoginForm, 
     OTPAuthenticationForm,
     CustomUserChangeForm, 
+    CustomSetPasswordForm,
     CompanyForm, 
     calibration_report_notesForm)
 
@@ -354,7 +356,17 @@ def otp_register(request):
         messages.warning(request, 'Your device is already registered. Please login!')
         return redirect('accounts:login')
 
+# Custom view to change Password
+class CustomPasswordResetConfirmView(PasswordResetConfirmView):
+    form_class = CustomSetPasswordForm
 
+    def get_user(self, uidb64):
+        try:
+            uid = urlsafe_base64_decode(uidb64).decode()
+            return get_object_or_404(CustomUser, pk=uid)
+        except (TypeError, ValueError, OverflowError, CustomUser.DoesNotExist):
+            return None
+        
 # User log out
 def user_logout(request):
     logout(request)

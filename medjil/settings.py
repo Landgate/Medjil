@@ -264,7 +264,6 @@ EMAIL_HOST_PASSWORD = os.environ.get("MEDJIL_EMAIL_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL = os.environ.get('MEDJIL_EMAIL_ADD')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
 # redirect url
 if 'MEDJIL_ENVIRONMENT' in os.environ:
     LOGIN_REDIRECT_URL = '/'

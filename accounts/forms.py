@@ -20,7 +20,7 @@ from django import forms
 from django.contrib.auth import password_validation
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth import authenticate
-from django.contrib.auth.forms import ReadOnlyPasswordHashField, UserCreationForm, UserChangeForm
+from django.contrib.auth.forms import ReadOnlyPasswordHashField, UserCreationForm, UserChangeForm, SetPasswordForm
 from django.contrib.auth.forms import AuthenticationForm
 
 from .models import CustomUser, Company,  Calibration_Report_Notes
@@ -147,7 +147,15 @@ class OTPAuthenticationForm(forms.Form):
 
     def get_user(self):
         return self.user
-        
+
+class CustomSetPasswordForm(SetPasswordForm):
+    def clean_new_password1(self):
+        new_password1 = self.cleaned_data.get('new_password1')
+
+        if self.user.check_password(new_password1):
+            raise forms.ValidationError("New password cannot be the same as the current password.")
+        return new_password1
+            
 class CompanyForm(forms.ModelForm):
     class Meta:
         model = Company
