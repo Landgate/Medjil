@@ -42,6 +42,8 @@ pip install -r requirements.txt
 ```
 ### Django Migration and load initial data
 ```
+python manage.py collectstatic
+
 set EMAIL_HOST_USER=admin@admin.com
 set EMAIL_HOST_PASSWORD=admin
 set DEBUG=1
@@ -63,7 +65,7 @@ Login to Medjil using the email and password.
 
 This is the root user and has all the privilages and access. 
 ### Test Data 
-Use the sample datasets in the folder .\Test Data\ to conduct some test calibrations. 
+Use the sample datasets in the folder .\assets\data\Test Data\ to conduct some test calibrations. 
 
 ### Database Relationship diagram
 [dbdiagram.io](https://dbdiagram.io/d/63db952d296d97641d7df322)
