@@ -142,15 +142,7 @@ def calibrate1(request, id):
         
         # read new edm file
         if survey_files['edm_file']:
-            edm_clms=['from_pillar',
-                      'to_pillar',
-                      'inst_ht',
-                      'tgt_ht',
-                      'raw_slope_dist',
-                      'raw_temperature',
-                      'raw_pressure',
-                      'raw_humidity']
-            raw_edm_obs = csv2dict(survey_files['edm_file'],edm_clms)
+            raw_edm_obs = csv2dict(survey_files['edm_file'])
             for v in raw_edm_obs.values():
                 v['use_for_distance'] = True
                                    
