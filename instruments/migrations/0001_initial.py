@@ -597,7 +597,7 @@ class Migration(migrations.Migration):
                         validators=[
                             django.core.validators.MinValueValidator(0.000000001)],
                         help_text="Resolution of the measurement eg. 0.0001",
-                        max_digits=7,
+                        max_digits=9,
                     ),
                 ),
                 ("created_on", models.DateTimeField(auto_now_add=True, null=True)),
@@ -1330,7 +1330,7 @@ class Migration(migrations.Migration):
                         validators=[
                             django.core.validators.MinValueValidator(0.000000001)],
                         help_text="Resolution of the measurement eg. 0.01",
-                        max_digits=7,
+                        max_digits=9,
                     ),
                 ),
                 ("created_on", models.DateTimeField(auto_now_add=True, null=True)),

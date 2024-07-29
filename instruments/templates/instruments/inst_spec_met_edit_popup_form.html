@@ -112,7 +112,7 @@
             {% endif %}
                 <div class="button-container">
                     <button class="cancelbtn bg-red-500 hover:bg-red-300" onclick="window.close()">Cancel</button>
-                    <button class="submit-button bg-green-500 hover:bg-green-400" type="submit" >Save</button>
+                    <button class="submit-button bg-green-500 hover:bg-green-400" type="submit" onclick="convertUnits()">Save</button>
                 </div>
                 {{ form.inst_type }}
         </form>
@@ -178,6 +178,83 @@
         }
     }
 
+</script>
+<script>
+// Function to convert units to database standards
+const unitsElements = document.querySelectorAll('select[id*="id_units_"]');
+function convertUnits() {
+    const unitConversions = {
+        'm': 1,
+        'mm': 1e-3, // Conversion to m
+        'nm': 1e-9, // Conversion to m
+        'A.x': 1,
+        'a.x': '+1',
+        'ppm': 1e-6, // Conversion to x:1
+        'mBar': 1,
+        'hPa': 1, // Conversion to mBar
+        'mmHg': 1.33322, // Conversion to mBar
+        'inHg': 33.8639, // Conversion to mBar
+        '°C': 1,
+        '°F': 5/9, // Conversion to Celsius
+        '%': 1, // Conversion to percent
+    };
+
+    unitsElements.forEach(select => {
+        const row = select.closest('tr'); // Find the parent table row
+        const cells = row.getElementsByTagName('td');
+    
+        if (cells.length >= 3) { // Make sure there are at least three cells
+            const valueCell = cells[1]; // Get the second <td> cell
+            const ucCell = cells[2]; // Get the third <td> cell
+            const inputValue = valueCell.querySelector('input');
+            const ucValue = ucCell.querySelector('input');
+    
+            if (inputValue) {
+                const selectedUnit = select.value;
+                const conversionFactor = unitConversions[selectedUnit] || 1; // Default to 1 if not found in mapping
+    
+                // Conversion logic here
+                let convertedValue, uc;
+    
+                if (selectedUnit === "a.x") {
+                    convertedValue = 1 + inputValue.value;
+                    uc = ucValue ? ucValue.value : undefined;
+                } else if (selectedUnit === "ppm") {
+                    convertedValue = 1 + inputValue.value * 1e-6;
+                    uc = ucValue ? (ucValue.value * 1e-6) : undefined;
+                } else {
+                    convertedValue = inputValue.value * conversionFactor;
+                    uc = ucValue ? ucValue.value * conversionFactor : undefined;
+                }
+    
+                // Update the values
+                inputValue.value = convertedValue;
+                console.log(convertedValue);
+    
+                // Update ucValue if it exists
+                if (ucValue) {
+                    ucValue.value = uc;
+                }
+    
+                // Set select value based on selected unit
+                if (conversionFactor != 1) {
+                    if (selectedUnit === 'mBar' || selectedUnit === 'mmHg' || selectedUnit === 'inHg') {
+                        select.value = 'hPa';
+                    } else if (selectedUnit === 'ppm' || selectedUnit === 'a.x') {
+                        select.value = 'A.x';
+                    } else if (selectedUnit === '°C') {
+                        select.value = '°C';
+                    } else if (selectedUnit === '%') {
+                        select.value = '%';
+                    } else {
+                        select.value = 'm';
+                    }
+                }
+            }
+        }
+    });
+
+}
 </script>
 	<body onunload="javascript:refreshParent()">
 
