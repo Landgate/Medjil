@@ -318,7 +318,7 @@ def otp_verify(request):
                     if request.session['next']:
                         return redirect(request.session['next'])
                     else:
-                        return redirect('accounts:user_account')
+                        return redirect('accounts:home')
                 else:
                     messages.warning(request, 'Invalid OTP. Please use the correct OTP device to verify!')
                     return redirect('accounts:login')

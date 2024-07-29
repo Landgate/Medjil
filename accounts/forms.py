@@ -124,6 +124,10 @@ class LoginForm(forms.ModelForm):
             password = self.cleaned_data.get('password')
             if not authenticate(email=email, password=password):
                 raise forms.ValidationError('The username and/or password you have entered is incorrect. Please check and try again!')
+            # modify cleaned_data to have a lower-cased email, if any
+            self.cleaned_data['email'] = email
+
+            return self.cleaned_data
 
 class OTPAuthenticationForm(forms.Form):
     """
