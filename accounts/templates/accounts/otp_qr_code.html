@@ -42,7 +42,7 @@
         
             {% if username %}
               <p>Dear <strong>{{ username }}</strong></p>
-              <p>Please scan the QR Code on the Authenticator App in your Phone to set up the two-factor authentication:</p>
+              <p>Open <strong>Authenticator App</strong> in your Phone to add this QR Code and set up the multi-factor authentication. You can use either Microsoft Authenticator or Google Authenticator.</p>
               <div>{{ qr_code_data|safe }} </div>
         
               <div class="submit-row">

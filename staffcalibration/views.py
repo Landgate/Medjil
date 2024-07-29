@@ -153,7 +153,8 @@ def staff_errors_at_regular_intervals(calib_id):
     '''
     thisAdj = AdjustedDataModel.objects.get(calibration_id = calib_id)
     # Get the staff readings
-    staff_reading = np.array([value for value in thisAdj.staff_reading.values()], dtype=object).T
+    # staff_reading = np.array([value for value in thisAdj.staff_reading.values()], dtype=object).T
+    staff_reading = np.array([thisAdj.staff_reading[key] for key in ['pin','from','to','reference','measured','correction']], dtype=object).T
     # Convert to floats where applicable - col 2 to end
     staff_reading[:,1:] = [[float(x) for x in y] for y in staff_reading[:,1:]]
     
@@ -411,7 +412,7 @@ def calibrate(request):
                         # Calculate Staff Errors
                         staff_errors_intervals = staff_errors_at_regular_intervals(thisRecord)
                         save_render_figure(staff_errors_intervals, temp_at_sf1, thisRecord)
-                        staff_errors_intervals = {'headers': ['FROM','TO', 'LENGHT', 'ERROR', 'CORRECTED_INTERVAL'], 
+                        staff_errors_intervals = {'headers': ['FROM','TO', 'LENGTH', 'ERROR', 'CORRECTED_INTERVAL'], 
                                         'data': staff_errors_intervals}
                         context = {
                             'calibration': thisRecord,
