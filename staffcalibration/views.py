@@ -34,13 +34,14 @@ from django.db.models import Q
 from common_func.validators import try_delete_protected
 from calibrationsites.models import (Pillar, 
                                     CalibrationSite)
-from rangecalibration.models import BarCodeRangeParam
+from rangecalibration.models import RangeCalibrationRecord, BarCodeRangeParam
 from .models import (StaffCalibrationRecord, 
                     AdjustedDataModel)
 # Import Forms
 from staffcalibration.forms import (StaffCalibrationRecordForm, 
                                     StaffCalibrationForm)
-
+# Import Range update param
+from rangecalibration.signals import compute_range_parameters
 ################################################################################
 # Home View
 @method_decorator(login_required(login_url="/accounts/login"), name='dispatch')
@@ -50,6 +51,23 @@ class HomeView(generic.ListView, LoginRequiredMixin):
     template_name = 'staffcalibration/staff_calibration_home.html'
 
     # ordering = ['--calibration_date']
+    # 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Retrieve additional queryset for calibration records not updated to Range Param
+        try:
+            if not BarCodeRangeParam.objects.first():
+                compute_range_parameters()
+                context['update_param_yes'] = True
+            elif RangeCalibrationRecord.objects.filter(valid=True, updated_to = False).first():
+                context['update_param_yes'] = True
+                compute_range_parameters()
+            success_message  =  'Range table successfully updated!'
+        except:
+            context['update_param_yes'] = False
+        # print(context)
+        return context
+    
     def get_queryset(self):
         queryset = StaffCalibrationRecord.objects.all()
         if self.request.user.is_staff:
