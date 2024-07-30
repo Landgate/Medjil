@@ -445,7 +445,7 @@ def calibrate(request):
                         messages.warning(request, 'The range parameter for the month of '+ mon_text + ' does not exist. Please contact Landgate')    
                         return redirect('staffcalibration:calibrate')
                 else:
-                    messages.warning(request, 'The calibration site - ' + site_id.site_name + ' does not exist. Please contact the site operator to add it.' )    
+                    messages.warning(request, 'The calibration site - ' + site_id.site_name + ' is not calibrated yet by the Site Operater. Please contact the Site Operator to use this site for staff calibration.' )    
                     return redirect('staffcalibration:calibrate')
             else:
                 messages.warning(request, 'Opps! Looks like you data is invalid. Please format your data as per the guidelines.' )    
