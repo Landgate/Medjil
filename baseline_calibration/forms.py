@@ -128,8 +128,8 @@ class PillarSurveyForm(forms.ModelForm):
            'outlier_criterion': forms.NumberInput(
                attrs={'placeholder':'Enter number of standard deviations for outlier detection',
                       'class': 'page3'}),
-            'fieldnotes_upload': forms.FileInput(
-                attrs={'class': 'page3', 'onclick':'ChgNoteFile()'})
+           'fieldnotes_upload': CustomClearableFileInput(
+                attrs={'class': 'page3'})
             }
         labels = {'outlier_criterion': 'Rejection Criteria for outlier detection',
                   'fieldnotes_upload': 'Scanned Fieldnotes'}

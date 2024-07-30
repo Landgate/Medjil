@@ -54,9 +54,6 @@
                                     {% if field.name == "site" %}
                                         <label for="id_site">{{ form.auto_base_calibration }} {{ form.auto_base_calibration.label }} </label>
                                     {% endif %}
-                                    {% if field.name == "fieldnotes_upload" and qs.fieldnotes_upload.file != none %}
-                                        <label id="fieldnotes_link" for="id_fieldnotes_upload"><a href= "{{ qs.fieldnotes_upload.url }}" target="_blank" rel="noopener noreferrer" style="color:blue; cursor: pointer; cursor: hand;"> ...{{ qs.fieldnotes_upload.name|slice:"-50:" }}</a></label>
-                                    {% endif %}
                                 </td>
                             {% endif %}
                             <td>

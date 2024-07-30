@@ -54,11 +54,7 @@
                                     <br><a onclick="tglMets2('hygrometer','hygro')" style="color:blue;cursor:pointer;cursor:hand;">+ Hygrometer 2</a>
                                 {% endif %}
                             </td>
-                            <td> {{ field }}
-                                {% if field.name == "fieldnotes_upload" and qs.fieldnotes_upload.file != none %}
-                                    <label id="fieldnotes_link" for="id_fieldnotes_upload"><a href= "{{ qs.fieldnotes_upload.url }}" target="_blank" rel="noopener noreferrer" style="color:blue; cursor: pointer; cursor: hand;"> {% if qs.fieldnotes_upload.name|length > 50 %} ...{% endif %}{{ qs.fieldnotes_upload.name|slice:"-50:" }}</a></label>
-                                {% endif %}
-                            </td>
+                            <td> {{ field }}</td>
                         {% endif %}
                         <td>
                             {% if field.name == "edm" or field.name == "prism" or field.name == "level" %}
@@ -277,11 +273,6 @@
         }
     }
 
-    function ChgNoteFile() {
-      var lnk = document.getElementById("fieldnotes_link");
-
-      lnk.textContent = '';
-    }
     
     function cacheForm(triggeringLink) {
         cacheInputs(triggeringLink);

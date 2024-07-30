@@ -57,13 +57,13 @@
                             <td>{{ pillar_survey.prism }} </td>
                             <td>{{ pillar_survey.edm.edm_specs.edm_owner.company_abbrev }}</td>
                             <td>{{ pillar_survey.survey_date }} </td>
-                            <td>{{ pillar_survey.site }} </td>
+                            <td>{{ pillar_survey.site }}</td>
                             <td>{{ pillar_survey.observer }} </td>
                             <td>{{ pillar_survey.job_number }} </td>
                             <td>
-                                <span class="flex justify-around">
+                                <span class="flex justify-around items-center text-center">
                                     {% if pillar_survey.certificate %}
-                                        <a class="px-2" href="{% url 'edm_calibration:report' id=pillar_survey.certificate.pk %}" class="px-3">
+                                        <a class="px-3" href="{% url 'edm_calibration:report' id=pillar_survey.certificate.pk %}">
                                             <svg id="report-view" width="16" height="16" viewBox="0 0 50 50">
 	                                            <g transform="translate(0,50) scale(0.100000,-0.100000)" fill="#000000" stroke="none">
 	                                            <path d="M92 493 c-34 -14 -42 -59 -42 -251 0 -176 1 -191 21 -216 l20 -26
@@ -83,7 +83,7 @@
                                             </svg>
                                         </a>
                                     {% else %}
-                                        <svg width="16" height="16" viewBox="0 0 16 16" xml:space="preserve"></svg>
+                                        <svg width="36" height="16" viewBox="0 0 16 16" xml:space="preserve"></svg>
                                     {% endif %}
                                     <a href="{% url 'edm_calibration:calibrate1' id=pillar_survey.pk %}" class="px-2">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="#000" class="bi bi-pencil-fill" id = "edit-view">

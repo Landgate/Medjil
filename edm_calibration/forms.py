@@ -34,6 +34,10 @@ from instruments.models import (
 
 from calibrationsites.models import (CalibrationSite)
 
+# Custom widget for clearing an upload file
+class CustomClearableFileInput(forms.ClearableFileInput):
+    template_name = 'custom_widgets/customclearablefileinput.html'
+
 # make your forms
 class CalibrateEdmForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -73,10 +77,11 @@ class CalibrateEdmForm(forms.ModelForm):
     class Meta:
         model = uPillar_Survey
         fields = '__all__'
-        exclude = ('certificate',
-                   'uploaded_on', 'modified_on',
-                    'data_entered_person','data_entered_position','data_entered_date',
-                    'data_checked_person','data_checked_position', 'data_checked_date')
+        exclude = (
+            'certificate',
+            'uploaded_on', 'modified_on',
+            'data_entered_person','data_entered_position','data_entered_date',
+            'data_checked_person','data_checked_position', 'data_checked_date')
         widgets = {
            'site': forms.Select(attrs={'class': 'page0'}),
            'auto_base_calibration':forms.CheckboxInput(
@@ -112,8 +117,9 @@ class CalibrateEdmForm(forms.ModelForm):
                attrs={'placeholder':'Enter number of standard deviations for outlier detection',
                       'class': 'page2'}),
            'test_cyclic': forms.CheckboxInput(attrs={'class': 'page2'}),
-           'fieldnotes_upload': forms.FileInput(attrs={'accept' : '.jpg, .pdf',
-                                                         'class': 'page2'})
+           'fieldnotes_upload': CustomClearableFileInput(
+               attrs={'accept' : '.jpg, .pdf',
+                      'class': 'page2'})
             }
         
     def clean_survey_date(self):
