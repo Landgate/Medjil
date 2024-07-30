@@ -310,6 +310,7 @@ def refline_std_dev(o, alignment_survey, edm):
         if ('04' in uc_budget.keys() and 'Reduced_distance' in o.keys()):
             uc_budget['04']['ui'] = (o['Reduced_distance'] *
                                    K * uc_budget['04']['std_dev'])*10**-6
+            
         # '05' Pressure
         if ('05' in uc_budget.keys() and 'Reduced_distance' in o.keys()):
             uc_budget['05']['ui'] = (o['Reduced_distance'] *

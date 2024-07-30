@@ -159,18 +159,21 @@ def unknown_mets(mets_type, request, mets_number='Unknown'):
 
 
 def create_medjil_level_gear(request, commit_errors):
+    medjil_level, medjil_staff = None, None
     try:
         medjil_level, created = DigitalLevel.objects.get_or_create(
             level_owner = request.user.company,
             level_number = '0000',
-            level_model = None)
+            level_make_name = 'Unknown',
+            level_model_name = 'Unknown')
     except Exception as e:
         commit_errors.append(f'Error creating generic level in Medjil: {e}')
     
     # Create dummy Barcode staff in Medjil
     try:
         medjil_staff, created = Staff.objects.get_or_create(
-            staff_model = None,
+            staff_make_name = 'Unknown',
+            staff_model_name = 'Unknown',
             staff_owner = request.user.company,
             staff_number = '',
             staff_type = 'Unknown',
@@ -601,9 +604,9 @@ def import_dli(request):
                                 tgt_ht = meas['to_ht'],
                                 hz_direction = az,
                                 raw_slope_dist = obs['EDMObsDistance'],
-                                raw_temperature = float_or_null(obs['MeasDryTemp']) or 0,
-                                raw_pressure = float_or_null(obs['MeasPressure']) or 0,
-                                raw_humidity = float_or_null(obs['MeasHumidity'] or 0)
+                                raw_temperature = float_or_null(obs['MeasDryTemp']) or 20,
+                                raw_pressure = float_or_null(obs['MeasPressure']) or 1013.25,
+                                raw_humidity = float_or_null(obs['MeasHumidity'] or 50)
                                 )
                     except Exception as e:
                         commit_errors.append(
@@ -679,9 +682,9 @@ def import_dli(request):
                                     inst_ht = meas['from_ht'],
                                     tgt_ht = meas['to_ht'],
                                     raw_slope_dist = obs['EDMObsDistance'],
-                                    raw_temperature = float_or_null(obs['MeasDryTemp']) or 0,
-                                    raw_pressure = float_or_null(obs['MeasPressure']) or 0,
-                                    raw_humidity = float_or_null(obs['MeasHumidity']) or 0
+                                    raw_temperature = float_or_null(obs['MeasDryTemp']) or 20,
+                                    raw_pressure = float_or_null(obs['MeasPressure']) or 1013.25,
+                                    raw_humidity = float_or_null(obs['MeasHumidity']) or 1013.25
                                     ))
                     except Exception as e:
                         commit_errors.append(
