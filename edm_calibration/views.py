@@ -166,6 +166,9 @@ def calibrate1(request, id):
         ps_instance = pillar_survey.save(commit=False)
         if frm['auto_base_calibration']:
             ps_instance.calibrated_baseline = baseline['calibrated_baseline']
+        else:
+            ps_instance.site = baseline['calibrated_baseline'].baseline
+            
         ps_instance.save()
         
         id = ps_instance.pk
