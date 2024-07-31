@@ -350,6 +350,17 @@
         });
     </script>
 
+<script>
+    document.querySelectorAll('input[type="file"]').forEach(function(input) {
+        input.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file.size > 5.5 * 1024 * 1024) { // 5MB
+                alert('The maximum file size that can be uploaded is 5.5MB');
+                event.target.value = ''; // Clear the input
+            }
+        });
+    });
+</script>
 </body>
 </html>
 
