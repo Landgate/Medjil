@@ -550,6 +550,9 @@ def calibrate2(request,id):
             html_report = render_to_string(
                 'edm_calibration/calibrate_report.html', context)
             
+            # Save html_report for if report does not validate
+            # Also use it to create an EDMI certificate for commit after report save
+            request.session['html_report'] = html_report
             ini_edmi_certificate['html_report'] = html_report
             edmi_certificate = EDMI_certificateForm(initial=ini_edmi_certificate)
             
@@ -568,6 +571,7 @@ def calibrate2(request,id):
             # data held on the report page
             ps_approvals.save()
             cert_instance = edmi_certificate.save()
+            del request.session['html_report']
             
             pillar_survey = uPillar_Survey.objects.get(id=id)
             pillar_survey.certificate = cert_instance
@@ -576,13 +580,13 @@ def calibrate2(request,id):
             return redirect('edm_calibration:edm_calibration_home')
         else:
             # This is if the submitted report form has a validation error.
-            html_report = edmi_certificate.cleaned_data()['html_report']
+            html_report = request.session['html_report']
             context = {'pillar_survey':pillar_survey,
                        'html_report': html_report,
                        'ps_approvals':ps_approvals,
                        'hidden':[edmi_certificate]}
             
-            return render(request, 'edm_calibration/calibrate_report.html', context)
+            return render(request, 'edm_calibration/display_report.html', context)
 
 
 @login_required(login_url="/accounts/login") 

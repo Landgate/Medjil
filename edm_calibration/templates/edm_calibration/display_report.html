@@ -119,14 +119,23 @@
                         <button type="submit" class="submit-button bg-green-500 hover:bg-green-400">Save</button>
                     </div>
                 </div>
-                <div style="display:None;">
+                <div>
                     {% for form in hidden %}
                         {{ form.management_form }}
                         {% for field in form %}
-                        <p>{{ field }}</p>
-                            {% for error in field.errors %}
-                                <p style="color:Red;">{{ error }}</p>
-                            {% endfor %}
+                            {% if field.errors %}
+                                <table>
+                                    <tr>
+                                    <td>{{ field.label_tag }}</td>
+                                    <td>{{ field }}</td>
+                                    {% for error in field.errors %}
+                                        <td style="color:Red;">{{ error }}</td>
+                                    {% endfor %}
+                                    </tr>
+                                </table>
+                            {% else %}
+                                <p style="display:None;">{{ field }}</p>
+                            {% endif %}
                         {% endfor %}
                     {% endfor %}
                 </div>

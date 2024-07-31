@@ -22,7 +22,7 @@ register = template.Library()
 
 @register.filter
 def multiply(value, arg):
-    if value=='': return ''
+    if value=='': return 0
     if value==0: return 0
     return value * arg
 
