@@ -148,7 +148,8 @@ class StaffCreateForm(forms.ModelForm):
         self.fields['staff_owner'].initial = user.company
         if not user.is_staff:
             self.fields['staff_owner'].queryset = Company.objects.filter(company_name=user.company.company_name)
-        
+            self.fields['isreference'].disabled = True
+            self.fields.pop('isreference')
         self.fields['staff_owner'].empty_label = '--- Select one ---'
 
     staff_owner = forms.ModelChoiceField(
@@ -166,14 +167,16 @@ class StaffCreateForm(forms.ModelForm):
                        'autocomplete':'off'}),
             'staff_model_name': forms.TextInput(
                 attrs={'list':'models',
-                       'autocomplete':'off'})
-            }     
-
-    calibrated = forms.BooleanField(
-        required=False, 
-        label = "Is Calibrated", 
-        help_text = "Does it have a previous calibration record?")
-
+                       'autocomplete':'off'}),
+            'iscalibrated': forms.Select(choices=[
+                (True, 'Yes'),
+                (False, 'No'),
+            ]),
+            'isreference': forms.Select(choices=[
+                (True, 'Yes'),
+                (False, 'No'),
+            ]),
+            }    
 
 class EDM_InstForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):

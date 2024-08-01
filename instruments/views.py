@@ -549,7 +549,7 @@ def show_calibrated_form_condition(wizard):
     # try to get the cleaned data of step 1
     cleaned_data = wizard.get_cleaned_data_for_step('inst_staff_form') or {}
     # check if the field ``leave_message`` was checked.
-    return cleaned_data.get('calibrated', True)
+    return cleaned_data.get('iscalibrated', True)
 
 STAFF_TEMPLATES  = {
                     "inst_staff_form": "instruments/inst_staff_create_form.html",
@@ -593,7 +593,7 @@ class StaffCreationWizard(LoginRequiredMixin, NamedUrlSessionWizardView):
         staff_length = data['staff_length']
         thermal_coefficient = data['thermal_coefficient']
         # Is it calibrated?
-        calibrated = data['calibrated']
+        calibrated = data['iscalibrated']
 
         # Create Staff
         if not calibrated:
@@ -624,7 +624,8 @@ class StaffCreationWizard(LoginRequiredMixin, NamedUrlSessionWizardView):
                     staff_type = staff_type,
                     staff_length = staff_length,
                     thermal_coefficient = thermal_coefficient,
-                    )
+                    iscalibrated = True,
+            )
             instrument_calib = StaffCalibrationRecord.objects.create(
                 site_id = site_id,
                 job_number = job_number,
@@ -679,7 +680,7 @@ class StaffCreationWizardPopUp(LoginRequiredMixin, NamedUrlSessionWizardView):
         staff_length = data['staff_length']
         thermal_coefficient = data['thermal_coefficient']
         # Is it calibrated?
-        calibrated = data['calibrated']
+        calibrated = data['iscalibrated']
 
         # Create Staff
         if not calibrated:

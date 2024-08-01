@@ -84,8 +84,8 @@ figure > img {
       font-weight: 500;
       text-align: left; }
       table th, table td {
-        /* vertical-align: text-top; */
-        vertical-align: middle;
+        vertical-align: text-top;
+        /* vertical-align: middle; */
       }
     table th:not(:last-child) {
       border-right: 1px solid #e1e1e1;

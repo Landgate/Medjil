@@ -26,19 +26,27 @@
         <form action="" class="site-form" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="mb-5 site-form-header bg-indigo-300 rounded px-2">
-                <h2 class="text-center"> {% if form.instance.pk %}Edit {% else %}Create {% endif %}
+                <h2 class="text-center">     
+                {% if form.instance.pk %}
+                    Edit 
+                    <input type="hidden" id="object_id" value="{{ form.instance.pk }}">
+                {% else %}
+                    Create 
+                    <input type="hidden" id="object_id" value="">
+                {% endif %}
+
                 {% if inst_type == 'baro' %}
-                 Barometer Instrument
+                    Barometer Instrument
                  {% elif inst_type == 'thermo'%}
-                 Thermometer Instrument
+                    Thermometer Instrument
                  {% elif inst_type == 'hygro'%}
-                 Hygrometer Instrument
+                    Hygrometer Instrument
                  {% elif inst_type == 'psy'%}
-                 Psychrometer Instrument
+                    Psychrometer Instrument
                  {% elif inst_type == 'edm'%}
-                 EDM Instrument
+                    EDM Instrument
                  {% else %}
-                 {{ inst_type|title }} Instrument</h2>
+                    {{ inst_type|title }} Instrument</h2>
                  {% endif %}</h2>
             </div>
             <div class="mt-5 mb-3">
@@ -100,6 +108,14 @@
     const db_makes = {{ makes|safe }};
     const db_models = {{ models|safe }};
 
+    // Disable fields 
+    const isCalibrated = document.getElementById('id_iscalibrated');
+    const isReference = document.getElementById('id_isreference');
+    if (document.getElementById('object_id').value) {
+        isCalibrated.disabled = true;
+        isReference.disabled = true;
+    } 
+    
 </script>
 
 {% endblock %}

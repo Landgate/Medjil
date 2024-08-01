@@ -181,6 +181,17 @@ class Staff(models.Model):
         verbose_name="CoE (in ppm)"
     )
 
+    iscalibrated = models.BooleanField(null=True, 
+                                     blank=True,
+                                     default = False,
+                                     verbose_name = "Is Calibrated",  
+                                     help_text = "Does it have a previous calibration record?")
+    isreference = models.BooleanField(null=True, 
+                                     blank=True,
+                                     default=False,
+                                     verbose_name = "Is Reference",  
+                                     help_text = "Is this a reference staff, e.g., invar staff used for calibrating the Staff Range?")
+
     created_on = models.DateTimeField(auto_now_add=True, null=True)
     modified_on = models.DateTimeField(auto_now=True, null=True)
 
