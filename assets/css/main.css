@@ -206,7 +206,7 @@ textarea {
 .header-wrapper {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: end;
     gap: 1rem;
     padding-top: 0.5rem;
 }
@@ -225,25 +225,37 @@ textarea {
 }
 
 .header-logo p {
+    display: none;
+} 
+
+.header-logo p span {
+  display: block;
+  font-size: 0.75rem;
+  color: #0c0c0d;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.header-logo p span:last-child {
+  color: #b03030;;
+}
+
+@media screen and (min-width: 768px) {
+  .header-logo p {
     display: flex; 
     flex-direction: column;
     align-items: flex-start;
     border-left: 2px solid #a9a9a9;
     padding-left: 0.25rem;
-    margin-bottom: 0;
+    margin-bottom: 0.25rem;
     width: 100%;
-} 
-
-.header-logo p span {
-    display: block;
-    font-size: 0.625rem;
-    color: #0c0c0d;
-    font-weight: 600;
-    text-transform: uppercase;
+  }
 }
 
-.header-logo p span:last-child {
-    color: #b03030;;
+@media screen and (min-width: 1200px) {
+  .header-logo p span {
+      font-size: 0.95rem;
+  }
 }
 
 .header-userinfo {
@@ -261,18 +273,29 @@ textarea {
   padding-left: 0.25rem
 }
 
+button {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 button.dropdown-btn {
   display: flex;
   align-items: center;
   border:none;
   background-color: #b03030;
   cursor: pointer;
-  /* #background-color: #e1e3e4; */
   padding: 8px;
-  width: 180px;
-  font-size: 0.95rem;
+  width: 220px;
+  font-size: 0.825rem;
   color: #fff;
 }
+
+/* @media screen and (min-width: 960px) {
+  button.dropdown-btn {
+      font-size: 0.95rem;
+  }
+} */
 
 .dropdown {
   background-color: #e1e3e4;
@@ -402,17 +425,7 @@ button.dropdown-btn {
   background-color:#c0c0c0;
   transition: 0.3s box-shadow ease;
 }
-@media screen and (min-width: 768px) {
-    .header-logo p span {
-        font-size: 0.75rem;
-    }
-}
 
-@media screen and (min-width: 960px) {
-    .header-logo p span {
-        font-size: 0.825rem;
-    }
-}
 
 /* Page Navigation */
 .page-nav {
@@ -1239,7 +1252,7 @@ select .default {
 .site-form .save-button,
 .site-form .submit-button {
   width: 25%;
-  padding: 7.5px 28px;
+  padding: 7.5px 12px;
   border: transparent;
   border-radius: 0.25rem;
   color: #fff; 
