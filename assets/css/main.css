@@ -489,12 +489,12 @@ button.dropdown-btn {
     display: none;
 }
 
-.nav-option {
-  display: none;
-}
-
 .active .nav-item {
     display: block;
+}
+
+.active .nav-option {
+  display: none;
 }
 
 .nav-links li a {
@@ -602,7 +602,7 @@ button.dropdown-btn {
         z-index: 800;
     }
 
-    .nav-item {
+    .nav-item, .nav-option {
         position:relative;
         display: block;
         max-width: 18%;
