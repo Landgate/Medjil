@@ -272,12 +272,6 @@ td .submit-button {
 }
 
 /* Style buttons */
-.btn_home {
-	background-color: Black; /* Blue background */
-	border: none; /* Remove borders */
-	color: White; /* White text */			  
-	cursor: pointer; /* Mouse pointer on hover */
-}
 
 /* spining load icon */
 .loader {

@@ -88,11 +88,7 @@
         </ul>
         <div class="wrapper">        	
             <ul class="nav-links">
-                <li>
-                    <ul>
-                        <button class="btn_home"><a href="{% url 'home' %}"><i class="fa fa-home"></i></a></button>
-                    </ul>
-                </li>
+                <li class="nav-item nav-option"><a href="{% url 'home' %}"><i class="fas fa-home"></i></a></li>
                 <li class="nav-item has-subnav"><a tabindex="0">Dashboard</a>
                      <ul class="sub-links">
                         <li class="sub-items">
@@ -216,11 +212,7 @@
                         </li>                    
                     </ul>
                 </li>
-                <li>
-                    <ul>
-                        <button id="printButton" class="btn_home"><a href="{% url 'home' %}"><i class="fas fa-print"></i></a></button>
-                    </ul>
-                </li>
+                <li class="nav-item nav-option"><a href="#" id="printButton"><i class="fas fa-print"></i></a></li>
             </ul>
         </div>
     </nav>
