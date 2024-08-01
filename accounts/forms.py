@@ -36,7 +36,9 @@ class SignupForm(UserCreationForm):
     
     csk = forms.CharField(
         required=False,
-        label='Company Secret Key')
+        label='Company Secret Key',
+        widget=forms.TextInput(
+            attrs={'placeholder': "Existing users from this company with Medjil login's have access to this key."}))
     
     class Meta:
         model = CustomUser
