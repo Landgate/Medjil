@@ -480,7 +480,7 @@ class Pillar_Survey(models.Model):
             'baseline_calibration:Pillar_Survey-detail', args=[str(self.id)])
 
     def __str__(self):
-        return f'{self.job_number} - {self.baseline} ({self.survey_date})'
+        return f'{self.baseline} ({self.survey_date})'
 
 
 class EDM_Observation(models.Model):
