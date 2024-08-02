@@ -41,14 +41,24 @@
             {% csrf_token %}
         
             {% if username %}
-              <p>Dear <strong>{{ username }}</strong></p>
-              <p>Open <strong>Authenticator App</strong> in your Phone to add this QR Code and set up the multi-factor authentication. You can use either Microsoft Authenticator or Google Authenticator.</p>
-              <div>{{ qr_code_data|safe }} </div>
-        
-              <div class="submit-row">
-                <!-- <input type="button" onclick="location.href='https://google.com';" value="Go to Login" /> -->
-                <a href="{% url 'accounts:login' %}" onclick="return confirmation()">Go to Login</a>
-              </div>
+                <p>Dear <strong>{{ username }}</strong>,</p>
+                <div class="flex">
+                    <div class="px-2 py-2">
+                        {{ qr_code_data|safe }} 
+                    </div>
+                    <div class="px-3 py-3">
+                        <p>Open <strong>Authenticator App</strong> in your Phone to add this QR Code and set up the multi-factor authentication. You can use either <span class="text-blue-700">Microsoft Authenticator</span> or <span class="text-blue-700">Google Authenticator.</span></p>
+                        <br>
+                        <p class="text-red-600">
+                            <strong>Do not scan the QR code on your device camera or click link on camera.</strong>
+                        </p>
+                        <br>
+                        <div class="submit-row">
+                            <a href="{% url 'accounts:login' %}" onclick="return confirmation()" class="text-base">Go to Login</a>
+                          </div>
+                    </div>
+                </div>
+              
         
             {% else %}
                 {% if form_errors %}
@@ -73,7 +83,7 @@
          
      </div>
      <div>
-        <h3 style="color:#dc3545">Warnings!</h3>
+        <h2 class="text-lg text-red-600">Warnings!</h2>
         <p>
             For security reasons, we will not be able to restore access to your account, if you have already set up the two-factor authentication. Please request one of our <a href="mailto:geodesy@landgate.wa.gov.au?subject=Medjil app two-factor authentication recovery.">Landgate Staff</a> to help recover access to your account.
         </p>
