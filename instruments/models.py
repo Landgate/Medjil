@@ -115,7 +115,15 @@ class DigitalLevel(models.Model):
         max_length=25,
         verbose_name="Level Model Name"
     )
-    level_owner = models.ForeignKey(Company, on_delete=models.SET_NULL, null=True)
+    level_owner = models.ForeignKey(Company, on_delete=models.PROTECT, null=True)
+    level_custodian = models.ForeignKey(
+        CustomUser,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        help_text="Person responsible for this instrument",
+        verbose_name="Level Custodian"
+    )
     level_number = models.CharField(
         max_length=15,
         validators=[MinLengthValidator(4), validate_profanity],
@@ -146,7 +154,15 @@ class Staff(models.Model):
         max_length=25,
         verbose_name="Staff Model Name"
     )
-    staff_owner = models.ForeignKey(Company, on_delete=models.SET_NULL, null=True)
+    staff_owner = models.ForeignKey(Company, on_delete=models.PROTECT, null=True)
+    staff_custodian = models.ForeignKey(
+        CustomUser,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        help_text="Person responsible for this instrument",
+        verbose_name="Staff Custodian"
+    )
     staff_number = models.CharField(
         max_length=15,
         validators=[validate_profanity],

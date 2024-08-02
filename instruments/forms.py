@@ -115,10 +115,13 @@ class DigitalLevelCreateForm(forms.ModelForm):
         user = kwargs.pop('user')
         super(DigitalLevelCreateForm, self).__init__(*args, **kwargs)   
         self.fields['level_owner'].initial = user.company
+        self.fields['level_custodian'].initial = user
         if not user.is_staff:
             # self.fields['level_owner'].disabled = True
             self.fields['level_owner'].queryset = Company.objects.filter(company_name=user.company.company_name)
+            self.fields['level_custodian'].queryset = CustomUser.objects.filter(company=user.company)
         self.fields['level_owner'].empty_label = '--- Select one ---'
+        self.fields['level_custodian'].empty_label = '--- Select one ---'
 
         # self.fields['level_owner'].queryset = Company.objects.exclude(company_abbrev__iexact='OTH')
         self.fields['level_number'].widget.attrs['placeholder'] = 'Level number, e.g., Serial number'
@@ -129,7 +132,7 @@ class DigitalLevelCreateForm(forms.ModelForm):
         widget=forms.Select())
     class Meta:
         model = DigitalLevel
-        fields = ('level_make_name','level_model_name', 'level_owner', 'level_number',)
+        fields = ('level_make_name','level_model_name', 'level_owner', 'level_custodian', 'level_number',)
         widgets = {
             'level_make_name': forms.TextInput(
                 attrs={'onchange':'filter_models()',
@@ -146,11 +149,14 @@ class StaffCreateForm(forms.ModelForm):
         user = kwargs.pop('user')
         super(StaffCreateForm, self).__init__(*args, **kwargs) 
         self.fields['staff_owner'].initial = user.company
+        self.fields['staff_custodian'].initial = user
         if not user.is_staff:
             self.fields['staff_owner'].queryset = Company.objects.filter(company_name=user.company.company_name)
+            self.fields['staff_custodian'].queryset = CustomUser.objects.filter(company=user.company)
             self.fields['isreference'].disabled = True
             self.fields.pop('isreference')
         self.fields['staff_owner'].empty_label = '--- Select one ---'
+        self.fields['staff_custodian'].empty_label = '--- Select one ---'
 
     staff_owner = forms.ModelChoiceField(
         #empty_label='--- Select one ---',

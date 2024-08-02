@@ -586,26 +586,30 @@ class StaffCreationWizard(LoginRequiredMixin, NamedUrlSessionWizardView):
         data = {k: v for form in form_list for k, v in form.cleaned_data.items()}
         inst_number = data['staff_number']
         inst_owner = data['staff_owner']
+        inst_custodian = data['staff_custodian']
         inst_model = data['staff_model']
         
         # Other parameters
         staff_type = data['staff_type']
         staff_length = data['staff_length']
         thermal_coefficient = data['thermal_coefficient']
-        # Is it calibrated?
-        calibrated = data['iscalibrated']
+        iscalibrated = data['iscalibrated']
+        isreference = data['isreference']
 
         # Create Staff
-        if not calibrated:
-            inst_staff = Staff.objects.create(
-                    staff_owner = inst_owner,
-                    staff_number = inst_number,
-                    staff_model = inst_model,
-                    staff_type = staff_type,
-                    staff_length = staff_length,
-                    thermal_coefficient = thermal_coefficient,
-                    )
-        else:
+
+        inst_staff = Staff.objects.create(
+                staff_owner = inst_owner,
+                staff_number = inst_number,
+                staff_custodian = inst_custodian,
+                staff_model = inst_model,
+                staff_type = staff_type,
+                staff_length = staff_length,
+                thermal_coefficient = thermal_coefficient,
+                iscalibrated = iscalibrated,
+                isreference = isreference,
+        )
+        if iscalibrated:
             site_id = data['site_id']
             job_number = data['job_number']
             inst_level = data['inst_level']
@@ -616,16 +620,6 @@ class StaffCreationWizard(LoginRequiredMixin, NamedUrlSessionWizardView):
             calibration_date = data['calibration_date']
             calibration_report = data['calibration_report']
             
-            # enter staff details
-            inst_staff = Staff.objects.create(
-                    staff_owner = inst_owner,
-                    staff_number = inst_number,
-                    staff_model = inst_model,
-                    staff_type = staff_type,
-                    staff_length = staff_length,
-                    thermal_coefficient = thermal_coefficient,
-                    iscalibrated = True,
-            )
             instrument_calib = StaffCalibrationRecord.objects.create(
                 site_id = site_id,
                 job_number = job_number,
@@ -672,6 +666,7 @@ class StaffCreationWizardPopUp(LoginRequiredMixin, NamedUrlSessionWizardView):
         data = {k: v for form in form_list for k, v in form.cleaned_data.items()}
         inst_number = data['staff_number']
         inst_owner = data['staff_owner']
+        inst_custodian = data['staff_custodian']
         inst_make = data['staff_make_name']
         inst_model = data['staff_model_name']
 
@@ -679,21 +674,23 @@ class StaffCreationWizardPopUp(LoginRequiredMixin, NamedUrlSessionWizardView):
         staff_type = data['staff_type']
         staff_length = data['staff_length']
         thermal_coefficient = data['thermal_coefficient']
-        # Is it calibrated?
-        calibrated = data['iscalibrated']
+        iscalibrated = data['iscalibrated']
+        isreference = data['isreference']
 
         # Create Staff
-        if not calibrated:
-            inst_staff = Staff.objects.create(
-                    staff_owner = inst_owner,
-                    staff_number = inst_number,
-                    staff_make_name = inst_make,
-                    staff_model_name = inst_model,
-                    staff_type = staff_type,
-                    staff_length = staff_length,
-                    thermal_coefficient = thermal_coefficient,
-                    )
-        else:
+        inst_staff = Staff.objects.create(
+                staff_owner = inst_owner,
+                staff_custodian = inst_custodian,
+                staff_number = inst_number,
+                staff_make_name = inst_make,
+                staff_model_name = inst_model,
+                staff_type = staff_type,
+                staff_length = staff_length,
+                thermal_coefficient = thermal_coefficient,
+                iscalibrated = iscalibrated,
+                isreference = isreference,
+                )
+        if iscalibrated:
             site_id = data['site_id']
             job_number = data['job_number']
             inst_level = data['inst_level']
@@ -705,15 +702,6 @@ class StaffCreationWizardPopUp(LoginRequiredMixin, NamedUrlSessionWizardView):
             calibration_report = data['calibration_report']
 
             # enter staff details
-            inst_staff = Staff.objects.create(
-                    staff_owner = inst_owner,
-                    staff_number = inst_number,
-                    staff_make_name = inst_make,
-                    staff_model_name = inst_model,
-                    staff_type = staff_type,
-                    staff_length = staff_length,
-                    thermal_coefficient = thermal_coefficient,
-                    )
             instrument_calib = StaffCalibrationRecord.objects.create(
                 site_id = site_id,
                 job_number = job_number,

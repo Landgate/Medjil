@@ -107,8 +107,14 @@ def user_staff_registry(request):
     subQuery = queryset.filter(inst_staff = OuterRef('inst_staff')).order_by('-calibration_date').values('calibration_date')[:1]
     queryset = queryset.filter(calibration_date = Subquery(subQuery)) #(latest_date=Max('calibration_date')).filter(calibration_date=F('latest_date')).order_by('inst_staff__number')
     
+    # Historical Records
+    if not request.user.is_staff:
+        queryset_history = StaffCalibrationRecord.objects.filter(Q(inst_staff__isreference=False) & Q(inst_staff__staff_owner = request.user.company) & ~Q(pk__in = queryset))  
+    else:
+        queryset_history = StaffCalibrationRecord.objects.filter(Q(inst_staff__isreference=False) & Q(inst_staff__staff_owner = request.user.company) & ~Q(pk__in = queryset))  
     context = {
         'queryset': queryset,
+        'queryset_history': queryset_history
     }
     return render(request, 'staffcalibration/staff_calibration_record.html', context)
 ################################################################################    

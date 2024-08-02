@@ -1456,10 +1456,21 @@ class Migration(migrations.Migration):
                     "staff_owner",
                     models.ForeignKey(
                         null=True,
-                        on_delete=django.db.models.deletion.SET_NULL,
+                        on_delete=django.db.models.deletion.PROTECT,
                         to="accounts.company",
                     ),
                 ),
+                (
+                    "staff_custodian",
+                    models.ForeignKey(
+                        null=True,
+                        blank=True,
+                        on_delete=models.SET_NULL,
+                        help_text="Person responsible for this instrument",
+                        verbose_name="Staff Custodian",
+                        to="accounts.CustomUser",
+                    ),
+                )   
             ],
             options={
                 "ordering": ["staff_number"],
@@ -1513,10 +1524,21 @@ class Migration(migrations.Migration):
                     "level_owner",
                     models.ForeignKey(
                         null=True,
-                        on_delete=django.db.models.deletion.SET_NULL,
+                        on_delete=django.db.models.deletion.PROTECT,
                         to="accounts.company",
                     ),
                 ),
+                (
+                    "level_custodian",
+                    models.ForeignKey(
+                        null=True,
+                        blank=True,
+                        on_delete=models.SET_NULL,
+                        help_text="Person responsible for this instrument",
+                        verbose_name="Level Custodian",
+                        to="accounts.CustomUser",
+                    )
+                )
             ],
             options={
                 "ordering": ["level_number", "level_make_name", "level_model_name"],
