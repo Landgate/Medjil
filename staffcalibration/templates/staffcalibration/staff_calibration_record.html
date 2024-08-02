@@ -52,6 +52,7 @@
                     <th class="text-center">Action</th>
                 </tr>
                 {% for element in queryset %}
+                {% if not element.inst_staff.isreference %}
                     <tr>
                         <td>{{ element.job_number }}</td>
                         <!-- <td> <a class="a_link" href="{{ element.inst_staff.get_absolute_url }}">{{ element.inst_staff.staff_number }}</a> </td> -->
@@ -110,7 +111,8 @@
                             </svg>
                             </a>
                         </td>
-                    </tr>            
+                    </tr>  
+                {% endif %}          
                 {% endfor %}
             </table>
         
@@ -127,7 +129,7 @@
                 <h2 class="post-title">Reference Invar Staves Calibration Certificates</h2>
             </div> 
                 
-            {% if queryset_refs %}
+            {% if queryset %}
                 <table style="table-layout: fixed; width: 100%">
                     <tr>
                         <th>Job Number</th>
@@ -140,8 +142,8 @@
                         <th class="text-center">Certificate</th>
                         <th class="text-center">Action</th>
                     </tr>
-                    {% for element in queryset_refs %}
-                        {% if element.inst_staff.staff_type == 'invar' %}
+                    {% for element in queryset %}
+                        {% if element.inst_staff.isreference %}
                             <tr>
                                 <td>{{ element.job_number }}</td>
                                 <!-- <td> <a class="a_link" href="{{ element.inst_staff.get_absolute_url }}">{{ element.inst_staff.staff_number }}</a> </td> -->
@@ -201,7 +203,7 @@
             {% else %}
                 <br>
                 <p class="py-2" style="color:red">
-                    There is currently no staff calibration record! Click on the Calibration Certificates on this <a href="{% url 'instruments:home' 'staff' %}">link</a> to add calibration records for the reference staves.
+                    There is currently no reference staff calibration record! Click on the Calibration Certificates on this <a href="{% url 'instruments:home' 'staff' %}">link</a> to add calibration records for the reference staves.
                 </p>
             {% endif %} 
         {% endif %}

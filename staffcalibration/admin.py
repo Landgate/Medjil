@@ -22,8 +22,8 @@ from accounts.admin import admin_site
 # Register your models here.
 @admin.register(StaffCalibrationRecord, site=admin_site)
 class StaffCalibrationRecordAdmin(admin.ModelAdmin):
-    list_display = ['job_number','inst_staff', 'staff_type', 'staff_length', \
-                    'inst_level', 'calibration_date', 'site_id']
+    list_display = ['job_number','inst_staff', 'staff_length', \
+                    'inst_level', 'scale_factor', 'calibration_date', 'site_id']
 
     ordering = ['inst_staff__staff_number', '-calibration_date']
     list_filter = ['inst_staff__staff_model_name', 'site_id']

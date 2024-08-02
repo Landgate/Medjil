@@ -253,12 +253,11 @@ def user_login(request):
         return redirect('/')
     if request.method == "POST":
         form = LoginForm(data=request.POST)
+        # print(form)
         if form.is_valid():
             email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
-            
             user = authenticate(email = email, password=password)
-            
             if user is not None:
                 if user.is_active:
                     request.session['email'] = email
@@ -294,7 +293,6 @@ def user_login(request):
                 messages.error(request, "Please check the login details.")
     else:
         form = LoginForm()
-        # print('form is invalid')
     return render(request, 'accounts/login.html', {'login_form': form})
 
 def otp_verify(request):

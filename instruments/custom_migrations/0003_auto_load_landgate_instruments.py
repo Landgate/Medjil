@@ -292,6 +292,8 @@ def add_landgate_instruments(apps, schema_editor):
                 job_number = row[14].strip()
                 level_model = row[15].strip()
                 staff_make = row[16].strip().upper()
+                iscalibrated = row[17].strip()
+                isreference = row[18].strip()
 
                 calibration_date = datetime.strptime(calibration_date, '%d/%m/%Y').date()
                 staff_obj, created = Staff.objects.get_or_create(
@@ -302,7 +304,9 @@ def add_landgate_instruments(apps, schema_editor):
                         staff_number = staff_number,
                         staff_length = staff_length,
                         thermal_coefficient = thermal_coefficient,
-                        )
+                        iscalibrated = iscalibrated,
+                        isreference = isreference,
+                )
                 # print(level_model)
                 record_obj, created = StaffCalibrationRecord.objects.get_or_create(
                     job_number = job_number,

@@ -190,7 +190,7 @@ class Staff(models.Model):
                                      blank=True,
                                      default=False,
                                      verbose_name = "Is Reference",  
-                                     help_text = "Is this a reference staff, e.g., invar staff used for calibrating the Staff Range?")
+                                     help_text = "Is this a reference Staff, e.g., invar staff used for calibrating the Staff Range?")
 
     created_on = models.DateTimeField(auto_now_add=True, null=True)
     modified_on = models.DateTimeField(auto_now=True, null=True)

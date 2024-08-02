@@ -1432,6 +1432,24 @@ class Migration(migrations.Migration):
                         verbose_name="CoE (in ppm)",
                     ),
                 ),
+                (
+                    "iscalibrated",
+                    models.BooleanField(
+                        blank=True,
+                        help_text="Does it have a previous calibration record?",
+                        null=True,
+                        verbose_name="Is Calibrated",
+                    ),
+                ),
+                (
+                    "isreference",
+                    models.BooleanField(
+                        blank=True,
+                        help_text = "Is this a reference Staff, e.g., invar staff used for calibrating the Staff Range?",
+                        null=True,
+                        verbose_name="Is Reference",
+                    ),
+                ),
                 ("created_on", models.DateTimeField(auto_now_add=True, null=True)),
                 ("modified_on", models.DateTimeField(auto_now=True, null=True)),
                 (

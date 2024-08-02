@@ -275,6 +275,7 @@ def add_landgate_instruments(apps, schema_editor):
         _ = next(reader)
         k = 0
         for row in reader:
+                # print(row)
                 k +=1
                 staff_number = row[0].strip()
                 staff_model = row[1].strip().upper()
@@ -294,7 +295,19 @@ def add_landgate_instruments(apps, schema_editor):
                 job_number = row[14].strip()
                 level_model = row[15].strip()
                 staff_make = row[16].strip().upper()
+                is_calibrated = row[17].strip()
+                is_reference = row[18].strip()
+                if is_calibrated == 'TRUE':
+                     is_calibrated = True
+                else:
+                     is_calibrated = False
 
+                if is_reference == 'TRUE':
+                     is_reference = True
+                elif is_reference == 'FALSE':
+                     is_reference = False
+                    
+                
                 calibration_date = datetime.strptime(calibration_date, '%d/%m/%Y').date()
                 staff_obj, created = Staff.objects.get_or_create(
                         staff_make_name = staff_make, 
@@ -304,7 +317,9 @@ def add_landgate_instruments(apps, schema_editor):
                         staff_number = staff_number,
                         staff_length = staff_length,
                         thermal_coefficient = thermal_coefficient,
-                        )
+                        iscalibrated = is_calibrated,
+                        isreference = is_reference,
+                )
                 # print(level_model)
                 record_obj, created = StaffCalibrationRecord.objects.get_or_create(
                     job_number = job_number,
@@ -341,7 +356,7 @@ def add_landgate_instruments(apps, schema_editor):
                 company_name__exact=lg_prism_model['prism_owner'])
             )
     for prism in lg_prisms:
-        print(prism['prism_model_name'])
+        # print(prism['prism_model_name'])
         record_obj, created = medjil_prism_inst.objects.get_or_create(
             prism_number = prism['prism_number'],
             photo = prism['photo'],

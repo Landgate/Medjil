@@ -113,7 +113,9 @@
     const isReference = document.getElementById('id_isreference');
     if (document.getElementById('object_id').value) {
         isCalibrated.disabled = true;
-        isReference.disabled = true;
+        if (isReference) {
+            isReference.disabled = true;
+        }
     } 
     
 </script>

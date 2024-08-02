@@ -52,7 +52,7 @@
               <th class="text-center font-semibold text-base text-gray-900">Action</th>
             </tr>
             {% for item in object_list %}
-              {% if item.inst_staff.staff_type != 'invar' %}
+              {% if not item.inst_staff.isreference %}
                 <tr>
                   <td class="font-regular text-left"> {{ item.job_number }}</td>    	
                   <td class="font-regular text-left"> {{ item.calibration_date|date:"d/m/Y" }} </td>

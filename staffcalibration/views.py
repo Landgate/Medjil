@@ -71,9 +71,9 @@ class HomeView(generic.ListView, LoginRequiredMixin):
     def get_queryset(self):
         queryset = StaffCalibrationRecord.objects.all()
         if self.request.user.is_staff:
-            queryset = queryset.filter(~Q(inst_staff__staff_type = 'invar'))
+            queryset = queryset.filter(inst_staff__isreference = False)
         else:
-            queryset = queryset.filter(Q(inst_staff__staff_owner = self.request.user.company))
+            queryset = queryset.filter(inst_staff__staff_owner = self.request.user.company)
        
         # Annotate the queryset so that staffs can see their records at the top
         queryset = queryset.annotate(
@@ -89,10 +89,9 @@ class HomeView(generic.ListView, LoginRequiredMixin):
 
 @login_required(login_url="/accounts/login")
 def user_staff_registry(request):
-    queryset_refs = StaffCalibrationRecord.objects.none()
     if request.user.is_staff:
         # all staffs excluding reference staves
-        queryset = StaffCalibrationRecord.objects.filter(~Q(inst_staff__staff_type = 'invar'))
+        queryset = StaffCalibrationRecord.objects.all()
         queryset = queryset.annotate(
             is_top=Case(
                 When(inst_staff__staff_owner = request.user.company, then=Value(1)),
@@ -102,18 +101,14 @@ def user_staff_registry(request):
         )
         queryset = queryset.order_by('-is_top', '-calibration_date')
         # only reference staves
-        queryset_refs = StaffCalibrationRecord.objects.filter(Q(inst_staff__staff_type = 'invar'))
     else:
         queryset = StaffCalibrationRecord.objects.filter(inst_staff__staff_owner = request.user.company)
     
     subQuery = queryset.filter(inst_staff = OuterRef('inst_staff')).order_by('-calibration_date').values('calibration_date')[:1]
     queryset = queryset.filter(calibration_date = Subquery(subQuery)) #(latest_date=Max('calibration_date')).filter(calibration_date=F('latest_date')).order_by('inst_staff__number')
     
-    subQueryRef = queryset_refs.filter(inst_staff = OuterRef('inst_staff')).order_by('-calibration_date').values('calibration_date')[:1]
-    queryset_refs = queryset_refs.filter(calibration_date = Subquery(subQueryRef)) #(latest_date=Max('calibration_date')).filter(calibration_date=F('latest_date')).order_by('inst_staff__number')
     context = {
         'queryset': queryset,
-        'queryset_refs': queryset_refs,
     }
     return render(request, 'staffcalibration/staff_calibration_record.html', context)
 ################################################################################    
