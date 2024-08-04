@@ -20,13 +20,13 @@
 {% block content %}
 <article class="post">
     <div class="page-content">
-        <div class="text-center">
-            <h1>Imported EDM Observations</h1>
-        </div>
         <form id="edm-rawDataForm" action="" style="font-size:10.0pt;width:4500px;" class="site-form" method="post" enctype="multipart/form-data">
+            <div class="mb-5 px-2 site-form-header bg-indigo-300 rounded">
+                <h2 class="text-center">Imported EDM Observations</h2>
+            </div>
             <div class="flexbox-container_IB flexbox-item-left_IB">
-            <p>The pillar survey observations are used to estimate the EDM instrument correction<a href= "{% url 'calibrationguide:read_manual' manual_name='edmi_calibration_manual.html' %}#EDMI-Chapter3" target="_blank" onclick="return showAddPopup(this);"> &#x1F6C8</a>
-            <br>Please select/deselect the observations in the following table to use for the estimatioin of instrument correction.</p>
+            <p>The pillar survey observations are to be used to estimate the EDM instrument correction<a href= "{% url 'calibrationguide:read_manual' manual_name='edmi_calibration_manual.html' %}#EDMI-Chapter3" target="_blank" onclick="return showAddPopup(this);"> &#x1F6C8</a>
+            <br>Please select/deselect the observations in the following table to use for the estimation of instrument correction.</p>
             </div>
             <div class="flexbox-container_IB" style="width: 100%;">
                 <div class="flexbox-item_400_IB">
@@ -72,16 +72,13 @@
                     {% endfor %}
                 </table>
             </div>
-            <div class="button-container">
+            <div id="bottom" class="button-container">
                 <button type="button" onclick="window.location.href='{% url 'edm_calibration:calibrate1' id=id %}'" class="submit-button bg-green-500 hover:bg-green-400">Back</button>
                 <button type="button" onclick="window.location.href='{% url 'edm_calibration:edm_calibration_home' %}'" class="cancelbtn bg-red-500 hover:bg-red-300">Cancel</button>
-                <button type="button" class="submit-button bg-green-500 hover:bg-green-400" onclick="submit_it()">Next</button>
+                <button type="button" class="submit-button bg-green-500 hover:bg-green-400" onclick="submit_it()">Process</button>
             </div>
         </form>
         <div class="loader" id="loading-icon" style="display:none;"></div>
-        <div id="bottom" style="text-align:center;">
-            <h4>{{ Page }}</h4>
-        </div>
     </div>
 </article>
 

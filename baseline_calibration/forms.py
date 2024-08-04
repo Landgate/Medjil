@@ -251,14 +251,14 @@ class Uncertainty_BudgetForm(forms.ModelForm):
             'std_dev_of_zero_adjustment': 'Std Dev Used When Statistically Zero (m)',
             'auto_EDMI_scf':
                 {'group':"EDM Scale factor", 
-                 'description': "EDMI Reg13 Scale correction factor",
+                 'description': "EDMI Reg13 Scale correction factor (Baseline Only)",
                  'units': "x:1",
                  'type': "B",
                  'distribution': "N",
                  'origin': "Instument Register"},
             'auto_EDMI_scf_drift':
                 {'group':"EDM Scale factor",
-                 'description': "EDM Scale correction factor drift over time)",
+                 'description': "EDM Scale correction factor drift over time (Baseline Only)",
                  'units': "x:1",
                  'type': "B",
                  'distribution': "N",
@@ -328,14 +328,14 @@ class Uncertainty_BudgetForm(forms.ModelForm):
                  'origin': "Derived"},
             'auto_hgts': 
                 {'group':"Heights", 
-                 'description': "Pillar height differences from imported file",
+                 'description': "Pillar certified height differences",
                  'units': "m",
                  'type': "B",
                  'distribution': "N",
                  'origin': "Derived"},
             'auto_os': 
                 {'group':"Offset", 
-                 'description': "Pillar alignment survey processed uncertainty",
+                 'description': "Pillar alignment survey offset uncertainties",
                  'units': "m",
                  'type': "B",
                  'distribution': "N",

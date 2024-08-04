@@ -30,7 +30,7 @@
         {% endif %}
       <br>
 			<h2 class="text-center">List of Uncertainty Budgets</h2>
-			<p class="text-center"><i>For more information about Uncertainty Budgets, please refer to the technical manual <a href= "{% url 'calibrationguide:read_manual' manual_name='edmi_calibration_manual.html' %}#EDMI-Chapter5_2" target="_blank" onclick="return showAddPopup(this);"> &#x1F6C8</a></i></p>
+			<p class="text-center"><i>For more information about Uncertainty Budgets, please refer to the technical manual <a href= "{% url 'calibrationguide:read_manual' manual_name='edmi_calibration_manual.html' %}#EDMI-Chapter5_2" target="_blank" onclick="return PopupTechnicalManual(this);"> &#x1F6C8</a></i></p>
 			<hr>
 			<div class="mt-2 flex justify-center">
 				<a href="{% url 'baseline_calibration:uc_budget_create' %}?next={{request.path}}" class="px-3 py-2 border border-transparent text-lg leading-4 rounded text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">

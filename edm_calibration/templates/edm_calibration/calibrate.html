@@ -30,7 +30,11 @@
                     <h2 class="text-center">{{ Header }}</h2>
                 </div>
             {% endfor %}
-
+            <div class="mb-3 px-2 site-form-header">
+                <p class="text-center text-lg">
+                    <u id="pgOfpgs">Step 1 of 3</u>
+                </p>
+            </div>
             {% csrf_token %}
             <table id="PillarSurveyTable">
                 <colgroup>
@@ -40,19 +44,19 @@
                 </colgroup>
                 {% for field in form %}
                     {% if field.name != "auto_base_calibration" %}
-                        <tr id="tr-{{field.name}}" class="tgl-{{ field.field.widget.attrs.class }}" style="display:none;">
+                        <tr id="tr-{{field.name}}" class="tgl-{{ field.field.widget.attrs.class }}" style="display:none;" title="{{ field.help_text|safe }}">
                             {% if field.field.is_checkbox %}
                                 <td></td>
-                                <td>{{ field }}&emsp; &emsp; {{ field.label }} </td>
+                                <td title="{{ field.help_text|safe }}">
+                                    {{ field }}&emsp; &emsp; {{ field.label }} {% if field.name == "test_cyclic" %}<a href= "{% url 'calibrationguide:read_manual' manual_name='edmi_calibration_manual.html' %}#EDMI-Chapter4_2_1CyclicErrors" target="_blank" onclick="return PopupTechnicalManual(this);"> &#x1F6C8</a>{% endif %}
+                                </td>
                             {% else %}
-                                {% if field.name == "edm" %}
-                                    <td><label>{{ field.label|upper }}</label></td>
-                                {% else %}
-                                    <td>{{ field.label_tag }}</td>
-                                {% endif %}
-                                <td> {{ field }}
+                                <td>
+                                    {{ field.label_tag }}
+                                </td>
+                                <td title="{{ field.help_text|safe }}"> {{ field }} 
                                     {% if field.name == "site" %}
-                                        <label for="id_site">{{ form.auto_base_calibration }} {{ form.auto_base_calibration.label }} </label>
+                                        <label for="id_site" title="{{ form.auto_base_calibration.help_text|safe }}">{{ form.auto_base_calibration }} {{ form.auto_base_calibration.label }} </label>
                                     {% endif %}
                                 </td>
                             {% endif %}
@@ -108,9 +112,6 @@
             </div>
         </form>
         <div class="loader" id="loading-icon" style="display:none;"></div>
-        <div style="text-align:center;">
-            <h4 id=pgOfpgs>1</h4>
-        </div>
     </div>
 </article>
 
@@ -154,7 +155,7 @@
       } else {
         document.getElementById("nextBtn").innerHTML = "Next";
       }
-      document.getElementById("pgOfpgs").innerHTML = "Page "+ (n+1) + " of " + (lastTab+1);
+      document.getElementById("pgOfpgs").innerHTML = "Step "+ (n+1) + " of " + (lastTab+1);
       tglCalibBase();
       tglFile("edm");
     }

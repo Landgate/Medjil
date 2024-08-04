@@ -568,7 +568,7 @@
                     <th onclick="sortTable(this)" class="text-center">From</th>
                     <th onclick="sortTable(this)" class="text-center">To</th>
                     {% for s in edm_observations.0.grp_Bay %}
-                        <th onclick="sortTable({{ forloop.counter0 }}+2)" class="text-center">Slope Dist. {{ forloop.counter }}</th>
+                        <th onclick="sortTable(this)" class="text-center">Slope Dist. {{ forloop.counter }}</th>
                     {% endfor %}
                     {% with edm_observations|first as o %}
                         <th onclick="sortTable(this)" class="text-center">Slope Dist. (m)</th>

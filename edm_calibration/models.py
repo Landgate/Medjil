@@ -49,10 +49,11 @@ def get_upload_to_location(instance, filename):
 class uPillar_Survey(models.Model):
     site = models.ForeignKey(
         CalibrationSite, on_delete = models.PROTECT, null = True, blank = True,
-        help_text="Baseline certified distances")   
+        help_text="Select the baseline used for the calibration")
     auto_base_calibration = models.BooleanField(
         default=True,
-        verbose_name = 'Auto select corresponding calibration of this baseline')
+        verbose_name = 'Auto select corresponding calibration of this baseline',
+        help_text="Auto select will use the most recent certified distances dated prior to this EDMI Calibration survey date")
     calibrated_baseline = models.ForeignKey(
         Pillar_Survey, on_delete = models.PROTECT, null = True,
         help_text="Baseline certified distances")

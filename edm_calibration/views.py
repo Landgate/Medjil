@@ -198,9 +198,8 @@ def calibrate1(request, id):
             print(e)
             
     headers = {'page0':'EDMI Calibration Details',
-                'page1': 'Instrumentation',
-                'page2': 'Corrections / Calibrations Applied to Instruments',
-                'page3': 'Error Budget and File Uploads',}
+                'page1': 'Instrumentation Details',
+                'page2': 'Error Budget and File Uploads'}
     
     return render(request, 'edm_calibration/calibrate.html', {
             'Headers': headers,
@@ -247,8 +246,7 @@ def calibrate2(request,id):
         formset = zip(edm_obs_formset, raw_edm_obs.values())
         
         return render(request, 'edm_calibration/edm_rawdata.html', 
-                      {'Page': 'Page 5 of 5',
-                       'id': id,
+                      {'id': id,
                        'edm_obs_formset': edm_obs_formset,
                        'pillar_survey': pillar_survey,
                        'formset': formset})

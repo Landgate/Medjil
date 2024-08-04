@@ -439,7 +439,7 @@ def add_surveyed_uc(o, edm_trend, pillar_survey, uc_sources, alignment_survey):
             'std_dev': comb_std,
             'degrees_of_freedom':30,
             'k':t.ppf(1-0.025,df=30),
-            'description':'Pillar height differences from imported file'})
+            'description':'Pillar certified height differences'})
        
     # '11'
     if pillar_survey['uncertainty_budget'].auto_os:
@@ -463,12 +463,13 @@ def add_surveyed_uc(o, edm_trend, pillar_survey, uc_sources, alignment_survey):
             'std_dev': comb_std,
             'degrees_of_freedom':30,
             'k':t.ppf(1-0.025,df=30),
-            'description':'Pillar alignment survey processed uncertainty'})
+            'description':'Pillar alignment survey offset uncertainty'})
 
     return surveyed_uc
 
 
 def add_certified_dist_uc(o, pillar_survey, uc_sources, std_dev_matrix, dof):
+    # Only used for calibration of EDMI
     cd_uc = deepcopy(uc_sources)
     # '07'
     if pillar_survey['uncertainty_budget'].auto_cd:

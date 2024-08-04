@@ -120,3 +120,14 @@ window.addEventListener('load', () => {
 // Event listener for the "Accept" button in the banner
 document.getElementById('acceptTCButton').addEventListener('click', hideTermsBanner);
 
+    // cache inputs of parent form and open popup.
+    function PopupTechnicalManual(triggeringLink) {
+                
+        href = triggeringLink.href;
+        var win = window.open(href, "Technical_Manual", "toolbar=yes,scrollbars=yes,resizable=yes, width=900");
+        if (win) {
+          win.focus();
+        }
+        
+        return false;
+    }

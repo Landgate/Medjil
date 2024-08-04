@@ -17,26 +17,40 @@
 */
 
 function sortTable(header) {
-  var table = header.closest("table");
-  var rows = Array.from(table.rows).slice(1).filter(row => !row.querySelector("th")); // Exclude the header row
-  var dir = header.dataset.sortDirection || "asc"; // Default sorting direction
+  const table = header.closest("table");
+  const rows = Array.from(table.rows).slice(1).filter(row => !row.querySelector("th")); // Exclude the header row
+  const dir = header.dataset.sortDirection || "asc"; // Default sorting direction
 
   // Toggle sorting direction
-  dir = dir === "asc" ? "desc" : "asc";
-  header.dataset.sortDirection = dir;
+  header.dataset.sortDirection = dir === "asc" ? "desc" : "asc";
 
   // Get the index of the clicked column
-  var columnIndex = Array.from(header.parentNode.children).indexOf(header);
+  const columnIndex = Array.from(header.parentNode.children).indexOf(header);
 
   // Sort the rows based on the column value
   rows.sort(function(a, b) {
-    var aValue = a.cells[columnIndex].textContent.toLowerCase();
-    var bValue = b.cells[columnIndex].textContent.toLowerCase();
+    const aValue = parseCellValue(a.cells[columnIndex].textContent);
+    const bValue = parseCellValue(b.cells[columnIndex].textContent);
     return dir === "asc" ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
   });
 
   // Reorder the rows in the table
-  rows.forEach(function(row) {
-    table.appendChild(row);
-  });
+  rows.forEach(row => table.appendChild(row));
+}
+
+function parseCellValue(cellContent) {
+  // Try to parse as a number
+  const numericValue = parseFloat(cellContent);
+  if (!isNaN(numericValue)) {
+    return numericValue.toString();
+  }
+
+  // Try to parse as a date
+  const dateValue = Date.parse(cellContent);
+  if (!isNaN(dateValue)) {
+    return new Date(dateValue).toISOString();
+  }
+
+  // Treat as text
+  return cellContent.toLowerCase();
 }

@@ -1,6 +1,6 @@
 <!--
 
-   © 2023 Western Australian Land Information Authority
+   © 2024 Western Australian Land Information Authority
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,6 +20,18 @@
 {% load custom_filter_tags %}
 
 {% block content %}
+
+<style>
+  .floating-button {
+    position: fixed;
+    bottom: 40px;
+    right: 20px;
+    cursor: pointer;
+    background-color: lightblue;
+  }
+</style>
+<div class="floating-button"><a href="#buttons">Scroll to Bottom</a></div>
+
 <article class="post">
     <div class="post-content">
         {% if messages %}
@@ -110,7 +122,7 @@
                         </tr>
                     </table>
                 </div>
-                <div class="button-container">
+                <div id="buttons" class="button-container">
                     <div class="flexbox-item_800_IB flexbox-item-button_IB">
                         {% if pillar_survey %}
                         <button type="button" onclick="window.location.href='{% url 'edm_calibration:calibrate2' id=pillar_survey.pk %}'" class="submit-button bg-green-500 hover:bg-green-400">Back</button>

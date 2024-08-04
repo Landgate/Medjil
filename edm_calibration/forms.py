@@ -88,7 +88,7 @@ class CalibrateEdmForm(forms.ModelForm):
                attrs={'onclick':'tglCalibBase()'}),
            'calibrated_baseline': forms.Select(attrs={'class':'page0'}),
            'computation_date': forms.DateInput(
-               attrs={'type':'date', 'input_formats': ['%d-%m-%Y'], 'class': 'page0'}),
+               attrs={'type':'date', 'input_formats': ['%d-%m-%Y']}),
            'survey_date': forms.DateInput(
                attrs={'type':'date', 'input_formats': ['%d-%m-%Y'], 'class': 'page0'}),
            'observer': forms.TextInput (attrs={'class': 'page0'}),    

@@ -659,9 +659,13 @@
                		<p>These parameters are assigned to the EDM model and are used for all instruments of that model associated with the company. The Manufacturers Uncertainty Constant, Manufacturers Parts Per Million Uncertainty
                			 and Manufacturers Uncertainty Coverage Factor are required fields. These are used by Medjil to perform the statistical test recommended in ISO 17123-4:2012 (see Section 7). </p>
                		<p>Medjil treats phase and pulse measuring instruments differently (first velocity correction is different) thus the pulse instruments must have mets applied before importing data to Medjil.</p>
-               		<p>Solving for cyclic errors can be performed for both types of instruments and is an option when performing and EDMI Calibration. 
+               		<p>
+                   		Solving for cyclic errors can be performed for both types of instruments and is an option when performing and EDMI Calibration. 
+               		</p>
+               		<p id="EDMI-Chapter4_2_1CyclicErrors">
                			 When solving for cyclic errors, Medjil will use a t-student test for both the first and second order cyclic errors. If errors are statistically insignificant, the design matrix will be compiled for either six, 
-               			 four or two parameters.</p> 
+               			 four or two parameters.
+                   	</p>
                		<p>The Unit Lenth is a required field. It is used when test for cyclic errors, plotting the Return Phase Angle of Observed Distances plot at the end of the EDMI Calibration report and 
                			 for calculation of the manufacturers reference refractive index when it has not been supplied in this form (See Section 4.2.2). </p>  
                			 The Frequency, Carrier Wavelength, Manufacturers Reference Refractive Index, C Term and D Term are optional fields. These are used for calculating the atmospheric corrections for instruments. 
@@ -891,15 +895,242 @@
 
             <div id="EDMI-Chapter5_2">
                <h3>5.2 Uncertainty budget</h3>
-               <p>An uncertainty budget consists of a table of the uncertainty sources that contribute to the combined
-                  uncertainty. Medjil automatically populates some records in the uncertainty budget and allows users to
-                  add custom uncertainty sources to the uncertainty budget.</p>
-
+               <p>
+                   An uncertainty budget consists of a table of uncertainty sources that contribute to the combined
+                   uncertainty. Medjil provides a default uncertainty budget but also permits the creation of 'Custom'
+                   (company-specific) uncertainty budgets that can be select during the calibration process.
+               </p>
+               <p>
+                   The uncertainty budget is composed of the follwing types of uncertianty budget sources:
+                   <ul>
+                       <li><b>Instrument Register Record - Uncertainty Budget Sources</b> The values for these uncertianties 
+                       are sourced from values in the instrument register and may relate to the instrument parameters or the 
+                       calibration certificates.</li>
+                       <li><b>Derived - Uncertainty Budget Sources</b> The values for these uncertianties are derived during 
+                       the computations.</li>
+                       <li><b>Custom - Uncertainty Budget Sources</b> These uncertainties are entered directly. The method 
+                       used to porpogate this uncertainty will be according to the assigned group.</li>
+                   </ul>
+               </p>
+               
                <div id="EDMI-Chapter5_2_1">
-                  <h4>5.2.1 Automatically populated uncertainty sources</h4>
+                  <h4>5.2.1 Custom uncertainty budgets</h4>
                   <p>
-                     Medjil automatically populates the uncertainty sources (Table 5.1 and Table 5.2) when processing
-                     the calibration of EDM Baselines and EDM Instrumentation.
+                  The Medjil ‘Default’ uncertainty budget has all options in the 'Instrument Register Record - Uncertainty Budget Sources'
+                  and 'Derived - Uncertainty Budget Sources' selected. It also defines six 'Custom - Uncertainty Budget Sources'
+                  that are appropriate for typical calibrations.
+                  </p>
+                  <p>
+                      When creating a Custom uncertainty budget, Medjil will use the Default as a template to initiate 
+                      the creation of the new uncertainty budget.</p>
+                  <img src="{% static 'images/CalibrationGuides/edmi/Picture_4_1.png' %}"
+                     alt="Uncertainty budgets">
+                  <p>Where:</p>
+                  <p>
+                     <b>Name</b> = Custom uncertainty budget name. Uncertainty budgets are identified by a name that must be unique.
+                  </p>
+                  <p>
+                     <b>Company</b> = The owner of the new uncertainty budget. The new budget(s) are accessible to any
+                     user within that company.
+                  </p>
+                  <p>
+                     <b>Std Dev Used When Statistically Zero</b> = This value is used to overruled (overwrite) any
+                     standard deviation equal to zero. For example Medjil uses the sample standard deviation of observation sets
+                     composed of measurements between the same pillars to calculate an uncertainty of the EDMI
+                     measurements.
+                     When all measurements in the one observation set are the same or if there is only one measurement
+                     in the observation set, the sample standard deviation is mathematically zero.
+                  </p>
+                  <p>
+                     <b>Type</b> = Definition of uncertainty type. Type A means a statistically derived component or
+                     uncertainty where Type B stands for any other derivation of uncertainty e.g. calibration report,
+                     manufacturer's specification or an estimate based on experience.
+                  </p>
+                  <p>
+                     <b>Distribution</b> = Definition of distribution associated with the uncertainty. A normal
+                     distribution is most associated with continuous univariate distributions such as many random variables.
+                     A rectangular distribution represents an arbitrary outcome that lies between certain bound (equal
+                     probability anywhere within the range). For example rounding of a physical quantity or a resolution
+                     of digital instrument.
+                  </p>
+                  <p>
+                     <b>Uncertainty</b> = The expanded uncertainty at 95% confidence in the units specified for the uncertainty source.
+                  </p>
+                  <p>
+                     <b>K</b> = The coverage factor is used to expand the uncertainty from 68% confidence level to 95% confidence level. 
+                     Typically k=2.0 for a normal distribution or sqrt(3) for a rectangular distribution. Medjil will auto complete this field as the distribution drop-down is
+                     changed but the user still has the ability to overwrite this field.
+                  </p>
+                  <p>
+                     <b>Dof</b> = Degrees of freedom. For a Type A uncertainty this is equal to the number of
+                     measurements
+                     minus the number of unknowns (redundant measurements). For a Type B uncertainty Dof needs to be
+                     estimated. The following can be used as a guide: 3 for not very confident, 10 for moderate
+                     confidence,
+                     30 for very confident.
+                  </p>
+                  <p>
+                     <b>Group</b> = Uncertainty sources are categorised into 11 different groups. The group selected for
+                     an
+                     uncertainty source will affect the following:
+                  </p>
+                  <ul>
+                     <li>The combining of error sources in the calibration report</li>
+                     <li>The unit selection for this uncertainty source</li>
+                     <li>The propagation (contribution) of the error sources to the total uncertainty of the calibration
+                     </li>
+                  </ul>
+                  <br>                  
+                  <p>
+                     <b>EDM scale factor</b> = Uncertainty related to the EDM scale factor can be specified in parts per
+                     million (ppm), percent (%), scalar(x:1) or a ratio (1:x). All error sources belonging to this group
+                     will be combined before the contribution to the total uncertainty of the calibration according to the
+                     following formula:
+                  </p>
+                  <div>$$ su_d = D*csu_g\ \ \ (Eq. 5.12)$$ </div>
+                  <p>Where:</p>
+                  <p>&emsp;&emsp;su<sub>d</sub> = Standard uncertainty of the distance</p>
+                  <p>&emsp;&emsp;D = Distance</p>
+                  <p>&emsp;&emsp;csu<sub>g</sub> = Combined standard uncertainty of the group</p>
+                  <p>The 'Default' Uncertainty Budget lists an error source with the description 'EDM scale factor
+                     affected by Temp (Type B)'. The EDM scale factor can be affected by temperature. This uncertainty component is
+                     a Type B estimate based on prior knowledge and experience.</p>
+                  <p>
+                     <b>EDMI measurement</b> = Uncertainty relating to the EDMI measurement can be specified in metres
+                     (m), millimetres (mm), parts per million (ppm), percent (%), scalar(x:1) or a ratio (1:x). All error
+                     sources belonging to this group will be combined before the contribution to the total uncertainty of the
+                     calibration according to the following formula:
+                  </p>
+                  <div>$$ su_d = csu_g\ \ \ (Eq. 5.13)$$ </div>
+                  <p>Where:</p>
+                  <p>&emsp;&emsp;su<sub>d</sub> = Standard uncertainty of the distance</p>
+                  <p>&emsp;&emsp;csu<sub>g</sub> = Combined standard uncertainty of the group</p>
+                  <p>
+                     <b>EDM LS zero offset</b> = Uncertainty relating to the EDM Least Squares zero offset can be
+                     specified
+                     in metres (m) or millimetres (mm). All error sources belonging to this group will be combined
+                     before the
+                     contribution to the total uncertainty of the calibration according to the following formula 4.13
+                  </p>
+                  <p>
+                     <b>Temperature</b> = Uncertainty related to the temperature can be specified in degrees Celsius
+                     (°C) or degrees Fahrenheit (°F). All error sources belonging to this group will be combined before the
+                     contribution to the total uncertainty of the calibration according to the following formula:
+                  </p>
+                  <div>$$ su_d = D*K*csu_g*10^{-6}\ \ \ (Eq. 5.14)$$ </div>
+                  <p>Where:</p>
+                  <p>&emsp;&emsp;su<sub>d</sub> = Standard uncertainty of the distance</p>
+                  <p>&emsp;&emsp;D = Distance</p>
+                  <p>&emsp;&emsp;csu<sub>g</sub> = Combined standard uncertainty of the group</p>
+                  <p>&emsp;&emsp;K = Partial differential for temperature defined as:</p>
+                  <div>
+                     $$
+                     K=\left[\frac{\frac{\left(n_G-1\right)\left(273.15p\right)}{1013.25}-11.27e*{10}^{-6}}{273.15+t^2}\right]*{10}^6\
+                     \ \ (Eq. 5.15)$$
+                  </div>
+                  <p>Where:</p>
+                  <p>&emsp;&emsp;p = Pressure [hPa]</p>
+                  <p>&emsp;&emsp;t = Temperature [C]</p>
+                  <p>&emsp;&emsp;n<sub>G</sub> = Manufacturers reference refractive index </p>
+                  <p>&emsp;&emsp;e = Partial water vapour Pressure [hPa] defined as:</p>
+                  <div>$$ e=\frac{Eh}{100}\ \ \ (Eq. 5.16)$$ </div>
+                  <p>Where:</p>
+                  <p>&emsp;&emsp;E = Saturation water vapour [hPa] at the dry bulb temperature</p>
+                  <p>&emsp;&emsp;h = Relative humidity [%]</p>
+                  <p>
+                     <b>Pressure</b> = Uncertainty related to the pressure can be specified in millibars (mBar),
+                     hectopascals (hPa) or millimetres of mercury (mmHg). All error sources belonging to this group will be combined
+                     before the contribution to the total uncertainty of the calibration according to the following
+                     formula:
+                  </p>
+                  <div>$$ su_d = D*L*csu_g*10^{-6}\ \ \ (Eq. 5.17)$$ </div>
+                  <p>Where:</p>
+                  <p>&emsp;&emsp;su<sub>d</sub> = Standard uncertainty of the distance</p>
+                  <p>&emsp;&emsp;D = Distance</p>
+                  <p>&emsp;&emsp;csu<sub>g</sub> = Combined standard uncertainty of the group</p>
+                  <p>&emsp;&emsp;L = Partial differential for Pressure defined as:</p>
+                  <div>
+                     $$ L=\left[0.26957809\frac{\left(n_G-1\right)}{273.15+t^2}\right]\ast{10}^6\ \ \ (Eq. 5.18)$$
+                  </div>
+                  <p>
+                     <b>Humidity</b> = Uncertainty relating to the humidity must be specified as a percent (%). All
+                     error
+                     sources belonging to this group will be combined before the contribution to the total uncertainty
+                     of the
+                     calibration according to the following formula:
+                  </p>
+                  <div>$$ su_d = D*M*csu_g*10^{-6}\ \ \ (Eq. 5.19)$$ </div>
+                  <p>Where:</p>
+                  <p>&emsp;&emsp;su<sub>d</sub> = Standard uncertainty of the distance</p>
+                  <p>&emsp;&emsp;D = Distance</p>
+                  <p>&emsp;&emsp;csu<sub>g</sub> = Combined standard uncertainty of the group</p>
+                  <p>&emsp;&emsp;M = Partial differential for humidity defined as:</p>
+                  <div>$$ M=\left[\frac{11.27*10^{-6}}{273.15+t^2}\right]*{10}^6\ \ \ (Eq. 5.20)$$ </div>
+                  <p>
+                     <b>Certified distances</b> = Uncertainty relating to the certified distances can be specified in
+                     metres
+                     (m), millimetres (mm), parts per million (ppm), percent (%), scalar(x:1) or a ratio (1:x). All
+                     error
+                     sources belonging to this group will be combined before the contribution to the total uncertainty
+                     of the
+                     calibration according to the following formula:
+                  </p>
+                  <div>$$ su_d = csu_g\ \ \ (Eq. 5.21)$$ </div>
+                  <p>Where:</p>
+                  <p>&emsp;&emsp;su<sub>d</sub> = Standard uncertainty of the distance</p>
+                  <p>&emsp;&emsp;csu<sub>g</sub> = Combined standard uncertainty of the group</p>
+                  <p>
+                     <b>EDMI calibration</b> = Uncertainty relating to the EDMI calibration can be specified in metres
+                     (m) or
+                     millimetres (mm). All error sources belonging to this group will be combined before the
+                     contribution to
+                     the total uncertainty of the calibration according to the Eg. 5.21.
+                  </p>
+                  <p>
+                     <b>Centring</b> = Uncertainty relating to the centring can be specified in metres (m) or
+                     millimetres
+                     (mm). All error sources belonging to this group will be combined before the contribution to the
+                     total
+                     uncertainty of the calibration according to the Eg. 5.21.
+                  </p>
+                  <p>
+                     <b>Heights</b> = Uncertainty relating to the heights can be specified in metres (m) or millimetres
+                     (mm).
+                     All error sources belonging to this group will be combined before the contribution to the total
+                     uncertainty of the calibration according to the following formula:
+                  </p>
+                  <div>$$ su_d = csu_g*\frac{∆H}{D}\ \ \ (Eq. 5.22)$$ </div>
+                  <p>Where:</p>
+                  <p>&emsp;&emsp;su<sub>d</sub> = Standard uncertainty of the distance</p>
+                  <p>&emsp;&emsp;D = Distance</p>
+                  <p>&emsp;&emsp;csu<sub>g</sub> = Combined standard uncertainty of the group</p>
+                  <p>&emsp;&emsp;∆H = Height difference between the from and to pillars</p>
+                  <p>
+                     <b>Offsets</b> = Uncertainty relating to the offsets can be specified in metres (m) or millimetres
+                     (mm).
+                     All error sources belonging to this group will be combined before the contribution to the total
+                     uncertainty of the calibration according to the following formula:
+                  </p>
+                  <div>$$ su_d = csu_g*\frac{∆O}{D}\ \ \ (Eq. 5.23)$$ </div>
+                  <p>Where:</p>
+                  <p>&emsp;&emsp;su<sub>d</sub> = Standard uncertainty of the distance</p>
+                  <p>&emsp;&emsp;D = Distance</p>
+                  <p>&emsp;&emsp;csu<sub>g</sub> = Combined standard uncertainty of the group</p>
+                  <p>&emsp;&emsp;∆O = Difference in offset between from and to pillars</p>
+                  <br>
+               </div>
+
+               <div id="EDMI-Chapter5_2_2">
+                  <h4>5.2.2 Uncertainty sources in reports</h4>
+                  <p>
+                     When using the 'Default' uncertianty budget, Medjil automatically populates these uncertainty sources 
+                     (Table 5.1 and Table 5.2) when processing the calibration of EDM Baselines and EDM Instrumentation.
+                     These uncertainty sources are optional when by means of a custom uncertainty budget except for the following:
+                     <ul>
+                         <li>EDMI Calibration - Uncertainty of LSA EDMI correction</li>
+                         <li>EDM LS zero offset - ZPC uncertainty</li>
+                         <li>Certified Distances - LSA uncertainty</li>
+                     </ul>
                   </p>
                   <br>Table 5.1: Medjil uncertainty budget for calibration of EDM Baseline</br>
                   <img src="{% static 'images/CalibrationGuides/edmi/Picture_4_2.png' %}"
@@ -1635,212 +1866,6 @@
                   </table>
                </div>
 
-               <div id="EDMI-Chapter5_2_2">
-                  <h4>5.2.2 Custom uncertainty budgets</h4>
-                  <p>The Medjil ‘Default’ uncertainty budget is used during the calibration computation, and it
-                     encompasses typical sources of uncertainty along with their corresponding values. These values are obtained
-                   from the Instrument Register or are derived from survey data during computation.</p>
-                  <p>Medjil also permits the creation of a 'Custom' (company-specific) uncertainty budget that can be
-                     used instead of the 'Default' sources of uncertainty. This 'Custom' uncertainty budget can be
-                     established by combining the following three uncertainty sources and values: (a) stored in the 'Instrument
-                     Register' records, (b) 'Derived' from data during computations, and (c) 'Custom' user defined uncertainty
-                     sources and values.</p>
-                  <img src="{% static 'images/CalibrationGuides/edmi/Picture_4_1.png' %}"
-                     alt="Uncertainty budgets">
-                  <p>Where:</p>
-                  <p>
-                     <b>Name</b> = Custom uncertainty budget name. Uncertainty budgets are identified by a name that must be unique.
-                  </p>
-                  <p>
-                     <b>Company</b> = The owner of the new uncertainty budget. The new budget(s) are accessible to any
-                     user within that company.
-                  </p>
-                  <p>
-                     <b>Std Dev Used When Statistically Zero</b> = This value is used to overruled (overwrite) any
-                     standard deviation equal to zero. For example Medjil uses the sample standard deviation of observation sets
-                     composed of measurements between the same pillars to calculate an uncertainty of the EDMI
-                     measurements.
-                     When all measurements in the one observation set are the same or if there is only one measurement
-                     in the observation set, the sample standard deviation is mathematically zero.
-                  </p>
-                  <p>
-                     <b>Type</b> = Definition of uncertainty type. Type A means a statistically derived component or
-                     uncertainty where Type B stands for any other derivation of uncertainty e.g. calibration report,
-                     manufacturer's specification or an estimate based on experience.
-                  </p>
-                  <p>
-                     <b>Distribution</b> = Definition of distribution associated with the uncertainty. A normal
-                     distribution is most associated with continuous univariate distributions such as many random variables.
-                     A rectangular distribution represents an arbitrary outcome that lies between certain bound (equal
-                     probability anywhere within the range). For example rounding of a physical quantity or a resolution
-                     of digital instrument.
-                  </p>
-                  <p>
-                     <b>Uncertainty</b> = The expanded uncertainty at 95% confidence in the units specified for the uncertainty source.
-                  </p>
-                  <p>
-                     <b>K</b> = The coverage factor is used to expand the uncertainty from 68% confidence level to 95% confidence level. 
-                     Typically k=2.0 for a normal distribution or sqrt(3) for a rectangular distribution. Medjil will auto complete this field as the distribution drop-down is
-                     changed but the user still has the ability to overwrite this field.
-                  </p>
-                  <p>
-                     <b>Dof</b> = Degrees of freedom. For a Type A uncertainty this is equal to the number of
-                     measurements
-                     minus the number of unknowns (redundant measurements). For a Type B uncertainty Dof needs to be
-                     estimated. The following can be used as a guide: 3 for not very confident, 10 for moderate
-                     confidence,
-                     30 for very confident.
-                  </p>
-                  <p>
-                     <b>Group</b> = Uncertainty sources are categorised into 11 different groups. The group selected for
-                     an
-                     uncertainty source will affect the following:
-                  </p>
-                  <ul>
-                     <li>The combining of error sources in the calibration report</li>
-                     <li>The unit selection for this uncertainty source</li>
-                     <li>The propagation (contribution) of the error sources to the total uncertainty of the calibration
-                     </li>
-                  </ul>
-                  <br>                  
-                  <p>
-                     <b>EDM scale factor</b> = Uncertainty related to the EDM scale factor can be specified in parts per
-                     million (ppm), percent (%), scalar(x:1) or a ratio (1:x). All error sources belonging to this group
-                     will be combined before the contribution to the total uncertainty of the calibration according to the
-                     following formula:
-                  </p>
-                  <div>$$ su_d = D*csu_g\ \ \ (Eq. 5.12)$$ </div>
-                  <p>Where:</p>
-                  <p>&emsp;&emsp;su<sub>d</sub> = Standard uncertainty of the distance</p>
-                  <p>&emsp;&emsp;D = Distance</p>
-                  <p>&emsp;&emsp;csu<sub>g</sub> = Combined standard uncertainty of the group</p>
-                  <p>The 'Default' Uncertainty Budget lists an error source with the description 'EDM scale factor
-                     affected by Temp (Type B)'. The EDM scale factor can be affected by temperature. This uncertainty component is
-                     a Type B estimate based on prior knowledge and experience.</p>
-                  <p>
-                     <b>EDMI measurement</b> = Uncertainty relating to the EDMI measurement can be specified in metres
-                     (m), millimetres (mm), parts per million (ppm), percent (%), scalar(x:1) or a ratio (1:x). All error
-                     sources belonging to this group will be combined before the contribution to the total uncertainty of the
-                     calibration according to the following formula:
-                  </p>
-                  <div>$$ su_d = csu_g\ \ \ (Eq. 5.13)$$ </div>
-                  <p>Where:</p>
-                  <p>&emsp;&emsp;su<sub>d</sub> = Standard uncertainty of the distance</p>
-                  <p>&emsp;&emsp;csu<sub>g</sub> = Combined standard uncertainty of the group</p>
-                  <p>
-                     <b>EDM LS zero offset</b> = Uncertainty relating to the EDM Least Squares zero offset can be
-                     specified
-                     in metres (m) or millimetres (mm). All error sources belonging to this group will be combined
-                     before the
-                     contribution to the total uncertainty of the calibration according to the following formula 4.13
-                  </p>
-                  <p>
-                     <b>Temperature</b> = Uncertainty related to the temperature can be specified in degrees Celsius
-                     (°C) or degrees Fahrenheit (°F). All error sources belonging to this group will be combined before the
-                     contribution to the total uncertainty of the calibration according to the following formula:
-                  </p>
-                  <div>$$ su_d = D*K*csu_g*10^{-6}\ \ \ (Eq. 5.14)$$ </div>
-                  <p>Where:</p>
-                  <p>&emsp;&emsp;su<sub>d</sub> = Standard uncertainty of the distance</p>
-                  <p>&emsp;&emsp;D = Distance</p>
-                  <p>&emsp;&emsp;csu<sub>g</sub> = Combined standard uncertainty of the group</p>
-                  <p>&emsp;&emsp;K = Partial differential for temperature defined as:</p>
-                  <div>
-                     $$
-                     K=\left[\frac{\frac{\left(n_G-1\right)\left(273.15p\right)}{1013.25}-11.27e*{10}^{-6}}{273.15+t^2}\right]*{10}^6\
-                     \ \ (Eq. 5.15)$$
-                  </div>
-                  <p>Where:</p>
-                  <p>&emsp;&emsp;p = Pressure [hPa]</p>
-                  <p>&emsp;&emsp;t = Temperature [C]</p>
-                  <p>&emsp;&emsp;n<sub>G</sub> = Manufacturers reference refractive index </p>
-                  <p>&emsp;&emsp;e = Partial water vapour Pressure [hPa] defined as:</p>
-                  <div>$$ e=\frac{Eh}{100}\ \ \ (Eq. 5.16)$$ </div>
-                  <p>Where:</p>
-                  <p>&emsp;&emsp;E = Saturation water vapour [hPa] at the dry bulb temperature</p>
-                  <p>&emsp;&emsp;h = Relative humidity [%]</p>
-                  <p>
-                     <b>Pressure</b> = Uncertainty related to the pressure can be specified in millibars (mBar),
-                     hectopascals (hPa) or millimetres of mercury (mmHg). All error sources belonging to this group will be combined
-                     before the contribution to the total uncertainty of the calibration according to the following
-                     formula:
-                  </p>
-                  <div>$$ su_d = D*L*csu_g*10^{-6}\ \ \ (Eq. 5.17)$$ </div>
-                  <p>Where:</p>
-                  <p>&emsp;&emsp;su<sub>d</sub> = Standard uncertainty of the distance</p>
-                  <p>&emsp;&emsp;D = Distance</p>
-                  <p>&emsp;&emsp;csu<sub>g</sub> = Combined standard uncertainty of the group</p>
-                  <p>&emsp;&emsp;L = Partial differential for Pressure defined as:</p>
-                  <div>
-                     $$ L=\left[0.26957809\frac{\left(n_G-1\right)}{273.15+t^2}\right]\ast{10}^6\ \ \ (Eq. 5.18)$$
-                  </div>
-                  <p>
-                     <b>Humidity</b> = Uncertainty relating to the humidity must be specified as a percent (%). All
-                     error
-                     sources belonging to this group will be combined before the contribution to the total uncertainty
-                     of the
-                     calibration according to the following formula:
-                  </p>
-                  <div>$$ su_d = D*M*csu_g*10^{-6}\ \ \ (Eq. 5.19)$$ </div>
-                  <p>Where:</p>
-                  <p>&emsp;&emsp;su<sub>d</sub> = Standard uncertainty of the distance</p>
-                  <p>&emsp;&emsp;D = Distance</p>
-                  <p>&emsp;&emsp;csu<sub>g</sub> = Combined standard uncertainty of the group</p>
-                  <p>&emsp;&emsp;M = Partial differential for humidity defined as:</p>
-                  <div>$$ M=\left[\frac{11.27*10^{-6}}{273.15+t^2}\right]*{10}^6\ \ \ (Eq. 5.20)$$ </div>
-                  <p>
-                     <b>Certified distances</b> = Uncertainty relating to the certified distances can be specified in
-                     metres
-                     (m), millimetres (mm), parts per million (ppm), percent (%), scalar(x:1) or a ratio (1:x). All
-                     error
-                     sources belonging to this group will be combined before the contribution to the total uncertainty
-                     of the
-                     calibration according to the following formula:
-                  </p>
-                  <div>$$ su_d = csu_g\ \ \ (Eq. 5.21)$$ </div>
-                  <p>Where:</p>
-                  <p>&emsp;&emsp;su<sub>d</sub> = Standard uncertainty of the distance</p>
-                  <p>&emsp;&emsp;csu<sub>g</sub> = Combined standard uncertainty of the group</p>
-                  <p>
-                     <b>EDMI calibration</b> = Uncertainty relating to the EDMI calibration can be specified in metres
-                     (m) or
-                     millimetres (mm). All error sources belonging to this group will be combined before the
-                     contribution to
-                     the total uncertainty of the calibration according to the Eg. 5.21.
-                  </p>
-                  <p>
-                     <b>Centring</b> = Uncertainty relating to the centring can be specified in metres (m) or
-                     millimetres
-                     (mm). All error sources belonging to this group will be combined before the contribution to the
-                     total
-                     uncertainty of the calibration according to the Eg. 5.21.
-                  </p>
-                  <p>
-                     <b>Heights</b> = Uncertainty relating to the heights can be specified in metres (m) or millimetres
-                     (mm).
-                     All error sources belonging to this group will be combined before the contribution to the total
-                     uncertainty of the calibration according to the following formula:
-                  </p>
-                  <div>$$ su_d = csu_g*\frac{∆H}{D}\ \ \ (Eq. 5.22)$$ </div>
-                  <p>Where:</p>
-                  <p>&emsp;&emsp;su<sub>d</sub> = Standard uncertainty of the distance</p>
-                  <p>&emsp;&emsp;D = Distance</p>
-                  <p>&emsp;&emsp;csu<sub>g</sub> = Combined standard uncertainty of the group</p>
-                  <p>&emsp;&emsp;∆H = Height difference between the from and to pillars</p>
-                  <p>
-                     <b>Offsets</b> = Uncertainty relating to the offsets can be specified in metres (m) or millimetres
-                     (mm).
-                     All error sources belonging to this group will be combined before the contribution to the total
-                     uncertainty of the calibration according to the following formula:
-                  </p>
-                  <div>$$ su_d = csu_g*\frac{∆O}{D}\ \ \ (Eq. 5.23)$$ </div>
-                  <p>Where:</p>
-                  <p>&emsp;&emsp;su<sub>d</sub> = Standard uncertainty of the distance</p>
-                  <p>&emsp;&emsp;D = Distance</p>
-                  <p>&emsp;&emsp;csu<sub>g</sub> = Combined standard uncertainty of the group</p>
-                  <p>&emsp;&emsp;∆O = Difference in offset between from and to pillars</p>
-                  <br>
-               </div>
             </div>
          </div>
 
