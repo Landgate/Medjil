@@ -503,7 +503,7 @@ button.dropdown-btn {
     white-space:nowrap;
     /* overflow:hidden; */
     text-overflow:ellipsis;
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 500;
     /* color: #0c0c0d; */
     color: #fff;
@@ -605,11 +605,11 @@ button.dropdown-btn {
     .nav-item, .nav-option {
         position:relative;
         display: block;
-        max-width: 18%;
+        min-width: 128px;
         border-radius: 0;
         text-align: center;
         border-bottom: transparent;
-        padding: 0.125rem 0.25rem;
+        padding: 0.25rem 0.25rem;
     }
 
     .nav-item:not(:last-child) {
@@ -660,6 +660,18 @@ button.dropdown-btn {
   border-right: 2px solid gray;
 }
 
+/* Change background color of buttons on hover */
+.left-sidebar button:hover,
+.left-sidebar button.active {
+    background-color: #cddbfe;
+    border-top-color: transparent;
+    border-right-color: transparent;
+    border-left-color: #FFB03D;
+    border-left-width: 3px;
+    border-bottom-color: transparent;
+    text-decoration: none;
+}
+
 .tab-content {
   width: 100%;
 }
@@ -691,6 +703,11 @@ button.dropdown-btn {
     border: 2px solid transparent;
   }
 
+  .flex-with-sidebar .post-content {
+    width: 100%;
+    /* background: azure; */
+  }
+
   /* Change background color of buttons on hover */
   .left-sidebar button:hover,
   .left-sidebar button.active {
@@ -701,20 +718,7 @@ button.dropdown-btn {
       border-left-width: 3px;
       border-bottom-color: transparent;
       text-decoration: none;
-      /* background-color: azure; */
-      /* border-bottom: 1px solid #0c0c0c; */
   }
-
-
-  .flex-with-sidebar .post-content {
-    width: 100%;
-    /* background: azure; */
-  }
-
-  /* Create an active/current "tab button" class */
-  /* .left-sidebar button.active {
-    background-color: #cddbfe;
-  } */
 
   .tab-content {
     margin-left: 1.125rem;
