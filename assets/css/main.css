@@ -509,6 +509,12 @@ button.dropdown-btn {
     color: #fff;
 }
 
+@media screen and (min-width: 960px) {
+  .nav-links li a {
+    font-size: 1rem;
+  }
+}
+
 /* .nav-links li > ul {
   text-transform: uppercase;
 } */
@@ -964,7 +970,7 @@ button.dropdown-btn {
     padding: 0
 }
 
-@media screen and (min-width: 700px) {
+@media screen and (min-width: 768px) {
     .footer-row h2 {
         font-size: 1.125rem;
         padding: 0 0.25rem;
