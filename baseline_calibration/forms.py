@@ -317,7 +317,7 @@ class Uncertainty_BudgetForm(forms.ModelForm):
                  'origin': "Instument Register"},
             'auto_cd': 
                 {'group':"Certified distances", 
-                 'description': "Pillar distances survey, processed uncertainty",
+                 'description': "Pillar distances survey, processed uncertainty (EDMI Only)",
                  'units': "m",
                  'type': "B",
                  'distribution': "N",
