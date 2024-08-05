@@ -1,7 +1,7 @@
     
     window.addEventListener('load', function() {
         //Load parent form inputs from Cache if they have been created in a popup
-        let inputs = document.querySelectorAll("input:not([type='file']), select");
+        let inputs = document.querySelectorAll("input:not([type='file'])[name], select[name]");
         let j = inputs.length;
         for (let i = 0; i < j; i++) {
             let el = inputs[i];
@@ -63,7 +63,7 @@
             window.sessionStorage.setItem('adding_id', inputElement.id);
         }
         
-        inputs = document.querySelectorAll("input:not([type='file']), select");
+        let inputs = document.querySelectorAll("input:not([type='file'])[name], select[name]");
         let j = inputs.length;
         for (i = 0; i < j; ++i) {
             let el = inputs[i];

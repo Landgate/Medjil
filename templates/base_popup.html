@@ -39,7 +39,20 @@
 
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js" integrity="sha384-SlE991lGASHoBfWbelyBPLsUlwY1GwNDJo3jSJO04KZ33K2bwfV9YBauFfnzvynJ" crossorigin="anonymous"></script>
-<script src="{% static 'js/script.js' %}"></script>
+<script>
+    // open popup.
+    function PopupTechnicalManual(triggeringLink) {
+                
+        href = triggeringLink.href;
+        var win = window.open(href, "Technical_Manual", "toolbar=yes,scrollbars=yes,resizable=yes, width=900");
+        if (win) {
+          win.focus();
+        }
+        
+        return false;
+    }
+
+</script>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     adjustWindowHeight();
@@ -60,7 +73,6 @@ function adjustWindowHeight() {
 }
 
 </script>
-
 <script>
     document.querySelectorAll('input[type="file"]').forEach(function(input) {
         input.addEventListener('change', function(event) {
@@ -72,6 +84,8 @@ function adjustWindowHeight() {
         });
     });
 </script>
+
+
 </body>
 </html>
 

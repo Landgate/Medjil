@@ -87,7 +87,7 @@
 	window.onload = function() {
 		const activeTabIndex = parseInt(window.localStorage.getItem("activeTabIndex"),10);
 		if (!isNaN(activeTabIndex)) {
-			console.log(activeTabIndex)
+			// console.log(activeTabIndex)
 			const tablinks = document.getElementsByClassName("tablinks");
 			if (tablinks[activeTabIndex]) {
 				tablinks[activeTabIndex].click();
