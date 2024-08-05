@@ -331,7 +331,7 @@ def instrument_register(request, inst_disp):
             'Prism Number',
             'Calibration Date',
             'Scale Correction Factor',
-            'Zero Point Correction',
+            'Zero Point Correction (m)',
             'Action']
         
         if not request.user.is_staff:
