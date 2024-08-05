@@ -1,6 +1,6 @@
 <!--
 
-   © 2023 Western Australian Land Information Authority
+   © 2024 Western Australian Land Information Authority
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -29,7 +29,11 @@
                     <h2 class="text-center">{{ Header }}</h2>
                 </div>
             {% endfor %}
-
+            <div class="mb-3 px-2 site-form-header">
+                <p class="text-center text-lg">
+                    <u id="pgOfpgs">Step 1 of 3</u>
+                </p>
+            </div>
             {% csrf_token %}
             <table id="PillarSurveyTable">
                 <colgroup>
@@ -111,9 +115,6 @@
             </div>
         </form>
         <div class="loader" id="loading-icon" style="display:none;"></div>
-        <div style="text-align:center;">
-            <h4 id=pgOfpgs>1</h4>
-        </div>
     </div>
 </article>
 
@@ -179,7 +180,7 @@
       } else {
         document.getElementById("nextBtn").innerHTML = "Next";
       }
-      document.getElementById("pgOfpgs").innerHTML = "Page "+ (n+1) + " of " + (lastTab+1);
+      document.getElementById("pgOfpgs").innerHTML = "Step "+ (n+1) + " of " + (lastTab+1);
     }
 
     function nextPrev(n) {

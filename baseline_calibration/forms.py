@@ -1,6 +1,6 @@
 '''
 
-   © 2023 Western Australian Land Information Authority
+   © 2024 Western Australian Land Information Authority
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -89,7 +89,7 @@ class PillarSurveyForm(forms.ModelForm):
         widgets = {
            'baseline': forms.Select(attrs={'class': 'page0'}),
            'computation_date': forms.DateInput(format=('%d-%m-%Y'),
-               attrs={'type':'date', 'class': 'page0'}),
+               attrs={'type':'date'}),
            'survey_date': forms.DateInput(format=('%d-%m-%Y'), 
                attrs={'type':'date', 'class': 'page0'}),
            'observer': forms.TextInput (attrs={'class': 'page0'}),    
