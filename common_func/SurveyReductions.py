@@ -982,9 +982,9 @@ def validate_survey(pillar_survey, baseline=None, calibrations=None,
     if not pillar_survey['mets_applied']:
         c = pillar_survey['edm'].edm_specs.c_term
         d = pillar_survey['edm'].edm_specs.d_term
-        if any(x is None for x in [c,d]) == None:
+        w = pillar_survey['edm'].edm_specs.carrier_wavelength
+        if any(x is None for x in [c,d,w]) == None:
             inputs = [
-                pillar_survey['edm'].edm_specs.carrier_wavelength,
                 pillar_survey['edm'].edm_specs.frequency,
                 pillar_survey['edm'].edm_specs.manu_ref_refrac_index]
             if any(x is None for x in inputs) == None:
