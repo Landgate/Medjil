@@ -73,6 +73,21 @@
             <B>Carrier Wavelength: </B>{{ pillar_survey.edm.edm_specs.carrier_wavelength }}nm
         </div>
     </div>
+    
+    <div class="flexbox-container_IB">
+    {% if pillar_survey.mets_applied %}
+        <div class="flexbox-item_800_IB flexbox-item-left_IB">The first velocity atmospheric corrections were applied to the raw observations prior to data import to Medjil.</div>
+    {% else %}
+        <div class="flexbox-item_800_IB flexbox-item-left_IB">
+        Raw EDM measurements imported to Medjil have been corrected with the first velocity correction using the following parameters:
+        <ul style="padding-left: 40px;">
+            <li><b>C Term</b> = {{ pillar_survey.edm.edm_specs.c_term }}</li>
+            <li><b>D Term</b> = {{ pillar_survey.edm.edm_specs.d_term }}</li>
+        </ul>
+        </div>
+    {% endif %}
+    </div>
+    
     <div class="flexbox-container_IB">
         <div class="flexbox-item_400_IB flexbox-item-left_IB">
             <br>
@@ -117,6 +132,18 @@
             {% endif %}
         </div>
     </div>
+    
+    <div class="flexbox-container_IB">
+        {% if not pillar_survey.thermo_calib_applied %}
+            <div class="flexbox-item_800_IB flexbox-item-left_IB">
+                A calibration correction has been applied to the raw temperature measurements imported to Medjil using the most recent calibration at the time of the pillar survey and the following parameters:
+                <ul style="padding-left: 40px;">
+                    <li><b>Zero Point Correction</b> = {{ calib.them.zero_point_correction }}</li>
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+    
     <div class="flexbox-container_IB">
         <div class="flexbox-item_400_IB flexbox-item-left_IB">
             <br>
@@ -143,6 +170,17 @@
         </div>
     </div>
     <div class="flexbox-container_IB">
+        {% if not pillar_survey.baro_calib_applied %}
+            <div class="flexbox-item_800_IB flexbox-item-left_IB">
+                A calibration correction has been applied to the raw pressure measurements imported to Medjil using the most recent calibration at the time of the pillar survey and the following parameters:
+                <ul style="padding-left: 40px;">
+                    <li><b>Zero Point Correction</b> = {{ calib.baro.zero_point_correction }}</li>
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+    
+    <div class="flexbox-container_IB">
         <div class="flexbox-item_400_IB flexbox-item-left_IB">
             <br>
             <B>
@@ -167,6 +205,17 @@
             {% endif %}
         </div>
     </div>
+    <div class="flexbox-container_IB">
+        {% if not pillar_survey.hygro_calib_applied %}
+            <div class="flexbox-item_800_IB flexbox-item-left_IB">
+                A calibration correction has been applied to the raw humidity measurements imported to Medjil using the most recent calibration at the time of the pillar survey and the following parameters:
+                <ul style="padding-left: 40px;">
+                    <li><b>Zero Point Correction</b> = {{ calib.hygro.zero_point_correction }}</li>
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+    
     <div class="flexbox-container_IB">
         <div class="flexbox-item_800_IB  flexbox-item-left_IB">
             <hr>
