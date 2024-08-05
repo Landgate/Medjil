@@ -57,6 +57,13 @@
                      <span class="title">2.4 Inter-pillar distances survey</span>
                      <!-- <span class="page"><span class="visually-hidden">Page&nbsp;</span>8</span> -->
                   </a>
+                  <ul>
+                      <li>
+                         <a href="#EDMI-Chapter2_4_1">
+                            <span class="title">ASCII Import format</span>
+                         </a>
+                      </li>
+                   </ul>
                </li>
                <li>
                   <a href="#EDMI-Chapter2_5">
@@ -66,9 +73,15 @@
                </li>
                <li>
                   <a href="#EDMI-Chapter2_6">
-                     <span class="title">2.6 Pillar heights survey</span>
-                     <!-- <span class="page"><span class="visually-hidden">Page&nbsp;</span>8</span> -->
+                     <span class="title">2.6 Pillar heights survey</span>                     
                   </a>
+                  <ul>
+                      <li>
+                         <a href="#EDMI-Chapter2_6_1">
+                            <span class="title">ASCII Import format</span>                            
+                         </a>
+                      </li>
+                   </ul>
                </li>
             </ol>
          </li>
@@ -78,6 +91,15 @@
                <!-- <span class="page"><span class="visually-hidden">Page&nbsp;</span>5</span> -->
             </a>
             <ol role="list" style="list-style: none;">
+                <li>
+                    <ul>
+                        <li>
+                           <a href="#EDMI-Chapter3">
+                              <span class="title">ASCII Import format</span>
+                           </a>
+                        </li>
+                     </ul>
+                </li>
                <li>
                   <a href="#EDMI-Chapter3_1">
                      <span class="title">3.1 Systematic errors in EDM instruments</span>
@@ -346,35 +368,49 @@
                <img src="{% static 'images/CalibrationGuides/edmi/Picture_1_3.png' %}"
                   alt="Inter-pillar distances survey">
                <br>
-               <p>To calibrate an EDM baseline, a series of inter-pillar distance measurements (surveys) are
-                  necessary,
-                  which should include atmospheric observations of the conditions during the during measuring of each
-                  survey distance. Medjil mandates that all instrumentation used in the survey must be calibrated and
-                  possess a current certificate stating the uncertainty of the instrument readings and the
-                  calibration
-                  corrections that can be applied. The uncertainty of instrument readings plays a crucial role in
-                  propagating uncertainties for the inter-pillar distance survey.</p>
-               <p>The distance observations are assumed to be slope distances that have not been corrected for the
-                  height of instrument or height of targets. Applying atmospheric corrections by entering these into
-                  the instrument is optional but Medjil requires temperature, pressure and humidity for every
-                  distance
-                  measurement even if this has been entered into the instrument. These values are used for estimating
-                  the propagation of uncertainty as well as the optional applying of atmospheric corrections when no
-                  correction was applied by the instrument during the survey.</p>
-               <p>It is recommended each distance (bay) d<sub>ij</sub> (where i = from_pillar; j = to_pillar) should
-                  be measured four times. However, Medjil allows the number of repeat measurements to vary between bays
-                  and between surveys. The pillar survey data is to be provided in an ASCII file and must contain the
-                  following fields:</p>
+               <p>
+                   To calibrate an EDM baseline, a series of inter-pillar distance measurements (surveys) are necessary,
+                   which should include atmospheric observations of the conditions during the during measuring of each 
+                   survey distance. Medjil mandates that all instrumentation used in the survey must be calibrated and
+                   possess a current certificate stating the uncertainty of the instrument readings and the calibration
+                   corrections that can be applied. The uncertainty of instrument readings plays a crucial role in
+                   propagating uncertainties for the inter-pillar distance survey.
+               </p>
+               <p> 
+                   The distance observations are assumed to be slope distances that have not been corrected for the
+                   height of instrument or height of targets. Applying atmospheric corrections by entering these into
+                   the instrument is optional but Medjil requires temperature, pressure and humidity for every distance
+                   measurement even if this has been entered into the instrument. These values are used for estimating
+                   the propagation of uncertainty as well as the optional applying of atmospheric corrections when no
+                   correction was applied by the instrument during the survey.
+               </p>
+               <h4 id="EDMI-Chapter2_4_1">ASCII Import format</h4>
+               <p>
+                   It is recommended each distance (bay) d<sub>ij</sub> (where i = from_pillar; j = to_pillar) should
+                   be measured four times. However, Medjil allows the number of repeat measurements to vary between bays
+                   and between surveys. The pillar survey data is to be provided in an ASCII file and must contain the
+                   following column headings and fields:
+               </p>
                <ul>
                   <li>from_pillar: Pillar name as defined in Medjil calibration sites</li>
                   <li>to_pillar: Pillar name as defined in Medjil calibration sites</li>
-                  <li>height_of_instrument: height in metres</li>
-                  <li>height_of_target: height in metres</li>
-                  <li>horizontal_direction(dd): angle in decimal degrees</li>
-                  <li>slope_distance: distance in metres</li>
-                  <li>temperature: temperature in degrees Celsius</li>
-                  <li>pressure: pressure in Hectopascals or millibars</li>
-                  <li>humidity: humidity in percentage</li>
+                  <li>height_of_instrument: Height in metres</li>
+                  <li>height_of_target: Height in metres</li>
+                  <li>horizontal_direction(dd): Angle in decimal degrees</li>
+                  <li>slope_distance: Distance in metres</li>
+                  <li>temperature: Temperature in degrees Celsius</li>
+                  <li>pressure: Pressure in Hectopascals or millibars</li>
+                  <li>humidity: Humidity in percentage</li>
+               </ul>
+               <br>
+               <p>
+                   When multiple sets of meterological instruments are specified for the pillar surveys, the additional
+                   column headings and fields are also required:
+               </p>
+               <ul>
+                  <li>temperature2: temperature in degrees Celsius</li>
+                  <li>pressure2: pressure in Hectopascals or millibars</li>
+                  <li>humidity2: humidity in percentage</li>
                </ul>
               <br>
                <p>Refer to this <a href="{% static 'data/TestData/baseline calibration/BUSS_baseline_calibration_edm_observations.csv' %}"
@@ -421,15 +457,30 @@
 
             <div id="EDMI-Chapter2_6">
                <h3>2.6 Pillar heights survey</h3>
-               <p>Pillar heights (H<sub>j</sub>) are to be determined as orthometric heights (eg. AHD71) and provided
-                  with standard deviations. The standard deviations should preferably be derived from redundant
-                  observations. Data for the height of pillars is to be provided in an ASCII file. Refer to this
-                  <a href="{% static 'data/TestData/baseline calibration/BUSS_ baseline_calibration_level_observation.csv' %}"
+               <p>
+                   Pillar heights (H<sub>j</sub>) are to be determined as orthometric heights (eg. AHD71) and provided
+                   with standard deviations. The standard deviations should preferably be derived from redundant
+                   observations. Pillar coordinates are required and used to determine the baseline location in 
+                   order to derive geometric correction to the distances. Medjil uses an average latitude of the 
+                   supplied pillar coordinates to calculate the geometric corrections of surveyed distances (see, 
+                   <a href="{% url 'calibrationguide:manual_view' %}#EDMI-Chapter4_3">Section 4.3</a> ).
+               </p>
+               <h4 id="EDMI-Chapter2_6_1">ASCII Import format</h4>
+               <p>                   
+                   Data for the height of pillars is to be provided in an ASCII file  and must contain
+                   the following column headings and fields:
+               </p>
+               <ul>
+                  <li>Pillar_name: Pillar name as defined in Medjil calibration sites</li>
+                  <li>Pillar_RL: height in metres</li>
+                  <li>Std_Dev: height in metres (standard uncertainty, one sigma)</li>
+               </ul>
+               <br>
+               <p>                   
+                   Refer to this
+                   <a href="{% static 'data/TestData/baseline calibration/BUSS_ baseline_calibration_level_observation.csv' %}"
                      target="_blank">sample dataset</a> for the required data format.
                </p>
-               <p>Pillar coordinates are required and used to determine the baseline location in order to derive
-                  geometric correction to the distances. Medjil uses an average latitude of the supplied pillar
-                  coordinates to calculate the geometric corrections of surveyed distances (see, <a href="{% url 'calibrationguide:manual_view' %}#EDMI-Chapter4_3">Section 4.3</a> ).</p>
             </div>
 
          </div>
@@ -439,9 +490,25 @@
                <h2>3. EDM Instrumentation calibration</h2>
                <p style="float:right"><a href="#EDMI-Manual_Content">Back to Top</a></p>
             </div>
+            <h4 id="EDMI-Chapter3_0">ASCII Import format</h4>
             <p>
-                Medjil requires the following data to be imported to perform and EDM instrument calibration. 'From_pillar', 'to_pillar',
-                'Height_of_instrument', 'Height_of_target', 'slope_distance', 'temperature', 'pressure', 'humidity'.
+                It is recommended each distance (bay) d<sub>ij</sub> (where i = from_pillar; j = to_pillar) should
+                be measured four times. However, Medjil allows the number of repeat measurements to vary between bays
+                and between surveys. The pillar survey data is to be provided in an ASCII file and must contain the
+                following column headings and fields:
+            </p>
+            <ul>
+               <li>from_pillar: Pillar name as defined in Medjil calibration sites</li>
+               <li>to_pillar: Pillar name as defined in Medjil calibration sites</li>
+               <li>height_of_instrument: Height in metres</li>
+               <li>height_of_target: Height in metres</li>
+               <li>slope_distance: Distance in metres</li>
+               <li>temperature: Temperature in degrees Celsius</li>
+               <li>pressure: Pressure in Hectopascals or millibars</li>
+               <li>humidity: Humidity in percentage</li>
+            </ul>
+            <br>
+            <p>
                 Refer to this <a href="{% static 'data/TestData/edmi calibration/BUSS_edm_calibration_edm_observations.csv' %}" target="_blank">sample dataset</a> for the required data format.
             </p>
             <div id="EDMI-Chapter3_1">

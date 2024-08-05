@@ -417,11 +417,25 @@
                         <li><b>Rejection Criteria for outlier detection</b>: number of standard deviations to use as a threashold for flagging outliers.</li>
                         <li>If Medjil is <b>not</b> calculate a calibration that tests for cyclic errors, <b>unselect</b> the checkbox <i>Test for cyclic errors</i></li>
                         <li><b>Scanned Fieldnotes</b>: Click the <b>Choose File</b> button to select the field record (in pdf format).</li>
-                        <li><b>EDM File (*.csv)a</b>: Click the <b>Choose File</b> button to select the csv file.</li>
+                        <li><b>EDM File (*.csv)</b>: Click the <b>Choose File</b> button to select the csv file.</li>
                         <li>Click the <b>Submit</b> button.</li>
                         <li><b>Note:</b>
                             <ul>
                                 <li>Form errors will be shown in red text to help correctly fill the form.</li>
+                                <li>
+                                    The <b>EDM File (*.csv)</b> must contain the following following column headings and fields:
+                                    <ul>
+                                      <li>from_pillar: Pillar name as defined in Medjil calibration sites</li>
+                                      <li>to_pillar: Pillar name as defined in Medjil calibration sites</li>
+                                      <li>height_of_instrument: Height in metres</li>
+                                      <li>height_of_target: Height in metres</li>
+                                      <li>horizontal_direction(dd): Angle in decimal degrees</li>
+                                      <li>slope_distance: Distance in metres</li>
+                                      <li>temperature: Temperature in degrees Celsius</li>
+                                      <li>pressure: Pressure in Hectopascals or millibars</li>
+                                      <li>humidity: Humidity in percentage</li>
+                                    </ul>
+                                </li>
                                 <li>Refer to this <a href="{% static 'data/TestData/edmi calibration/BUSS_edm_calibration_edm_observations.csv' %}" target="_blank"><b>sample dataset</b></a> with the corresponding <a href="{% static 'data/TestData/edmi calibration/BUSS_TS16 EDM Calibration Fieldnotes.pdf' %}" target="_blank"><b>Fieldnotes</b></a> for the required data format.</li>
                             </ul>
                         </li>
