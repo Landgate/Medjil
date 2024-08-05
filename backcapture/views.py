@@ -97,9 +97,10 @@ def db_files2dict(files, is_staff=False):
             if f.name == 'rxStandard.db': pk = 'Type'
             if f.name.startswith('rxUncertainty'): pk = 'Description'
             if not is_staff and f.name == 'rxJob.db':
-                rx[ky] = list2dict(decrypt_file(f), columns_dict[f.name], pk,
-                                   filter_key = 'calibration_type',
-                                   filter_value = 'I')
+                rx[ky] = list2dict(
+                    decrypt_file(f), columns_dict[f.name], pk,
+                    filter_key = 'calibration_type',
+                    filter_value = 'I')
             else:
                 rx[ky] = list2dict(decrypt_file(f), columns_dict[f.name], pk)
     
@@ -220,6 +221,7 @@ def create_medjil_model(rx, request, commit_errors):
         # create Prism in Medjil Prism_Specification tables
         if rx_model['type'] == 'P':
             # Create the prism in Medjil Specifications tables
+            # If the unique constraint fails, try with different model_name
             try:
                 rx_model['medjil_specs_pk'], created = (
                     Prism_Specification.objects.get_or_create(
@@ -228,11 +230,21 @@ def create_medjil_model(rx, request, commit_errors):
                         prism_owner = request.user.company,
                         manu_unc_const = float(zpc) * 2,
                         manu_unc_k = 2))
-            except Exception as e:
-                commit_errors.append(
-                    f'Error creating Prism Model {model} in Medjil: {e}')
+            except:
+                try:
+                    rx_model['medjil_specs_pk'], created = (
+                        Prism_Specification.objects.get_or_create(
+                            prism_make_name = make,
+                            prism_model_name = model + ' (Baseline.exe)',
+                            prism_owner = request.user.company,
+                            manu_unc_const = float(zpc) * 2,
+                            manu_unc_k = 2))
+                except Exception as e:
+                    commit_errors.append(
+                        f'Error creating Prism Model {model} in Medjil: {e}')
         else:
             # Create the EDM in Medjil EDM_Specification tables
+            # If the unique constraint fails, try with different model_name
             rx_model['type'] = 'pu'
             if rx_model['is_pulse'] =='False': rx_model['type'] ='ph'
             if len(rx_model['manu_ref_refrac_index']) == 0:
@@ -258,9 +270,25 @@ def create_medjil_model(rx, request, commit_errors):
                         carrier_wavelength = rx_model['carrier_wavelength'],
                         manu_ref_refrac_index = rx_model['manu_ref_refrac_index'],
                         measurement_increments = 0.0001))
-            except Exception as e:
-                commit_errors.append(
-                    f'Error creating EDM Model {model} in Medjil: {e}')
+            except:
+                try:
+                    rx_model['medjil_specs_pk'], created = (
+                        EDM_Specification.objects.get_or_create(
+                            edm_make_name = make,
+                            edm_model_name = model + ' (Baseline.exe)',
+                            edm_owner = request.user.company,
+                            edm_type = rx_model['type'],
+                            manu_unc_const = float(zpc) * 2,
+                            manu_unc_ppm = float(ppm) * 2,
+                            manu_unc_k = 2,
+                            unit_length = rx_model['unit_length'],
+                            frequency = rx_model['frequency'],
+                            carrier_wavelength = rx_model['carrier_wavelength'],
+                            manu_ref_refrac_index = rx_model['manu_ref_refrac_index'],
+                            measurement_increments = 0.0001))
+                except Exception as e:
+                    commit_errors.append(
+                        f'Error creating EDM Model {model} in Medjil: {e}')
     return rx, commit_errors
 
 
@@ -270,20 +298,25 @@ def create_medjil_insts(rx, request, commit_errors):
         try:
             specs = rx_specs['medjil_specs_pk']
             if rx_inst['inst_type'] == 'E':
-                rx_inst['medjil_pk'], created = EDM_Inst.objects.get_or_create(
+                rx_inst['medjil_pk'], _ = EDM_Inst.objects.get_or_create(
                     edm_number = rx_inst['serial_number'],
                     edm_custodian = request.user,
                     comment = rx_inst['comments'],
                     edm_specs = specs)
+        except Exception as e:
+            commit_errors.append(
+                f"Error creating EDM Instrument SN {rx_inst['serial_number']} in Medjil: {e}")
+        try:
             if rx_inst['inst_type'] == 'P':
-                rx_inst['medjil_pk'], created = Prism_Inst.objects.get_or_create(
+                rx_inst['medjil_pk'], _ = Prism_Inst.objects.get_or_create(
                     prism_number = rx_inst['serial_number'],
                     prism_custodian = request.user,
                     comment = rx_inst['comments'],
                     prism_specs = specs)
         except Exception as e:
             commit_errors.append(
-                f"Error creating Instrument SN {rx_inst['serial_number']} in Medjil: {e}")
+                f"Error creating Prism Instrument SN {rx_inst['serial_number']} in Medjil: {e}")
+            
     return rx, commit_errors
 
 
@@ -554,7 +587,10 @@ def import_dli(request):
                         variance = 1,
                         degrees_of_freedom = int(len(uniq_bays) - len(pillars)),
                         )
-                    commit_successes.append(job["name"])
+                    if created: 
+                        commit_successes.append(job["name"])
+                    else:commit_error.append(
+                        f'Database commit error while creating {job["name"]}')
 
                     first_pillar = medjil_pillars[0]
                     UC_formula = rx['BaselineAccuracy'][job['baseline_fk']]
@@ -577,6 +613,9 @@ def import_dli(request):
                             reduced_level = float(pillar['height']),
                             rl_uncertainty = float(pillar['HtStdDev'])
                             )
+                        if not created: commit_error.append(
+                            f'Database commit error while creating certified distance {first_pillar} to {medjil_pillar} in {job["name"]}')
+                        
                         #Store level observations
                         medjil_lvl_obs, created = Level_Observation.objects.get_or_create(
                             pillar_survey = medjil_baseline_calibration,
@@ -584,6 +623,9 @@ def import_dli(request):
                             reduced_level = float(pillar['height']),
                             rl_standard_deviation =float(pillar['HtStdDev'])
                             )
+                        if not created: commit_error.append(
+                            f'Database commit error while creating certified height for {medjil_pillar} in {job["name"]}')
+                        
 
                     # Store observations used for calibration
                     try:
