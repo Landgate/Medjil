@@ -533,13 +533,14 @@ def calibrate2(request,id):
                                    'std_residual': o['std_residual']})
                 if o['Reduced_distance'] > first_to_last['Reduced_distance']:
                     first_to_last = o
-
+            
             context = {'pillar_survey':pillar_survey,
                        'calib':calib,
                        'baseline': baseline,
                        'chi_test': chi_test,
                        'ISO_test': ISO_test,
                        'edm_observations': edm_observations,
+                       'ini_edmi_certificate':ini_edmi_certificate,
                        'residual_chart': residual_chart,
                        'report_notes': report_notes,
                        'Check_Errors': Check_Errors,

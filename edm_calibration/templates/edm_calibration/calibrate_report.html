@@ -696,22 +696,22 @@
             <th>UC</th>
         </tr>
 
-        {% with hidden.0 as form %}
+        {% with ini_edmi_certificate as form %}
          <tr class="text-left">
-            <td>{{ form.calibration_date.value }}</td>
-            <td>{{ form.zero_point_correction.value|floatformat:5 }}</td>
-            <td>{{ form.zpc_uncertainty.value|floatformat:5 }}</td>
-            <td>{{ form.scale_correction_factor.value|floatformat:8 }}</td>
-            <td>{{ form.scf_uncertainty.value|sigfigs:2 }}</td>
-            {% if form.has_cyclic_corrections.value %}
-                <td>{{ form.cyclic_one.value|floatformat:5 }}</td>
-                <td>{{ form.cyc_1_uncertainty.value|sigfigs:2 }}</td>
-                <td>{{ form.cyclic_two.value|floatformat:5 }}</td>
-                <td>{{ form.cyc_2_uncertainty.value|sigfigs:2 }}</td>
-                <td>{{ form.cyclic_three.value|floatformat:5 }}</td>
-                <td>{{ form.cyc_3_uncertainty.value|sigfigs:2 }}</td>
-                <td>{{ form.cyclic_four.value|floatformat:5 }}</td>
-                <td>{{ form.cyc_4_uncertainty.value|sigfigs:2 }}</td>
+            <td>{{ form.calibration_date }}</td>
+            <td>{{ form.zero_point_correction|floatformat:5 }}</td>
+            <td>{{ form.zpc_uncertainty|floatformat:5 }}</td>
+            <td>{{ form.scale_correction_factor|floatformat:8 }}</td>
+            <td>{{ form.scf_uncertainty|sigfigs:2 }}</td>
+            {% if form.has_cyclic_corrections %}
+                <td>{{ form.cyclic_one|floatformat:5 }}</td>
+                <td>{{ form.cyc_1_uncertainty|sigfigs:2 }}</td>
+                <td>{{ form.cyclic_two|floatformat:5 }}</td>
+                <td>{{ form.cyc_2_uncertainty|sigfigs:2 }}</td>
+                <td>{{ form.cyclic_three|floatformat:5 }}</td>
+                <td>{{ form.cyc_3_uncertainty|sigfigs:2 }}</td>
+                <td>{{ form.cyclic_four|floatformat:5 }}</td>
+                <td>{{ form.cyc_4_uncertainty|sigfigs:2 }}</td>
             {% else %}
                 <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
             {% endif %}
