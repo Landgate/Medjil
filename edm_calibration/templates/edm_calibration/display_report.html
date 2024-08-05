@@ -34,14 +34,33 @@
 
 <article class="post">
     <div class="post-content">
-        {% if messages %}
-            <ul class="message-list">
-            {% for message in messages %}
-                <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|safe }}</li>
-            {% endfor %} </ul>
-            <br>
-        {% endif %}
-
+    <div class="flexbox-container_IB">
+        <div class="flexbox-item_800_IB  flexbox-item-left_IB">
+            {% if messages %}
+                <ul class="message-list">
+                    {% for message in messages %}
+                        <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|safe }}</li>
+                    {% endfor %}
+                </ul>
+                <br>
+            {% endif %}
+            {% for form in hidden %}
+                {% if form.errors %}
+                    <ul class="message-list">
+                        {% for field in form %}
+                            {% if field.errors %}
+                                {% for error in field.errors %}
+                                    <li class="error">{{ field.label }} value is: {{ field.value }}, {{ error }}</li>
+                                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                    <br>
+                {% endif %}
+            {% endfor %}
+        </div>
+        </div>
+    
         {{ html_report|safe }}
         <form class="approvals-form site-form" method="post" enctype="multipart/form-data">
             {% csrf_token %}
@@ -122,6 +141,22 @@
                         </tr>
                     </table>
                 </div>
+                <div class="text-left">
+                    {% for form in hidden %}
+                        {% if form.errors %}
+                            <ul class="message-list">
+                                {% for field in form %}
+                                    {% if field.errors %}
+                                        {% for error in field.errors %}
+                                            <li class="error">{{ field.label }} value is: {{ field.value }}, {{ error }}</li>
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                            <br>
+                        {% endif %}
+                    {% endfor %}
+                </div>
                 <div id="buttons" class="button-container">
                     <div class="flexbox-item_800_IB flexbox-item-button_IB">
                         {% if pillar_survey %}
@@ -131,23 +166,14 @@
                         <button type="submit" class="submit-button bg-green-500 hover:bg-green-400">Save</button>
                     </div>
                 </div>
-                <div>
+                <div style="display:None;">
                     {% for form in hidden %}
                         {{ form.management_form }}
                         {% for field in form %}
-                            {% if field.errors %}
-                                <table>
-                                    <tr>
-                                    <td>{{ field.label_tag }}</td>
-                                    <td>{{ field }}</td>
-                                    {% for error in field.errors %}
-                                        <td style="color:Red;">{{ error }}</td>
-                                    {% endfor %}
-                                    </tr>
-                                </table>
-                            {% else %}
-                                <p style="display:None;">{{ field }}</p>
-                            {% endif %}
+                        <p>{{ field }}</p>
+                            {% for error in field.errors %}
+                                <p style="color:Red;">{{ error }}</p>
+                            {% endfor %}
                         {% endfor %}
                     {% endfor %}
                 </div>

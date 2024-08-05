@@ -122,6 +122,22 @@
                         </tr>
                     </table>
                 </div>
+                <div class="text-left">
+                    {% for form in hidden %}
+                        {% if form.errors %}
+                            <ul class="message-list">
+                                {% for field in form %}
+                                    {% if field.errors %}
+                                        {% for error in field.errors %}
+                                            <li class="error">{{ field.label }} value is: {{ field.value }}, {{ error }}</li>
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                            <br>
+                        {% endif %}
+                    {% endfor %}
+                </div>
                 <div id="buttons" class="button-container">
                     <div class="flexbox-item_800_IB flexbox-item-button_IB">
                     {% if pillar_survey %}
