@@ -179,6 +179,8 @@ class calibration_report_notesForm(forms.ModelForm):
         self.initial['company'] = user.company
         if not user.is_staff:
             self.fields['company'].disabled = True
+            self.fields['company'].queryset = Company.objects.filter(
+                company_name = user.company)
             self.fields['note_type'].disabled = True
             self.initial['note_type'] = 'C'
 

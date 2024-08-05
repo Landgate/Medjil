@@ -949,11 +949,9 @@ def accreditation_edit(request, id=None):
     context = {}
     # if id==None this is a new accredittion.
     if id == 'None':
-        ini ={'accredited_company': request.user.company}
         accreditation = AccreditationForm(request.POST or None,
                                           request.FILES or None,
-                                          user=request.user,
-                                          initial = ini)
+                                          user=request.user)
         context['Header'] = 'Input Accreditation Details'
     else:
         obj = get_object_or_404(Accreditation, id=id)
@@ -961,12 +959,13 @@ def accreditation_edit(request, id=None):
         obj.valid_to_date = obj.valid_to_date.isoformat()
         accreditation = AccreditationForm(request.POST or None,
                                           request.FILES or None,
-                                          instance=obj)
+                                          instance=obj,
+                                          user=request.user)
 
         context['Header'] = 'Edit Accreditation Details'
     
     if accreditation.is_valid():
-        accreditation.save()
+        accreditation.save()  
         # Save the pk if this has been called during calibration with add_btn.
         request.session['new_instance'] = accreditation.instance.pk
         next_url = request.POST.get('next')

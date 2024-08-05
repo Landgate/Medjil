@@ -37,6 +37,7 @@ from instruments.models import (
     DigitalLevel,
     Staff,
 )
+from accounts.models import Company
 from calibrationsites.models import CalibrationSite
 
 
@@ -243,6 +244,8 @@ class Uncertainty_BudgetForm(forms.ModelForm):
             self.initial['company'] = user.company
             if not user.is_staff:
                 self.fields['company'].disabled = True
+                self.fields['company'].queryset = Company.objects.filter(
+                    company_name = user.company)
                 
     class Meta:
         model = Uncertainty_Budget
@@ -381,10 +384,12 @@ class AccreditationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
         super(AccreditationForm, self).__init__(*args, **kwargs)
-        if user:
-            if not user.is_staff:
-                self.fields['accredited_company'].disabled = True
-                
+        if not user.is_staff:
+            self.fields['accredited_company'].disabled = True
+            self.fields['accredited_company'].queryset = Company.objects.filter(
+                company_name = user.company)
+            self.fields['accredited_company'].initial = user.company
+
     class Meta:
         model = Accreditation
         fields = '__all__'
@@ -399,4 +404,3 @@ class AccreditationForm(forms.ModelForm):
                 attrs={'accept' : '.pdf, .jpg, .jpeg, .png, .tif',
                        'required': False})
            }
-

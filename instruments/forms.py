@@ -233,6 +233,8 @@ class EDM_SpecificationForm(forms.ModelForm):
         self.initial['units_measurement_inc'] = 'm'
         if not user.is_staff:
             self.fields['edm_owner'].disabled = True
+            self.fields['edm_owner'].queryset = Company.objects.filter(
+                company_name = user.company)
 
     class Meta:
         model = EDM_Specification
