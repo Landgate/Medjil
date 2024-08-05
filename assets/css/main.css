@@ -454,6 +454,7 @@ button.dropdown-btn {
 }
 
 .nav-header {
+    height: 2.75rem;
     order:2;
     display: flex;
     justify-content: space-between;
@@ -639,7 +640,7 @@ button.dropdown-btn {
     }
 
     .sub-links {
-        width: 180%;
+        width: 155%;
         margin-top: 1rem;
         text-align: left;
     }

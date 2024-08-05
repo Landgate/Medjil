@@ -83,8 +83,8 @@
     </header>
     <nav class="page-nav no-print">
         <ul class="nav-header">
-            <li class="nav-header-item"><a href="#"><i class="fas fa-home"></i></a></li>
-            <li class="nav-header-item toggle"><a href="#"><i class="fas fa-bars"></i></a></li>
+            <li class="nav-header-item"><a href="#"><i class="fa-solid fa-home"></i></a></li>
+            <li class="nav-header-item toggle"><a href="#"><i class="fa-solid fa-bars"></i></a></li>
         </ul>
         <div class="wrapper">        	
             <ul class="nav-links">
@@ -144,22 +144,6 @@
                         {% endif %}
                     </ul>
                 </li>
-                <!-- <li class="nav-item has-subnav"><a tabindex="0">Baseline Calibration </a>
-                    <ul class="sub-links">
-                        <li class="sub-items">
-                            <a href="{% url 'baseline_calibration:calibration_home' %}">
-                                <div class="sub-item-header">Calibrate the Baseline</div>
-                                <div class="sub-item-description">Choose the Baseline and calibrate the certified distances</div>
-                            </a>
-                        </li>
-                        <li class="sub-items">
-                            <a href="#">
-                                <div class="sub-item-header">Registry of Calibrating the Baselines</div>
-                                <div class="sub-item-description">Edit or query the history of calibrating the baseline</div>
-                            </a>
-                        </li>
-                    </ul>
-                </li> -->
                 <li class="nav-item has-subnav"><a tabindex="0">EDM Calibration </a>
                     <ul class="sub-links">
                         {% if user.is_staff %}
@@ -290,7 +274,6 @@
 
                 // Unrotate if clicked on a different dropdown link
                 iconsChevron.forEach((icons) => {
-                    // console.log(btn.firstElementChild.nextElementSibling)
                     if (icons.classList !== btn.firstElementChild.nextElementSibling.classList){
                         icons.classList.remove("down");
                     }        

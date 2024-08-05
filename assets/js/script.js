@@ -21,16 +21,25 @@ const menu = document.querySelector('.nav-links');
 function toggleMenu() {
         if (menu.classList.contains("active")) {
             menu.classList.remove("active");
-            toggle.querySelector("a").innerHTML = "<i class='fas fa-bars'></i>"
+            toggle.querySelector("a").innerHTML = "<i class='fa-solid fa-bars'></i>"
         } else {
             menu.classList.add("active");
-            toggle.querySelector("a").innerHTML = "<i class='fas fa-times'></i>"
+            toggle.querySelector("a").innerHTML = "<i class='fa-solid fa-times'></i>"
         }
     }
 
 toggle.addEventListener('click', toggleMenu, false)
+// close dropdown when the escape key is pressed
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    if (menu.classList.contains("active")) {
+      menu.classList.remove("active");
+      toggle.querySelector("a").innerHTML = "<i class='fas fa-bars'></i>"
+    }
+  }
+});
 
-const items = document.querySelectorAll(".nav-item");
+// const items = document.querySelectorAll(".nav-item");
 
 /* Activate Submenu */
 function toggleItem() {
@@ -44,15 +53,18 @@ function toggleItem() {
     }
   }
   
+
   /* Close Submenu From Anywhere */
   function closeSubmenu(e) {
     let isClickInside = menu.contains(e.target);
-  
+    console.log(isClickInside);
     if (!isClickInside && menu.querySelector(".sub-links-active")) {
       menu.querySelector(".sub-links-active").classList.remove("sub-links-active");
     }
   }
+
   /* Event Listeners */
+  const items = document.querySelectorAll(".nav-item");
   toggle.addEventListener("click", toggleMenu, false);
   for (let item of items) {
     if (item.querySelector(".sub-links")) {
