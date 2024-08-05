@@ -1,7 +1,7 @@
 {% load static %}
 
 <div>
-		   {% if not user.is_authenticated %}
+       {% if not user.is_authenticated %}
    <p>Please login or signup to manage and calibrate your staff.</p>
    <div class="single-item-container">
       <button
@@ -261,7 +261,7 @@
          </div>
 
          <div class="fl w-50-ns ph3" id="EDMI-Chapter2">
-            <div class="flex justify-between items-center"></div>
+            <div class="flex justify-between items-center">
                <h2>2. EDM Baseline calibration</h2>
                <p style="float:right"><a href="#EDMI-Manual_Content">Back to Top</a></p>
             </div>
@@ -314,7 +314,7 @@
                <p>Let's consider the following example baseline, comprising four pillars:</p>
                <img src="{% static 'images/CalibrationGuides/edmi/Picture_1_1.png' %}"
                   alt="Example of EDM Baseline">
-							 <br>
+               <br>
                <p>A set of linear observation equations can be formulated based on Eq. 2.1 and Eq. 2.2 as follows:
                </p>
                <div>
@@ -345,7 +345,7 @@
                <h3>2.4 Inter-pillar distances survey</h3>
                <img src="{% static 'images/CalibrationGuides/edmi/Picture_1_3.png' %}"
                   alt="Inter-pillar distances survey">
-							 <br>                  
+               <br>
                <p>To calibrate an EDM baseline, a series of inter-pillar distance measurements (surveys) are
                   necessary,
                   which should include atmospheric observations of the conditions during the during measuring of each
@@ -376,7 +376,7 @@
                   <li>pressure: pressure in Hectopascals or millibars</li>
                   <li>humidity: humidity in percentage</li>
                </ul>
-							<br>
+              <br>
                <p>Refer to this <a href="{% static 'data/TestData/baseline calibration/BUSS_baseline_calibration_edm_observations.csv' %}"
                      target="_blank">sample dataset</a> required for an EDM baseline calibration survey data format.</p>
 
@@ -393,7 +393,7 @@
                   calculation of the pillar offset if the survey setup includes measurements to pillar 1 and pillar n.
                </p>
                <img src="{% static 'images/CalibrationGuides/edmi/Picture_1_2.png' %}" alt="Pillar Offsets">
-							 <br>               
+               <br>
                <p>For each pillar setup, an arbitrary set of coordinates (E<sub>j</sub>, N<sub>j</sub>) are
                   calculated for all pillars observed according to the formula:</p>
                <div>$$\left[E_j,N_j\right]=\ Polar2Reclangular\left(Hz_{ij},d_{ij}\right)\ \ \ (Eq. 2.5)$$ </div>
@@ -460,7 +460,7 @@
                      <li>Electrical delays, geometrical detours and eccentricities in the instruments</li>
                      <li>Differences between the electronic centre and the mechanical centre of the instrument</li>
                      <li>Differences between the optical and mechanical centres of the reflector (prism)</li>
-                  </ul>                  
+                  </ul>
                   <p>
                      This errors may vary with changes of reflector, or after jolts, or with different instrument
                      mountings. Zpc is an algebraic constant applied directly to every measurement.
@@ -588,15 +588,15 @@
                   certificates for EDMI, Barometer, Thermometer and Hygrometer. If calibration corrections have not been applied
                   to instrument readings, Medjil allows calibration corrections to be applied to the raw readings during
                   the Medjil calibration.</p>
-                  
-                  <p>Data from one or two meteorological instruments (e.g. two thermometers, two barometers) can be recorded and imported to Medjil. 
-                  	If a set of two instruments have been used along the observed distance (e.g. at the instrument and target locations) Medjil will compute and apply averaged values.</p>
+
+                  <p>Data from one or two meteorological instruments (e.g. two thermometers, two barometers) can be recorded and imported to Medjil.
+                    If a set of two instruments have been used along the observed distance (e.g. at the instrument and target locations) Medjil will compute and apply averaged values.</p>
 
                <div id="EDMI-Chapter4_1_1">
                   <h4>4.1.1 Meteorological instrumentation corrections</h4>
-                  <p>All meteorological instruments (thermometer, barometer, hygrometer) can reference calibration certificates to apply corrections to raw readings. 
-                  	These corrections are sourced from the most recent instrument calibration certificate current prior to the date of pillar survey. 
-                  	Calibration corrections are applied as zero point correction (zpc) to the raw meteorological instruments readings:</p>
+                  <p>All meteorological instruments (thermometer, barometer, hygrometer) can reference calibration certificates to apply corrections to raw readings.
+                    These corrections are sourced from the most recent instrument calibration certificate current prior to the date of pillar survey.
+                    Calibration corrections are applied as zero point correction (zpc) to the raw meteorological instruments readings:</p>
                   <div>c<sub>M</sub> = zpc</div>
                </div>
 
@@ -605,8 +605,8 @@
                   <p>EDMI calibration corrections are sourced from the most recent instrument calibration certificate current prior to the date of baseline survey:</p>
                   <div>c<sub>EDMI</sub> = sfc * d + zpc</div>
                   <br>
-                  <p>If the meteorological corrections have not been applied to EDMI readings prior to upload, 
-                  	atmospheric calibration corrections will be applied prior to calculating the first velocity correction.</p>
+                  <p>If the meteorological corrections have not been applied to EDMI readings prior to upload,
+                    atmospheric calibration corrections will be applied prior to calculating the first velocity correction.</p>
                </div>
             </div>
 
@@ -643,42 +643,42 @@
                   <p>Where:</p>
                   <p>&emsp;&emsp;p = Atmospheric pressure in hectopascals</p>
                   <p>&emsp;&emsp;t = Dry temperature in degrees Celsius</p>
-               		
-               		<p id="EDMI-Chapter4_2_1Note">The terms C and D as well as EDM type, Unit Length, Modulation Frequency, Carrier Wavelength and Refractive Index are instrument specific (manufacturers supplied). 
-               			Recommended values for common instruments are provided in the EDM Specifications Lookup Table. This table has been populated with information from the following sources:</p>
-               		<ul>
-               			 <li>Rüeger, J. M. 1996. Electronic Distance Measurement - An Introduction, 4th corrected edition</li>
-               			 <li>Rüeger. J. M. 2007a. First Velocity Correction in EDM: How to get the Constants C and D, Azimuth</li>
-               			 <li>https://www.land.vic.gov.au/surveying/services/equipment-calibration-services</li>
-               			 <li>CR Kennedy</li>
-               		</ul>  
-               		<br>               		
-               		<img src="{% static 'images/CalibrationGuides/edmi/Picture_4_4.png' %}"
+
+                  <p id="EDMI-Chapter4_2_1Note">The terms C and D as well as EDM type, Unit Length, Modulation Frequency, Carrier Wavelength and Refractive Index are instrument specific (manufacturers supplied).
+                    Recommended values for common instruments are provided in the EDM Specifications Lookup Table. This table has been populated with information from the following sources:</p>
+                  <ul>
+                     <li>Rüeger, J. M. 1996. Electronic Distance Measurement - An Introduction, 4th corrected edition</li>
+                     <li>Rüeger. J. M. 2007a. First Velocity Correction in EDM: How to get the Constants C and D, Azimuth</li>
+                     <li>https://www.land.vic.gov.au/surveying/services/equipment-calibration-services</li>
+                     <li>CR Kennedy</li>
+                  </ul>
+                  <br>
+                  <img src="{% static 'images/CalibrationGuides/edmi/Picture_4_4.png' %}"
                   alt="Creating EDM Model using EDM specification lookup table">
-									<br>               			 
-               		<p>These parameters are assigned to the EDM model and are used for all instruments of that model associated with the company. The Manufacturers Uncertainty Constant, Manufacturers Parts Per Million Uncertainty
-               			 and Manufacturers Uncertainty Coverage Factor are required fields. These are used by Medjil to perform the statistical test recommended in ISO 17123-4:2012 (see Section 7). </p>
-               		<p>Medjil treats phase and pulse measuring instruments differently (first velocity correction is different) thus the pulse instruments must have mets applied before importing data to Medjil.</p>
-               		<p>
-                   		Solving for cyclic errors can be performed for both types of instruments and is an option when performing and EDMI Calibration. 
-               		</p>
-               		<p id="EDMI-Chapter4_2_1CyclicErrors">
-               			 When solving for cyclic errors, Medjil will use a t-student test for both the first and second order cyclic errors. If errors are statistically insignificant, the design matrix will be compiled for either six, 
-               			 four or two parameters.
-                   	</p>
-               		<p>The Unit Lenth is a required field. It is used when test for cyclic errors, plotting the Return Phase Angle of Observed Distances plot at the end of the EDMI Calibration report and 
-               			 for calculation of the manufacturers reference refractive index when it has not been supplied in this form (See Section 4.2.2). </p>  
-               			 The Frequency, Carrier Wavelength, Manufacturers Reference Refractive Index, C Term and D Term are optional fields. These are used for calculating the atmospheric corrections for instruments. 
-               			 However, Medjil will refuse to process raw data where the atmospheric corrections have not been applied prior to upload, if insufficient parameters are supplied to calculate the atmospheric corrections. 
-               			 The C Term and D Term are used to calculate the first velocity correction (See Section 4.2.1). If the C or D Term are not supplied, Medjil uses the carrier wavelength, frequency and Manufacturers Refractive index to 
-               			 calculate these terms.</p>
-               		<p>The Measurement Increments are a required field. Medjil will use this value for propagation of uncertainty when the pre-selected Uncertainty Budget requests instrument rounding is included
-               			  from the Instrument Register Record – Uncertainty Budget Sources (See Section 5.2).</p>                  			          			
+                  <br>
+                  <p>These parameters are assigned to the EDM model and are used for all instruments of that model associated with the company. The Manufacturers Uncertainty Constant, Manufacturers Parts Per Million Uncertainty
+                     and Manufacturers Uncertainty Coverage Factor are required fields. These are used by Medjil to perform the statistical test recommended in ISO 17123-4:2012 (see Section 7). </p>
+                  <p>Medjil treats phase and pulse measuring instruments differently (first velocity correction is different) thus the pulse instruments must have mets applied before importing data to Medjil.</p>
+                  <p>
+                      Solving for cyclic errors can be performed for both types of instruments and is an option when performing and EDMI Calibration.
+                  </p>
+                  <p id="EDMI-Chapter4_2_1CyclicErrors">
+                     When solving for cyclic errors, Medjil will use a t-student test for both the first and second order cyclic errors. If errors are statistically insignificant, the design matrix will be compiled for either six,
+                     four or two parameters.
+                    </p>
+                  <p>The Unit Lenth is a required field. It is used when test for cyclic errors, plotting the Return Phase Angle of Observed Distances plot at the end of the EDMI Calibration report and
+                     for calculation of the manufacturers reference refractive index when it has not been supplied in this form (See Section 4.2.2). </p>
+                     The Frequency, Carrier Wavelength, Manufacturers Reference Refractive Index, C Term and D Term are optional fields. These are used for calculating the atmospheric corrections for instruments.
+                     However, Medjil will refuse to process raw data where the atmospheric corrections have not been applied prior to upload, if insufficient parameters are supplied to calculate the atmospheric corrections.
+                     The C Term and D Term are used to calculate the first velocity correction (See Section 4.2.1). If the C or D Term are not supplied, Medjil uses the carrier wavelength, frequency and Manufacturers Refractive index to
+                     calculate these terms.</p>
+                  <p>The Measurement Increments are a required field. Medjil will use this value for propagation of uncertainty when the pre-selected Uncertainty Budget requests instrument rounding is included
+                      from the Instrument Register Record – Uncertainty Budget Sources (See Section 5.2).</p>
                </div>
                <div id="EDMI-Chapter4_2_2">
                   <h4>4.2.2 Reference Refractive Index</h4>
-                  <p>The reference refractive index (n<sub>REF</sub>) is instrument specific and it is preferred that the manufacturer supplied value is used rather than calculated as the rounding error of the calculated value can be significant. 
-                  	If the refractive index is not provided Medjil uses Unit Length, Carrier Wavelength and Modulation Frequency stored in the instrument register to calculate this value.</p>
+                  <p>The reference refractive index (n<sub>REF</sub>) is instrument specific and it is preferred that the manufacturer supplied value is used rather than calculated as the rounding error of the calculated value can be significant.
+                    If the refractive index is not provided Medjil uses Unit Length, Carrier Wavelength and Modulation Frequency stored in the instrument register to calculate this value.</p>
                   <div>
                      $$ n_{\mathrm{REF}}=\frac{C_O}{\lambda_{\mathrm{MOD\ }}f_{MOD}}=\frac{C_O}{2Uf_{MOD}}\ \ \ \
                      (Eq. 4.5)
@@ -688,7 +688,7 @@
                   <p>&emsp;&emsp;C<sub>O</sub> = Velocity of light in a vacuum = 299 792 458 m/s (SI definition)</p>
                   <p>&emsp;&emsp;&#955<sub>MOD</sub> = Carrier wavelength of the instrument</p>
                   <p>&emsp;&emsp;f<sub>MOD</sub> = Modulation frequency of the instrument</p>
-                  <p>&emsp;&emsp;U = The half of &#955<sub>MOD</sub> , called the unit length of the instrument.</p>                  
+                  <p>&emsp;&emsp;U = The half of &#955<sub>MOD</sub> , called the unit length of the instrument.</p>
                </div>
                <div id="EDMI-Chapter4_2_3">
                   <h4>4.2.3 Group refractive Index of light in the atmosphere</h4>
@@ -871,9 +871,9 @@
                   obtain an expanded uncertainty</li>
             </ul>
             <br>
-            <p>Medjil adheres to the recommendation outlined in ISO 17123-4:2012, Section 6.5. It allows the definition of an uncertainty 
-            	budget by combining individual sources of uncertainty (Type A and Type B) to derive combined standard uncertainty and expanded uncertainty 
-            	as a representative measure of accuracy.</p>
+            <p>Medjil adheres to the recommendation outlined in ISO 17123-4:2012, Section 6.5. It allows the definition of an uncertainty
+              budget by combining individual sources of uncertainty (Type A and Type B) to derive combined standard uncertainty and expanded uncertainty
+              as a representative measure of accuracy.</p>
 
             <div id="EDMI-Chapter5_1">
                <h3>5.1 Combined standard and expanded uncertainty</h3>
@@ -903,16 +903,16 @@
                <p>
                    The uncertainty budget is composed of the follwing types of uncertianty budget sources:
                    <ul>
-                       <li><b>Instrument Register Record - Uncertainty Budget Sources</b> The values for these uncertianties 
-                       are sourced from values in the instrument register and may relate to the instrument parameters or the 
+                       <li><b>Instrument Register Record - Uncertainty Budget Sources</b> The values for these uncertianties
+                       are sourced from values in the instrument register and may relate to the instrument parameters or the
                        calibration certificates.</li>
-                       <li><b>Derived - Uncertainty Budget Sources</b> The values for these uncertianties are derived during 
+                       <li><b>Derived - Uncertainty Budget Sources</b> The values for these uncertianties are derived during
                        the computations.</li>
-                       <li><b>Custom - Uncertainty Budget Sources</b> These uncertainties are entered directly. The method 
+                       <li><b>Custom - Uncertainty Budget Sources</b> These uncertainties are entered directly. The method
                        used to porpogate this uncertainty will be according to the assigned group.</li>
                    </ul>
                </p>
-               
+
                <div id="EDMI-Chapter5_2_1">
                   <h4>5.2.1 Custom uncertainty budgets</h4>
                   <p>
@@ -921,7 +921,7 @@
                   that are appropriate for typical calibrations.
                   </p>
                   <p>
-                      When creating a Custom uncertainty budget, Medjil will use the Default as a template to initiate 
+                      When creating a Custom uncertainty budget, Medjil will use the Default as a template to initiate
                       the creation of the new uncertainty budget.</p>
                   <img src="{% static 'images/CalibrationGuides/edmi/Picture_4_1.png' %}"
                      alt="Uncertainty budgets">
@@ -957,7 +957,7 @@
                      <b>Uncertainty</b> = The expanded uncertainty at 95% confidence in the units specified for the uncertainty source.
                   </p>
                   <p>
-                     <b>K</b> = The coverage factor is used to expand the uncertainty from 68% confidence level to 95% confidence level. 
+                     <b>K</b> = The coverage factor is used to expand the uncertainty from 68% confidence level to 95% confidence level.
                      Typically k=2.0 for a normal distribution or sqrt(3) for a rectangular distribution. Medjil will auto complete this field as the distribution drop-down is
                      changed but the user still has the ability to overwrite this field.
                   </p>
@@ -980,7 +980,7 @@
                      <li>The propagation (contribution) of the error sources to the total uncertainty of the calibration
                      </li>
                   </ul>
-                  <br>                  
+                  <br>
                   <p>
                      <b>EDM scale factor</b> = Uncertainty related to the EDM scale factor can be specified in parts per
                      million (ppm), percent (%), scalar(x:1) or a ratio (1:x). All error sources belonging to this group
@@ -1123,9 +1123,9 @@
                <div id="EDMI-Chapter5_2_2">
                   <h4>5.2.2 Uncertainty sources in reports</h4>
                   <p>
-                     When using the 'Default' uncertianty budget, Medjil automatically populates these uncertainty sources 
-                     (Table 5.1 and Table 5.2) when processing the calibration of EDM Baselines and EDM Instrumentation.
-                     These uncertainty sources are optional when by means of a custom uncertainty budget except for the following:
+                     If the 'Default' uncertianty budget is used, Medjil automatically populates uncertainty sources shown in
+                     Table 5.1 and Table 5.2 when processing the calibration of EDM Baselines and EDM Instrumentation respectively.
+                     Except for the following, these uncertainty sources are optional when using a custom uncertainty budget:
                      <ul>
                          <li>EDMI Calibration - Uncertainty of LSA EDMI correction</li>
                          <li>EDM LS zero offset - ZPC uncertainty</li>
@@ -1874,7 +1874,7 @@
                <h2>6. Least squares adjustment</h2>
                <p style="float:right"><a href="#EDMI-Manual_Content">Back to Top</a></p>
             </div>
-            
+
             <p>In matrix notation:</p>
             <div>$$ X+r=F\left(y\right)\ \ \ (Eq. 6.1)$$ </div>
             <p>Residuals:</p>
@@ -1888,10 +1888,10 @@
             <div>$$ y=\left(A^TPA\right)^{-1}A^TPx\ \ \ (Eq. 6.3)$$ </div>
             <p>Where:</p>
             <p>&emsp;&emsp;P = The weight matrix</p>
-            <p>Please note detailed description of the least squares adjustment method is out of scope of this manual. This method is widely used in surveying, geodesy and photogrammetry 
-            	to solve overdetermined systems of equations based on the principle of minimising the sum of observation's residuals squares. 
-            	User can explore this method in numerous available publications eg. "Practical Least Squares Adjustment of Surveying Measurements” 
-            	by Alan R. Dragoo or “Adjustment Computations” by Charles D. Ghilani.</p>
+            <p>Please note detailed description of the least squares adjustment method is out of scope of this manual. This method is widely used in surveying, geodesy and photogrammetry
+              to solve overdetermined systems of equations based on the principle of minimising the sum of observation's residuals squares.
+              User can explore this method in numerous available publications eg. "Practical Least Squares Adjustment of Surveying Measurements”
+              by Alan R. Dragoo or “Adjustment Computations” by Charles D. Ghilani.</p>
          </div>
 
          <div class="fl w-50-ns ph3" id="EDMI-Chapter7">
