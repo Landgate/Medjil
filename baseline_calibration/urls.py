@@ -36,5 +36,8 @@ urlpatterns = [
     path('accreditations/', views.accreditations, name = 'accreditations'),
     path('accreditations/<slug:id>/edit/', views.accreditation_edit, name = 'accreditation_edit'),
     path('accreditations/<int:id>/delete/', views.accreditation_delete, name = 'accreditation_delete'),
- 
+
+    path('certified_distances/<int:id>', views.certified_distances_home, name = 'certified_distances_home'),
+    path('certified_distances/<int:id>/edit/', views.certified_distances_edit, name = 'certified_distances_edit'),
+
 ]

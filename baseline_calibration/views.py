@@ -994,3 +994,53 @@ def accreditation_delete(request, id):
     return redirect('baseline_calibration:accreditations')
 
 
+@login_required(login_url="/accounts/login") 
+def certified_distances_home(request, id):
+    certified_distances_obj = Certified_Distance.objects.filter(
+        pillar_survey__baseline_id = id)
+    
+    pillar_surveys = set([cd.pillar_survey.id for cd in certified_distances_obj])
+    pillars = set([cd.to_pillar for cd in certified_distances_obj])
+    
+    # Organise into a dictionary grouped by pillar survey
+    certified_distances_list = []
+    for ps in pillar_surveys:
+        cd=[]
+        for pillar in pillars:
+            cd.append(
+                certified_distances_obj.filter(
+                    pillar_survey = ps,
+                    to_pillar = pillar))
+        certified_distances_list.append(cd)
+        
+    context = {
+        'certified_distances_list': certified_distances_list}
+    
+    return render(
+        request,
+        'baseline_calibration/certified_distances_list.html', 
+        context)
+
+
+@login_required(login_url="/accounts/login") 
+def certified_distances_edit(request, id):
+    # only available to staff
+    if request.user.is_staff:
+        certified_distances = modelformset_factory(
+            Certified_Distance,
+            form = Certified_DistanceForm, 
+            extra = 0)
+        
+        obj = Certified_Distance.objects.filter(
+            pillar_survey = id)
+        
+        pillar_survey_formset = certified_distances(
+            request.POST or None,
+            queryset=obj)
+    
+    context = {
+        'pillar_survey_formset': pillar_survey_formset}
+    
+    return render(request, 'baseline_calibration/certified_distances_form.html', context)
+
+

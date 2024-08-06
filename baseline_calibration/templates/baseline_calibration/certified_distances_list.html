@@ -1,0 +1,189 @@
+<!--
+
+© 2024 Western Australian Land Information Authority
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+{% extends 'base_generic.html' %}
+{% load static %}
+
+{% block content %}
+<article class="post">
+  <div class="post-content">
+    {% if messages %}
+      <ul class="message-list">
+        {% for message in messages %}
+          <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|safe }}</li>
+        {% endfor %}
+      </ul>
+      <br>
+    {% endif %}
+      <br>
+        <h2 class="text-center">List of Certified Distance Pillar Surveys</h2>
+        <p class="text-center">
+          <i>Certified Distances computed from EDM Baseline calibration pillar surveys</i>
+        </p>
+        <hr>
+          <div>
+            <div>
+              <div class="mt-2 flex justify-center">
+                <a href="{% url 'baseline_calibration:calibration_home'%}" class="px-3 py-2 border border-transparent text-lg leading-4 rounded text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+                New Baseline Calibration
+                </a>
+              </div>
+              <br>
+              {% if messages %}
+                <ul class="alert messages">
+                  {% for message in messages %}
+                    <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|safe }}</li>
+                  {% endfor %}
+                </ul>
+              {% endif %}
+              <div>
+                <div id="certified-distances-list">
+                  {% if certified_distances_list %}
+                    <table style="width:100%">
+                      <tr>
+                        <th class="text-center font-semibold text-base text-gray-900"></th>
+                        <th colspan="{{certified_distances_list.0|length}}" class="text-center font-semibold text-base text-gray-900">Pillar Distances (m)</th>
+                        <th class="text-center font-semibold text-base text-gray-900"></th>
+                      </tr>
+                      
+                      {% for ps in certified_distances_list %}
+                        <tr>
+                          {% if forloop.first %}<!-- Create the header row-->
+                            <tr>
+                              <th class="text-left font-semibold text-base text-gray-900">Pillar Survey</th>
+                                {% for cd in ps %}
+                                  {% for bay in cd %}
+                                    <th class="text-center font-semibold text-base text-gray-900">{{ bay.to_pillar.name }}</th>
+                                  {% endfor %}
+                                {% endfor %}
+                                <th class="text-center font-semibold text-base text-gray-900"></th>
+                            </tr>
+                          {% endif %}
+                          
+                          <td>{{ ps.0.0.pillar_survey }}</td>
+                          {% for cd in ps %}
+                            {% for bay in cd %}<!-- put the distances in cells one at a time-->
+                              <td class="text-right">{{ bay.distance|floatformat:5 }}</td>
+                            {% endfor %}
+                          {% endfor %}
+                          <td>
+                            <span class="flex justify-around items-center text-center">
+                              <a href="{% url 'baseline_calibration:certified_distances_edit' id=ps.0.0.pillar_survey.id %}?next={{request.path}}" class="px-2" id="add_spec">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000" class="bi bi-pencil-fill" id = "edit-view" viewBox="0 0 16 16">
+                                  <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"></path>
+                                </svg>
+                              </a>
+                            </span>
+                          </td>
+                        </tr>
+                      {% endfor %}
+                    </table>
+                    <!-- Create a table for the offsets -->
+                    <table style="width:100%">
+                      <tr>
+                        <th class="text-center font-semibold text-base text-gray-900"></th>
+                        <th colspan="{{certified_distances_list.0|length}}" class="text-center font-semibold text-base text-gray-900">Pillar Offsets (m)</th>
+                        <th class="text-center font-semibold text-base text-gray-900"></th>
+                      </tr>
+                      
+                      {% for ps in certified_distances_list %}
+                        <tr>
+                          {% if forloop.first %}<!-- Create the header row-->
+                            <tr>
+                              <th class="text-left font-semibold text-base text-gray-900">Pillar Survey</th>
+                                {% for cd in ps %}
+                                  {% for bay in cd %}
+                                    <th class="text-center font-semibold text-base text-gray-900">{{ bay.to_pillar.name }}</th>
+                                  {% endfor %}
+                                {% endfor %}
+                                <th class="text-center font-semibold text-base text-gray-900"></th>
+                            </tr>
+                          {% endif %}
+                          
+                          <td>{{ ps.0.0.pillar_survey }}</td>
+                          {% for cd in ps %}
+                            {% for bay in cd %}<!-- put the offsets in cells one at a time-->
+                              <td class="text-right">{{ bay.offset|floatformat:3 }}</td>
+                            {% endfor %}
+                          {% endfor %}
+                          <td>
+                            <span class="flex justify-around items-center text-center">
+                              <a href="{% url 'baseline_calibration:certified_distances_edit' id=ps.0.0.pillar_survey.id %}?next={{request.path}}" class="px-2" id="add_spec">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000" class="bi bi-pencil-fill" id = "edit-view" viewBox="0 0 16 16">
+                                  <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"></path>
+                                </svg>
+                              </a>
+                            </span>
+                          </td>
+                        </tr>
+                      {% endfor %}
+                    </table>
+                    <!-- Create a table for the heights -->
+                    <table style="width:100%">
+                      <tr>
+                        <th class="text-center font-semibold text-base text-gray-900"></th>
+                        <th colspan="{{certified_distances_list.0|length}}" class="text-center font-semibold text-base text-gray-900">Pillar Heights (m)</th>
+                        <th class="text-center font-semibold text-base text-gray-900"></th>
+                      </tr>
+                      
+                      {% for ps in certified_distances_list %}
+                        <tr>
+                          {% if forloop.first %}<!-- Create the header row-->
+                            <tr>
+                              <th class="text-left font-semibold text-base text-gray-900">Pillar Survey</th>
+                                {% for cd in ps %}
+                                  {% for bay in cd %}
+                                    <th class="text-center font-semibold text-base text-gray-900">{{ bay.to_pillar.name }}</th>
+                                  {% endfor %}
+                                {% endfor %}
+                                <th class="text-center font-semibold text-base text-gray-900"></th>
+                            </tr>
+                          {% endif %}
+                          
+                          <td>{{ ps.0.0.pillar_survey }}</td>
+                          {% for cd in ps %}
+                            {% for bay in cd %}<!-- put the heights in cells one at a time-->
+                              <td class="text-right">{{ bay.reduced_level|floatformat:3 }}</td>
+                            {% endfor %}
+                          {% endfor %}
+                          <td>
+                            <span class="flex justify-around items-center text-center">
+                              <a href="{% url 'baseline_calibration:certified_distances_edit' id=ps.0.0.pillar_survey.id %}?next={{request.path}}" class="px-2" id="add_spec">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000" class="bi bi-pencil-fill" id = "edit-view" viewBox="0 0 16 16">
+                                  <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"></path>
+                                </svg>
+                              </a>
+                            </span>
+                          </td>
+                        </tr>
+                      {% endfor %}
+                    </table>
+                  {% else %}
+                    <p>There are no records to display.</p>
+                  {% endif %}
+                </div>
+              </div>
+          </div>
+        </div>
+  </div>
+</article>
+<script>
+function confirmation() {
+return confirm('Are you sure you want to delete this record? You will not be able to retreive the record later.');
+}
+</script>
+{% endblock content %}

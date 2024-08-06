@@ -1,0 +1,102 @@
+<!--
+
+   © 2023 Western Australian Land Information Authority
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+-->
+{% extends 'base_generic.html' %}
+{% load static %}
+
+
+{% block content %}
+
+<article class="post">
+  <div class="flexbox-container_IB">
+    <div class="flexbox-item_1600_IB">
+      <form id='id_html_form' style="font-size:10.0pt;width:4500px;" action="" class="site-form" method="post" autocomplete="off">
+        <div class="flexbox-item_1600_IB">
+          <h1 style="text-align:center">Certified Distances</h1>
+        </div>
+        {% if form.non_field_errors %}
+	        <div class="mt-1 mb-2 non-field-errors">
+		        {% for error in form.non_field_errors %}
+		          <p style="color:Red;">{{ error }}</p>
+		        {% endfor %}
+	        </div>
+        {% endif %}
+        {% csrf_token %}
+        <div class="flexbox-item_1600_IB">
+          <table id="id_formset_container" style="font-size:10pt;width:100%">
+            <!--colgroup>
+              <col span="1" style="width: 15%;">
+              <col span="1" style="width: 35%;">
+              <col span="1" style="width: 12%;">
+              <col span="1" style="width: 5%;">
+              <col span="1" style="width: 10%;">
+              <col span="1" style="width: 8%;">
+              <col span="1" style="width: 6%;">
+              <col span="1" style="width: 5%;">
+              <col span="1" style="width: 4%;">
+            </colgroup-->
+            {{ pillar_survey_formset.management_form }}
+            <tr>
+            	{% for field in pillar_survey_formset|first %}
+	              {% if field.label != "Id" %}
+	              	<th Title="{{ field.help_text }}">{{ field.label|title }}</th>
+	              {% endif %}
+              {% endfor %}
+            </tr>
+            {% for form in pillar_survey_formset %}
+	            {% if form.non_field_errors %}
+		            <div class="mt-1 mb-2 non-field-errors">
+		          	  {% for error in form.non_field_errors %}
+		            	  <p style="color:Red;">{{ error }}</p>
+		              {% endfor %}
+		            </div>
+	            {% endif %}
+	            
+	            <tr id=data-form-index_{{forloop.counter0}}>
+	            	{% for field in form %}
+	            	  <td Title="{{ field.help_text }}">{{ field }}</td>
+	              {% endfor %}
+	              {% if form.errors %}
+	              <tr>
+	              	{% for field in form %}
+	                <td>
+	                	{% for error in field.errors %}
+	                  <p style="color:Red;">{{ error }}</p>
+	                  {% endfor %}
+	                </td>
+	                {% endfor %}
+	              </tr>
+	              {% endif %}
+	            </tr>
+            {% endfor %}
+          </table>
+        </div>
+        {% if request.GET.next %}
+        <input type="hidden" name="next" value="{{ request.GET.next }}">
+        {% endif %}
+          <div class="flexbox-item_1600_IB flexbox-item-button_IB">
+          {% if request.GET.next %}
+            <button type="button" onclick="window.location.href='{{ request.GET.next }}'" class="cancelbtn bg-red-500 hover:bg-red-300">Cancel</button>
+          {% endif %}
+            <button class="submit-button bg-green-500 hover:bg-green-400" type="submit" >Save</button>
+          </div>
+      </form>
+    </div>
+  </div>
+</article>
+
+{% endblock %}
