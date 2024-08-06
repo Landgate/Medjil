@@ -519,11 +519,14 @@ def import_dli(request):
                     commit_error.append(
                         f"No Medjil baseline matched for job: {job['name']}")
 
-                mets_applied = False
+                mets_applied = True
                 try:
-                    if job_measurements[0]['mets_flag'] == 'Y': mets_applied = True
-                except:
-                    mets_applied = True
+                    key_0 = list(job_measurements)[0]
+                    if job_measurements[key_0]['mets_flag'] == 'N': mets_applied = False
+                except Exception as e:
+                    commit_error.append(
+                        f'{job["name"]} Error setting mets_flag, default to Y: {e}')
+
                 
                 thermo_calib_applied = all([job['ThermometerCorr1'] == '0', 
                                             job['ThermometerCorr2'] == '0'])
