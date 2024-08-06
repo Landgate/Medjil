@@ -429,6 +429,8 @@ def calibrate2(request,id):
             
             # populate a hidden formsets to save after commit (form Submit)
             pillar_survey['parameters'] = matrix_y
+            # Change scf for Corrected Distance rather than instrument correction
+            pillar_survey['parameters'][1]['value'] += 1
             ini_edmi_certificate = {
                 'edm':pillar_survey['edm'],
                 'prism':pillar_survey['prism'],
