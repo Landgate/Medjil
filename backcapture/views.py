@@ -651,7 +651,7 @@ def import_dli(request):
                                 raw_slope_dist = obs['EDMObsDistance'],
                                 raw_temperature = float_or_null(obs['MeasDryTemp']) or 20,
                                 raw_pressure = float_or_null(obs['MeasPressure']) or 1013.25,
-                                raw_humidity = float_or_null(obs['MeasHumidity'] or 50)
+                                raw_humidity = float_or_null(obs['MeasHumidity']) or 50
                                 )
                     except Exception as e:
                         commit_errors.append(
