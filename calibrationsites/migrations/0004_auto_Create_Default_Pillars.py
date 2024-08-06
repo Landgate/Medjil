@@ -68,6 +68,7 @@ def load_initial_data(apps, schema_editor):
     # Boya Pillars
     site_id = CalibrationSite.objects.get(site_name = boya_pillars[0]['site_name'])
     pillars = boya_pillars[1]['name']
+
     for pillar in pillars:
         Pillar.objects.get_or_create(
             site_id=site_id,

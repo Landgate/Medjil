@@ -16,8 +16,8 @@
 
 '''
 from django import forms
-from django.forms import modelformset_factory
-from django.forms.models import BaseFormSet
+from django.core.exceptions import NON_FIELD_ERRORS
+from django.forms import modelformset_factory, BaseModelFormSet
 from .models import (Country, 
                     State, 
                     Locality, 
@@ -182,8 +182,30 @@ class AddPillarForm(forms.ModelForm):
         model = Pillar
         fields = '__all__'
         exclude = ('site_id', 'order',)
+        error_messages = {
+            NON_FIELD_ERRORS: {
+                'unique_together': "%(model_name)s's %(field_labels)s appears to exist already. Pillar/Pin No must be unique.",
+            }
+        }
 
-BaseAddPillarFormSet = modelformset_factory(Pillar, form=AddPillarForm, extra=1, can_delete=True)
+class CustomBaseModelFormSet(BaseModelFormSet):
+    def clean(self):
+        if any(self.errors):
+            return
+        values = set()
+        for form in self.forms:
+            if form.cleaned_data:
+                siteid = form.cleaned_data.get('site_id')
+                name = form.cleaned_data.get('name')
+                if (siteid, name) in values:
+                    form.add_error(None, "Pillar/Pin No must be unique.")
+                values.add((siteid, name))
+
+BaseAddPillarFormSet = modelformset_factory(Pillar, 
+                                            form=AddPillarForm, 
+                                            formset=CustomBaseModelFormSet,
+                                            extra=1, 
+                                            can_delete=True)
 
 class AddPillarFormSet(BaseAddPillarFormSet):
     def __init__(self, *args, **kwargs):

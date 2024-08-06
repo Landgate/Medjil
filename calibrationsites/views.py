@@ -39,7 +39,7 @@ from .forms import (CountryForm,
                     CalibrationSiteUpdateForm,
                     PillarForm, 
                     AddPillarForm, 
-                    AddPillarFormSet)
+                    CustomBaseModelFormSet)
 # Models
 from .models import (Country, 
                     State, 
@@ -115,7 +115,10 @@ def pillar_create(request, id):
                             'next_sq_number': next_sq_number}
 
     if (no_of_pillars < site_id.no_of_pillars):
-        AddPillarFormSet = formset_factory(AddPillarForm, extra=2, max_num= required_num_of_pillars)
+        AddPillarFormSet = formset_factory(AddPillarForm, 
+                                           formset= CustomBaseModelFormSet,
+                                           extra=2, 
+                                           max_num= required_num_of_pillars)
 
         if request.method == 'POST':
             formset = AddPillarFormSet(request.POST)
@@ -225,10 +228,12 @@ class CreateCalibrationSiteWizard(LoginRequiredMixin, NamedUrlSessionWizardView)
         kwargs['user'] = self.request.user
         if step == 'pillar_form':
             data = self.get_cleaned_data_for_step('site_form')
-            sitetype = data['site_type']
-            sitename = data['site_name']
-            kwargs['sitetype'] = sitetype
-            kwargs['sitename'] = sitename
+            kwargs['sitetype'] = data['site_type']
+            kwargs['sitename'] = data['site_name']
+            # sitetype = data['site_type']
+            # sitename = data['site_name']
+            # kwargs['sitetype'] = sitetype
+            # kwargs['sitename'] = sitename
         return kwargs
 
     def get_form(self, step=None, data=None, files=None):
@@ -246,21 +251,41 @@ class CreateCalibrationSiteWizard(LoginRequiredMixin, NamedUrlSessionWizardView)
             form.max_num = no_pillars
             form.user = self.request.user
         return form
+        # if step == 'pillar_form':
+        #     data = self.get_cleaned_data_for_step('site_form')
+        #     no_pillars = int(data['no_of_pillars'])
+        #     form.extra = no_pillars
+        #     form.max_num = no_pillars
+        #     form.user = self.request.user
+        #     formset = PillarFormSet(data, queryset=Pillar.objects.none())
+        #     if formset.is_valid():
+        #         return formset
+        #     else:
+        #         self.storage.set_step_data(step, self.process_step(formset))
+        #         self.storage.set_step_files(step, self.process_step_files(formset))
+        #         return formset
+        # return form
 
     def get_context_data(self, form, **kwargs):
         context = super(CreateCalibrationSiteWizard, self).get_context_data(form=form, **kwargs)
         if self.steps.current == 'pillar_form':
             data = self.get_cleaned_data_for_step('site_form'); 
-            sitetype = data['site_type']
-            sitename = data['site_name']
-            sitestate = data['state']
-            no_pillars = data['no_of_pillars']
             context.update({
-                        'sitetype': sitetype,
-                        'sitename': sitename,
-                        'sitestate': sitestate,
-                        'no_pillars': no_pillars
-                        })
+                'sitetype': data['site_type'],
+                'sitename': data['site_name'],
+                'sitestate': data['state'],
+                'no_pillars': data['no_of_pillars']
+            })
+            # sitetype = data['site_type']
+            # sitename = data['site_name']
+            # sitestate = data['state']
+            # no_pillars = data['no_of_pillars']
+            # context.update({
+            #             'sitetype': sitetype,
+            #             'sitename': sitename,
+            #             'sitestate': sitestate,
+            #             'no_pillars': no_pillars
+            #             })
         return context
 
     def done(self, form_list, **kwargs):

@@ -78,7 +78,21 @@
                         {% endif %}
                         <tr>
                             <td style="vertical-align: text-top">{{ forloop.counter }}. </td>
-                            <td style="vertical-align: text-top">{{ form.name }}</td>
+                            <td style="vertical-align: text-top">
+                                {{ form.name }}
+                                <!-- Errors -->
+                                {% if form.name.errors %}
+                                    <p class="error error-danger">{{ form.name.errors }}</p>
+                                {% endif %}
+                                <!-- {% for error in form.field.errors %}
+									<p class="error error-danger">{{ error }}</p>
+								{% endfor %} -->
+                               {% if form.non_field_errors %}
+                                    {% for error in form.non_field_errors %}
+                                        <p class="error error-danger">{{ error }}</p>
+                                    {% endfor %}
+                                {% endif %}
+                            </td>
                             {% if sitetype == 'baseline' %}
                                 <td style="vertical-align: text-top">
                                     {{ form.easting }}

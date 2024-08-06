@@ -279,9 +279,14 @@
     //      siteAccessInput.files = [storedFile];
     //     }
     // });
-    window.onload = function() {
-        sessionStorage.clear();
-    }
+    // // Set a flag to detect page reload
+    // window.onbeforeunload = function() {
+    //         sessionStorage.setItem("is_reloaded", true);
+    //     };
+
+    // window.onload = function() {
+    //     sessionStorage.clear();
+    // }
 
     window.onload = function() {
         var inputs = document.getElementsByTagName('input');
@@ -298,6 +303,56 @@
             }
         }
     };
+
+    // Set a flag to detect page reload
+    window.onbeforeunload = function() {
+            sessionStorage.setItem("is_reloaded", true);
+        };
+
+        // Clear session storage only on page reload
+        window.onload = function() {
+            if (sessionStorage.getItem("is_reloaded")) {
+                sessionStorage.clear();
+                sessionStorage.removeItem("is_reloaded");
+                // console.log("Session storage cleared on reload");
+            // } else {
+            //     console.log("Page loaded without reload");
+            }
+        };
+
+        // Function to handle form submission
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            // Save form data to session storage
+            const formData = new FormData(event.target);
+            for (const [key, value] of formData.entries()) {
+                sessionStorage.setItem(key, value);
+            }
+            console.log("Form data saved to session storage");
+        }
+
+        // Function to restore form data from session storage
+        function restoreFormData() {
+            const formElements = document.forms[0].elements;
+            for (const element of formElements) {
+                if (sessionStorage.getItem(element.name)) {
+                    element.value = sessionStorage.getItem(element.name);
+                }
+            }
+            // console.log("Form data restored from session storage");
+        }
+
+        // Restore form data on page load
+        window.onload = function() {
+            if (sessionStorage.getItem("is_reloaded")) {
+                sessionStorage.clear();
+                sessionStorage.removeItem("is_reloaded");
+                // console.log("Session storage cleared on reload");
+            } else {
+                restoreFormData();
+                // console.log("Page loaded without reload");
+            }
+        };
     
 </script>
     
