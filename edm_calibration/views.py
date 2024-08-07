@@ -27,7 +27,6 @@ from django.urls import reverse
 
 
 from collections import OrderedDict
-import copy
 from math import pi, sin, cos, sqrt
 from datetime import date
 import json
@@ -438,7 +437,7 @@ def calibrate2(request,id):
                 'zpc_coverage_factor': chi_test['k'],
                 'standard_deviation': sqrt(chi_test['Variance']),
                 'degrees_of_freedom': chi_test['dof'],
-                'scale_correction_factor': matrix_y[1]['value']+1,
+                'scale_correction_factor': matrix_y[1]['value'] + 1,
                 'scf_uncertainty': matrix_y[1]['uncertainty'],
                 'scf_coverage_factor': chi_test['k']
                 }
