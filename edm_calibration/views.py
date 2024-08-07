@@ -27,6 +27,7 @@ from django.urls import reverse
 
 
 from collections import OrderedDict
+import copy
 from math import pi, sin, cos, sqrt
 from datetime import date
 import json
@@ -428,9 +429,6 @@ def calibrate2(request,id):
                 matrix_A = [a[:-2] for a in matrix_A]
             
             # populate a hidden formsets to save after commit (form Submit)
-            pillar_survey['parameters'] = matrix_y
-            # Change scf for Corrected Distance rather than instrument correction
-            pillar_survey['parameters'][1]['value'] += 1
             ini_edmi_certificate = {
                 'edm':pillar_survey['edm'],
                 'prism':pillar_survey['prism'],
@@ -440,7 +438,7 @@ def calibrate2(request,id):
                 'zpc_coverage_factor': chi_test['k'],
                 'standard_deviation': sqrt(chi_test['Variance']),
                 'degrees_of_freedom': chi_test['dof'],
-                'scale_correction_factor': matrix_y[1]['value'] + 1,
+                'scale_correction_factor': matrix_y[1]['value']+1,
                 'scf_uncertainty': matrix_y[1]['uncertainty'],
                 'scf_coverage_factor': chi_test['k']
                 }
@@ -463,7 +461,8 @@ def calibrate2(request,id):
                     'cyc_4_uncertainty': matrix_y[4]['uncertainty'],
                     'cyc_4_coverage_factor': chi_test['k']
                     })
-                    
+            pillar_survey['parameters'] = matrix_y
+            
             for o in edm_observations.values():
                 o['residual'] = residuals[o['id']]['residual']
                 o['std_residual'] = residuals[o['id']]['std_residual']

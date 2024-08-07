@@ -389,7 +389,7 @@
                         </td>
                         <td class="text-center">
                             {% if parameter.term == 'scf' %}
-                                <B>{{ parameter.value|floatformat:8 }}</B>
+                                <B>{{ ini_edmi_certificate.scale_correction_factor|floatformat:8 }}</B>
                             {% else %}
                                 <B>{{ parameter.value|floatformat:4 }}</B>
                             {% endif %}
