@@ -384,11 +384,11 @@ class AccreditationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
         super(AccreditationForm, self).__init__(*args, **kwargs)
+        self.fields['accredited_company'].initial = user.company
         if not user.is_staff:
             self.fields['accredited_company'].disabled = True
             self.fields['accredited_company'].queryset = Company.objects.filter(
                 company_name = user.company)
-            self.fields['accredited_company'].initial = user.company
 
     class Meta:
         model = Accreditation
