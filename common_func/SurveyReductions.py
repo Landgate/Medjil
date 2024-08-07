@@ -990,7 +990,7 @@ def validate_survey(pillar_survey, baseline=None, calibrations=None,
             if any(x is None for x in inputs) == None:
                 Errs.append(
                     'In order for Medjil to apply atmospheric corrections,'
-                    ' either the C-term and D-term must be specified'
+                    ' either the carrier wavelength, C-term and D-term must be specified'
                     ' or the carrier wavelength, modulation frequency and'
                     ' manufacturers refractive index must be specified'
                     ' insufficient data has been supplied for the EDM'
