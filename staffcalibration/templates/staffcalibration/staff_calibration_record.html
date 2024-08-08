@@ -57,20 +57,18 @@
                         <th class="text-center">Action</th>
                     </tr>
                     {% for element in queryset %}
-                    <!-- <p>{{ element.inst_staff }}</p> -->
-                    {% if element.inst_staff.isreference %}
+                    {% if element.isreference %}
                         <tr>
                             <td>{{ element.job_number }}</td>
-                            <!-- <td> <a class="a_link" href="{{ element.inst_staff.get_absolute_url }}">{{ element.inst_staff.staff_number }}</a> </td> -->
-                            <td>{{ element.inst_staff.staff_number }}</td>
+                            <td>{{ element.staff_number }}</td>
                             <td>
-                                {% if element.inst_staff.staff_make_name %}
-                                    {{ element.inst_staff.staff_model_name }} ({{ element.inst_staff.staff_make_name }})
+                                {% if element.staff_make_name %}
+                                    {{ element.staff_model_name }})
                                 {% else %}
                                     -
                                 {% endif %}
                             </td>
-                            <td>{{ element.inst_staff.staff_type|title }}</td>
+                            <td>{{ element.staff_type|title }}</td>
                             <td>{{ element.scale_factor|stringformat:"1.6f" }}</td>
                             <td class="text-center">
                                 {% if element.field_url %}
@@ -101,7 +99,7 @@
                                     </g>
                                     </svg>
                                     </a>
-                                {% elif element.field_book %}
+                                {% elif element.field_book or has_adj %}
                                     <a href="{% url 'staffcalibration:print_report' element.id %}" target="__blank" class="px-2">
                                         <svg id="report-view" width="16" height="16" viewBox="0 0 50 50">                    
                                             <g transform="translate(0,50) scale(0.100000,-0.100000)" fill="#000000" stroke="none">
@@ -157,10 +155,9 @@
                     <th class="text-center">Action</th>
                 </tr>
                 {% for element in queryset %}
-                    {% if not element.inst_staff.isreference %}
+                    {% if not element.isreference %}
                         <tr>
                             <td>{{ element.job_number }}</td>
-                            <!-- <td> <a class="a_link" href="{{ element.inst_staff.get_absolute_url }}">{{ element.inst_staff.staff_number }}</a> </td> -->
                             <td>{{ element.staff_number }}</td>
                             <td>
                                 {% if element.staff_model_name %}
@@ -253,7 +250,6 @@
                     {% if not element.isreference %}
                         <tr>
                             <td>{{ element.job_number }}</td>
-                            <!-- <td> <a class="a_link" href="{{ element.inst_staff.get_absolute_url }}">{{ element.inst_staff.staff_number }}</a> </td> -->
                             <td>{{ element.staff_number }}</td>
                             <td>{{ element.staff_model_name }}</td>
                             <td>{{ element.staff_type|title }}</td>

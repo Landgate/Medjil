@@ -88,7 +88,29 @@ class HomeView(generic.ListView, LoginRequiredMixin):
         )
         # Order by 'is_top' (descending) and then by 'date' (descending)
         queryset = queryset.order_by('-is_top', '-calibration_date')
-        return queryset
+        # Create dictionary
+        queryobj = []
+        for obj in queryset:
+            obj_dict = model_to_dict(obj)
+            if AdjustedDataModel.objects.filter(calibration_id = obj).exists():
+                obj_dict['has_adj'] = True
+            else:
+                obj_dict['has_adj'] = False
+            obj_dict['staff_number'] = obj.inst_staff.staff_number
+            obj_dict['staff_owner'] = obj.inst_staff.staff_owner
+            obj_dict['isreference'] = obj.inst_staff.isreference
+            if obj.inst_level:
+                obj_dict['level_number'] = obj.inst_level.level_number
+            else:
+                obj_dict['level_number'] = '-'
+            if obj.inst_staff.staff_make_name:
+                obj_dict['staff_model_name'] = obj.inst_staff.staff_model_name + ' (' + obj.inst_staff.staff_make_name + ')'
+            else:
+                obj_dict['staff_model_name'] = '-'
+            obj_dict['staff_type'] = obj.inst_staff.staff_type
+            queryobj.append(obj_dict)
+        return queryobj
+        # return queryset
 
 @login_required(login_url="/accounts/login")
 def user_staff_registry(request):
@@ -118,6 +140,7 @@ def user_staff_registry(request):
         else:
             obj_dict['has_adj'] = False
         obj_dict['staff_number'] = obj.inst_staff.staff_number
+        obj_dict['isreference'] = obj.inst_staff.isreference
         if obj.inst_staff.staff_make_name:
             obj_dict['staff_model_name'] = obj.inst_staff.staff_model_name + ' (' + obj.inst_staff.staff_make_name + ')'
         else:
