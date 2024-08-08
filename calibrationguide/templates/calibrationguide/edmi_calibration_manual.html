@@ -73,12 +73,12 @@
                </li>
                <li>
                   <a href="#EDMI-Chapter2_6">
-                     <span class="title">2.6 Pillar heights survey</span>                     
+                     <span class="title">2.6 Pillar heights survey</span>
                   </a>
                   <ul>
                       <li>
                          <a href="#EDMI-Chapter2_6_1">
-                            <span class="title">ASCII Import format</span>                            
+                            <span class="title">ASCII Import format</span>
                          </a>
                       </li>
                    </ul>
@@ -370,13 +370,13 @@
                <br>
                <p>
                    To calibrate an EDM baseline, a series of inter-pillar distance measurements (surveys) are necessary,
-                   which should include atmospheric observations of the conditions during the during measuring of each 
+                   which should include atmospheric observations of the conditions during the during measuring of each
                    survey distance. Medjil mandates that all instrumentation used in the survey must be calibrated and
                    possess a current certificate stating the uncertainty of the instrument readings and the calibration
                    corrections that can be applied. The uncertainty of instrument readings plays a crucial role in
                    propagating uncertainties for the inter-pillar distance survey.
                </p>
-               <p> 
+               <p>
                    The distance observations are assumed to be slope distances that have not been corrected for the
                    height of instrument or height of targets. Applying atmospheric corrections by entering these into
                    the instrument is optional but Medjil requires temperature, pressure and humidity for every distance
@@ -460,13 +460,13 @@
                <p>
                    Pillar heights (H<sub>j</sub>) are to be determined as orthometric heights (eg. AHD71) and provided
                    with standard deviations. The standard deviations should preferably be derived from redundant
-                   observations. Pillar coordinates are required and used to determine the baseline location in 
-                   order to derive geometric correction to the distances. Medjil uses an average latitude of the 
-                   supplied pillar coordinates to calculate the geometric corrections of surveyed distances (see, 
+                   observations. Pillar coordinates are required and used to determine the baseline location in
+                   order to derive geometric correction to the distances. Medjil uses an average latitude of the
+                   supplied pillar coordinates to calculate the geometric corrections of surveyed distances (see,
                    <a href="{% url 'calibrationguide:manual_view' %}#EDMI-Chapter4_3">Section 4.3</a> ).
                </p>
                <h4 id="EDMI-Chapter2_6_1">ASCII Import format</h4>
-               <p>                   
+               <p>
                    Data for the height of pillars is to be provided in an ASCII file  and must contain
                    the following column headings and fields:
                </p>
@@ -476,7 +476,7 @@
                   <li>Std_Dev: height in metres (standard uncertainty, one sigma)</li>
                </ul>
                <br>
-               <p>                   
+               <p>
                    Refer to this
                    <a href="{% static 'data/TestData/baseline calibration/BUSS_ baseline_calibration_level_observation.csv' %}"
                      target="_blank">sample dataset</a> for the required data format.

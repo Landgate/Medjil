@@ -999,20 +999,54 @@ def certified_distances_home(request, id):
     certified_distances_obj = Certified_Distance.objects.filter(
         pillar_survey__baseline_id = id)
     
-    pillar_surveys = set([cd.pillar_survey.id for cd in certified_distances_obj])
+    pillar_surveys = set([cd.pillar_survey for cd in certified_distances_obj])
     pillars = set([cd.to_pillar for cd in certified_distances_obj])
     
     # Organise into a dictionary grouped by pillar survey
     certified_distances_list = []
-    for ps in pillar_surveys:
+    for pillar_survey in pillar_surveys:
         cd=[]
         for pillar in pillars:
             cd.append(
                 certified_distances_obj.filter(
-                    pillar_survey = ps,
+                    pillar_survey = pillar_survey.id,
                     to_pillar = pillar))
         certified_distances_list.append(cd)
-        
+    
+    # Calculate data for graph
+    back_colours = ['#FF0000', '#800000', '#FFFF00', '#808000', 
+                    '#00FF00', '#008000', '#00FFFF', '#008080', 
+                    '#0000FF', '#000080', '#FF00FF', '#800080']
+    graph1_datasets = []
+    i=0
+    for pillar in (pillars):
+        dataset = {
+            'backColor': back_colours[i],
+            'borderWidth': 1,
+            'data':[],
+            'fill': False,
+            'label': pillar.name,
+            'pointRadius': 0,
+            'showLine': True,
+            'tension': 0
+            }
+        i+=1
+        if i > len(back_colours) : i=0
+        dataset = []
+        for pillar_survey in pillar_surveys:
+            x=certified_distances_obj.get(
+                pillar_survey = pillar_survey.id,
+                to_pillar = pillar).distance
+            y=pillar_survey.survey_date
+            dataset['data'].append({
+                'x': float(certified_distances_obj.get(
+                    pillar_survey = pillar_survey.id),
+                    to_pillar = pillar).distance,
+                'y':pillar_survey.survey_date
+                })
+        graph1_datasets.append(dataset)
+    #convert from python to json
+    graph1_datasets = json.dumps(graph1_datasets, cls=DjangoJSONEncoder)        
     context = {
         'certified_distances_list': certified_distances_list}
     
@@ -1038,9 +1072,10 @@ def certified_distances_edit(request, id):
             request.POST or None,
             queryset=obj)
     
-    context = {
-        'pillar_survey_formset': pillar_survey_formset}
-    
-    return render(request, 'baseline_calibration/certified_distances_form.html', context)
+        context = {
+            'pillar_survey_formset': pillar_survey_formset}
+        
+        return render(request, 'baseline_calibration/certified_distances_form.html', context)
+
 
 

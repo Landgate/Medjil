@@ -80,18 +80,27 @@ limitations under the License.
                               <td class="text-right">{{ bay.distance|floatformat:5 }}</td>
                             {% endfor %}
                           {% endfor %}
-                          <td>
+                          <td>{% if request.user.is_staff %}
                             <span class="flex justify-around items-center text-center">
                               <a href="{% url 'baseline_calibration:certified_distances_edit' id=ps.0.0.pillar_survey.id %}?next={{request.path}}" class="px-2" id="add_spec">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000" class="bi bi-pencil-fill" id = "edit-view" viewBox="0 0 16 16">
                                   <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"></path>
                                 </svg>
                               </a>
-                            </span>
+                            </span>{% endif %}
                           </td>
                         </tr>
                       {% endfor %}
                     </table>
+                    <div class="flexbox-container_IB">
+                        <div class="flexbox-item_800_IB  flexbox-item-left_IB">
+                            <div class="text-center">
+                                <h2>Baseline Distances History Comparisons</h2>
+                                <canvas id="graph1"></canvas>
+                                <hr>
+                            </div>
+                        </div>
+                    </div>
                     <!-- Create a table for the offsets -->
                     <table style="width:100%">
                       <tr>
@@ -120,14 +129,14 @@ limitations under the License.
                               <td class="text-right">{{ bay.offset|floatformat:3 }}</td>
                             {% endfor %}
                           {% endfor %}
-                          <td>
+                          <td>{% if request.user.is_staff %}
                             <span class="flex justify-around items-center text-center">
                               <a href="{% url 'baseline_calibration:certified_distances_edit' id=ps.0.0.pillar_survey.id %}?next={{request.path}}" class="px-2" id="add_spec">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000" class="bi bi-pencil-fill" id = "edit-view" viewBox="0 0 16 16">
                                   <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"></path>
                                 </svg>
                               </a>
-                            </span>
+                            </span>{% endif %}
                           </td>
                         </tr>
                       {% endfor %}
@@ -160,14 +169,14 @@ limitations under the License.
                               <td class="text-right">{{ bay.reduced_level|floatformat:3 }}</td>
                             {% endfor %}
                           {% endfor %}
-                          <td>
+                          <td>{% if request.user.is_staff %}
                             <span class="flex justify-around items-center text-center">
                               <a href="{% url 'baseline_calibration:certified_distances_edit' id=ps.0.0.pillar_survey.id %}?next={{request.path}}" class="px-2" id="add_spec">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000" class="bi bi-pencil-fill" id = "edit-view" viewBox="0 0 16 16">
                                   <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"></path>
                                 </svg>
                               </a>
-                            </span>
+                            </span>{% endif %}
                           </td>
                         </tr>
                       {% endfor %}
@@ -185,5 +194,44 @@ limitations under the License.
 function confirmation() {
 return confirm('Are you sure you want to delete this record? You will not be able to retreive the record later.');
 }
+</script>
+<script>
+// Script to produce the Pillar Distance Graph
+let graph1_datasets = {{ graph1_datasets|safe }};
+
+new Chart("graph1", {
+    type: "scatter",
+    data: {
+        datasets: graph1_datasets},
+    options: {
+        legend: {display: true},
+        tooltips: {
+            callbacks: {
+                label: function(tooltipItem) {
+                    var label = data.labels[tooltipItem.index];
+                    return label;
+                    }
+                }
+            },
+        scales:  {
+            x: {
+                type: 'linear',
+                title: {
+                    display: true,
+                    text: 'Distance (m)'
+                    }
+                },
+            y: {
+                title: {
+                    display: true,
+                    text: 'Instrument Correction (m)'
+                    },
+                ticks: {
+                    stepSize: 0.001
+                    }
+                }
+            }
+        }
+    });
 </script>
 {% endblock content %}
