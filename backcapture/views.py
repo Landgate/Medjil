@@ -519,10 +519,11 @@ def import_dli(request):
                     commit_error.append(
                         f"No Medjil baseline matched for job: {job['name']}")
 
+                #  NB this mets_applied = True, ['mets_flag'] == 'Y' appears wrong, but it has been checked and BASELINE.exe appeared to be the cause of confusion
                 mets_applied = True
                 try:
                     key_0 = list(job_measurements)[0]
-                    if job_measurements[key_0]['mets_flag'] == 'N': mets_applied = False
+                    if job_measurements[key_0]['mets_flag'] == 'Y': mets_applied = False
                 except Exception as e:
                     commit_error.append(
                         f'{job["name"]} Error setting mets_flag, default to Y: {e}')
