@@ -141,6 +141,15 @@ limitations under the License.
                         </tr>
                       {% endfor %}
                     </table>
+                    <div class="flexbox-container_IB">
+                        <div class="flexbox-item_800_IB  flexbox-item-left_IB">
+                            <div class="text-center">
+                                <h2>Baseline Offsets History Comparisons</h2>
+                                <canvas id="graph2"></canvas>
+                                <hr>
+                            </div>
+                        </div>
+                    </div>
                     <!-- Create a table for the heights -->
                     <table style="width:100%">
                       <tr>
@@ -181,6 +190,15 @@ limitations under the License.
                         </tr>
                       {% endfor %}
                     </table>
+                    <div class="flexbox-container_IB">
+                        <div class="flexbox-item_800_IB  flexbox-item-left_IB">
+                            <div class="text-center">
+                                <h2>Baseline Reduced Levels History Comparisons</h2>
+                                <canvas id="graph3"></canvas>
+                                <hr>
+                            </div>
+                        </div>
+                    </div>
                   {% else %}
                     <p>There are no records to display.</p>
                   {% endif %}
@@ -195,42 +213,93 @@ function confirmation() {
 return confirm('Are you sure you want to delete this record? You will not be able to retreive the record later.');
 }
 </script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment"></script>
 <script>
 // Script to produce the Pillar Distance Graph
 let graph1_datasets = {{ graph1_datasets|safe }};
+let graph2_datasets = {{ graph2_datasets|safe }};
+let graph3_datasets = {{ graph3_datasets|safe }};
 
 new Chart("graph1", {
-    type: "scatter",
-    data: {
-        datasets: graph1_datasets},
+    type: "line",
+    data: graph1_datasets,
+    
     options: {
-        legend: {display: true},
-        tooltips: {
-            callbacks: {
-                label: function(tooltipItem) {
-                    var label = data.labels[tooltipItem.index];
-                    return label;
-                    }
-                }
-            },
-        scales:  {
+        responsive: true,
+        scales: {
             x: {
-                type: 'linear',
+                type: 'time',
+                time: {
+                    unit: 'year', // Adjust as needed (e.g., 'month', 'year')
+                    },
                 title: {
                     display: true,
-                    text: 'Distance (m)'
-                    }
+                    text: 'Date',
+                    },
                 },
             y: {
                 title: {
                     display: true,
-                    text: 'Instrument Correction (m)'
+                    text: 'Distance (m)',
                     },
-                ticks: {
-                    stepSize: 0.001
-                    }
-                }
-            }
+                },
+            },
+        }
+    });
+    
+new Chart("graph2", {
+    type: "line",
+    data: graph2_datasets,
+    
+    options: {
+        responsive: true,
+        scales: {
+            x: {
+                type: 'time',
+                time: {
+                    unit: 'year', // Adjust as needed (e.g., 'month', 'year')
+                    },
+                title: {
+                    display: true,
+                    text: 'Date',
+                    },
+                },
+            y: {
+                title: {
+                    display: true,
+                    text: 'Offset (m)',
+                    },
+                },
+            },
+        }
+    });
+    
+new Chart("graph3", {
+    type: "line",
+    data: graph3_datasets,
+    
+    options: {
+        responsive: true,
+        scales: {
+            x: {
+                type: 'time',
+                time: {
+                    unit: 'year', // Adjust as needed (e.g., 'month', 'year')
+                    },
+                title: {
+                    display: true,
+                    text: 'Date',
+                    },
+                },
+            y: {
+                title: {
+                    display: true,
+                    text: 'Offset (m)',
+                    },
+                },
+            },
         }
     });
 </script>

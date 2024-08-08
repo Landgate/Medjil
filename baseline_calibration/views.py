@@ -18,12 +18,14 @@
 from collections import OrderedDict
 from datetime import date
 from django.contrib.auth.decorators import login_required
+from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models import Q
 from django.forms import formset_factory, modelformset_factory
 from django.forms.models import model_to_dict
 from django.http import QueryDict
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
+import json
 from math import sqrt
 from statistics import mean
 import numpy as np
@@ -997,10 +999,15 @@ def accreditation_delete(request, id):
 @login_required(login_url="/accounts/login") 
 def certified_distances_home(request, id):
     certified_distances_obj = Certified_Distance.objects.filter(
-        pillar_survey__baseline_id = id)
+        pillar_survey__baseline_id = id).order_by('pillar_survey__survey_date')
     
-    pillar_surveys = set([cd.pillar_survey for cd in certified_distances_obj])
+    pillar_surveys = []
+    for cd in certified_distances_obj:
+        if cd.pillar_survey not in pillar_surveys:
+            pillar_surveys.append(cd.pillar_survey)
+            
     pillars = set([cd.to_pillar for cd in certified_distances_obj])
+    first_pillar_survey = certified_distances_obj.first().pillar_survey
     
     # Organise into a dictionary grouped by pillar survey
     certified_distances_list = []
@@ -1017,38 +1024,91 @@ def certified_distances_home(request, id):
     back_colours = ['#FF0000', '#800000', '#FFFF00', '#808000', 
                     '#00FF00', '#008000', '#00FFFF', '#008080', 
                     '#0000FF', '#000080', '#FF00FF', '#800080']
-    graph1_datasets = []
+    
+    labels = [pillar_survey.survey_date for pillar_survey in pillar_surveys]
+    dataset1 = []
+    dataset2 = []
+    dataset3 = []
     i=0
-    for pillar in (pillars):
-        dataset = {
-            'backColor': back_colours[i],
-            'borderWidth': 1,
-            'data':[],
-            'fill': False,
-            'label': pillar.name,
-            'pointRadius': 0,
-            'showLine': True,
-            'tension': 0
-            }
-        i+=1
-        if i > len(back_colours) : i=0
-        dataset = []
+    for pillar in pillars:
+        data1 =[]
+        data2 =[]
+        data3 =[]
         for pillar_survey in pillar_surveys:
-            x=certified_distances_obj.get(
+            data1.append(
+                certified_distances_obj.get(
                 pillar_survey = pillar_survey.id,
                 to_pillar = pillar).distance
-            y=pillar_survey.survey_date
-            dataset['data'].append({
-                'x': float(certified_distances_obj.get(
-                    pillar_survey = pillar_survey.id),
-                    to_pillar = pillar).distance,
-                'y':pillar_survey.survey_date
-                })
-        graph1_datasets.append(dataset)
+                - certified_distances_obj.get(
+                    pillar_survey = first_pillar_survey.id,
+                    to_pillar = pillar).distance
+                )
+            data2.append(
+                certified_distances_obj.get(
+                pillar_survey = pillar_survey.id,
+                to_pillar = pillar).offset
+                - certified_distances_obj.get(
+                    pillar_survey = first_pillar_survey.id,
+                    to_pillar = pillar).offset
+                )
+            data3.append(
+                certified_distances_obj.get(
+                pillar_survey = pillar_survey.id,
+                to_pillar = pillar).reduced_level
+                - certified_distances_obj.get(
+                    pillar_survey = first_pillar_survey.id,
+                    to_pillar = pillar).reduced_level
+                )
+
+        dataset1.append(
+             {'borderColor':back_colours[i],
+             'borderWidth': 1,
+             'data':data1,
+             'fill':False,
+             'label': pillar.name,
+             'pointRadius': 1,
+             'showLine': True,
+             'tension': 0})
+        dataset2.append(
+             {'borderColor':back_colours[i],
+             'borderWidth': 1,
+             'data':data2,
+             'fill':False,
+             'label': pillar.name,
+             'pointRadius': 1,
+             'showLine': True,
+             'tension': 0})
+        dataset3.append(
+             {'borderColor':back_colours[i],
+             'borderWidth': 1,
+             'data':data3,
+             'fill':False,
+             'label': pillar.name,
+             'pointRadius': 1,
+             'showLine': True,
+             'tension': 0})
+        i+=1
+        if i>len(back_colours): i=0
+    
+    graph1_data = {
+        'labels':labels,
+        'datasets':dataset1}
+    graph2_data = {
+        'labels':labels,
+        'datasets':dataset2}
+    graph3_data = {
+        'labels':labels,
+        'datasets':dataset3}
+    
     #convert from python to json
-    graph1_datasets = json.dumps(graph1_datasets, cls=DjangoJSONEncoder)        
+    graph1_data = json.dumps(graph1_data, cls=DjangoJSONEncoder)
+    graph2_data = json.dumps(graph2_data, cls=DjangoJSONEncoder)
+    graph3_data = json.dumps(graph3_data, cls=DjangoJSONEncoder)
     context = {
-        'certified_distances_list': certified_distances_list}
+        'certified_distances_list': certified_distances_list,
+        'graph1_datasets': graph1_data,
+        'graph2_datasets': graph2_data,
+        'graph3_datasets': graph3_data}
     
     return render(
         request,
