@@ -30,6 +30,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
 from django.db.models import Case, When, Value, IntegerField, Max, OuterRef, Subquery
 from django.db.models import Q
+from django.forms.models import model_to_dict
 # Import Models
 from common_func.validators import try_delete_protected
 from calibrationsites.models import (Pillar, 
@@ -52,6 +53,7 @@ class HomeView(generic.ListView, LoginRequiredMixin):
 
     # ordering = ['--calibration_date']
     # 
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # Retrieve additional queryset for calibration records not updated to Range Param
@@ -69,11 +71,12 @@ class HomeView(generic.ListView, LoginRequiredMixin):
         return context
     
     def get_queryset(self):
-        queryset = StaffCalibrationRecord.objects.all()
+        # queryset = StaffCalibrationRecord.objects.all()
         if self.request.user.is_staff:
-            queryset = queryset.filter(inst_staff__isreference = False)
+            queryset = StaffCalibrationRecord.objects.all() #filter(inst_staff__isreference = False)#inst_staff__isreference = False)
+         #   print(queryset)
         else:
-            queryset = queryset.filter(inst_staff__staff_owner = self.request.user.company)
+            queryset = StaffCalibrationRecord.objects.filter(inst_staff__staff_owner = self.request.user.company)
        
         # Annotate the queryset so that staffs can see their records at the top
         queryset = queryset.annotate(
@@ -107,14 +110,43 @@ def user_staff_registry(request):
     subQuery = queryset.filter(inst_staff = OuterRef('inst_staff')).order_by('-calibration_date').values('calibration_date')[:1]
     queryset = queryset.filter(calibration_date = Subquery(subQuery)) #(latest_date=Max('calibration_date')).filter(calibration_date=F('latest_date')).order_by('inst_staff__number')
     
+    queryobj = []
+    for obj in queryset:
+        obj_dict = model_to_dict(obj)
+        if AdjustedDataModel.objects.filter(calibration_id = obj).exists():
+            obj_dict['has_adj'] = True
+        else:
+            obj_dict['has_adj'] = False
+        obj_dict['staff_number'] = obj.inst_staff.staff_number
+        if obj.inst_staff.staff_make_name:
+            obj_dict['staff_model_name'] = obj.inst_staff.staff_model_name + ' (' + obj.inst_staff.staff_make_name + ')'
+        else:
+            obj_dict['staff_model_name'] = '-'
+        obj_dict['staff_type'] = obj.inst_staff.staff_type
+        queryobj.append(obj_dict)
     # Historical Records
     if not request.user.is_staff:
         queryset_history = StaffCalibrationRecord.objects.filter(Q(inst_staff__isreference=False) & Q(inst_staff__staff_owner = request.user.company) & ~Q(pk__in = queryset))  
     else:
         queryset_history = StaffCalibrationRecord.objects.filter(Q(inst_staff__isreference=False) & Q(inst_staff__staff_owner = request.user.company) & ~Q(pk__in = queryset))  
+    queryobj_history = []
+    for obj in queryset_history:
+        obj_dict = model_to_dict(obj)
+        if AdjustedDataModel.objects.filter(calibration_id = obj).exists():
+            obj_dict['has_adj'] = True
+        else:
+            obj_dict['has_adj'] = False
+        obj_dict['staff_number'] = obj.inst_staff.staff_number
+        if obj.inst_staff.staff_make_name:
+            obj_dict['staff_model_name'] = obj.inst_staff.staff_model_name + ' (' + obj.inst_staff.staff_make_name + ')'
+        else:
+            obj_dict['staff_model_name'] = '-'
+        obj_dict['staff_type'] = obj.inst_staff.staff_type
+        queryobj_history.append(obj_dict)
+    
     context = {
-        'queryset': queryset,
-        'queryset_history': queryset_history
+        'queryset': queryobj,
+        'queryset_history': queryobj_history
     }
     return render(request, 'staffcalibration/staff_calibration_record.html', context)
 ################################################################################    

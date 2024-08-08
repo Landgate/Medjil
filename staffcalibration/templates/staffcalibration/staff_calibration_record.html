@@ -63,7 +63,13 @@
                             <td>{{ element.job_number }}</td>
                             <!-- <td> <a class="a_link" href="{{ element.inst_staff.get_absolute_url }}">{{ element.inst_staff.staff_number }}</a> </td> -->
                             <td>{{ element.inst_staff.staff_number }}</td>
-                            <td>{{ element.inst_staff.staff_model_name }} ({{ element.inst_staff.staff_make_name}})</td>
+                            <td>
+                                {% if element.inst_staff.staff_make_name %}
+                                    {{ element.inst_staff.staff_model_name }} ({{ element.inst_staff.staff_make_name }})
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
                             <td>{{ element.inst_staff.staff_type|title }}</td>
                             <td>{{ element.scale_factor|stringformat:"1.6f" }}</td>
                             <td class="text-center">
@@ -155,9 +161,15 @@
                         <tr>
                             <td>{{ element.job_number }}</td>
                             <!-- <td> <a class="a_link" href="{{ element.inst_staff.get_absolute_url }}">{{ element.inst_staff.staff_number }}</a> </td> -->
-                            <td>{{ element.inst_staff.staff_number }}</td>
-                            <td>{{ element.inst_staff.staff_model_name }} ({{ element.inst_staff.staff_make_name}})</td>
-                            <td>{{ element.inst_staff.staff_type|title }}</td>
+                            <td>{{ element.staff_number }}</td>
+                            <td>
+                                {% if element.staff_model_name %}
+                                    {{ element.staff_model_name }} 
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td>{{ element.staff_type|title }}</td>
                             <td>{{ element.scale_factor|stringformat:"1.6f" }}</td>
                             <td class="text-center">
                                 {% if element.field_url %}
@@ -188,7 +200,7 @@
                                     </g>
                                     </svg>
                                     </a>
-                                {% elif element.field_book %}
+                                    {% elif element.has_adj or element.fieldbook %}
                                     <a href="{% url 'staffcalibration:print_report' element.id %}" target="__blank" class="px-2">
                                         <svg version="1.1" baseProfile="tiny" id="report-view" xmlns:x="&ns_extend;" xmlns:i="&ns_ai;" xmlns:graph="&ns_graphs;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/" x="0px" y="0px" width="16" height="16" viewBox="0 0 42 42" xml:space="preserve">
                                             <path fill-rule="evenodd" d="M22.5,1.5h-14c-2.55,0-3,0.561-3,3v32c0,2.49,0.55,3,3,3h24c2.5,0,3-0.47,3-3v-22h-13V1.5z M35.5,11.5l-10-10v10H35.5z"/>
@@ -196,7 +208,7 @@
                                     </a>
                                 {% endif %}
                             </td>
-                            {% if user.is_staff or element.inst_staff.staff_custodian == user %}
+                            {% if user.is_staff or element.staff_custodian == user %}
                                 <td class="font-regular text-center">
                                     <a class="px-2" href="{% url 'staffcalibration:delete_record' element.id %}" onclick="return confirmation()">
                                     <svg width="16" height="16" viewBox="0 0 16 16" fill="red" class="bi bi-trash">
@@ -237,13 +249,14 @@
                     <th class="text-center">Action</th>
                 </tr>
                 {% for element in queryset_history %}
-                    {% if not element.inst_staff.isreference %}
+                    {{ element }}
+                    {% if not element.isreference %}
                         <tr>
                             <td>{{ element.job_number }}</td>
                             <!-- <td> <a class="a_link" href="{{ element.inst_staff.get_absolute_url }}">{{ element.inst_staff.staff_number }}</a> </td> -->
-                            <td>{{ element.inst_staff.staff_number }}</td>
-                            <td>{{ element.inst_staff.staff_model_name }} ({{ element.inst_staff.staff_make_name}})</td>
-                            <td>{{ element.inst_staff.staff_type|title }}</td>
+                            <td>{{ element.staff_number }}</td>
+                            <td>{{ element.staff_model_name }}</td>
+                            <td>{{ element.staff_type|title }}</td>
                             <td>{{ element.scale_factor|stringformat:"1.6f" }}</td>
                             <td class="text-center">
                                 {% if element.field_url %}
@@ -274,7 +287,7 @@
                                     </g>
                                     </svg>
                                     </a>
-                                {% elif element.field_book %}
+                                {% elif element.has_adj or element.fieldbook %}
                                     <a href="{% url 'staffcalibration:print_report' element.id %}" target="__blank" class="px-2">
                                         <svg version="1.1" baseProfile="tiny" id="report-view" xmlns:x="&ns_extend;" xmlns:i="&ns_ai;" xmlns:graph="&ns_graphs;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/" x="0px" y="0px" width="16" height="16" viewBox="0 0 42 42" xml:space="preserve">
                                             <path fill-rule="evenodd" d="M22.5,1.5h-14c-2.55,0-3,0.561-3,3v32c0,2.49,0.55,3,3,3h24c2.5,0,3-0.47,3-3v-22h-13V1.5z M35.5,11.5l-10-10v10H35.5z"/>
@@ -282,7 +295,7 @@
                                     </a>
                                 {% endif %}
                             </td>
-                            {% if user.is_staff or element.inst_staff.staff_custodian == user %}
+                            {% if user.is_staff or element.staff_custodian == user %}
                                 <td class="font-regular text-center">
                                     <a class="px-2" href="{% url 'staffcalibration:delete_record' element.id %}" onclick="return confirmation()">
                                     <svg width="16" height="16" viewBox="0 0 16 16" fill="red" class="bi bi-trash">

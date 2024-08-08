@@ -35,10 +35,18 @@
                 
             </div>
             <div class="text-left text-base">
-                {% if sitetype == 'staff_range' %}
-                    Number of Pins: <strong id="number_of_pins">{{ no_pillars|floatformat:0 }}</strong>
-                {% elif sitetype == 'baseline' %}
-                    Number of Pillars: <strong id="number_of_pins">{{ no_pillars|floatformat:0 }}</strong>
+                <p>
+                    {% if sitetype == 'staff_range' %}
+                        Number of Pins: <strong id="number_of_pins">{{ no_pillars|floatformat:0 }}</strong>
+                    {% elif sitetype == 'baseline' %}
+                        Number of Pillars: <strong id="number_of_pins">{{ no_pillars|floatformat:0 }}</strong>
+                    {% endif %}
+                </p>
+                {% if sitetype == 'baseline' %}
+                    <p>
+                        For more information about Baselines Calibration, please refer to the technical manual 
+                        <i>For more information about Baselines Calibration, please refer to the technical manual <a href="/calibrationguide/read_manual/edmi_calibration_manual.html#EDMI-Chapter2" target="_blank" onclick="return PopupTechnicalManual(this);"> 🛈</a></i>
+                    </p>
                 {% endif %}
             </div>
         </div>

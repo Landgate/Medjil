@@ -1542,7 +1542,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 "ordering": ["level_number", "level_make_name", "level_model_name"],
-                "unique_together": {("level_make_name","level_model_name","level_number", "level_owner")},
+                "unique_together": {("level_owner","level_number")},
             },
         ),
     ]
