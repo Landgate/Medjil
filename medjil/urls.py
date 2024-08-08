@@ -41,7 +41,7 @@ from accounts.sites import medjil_super_site
 
 # URL 
 urlpatterns = [
-    path('admin/', medjil_super_site.urls),                                # No mfa authentication for this site
+    # path('admin/', medjil_super_site.urls),                                # No mfa authentication for this site
     path('medjil-admin/', medjil_admin_site.urls),
     path('accounts/', include('accounts.urls')),
     path('calibrationsites/', include('calibrationsites.urls')),
