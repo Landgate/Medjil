@@ -287,6 +287,7 @@ def load_data(apps, schema_editor):
             ######################################################
             # Calibrate & Update the Staff Calirbation Record
             k = 0
+            LgStaffList = [209,210,212,214,26296,26909,27690,79918]
             for i, idata in enumerate(UStaffRawData):
                 # Initialise
                 staff_number = None; average_temperature = None; standard_tempearture = None
@@ -303,6 +304,7 @@ def load_data(apps, schema_editor):
                 if inst_staff:
                     staff_number = inst_staff.staff_number
                     staff_length = inst_staff.staff_length
+                    staff_owner = inst_staff.staff_owner
                     thermal_coefficient = inst_staff.thermal_coefficient*10**-6
                     # Get metadata from calibration record
                     for met in UStaffCalibData:
@@ -341,35 +343,36 @@ def load_data(apps, schema_editor):
                                 temp_at_sf1 = '{:.1f}'.format(((1/scaleFactor0)-1)/(thermal_coefficient)+average_temperature)
                                 data_adj = np.array(diff_correction['data'], dtype=object)
                                 # Update Staff CalibrationRecord
-                                calib_obj, created = StaffCalibrationRecord.objects.get_or_create(
-                                        job_number = dataIndex[:4]+dataIndex.split('-', maxsplit=1)[1][:4],
-                                        site_id = CalibrationSite.objects.filter(site_name = 'Boya').first(),
-                                        inst_staff = inst_staff,
-                                        inst_level = inst_level,
-                                        scale_factor = scaleFactor1,
-                                        grad_uncertainty = grad_uncertainty,
-                                        observed_temperature = average_temperature,
-                                        observer = observer,
-                                        calibration_date = calibration_date
-                                )
-                                # Update Staff AdjustedData Model
-                                if created:
-                                    calib_adj, created = StaffAdjustedDataModel.objects.update_or_create(
-                                        calibration_id = calib_obj,
-                                        uscale_factor = scaleFactor0,
-                                        temp_at_sf1 = temp_at_sf1,
-                                        staff_reading = {
-                                                    'pin': data_adj[:,0].tolist(),
-                                                    'from': data_adj[:,1].tolist(),
-                                                    'to': data_adj[:,2].tolist(),
-                                                    'reference': data_adj[:,3].tolist(),
-                                                    'measured': data_adj[:,4].tolist(),
-                                                    'correction': data_adj[:,5].tolist(),
-                                        }
-                        )
-
+                                # owner = StaffCalibrationRecord.objects.filter(inst_staff__staff_owner__company_name = staff_owner).first()
+                                if 'Landgate' not in staff_owner.company_name and staff_number not in LgStaffList:
+                                    calib_obj, created = StaffCalibrationRecord.objects.get_or_create(
+                                            job_number = dataIndex[:4]+dataIndex.split('-', maxsplit=1)[1][:4],
+                                            site_id = CalibrationSite.objects.filter(site_name = 'Boya').first(),
+                                            inst_staff = inst_staff,
+                                            inst_level = inst_level,
+                                            scale_factor = scaleFactor1,
+                                            grad_uncertainty = grad_uncertainty,
+                                            observed_temperature = average_temperature,
+                                            observer = observer,
+                                            calibration_date = calibration_date
+                                    )
+                                    # Update Staff AdjustedData Model
+                                    if created:
+                                        calib_adj, created = StaffAdjustedDataModel.objects.update_or_create(
+                                            calibration_id = calib_obj,
+                                            uscale_factor = scaleFactor0,
+                                            temp_at_sf1 = temp_at_sf1,
+                                            staff_reading = {
+                                                        'pin': data_adj[:,0].tolist(),
+                                                        'from': data_adj[:,1].tolist(),
+                                                        'to': data_adj[:,2].tolist(),
+                                                        'reference': data_adj[:,3].tolist(),
+                                                        'measured': data_adj[:,4].tolist(),
+                                                        'correction': data_adj[:,5].tolist(),
+                                            })
                         else:
-                            print('Cannot be computed!')
+                            pass
+                            #print('Cannot be computed!')
 
     else:
         print("Files Not found")
@@ -388,14 +391,15 @@ def reverse_func(apps, schema_editor):
         try:
             u.delete()
         except ObjectDoesNotExist:
-            print('Cannot delete ', k, u)
+            pass
+            # print('Cannot delete ', k, u)
     for c in Company.objects.all():
         if c.company_name not in staff_company:
-            # print(c.company_name)
             try:
                 c.delete()
             except ProtectedError:
-                print(c.company_name, ' cannot be deleted!')
+                pass
+                # print(c.company_name, ' cannot be deleted!')
             
 
 class Migration(migrations.Migration):

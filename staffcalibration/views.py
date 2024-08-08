@@ -108,6 +108,8 @@ class HomeView(generic.ListView, LoginRequiredMixin):
             else:
                 obj_dict['staff_model_name'] = '-'
             obj_dict['staff_type'] = obj.inst_staff.staff_type
+            obj_dict['report_url'] = obj.report_url
+            obj_dict['field_url'] = obj.field_url
             queryobj.append(obj_dict)
         return queryobj
         # return queryset
@@ -146,6 +148,8 @@ def user_staff_registry(request):
         else:
             obj_dict['staff_model_name'] = '-'
         obj_dict['staff_type'] = obj.inst_staff.staff_type
+        obj_dict['report_url'] = obj.report_url
+        obj_dict['field_url'] = obj.field_url
         queryobj.append(obj_dict)
     # Historical Records
     if not request.user.is_staff:
@@ -165,6 +169,8 @@ def user_staff_registry(request):
         else:
             obj_dict['staff_model_name'] = '-'
         obj_dict['staff_type'] = obj.inst_staff.staff_type
+        obj_dict['report_url'] = obj.report_url
+        obj_dict['field_url'] = obj.field_url
         queryobj_history.append(obj_dict)
     
     context = {

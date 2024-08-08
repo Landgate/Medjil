@@ -60,6 +60,7 @@
                   <td class="font-regular text-left"> {{ item.level_number }} </td>
                   <td class="font-regular text-left"> {{ item.observer }} </td>
                   <td class="font-regular text-left"> {{ item.staff_owner }} </td>
+                  <!-- <td>{{ item.report_url }}</td> -->
                   <td class="font-regular text-center">
                     {% if item.report_url %}
                         <a href="{{ item.report_url|default_if_none:'#' }}" target="__blank" class="px-2">
@@ -73,7 +74,7 @@
                             </g>
                           </svg>
                         </a>
-                    {% elif item.field_book or item.has_adj %}
+                    {% elif item.field_url and item.has_adj %}
                         <a href="{% url 'staffcalibration:print_report' item.id %}" target="__blank" class="px-2">
                             <svg id="report-view" width="16" height="16" viewBox="0 0 50 50">                    
                                 <g transform="translate(0,50) scale(0.100000,-0.100000)" fill="#000000" stroke="none">
