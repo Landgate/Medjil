@@ -304,7 +304,7 @@ def load_data(apps, schema_editor):
             ######################################################
             # Calibrate & Update the Staff Calirbation Record
             k = 0
-            LgStaffList = [209,210,212,214,26296,26909,27690,79918]
+            LgStaffList = [209,210,212,213,214,222,26296,26909,27690,79918]
             for i, idata in enumerate(UStaffRawData):
                 # Initialise
                 staff_number = None; average_temperature = None; standard_tempearture = None
