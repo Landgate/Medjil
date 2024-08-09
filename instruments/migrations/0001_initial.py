@@ -1398,7 +1398,7 @@ class Migration(migrations.Migration):
                         choices=[
                             (None, "Select one of the following"),
                             ("invar", "Invar"),
-                            ("fiberglass", "Fiber glass"),
+                            ("fiberglass", "Fibre glass"),
                             ("wood", "Wood"),
                             ("aluminium", "Aluminium"),
                             ("steel", "Steel"),

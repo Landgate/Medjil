@@ -7,6 +7,7 @@ from datetime import date, datetime
 from math import sqrt, isnan
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import ProtectedError
+from django.db import IntegrityError
 from django.conf import settings
 import common_func.validators
 from django.db import migrations, models
@@ -78,6 +79,17 @@ def load_data(apps, schema_editor):
 
     # Starting to read the files
     jsonfile = os.path.join(settings.STATIC_ROOT, 'data/InitialData/StaffApp/db.json')
+    staff_types = {
+        'invar': 'Invar',
+        'fiberglass': 'Fibreglass',
+        'wood': 'Wood',
+        'aluminium': 'Aluminium',
+        'steel': 'Steel',
+        'epoxy': 'Carbon/epoxy',
+        'e_glass': 'E-glass',
+        's2_glass': 'S2-glass',
+    }
+
     if os.path.exists(jsonfile):
         with open(jsonfile) as f:
             data = json.load(f)
@@ -143,9 +155,14 @@ def load_data(apps, schema_editor):
                                 )
                     LevelList.append({'pk': pk, 'level_custodian': level_custodian, 'level_number' :field['level_number']})
                 if 'staffs.staff' == data[i]['model']:
+                    staff_type1 = None
                     staff_owner = Company.objects.get(company_name = StaffUsers[StaffUsers[:,0]==field['user']][0][2])
                     staff_custodian = User.objects.get(email = StaffUsers[StaffUsers[:,0]==field['user']][0][1])
                     staff_type = StaffTypes[StaffTypes[:,0]==field['staff_type']][0][1]
+                    for key, value in staff_types.items():
+                        if staff_type == value:
+                            staff_type1 = key
+                            break
                     thermal_coefficient = StaffTypes[StaffTypes[:,0]==field['staff_type']][0][2]
                     if field['correction_factor']:
                         iscalibrated = True
@@ -160,7 +177,7 @@ def load_data(apps, schema_editor):
                                 staff_owner = staff_owner,
                                 staff_custodian = staff_custodian,
                                 staff_number = field['staff_number'],
-                                staff_type = staff_type,
+                                staff_type = staff_type1,
                                 staff_length = field['staff_length'],
                                 thermal_coefficient = thermal_coefficient,
                                 iscalibrated = iscalibrated,             
@@ -344,31 +361,34 @@ def load_data(apps, schema_editor):
                                 data_adj = np.array(diff_correction['data'], dtype=object)
                                 # Update Staff CalibrationRecord
                                 if 'Landgate' not in staff_owner.company_name and staff_number not in LgStaffList:
-                                    calib_obj, created = StaffCalibrationRecord.objects.get_or_create(
-                                            job_number = dataIndex[:4]+dataIndex.split('-', maxsplit=1)[1][:4],
-                                            site_id = CalibrationSite.objects.filter(site_name = 'Boya').first(),
-                                            inst_staff = inst_staff,
-                                            inst_level = inst_level,
-                                            scale_factor = scaleFactor1,
-                                            grad_uncertainty = grad_uncertainty,
-                                            observed_temperature = average_temperature,
-                                            observer = observer,
-                                            calibration_date = calibration_date
-                                    )
-                                    # Update Staff AdjustedData Model
-                                    if created:
-                                        calib_adj, created = StaffAdjustedDataModel.objects.update_or_create(
-                                            calibration_id = calib_obj,
-                                            uscale_factor = scaleFactor0,
-                                            temp_at_sf1 = temp_at_sf1,
-                                            staff_reading = {
-                                                        'pin': data_adj[:,0].tolist(),
-                                                        'from': data_adj[:,1].tolist(),
-                                                        'to': data_adj[:,2].tolist(),
-                                                        'reference': data_adj[:,3].tolist(),
-                                                        'measured': data_adj[:,4].tolist(),
-                                                        'correction': data_adj[:,5].tolist(),
-                                            })
+                                    try:
+                                        calib_obj, created = StaffCalibrationRecord.objects.get_or_create(
+                                                job_number = dataIndex[:4]+dataIndex.split('-', maxsplit=1)[1][:4],
+                                                site_id = CalibrationSite.objects.filter(site_name = 'Boya').first(),
+                                                inst_staff = inst_staff,
+                                                inst_level = inst_level,
+                                                scale_factor = scaleFactor1,
+                                                grad_uncertainty = grad_uncertainty,
+                                                observed_temperature = average_temperature,
+                                                observer = observer,
+                                                calibration_date = calibration_date
+                                        )
+                                        # Update Staff AdjustedData Model
+                                        if created:
+                                            calib_adj, created = StaffAdjustedDataModel.objects.update_or_create(
+                                                calibration_id = calib_obj,
+                                                uscale_factor = scaleFactor0,
+                                                temp_at_sf1 = temp_at_sf1,
+                                                staff_reading = {
+                                                            'pin': data_adj[:,0].tolist(),
+                                                            'from': data_adj[:,1].tolist(),
+                                                            'to': data_adj[:,2].tolist(),
+                                                            'reference': data_adj[:,3].tolist(),
+                                                            'measured': data_adj[:,4].tolist(),
+                                                            'correction': data_adj[:,5].tolist(),
+                                                })
+                                    except IntegrityError:
+                                        pass
                         else:
                             pass
                             #print('Cannot be computed!')

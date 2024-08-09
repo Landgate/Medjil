@@ -171,7 +171,7 @@ class Staff(models.Model):
     staff_types = (
         (None, 'Select one of the following'),
         ('invar', 'Invar'),
-        ('fiberglass', 'Fiber glass'),
+        ('fiberglass', 'Fibreglass'),
         ('wood', 'Wood'),
         ('aluminium', 'Aluminium'),
         ('steel', 'Steel'),
