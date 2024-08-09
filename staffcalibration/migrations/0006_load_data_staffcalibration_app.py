@@ -332,7 +332,7 @@ def load_data(apps, schema_editor):
                         new_obs_data = new_obs_data[np.sort(data_ind), :]                            # Extract & sort data
                         ref_data = ref_data[np.sort(ref_ind),:]                              # Extract & sort reference 
                     
-                        if average_temperature and thermal_coefficient and scale_factor:
+                        if average_temperature and thermal_coefficient and scale_factor and len(common_pins) > 0:
                             k +=1
                             scaleFactor0, scaleFactor1, grad_uncertainty, diff_correction = compute_correction_factor(new_obs_data, 
                                                                                                                     ref_data, 
@@ -343,7 +343,6 @@ def load_data(apps, schema_editor):
                                 temp_at_sf1 = '{:.1f}'.format(((1/scaleFactor0)-1)/(thermal_coefficient)+average_temperature)
                                 data_adj = np.array(diff_correction['data'], dtype=object)
                                 # Update Staff CalibrationRecord
-                                # owner = StaffCalibrationRecord.objects.filter(inst_staff__staff_owner__company_name = staff_owner).first()
                                 if 'Landgate' not in staff_owner.company_name and staff_number not in LgStaffList:
                                     calib_obj, created = StaffCalibrationRecord.objects.get_or_create(
                                             job_number = dataIndex[:4]+dataIndex.split('-', maxsplit=1)[1][:4],
