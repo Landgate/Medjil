@@ -115,22 +115,25 @@ def load_data(apps, schema_editor):
                 if 'accounts.customuser' == data[i]['model']:
                     authority = AuthorityTable[AuthorityTable[:,0] == field['authority']][0]
                     # Create Company
-                    com_obj, created = Company.objects.get_or_create(
-                            company_name = authority[1], 
-                            company_abbrev = authority[2]
-                    )
-                    user_obj, created = User.objects.get_or_create(
-                        email = field['email'],
-                        password = field['password'],
-                        first_name = field['first_name'], 
-                        last_name = field['last_name'],
-                        company = com_obj,
-                        is_staff = field['is_staff'],
-                        is_superuser = field['is_superuser'],
-                        is_active = field['is_active'],
-                        date_joined = field['date_joined'],
-                        last_login = field['last_login'],
-                    )
+                    try: 
+                        com_obj, created = Company.objects.get_or_create(
+                                company_name = authority[1], 
+                                company_abbrev = authority[2]
+                        )
+                        user_obj, created = User.objects.get_or_create(
+                            email = field['email'],
+                            password = field['password'],
+                            first_name = field['first_name'], 
+                            last_name = field['last_name'],
+                            company = com_obj,
+                            is_staff = field['is_staff'],
+                            is_superuser = field['is_superuser'],
+                            is_active = field['is_active'],
+                            date_joined = field['date_joined'],
+                            last_login = field['last_login'],
+                        )
+                    except IntegrityError:
+                        pass
                     StaffUsers.append([pk, field['email'], authority[1]])
             StaffUsers = np.array(StaffUsers, dtype=object)
             #########################################################
