@@ -565,7 +565,7 @@ class Mets_Inst(models.Model):
         verbose_name='instrument Model'
     )
     mets_number = models.CharField(
-        max_length=15,
+        max_length=25,
         validators=[validate_profanity],
         help_text="Enter the instrument serial number / unique ID",
         verbose_name='instrument number'

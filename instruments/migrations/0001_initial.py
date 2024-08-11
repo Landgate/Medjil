@@ -625,7 +625,7 @@ class Migration(migrations.Migration):
                     "mets_number",
                     models.CharField(
                         help_text="Enter the instrument serial number / unique ID",
-                        max_length=15,
+                        max_length=25,
                         validators=[common_func.validators.validate_profanity],
                         verbose_name="instrument number",
                     ),

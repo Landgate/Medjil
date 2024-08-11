@@ -757,7 +757,5 @@ def intercomparison(request, id=None):
             return render(request, 
                           'edm_calibration/intercomparison_report_display.html',
                           {'html_report': html_report})
-                
-        form.save()
 
     return render(request, 'edm_calibration/intercomparison_edit.html', {'form': form})
