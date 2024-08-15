@@ -155,7 +155,8 @@ admin_site.index_title = 'Medjil Site Administration'
 #######################################################################
 ##################### REGISTER MODELS #################################
 #######################################################################
-admin_site.register(CustomUser)
+admin_site.register(CustomUser, CustomUserAdmin)
+
 admin_site.register(MedjilTOTPDevice, MedjilTOTPDeviceAdmin)
 
 class Roles(Group):
