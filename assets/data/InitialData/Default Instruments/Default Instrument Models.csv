@@ -67,27 +67,27 @@ edm,Leica,TCRP 1205+
 edm,Leica,TPS 1000
 edm,Leica,TPS 1100
 edm,Leica,TPS 1200
-edm,Nikon       ,XS
-edm,Nikon       ,N 2
-edm,Nikon       ,N5
-edm,Nikon       ,K 2
-edm,Nikon       ,K 5
-edm,Nikon       ,NPL 322+
-edm,Nikon       ,XF
-edm,Nikon       ,XF HP
+edm,Nikon,XS
+edm,Nikon,N 2
+edm,Nikon,N5
+edm,Nikon,K 2
+edm,Nikon,K 5
+edm,Nikon,NPL 322+
+edm,Nikon,XF
+edm,Nikon,XF HP
 edm,Pentax,R 2500NS
 edm,Pentax,W 2800N
 edm,Pentax,R 2505
-edm,Sokkia      ,SET 1X
-edm,Sokkia      ,SET 2X
-edm,Sokkia      ,SET 3X
-edm,Sokkia      ,SET 4X
-edm,Sokkia      ,SET 5X
-edm,Sokkia      ,iM 50
-edm,Sokkia      ,iM 100
-edm,Sokkia      ,FX
-edm,Sokkia      ,iX 600
-edm,Sokkia      ,iX 1200
+edm,Sokkia,SET 1X
+edm,Sokkia,SET 2X
+edm,Sokkia,SET 3X
+edm,Sokkia,SET 4X
+edm,Sokkia,SET 5X
+edm,Sokkia,iM 50
+edm,Sokkia,iM 100
+edm,Sokkia,FX
+edm,Sokkia,iX 600
+edm,Sokkia,iX 1200
 edm,Topcon,GM 50
 edm,Topcon,GM 100
 edm,Topcon,OS 200
@@ -95,10 +95,10 @@ edm,Topcon,OS Series
 edm,Topcon,GPT 3500
 edm,Topcon,GTL 1200
 edm,Topcon,GT 1200/600
-edm,Topcon      ,GTL 1000
-edm,Topcon      ,GT 500V
-edm,Topcon      ,IS-3 Series
-edm,Topcon      ,MS AXII
+edm,Topcon,GTL 1000
+edm,Topcon,GT 500V
+edm,Topcon,IS-3 Series
+edm,Topcon,MS AXII
 edm,Trimble,S 5
 edm,Trimble,S 7
 edm,Trimble,S 9 HP
@@ -118,10 +118,10 @@ level,Leica,DNA 10
 level,GeoMax,ZDL 700
 level,Trimble,DiNi 0.3
 level,Trimble,DiNi 0.7
-level,Sokkia      ,SDL 1X
-level,Sokkia      ,SDL 30
-level,Sokkia      ,SDL 50
-level,Sokkia      ,B Series
+level,Sokkia,SDL 1X
+level,Sokkia,SDL 30
+level,Sokkia,SDL 50
+level,Sokkia,B Series
 level,Trimble,DiNi 21
 level,Trimble,DiNi 22
 level,Topcon,DL 502
@@ -150,15 +150,15 @@ prism,Leica,MPR122
 prism,Leica,CPR111
 prism,Leica,GMP004
 prism,Leica,GMP104
-prism,Sokkia      ,360 Robotic Prism
-prism,Sokkia      ,APO1
-prism,Sokkia      ,APO1S
-prism,Sokkia      ,Black AY mini
-prism,Sokkia      ,CST optima
-prism,Sokkia      ,Mini prism middle bubble
-prism,Sokkia      ,Mini prism side bubble
-prism,Sokkia      ,Plastic mini prism
-prism,Sokkia      ,0/30 Poly prism
+prism,Sokkia,360 Robotic Prism
+prism,Sokkia,APO1
+prism,Sokkia,APO1S
+prism,Sokkia,Black AY mini
+prism,Sokkia,CST optima
+prism,Sokkia,Mini prism middle bubble
+prism,Sokkia,Mini prism side bubble
+prism,Sokkia,Plastic mini prism
+prism,Sokkia,0/30 Poly prism
 prism,Trimble,360 Prism
 prism,Trimble,Mini Prism
 prism,Trimble,Small Monitoring Prism
