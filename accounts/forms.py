@@ -85,7 +85,7 @@ class CustomUserChangeForm(ModelForm):
         
     class Meta:
         model = CustomUser
-        fields = ['email', 'company']
+        fields = ['first_name','last_name','email', 'company']
 
     def clean_csk(self):
         company = self.cleaned_data.get('company')

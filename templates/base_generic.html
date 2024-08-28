@@ -97,13 +97,14 @@
                                 <div class="sub-item-description">List of all company instruments</div>
                             </a>
                         </li>
+                        {% if user.is_staff %}
                         <li class="sub-items">
                             <a href="{% url 'baseline_calibration:accreditations' %}">
                                 <div class="sub-item-header">Accreditation Certifications</div>
                                 <div class="sub-item-description">List of all company accreditation certificates</div>
                             </a>
                         </li>
-                        
+                        {% endif %}
                         <li class="sub-items">
                             <a href="{% url 'calibrationsites:home' %}">
                                 <div class="sub-item-header">Calibration Sites</div>
