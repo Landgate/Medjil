@@ -232,22 +232,29 @@ new Chart("graph1", {
             x: {
                 type: 'time',
                 time: {
-                    unit: 'year', // Adjust as needed (e.g., 'month', 'year')
+                    unit: 'year',
                     },
                 title: {
                     display: true,
                     text: 'Date',
-                    },
-                },
-            y: {
-                title: {
-                    display: true,
-                    text: 'Distance (m)',
-                    },
                 },
             },
-        }
-    });
+            y: {
+                suggestedMin: -0.005,
+                suggestedMax: 0.005,
+                title: {
+                    display: true,
+                    text: 'Distance Change (m)',
+                },
+                ticks: {
+                    callback: function(value) {
+                        return value.toFixed(3); // Ensures the ticks are displayed with three decimal places
+                    }
+                }
+            },
+        },
+    }
+});
     
 new Chart("graph2", {
     type: "line",
@@ -259,48 +266,61 @@ new Chart("graph2", {
             x: {
                 type: 'time',
                 time: {
-                    unit: 'year', // Adjust as needed (e.g., 'month', 'year')
-                    },
+                    unit: 'year',
+                },
                 title: {
                     display: true,
                     text: 'Date',
-                    },
-                },
-            y: {
-                title: {
-                    display: true,
-                    text: 'Offset (m)',
-                    },
                 },
             },
-        }
-    });
+            y: {
+                suggestedMin: -0.005,
+                suggestedMax: 0.005,
+                title: {
+                    display: true,
+                    text: 'Offset Change (m)',
+                },
+                ticks: {
+                    callback: function(value) {
+                        return value.toFixed(3); // Ensures the ticks are displayed with three decimal places
+                    }
+                }
+            },
+        },
+    }
+});
     
 new Chart("graph3", {
     type: "line",
     data: graph3_datasets,
-    
     options: {
         responsive: true,
         scales: {
             x: {
                 type: 'time',
                 time: {
-                    unit: 'year', // Adjust as needed (e.g., 'month', 'year')
-                    },
+                    unit: 'year',
+                },
                 title: {
                     display: true,
                     text: 'Date',
-                    },
-                },
-            y: {
-                title: {
-                    display: true,
-                    text: 'Offset (m)',
-                    },
                 },
             },
-        }
-    });
+            y: {
+                suggestedMin: -0.005,
+                suggestedMax: 0.005,
+                title: {
+                    display: true,
+                    text: 'Height Change (m)',
+                },
+                ticks: {
+                    callback: function(value) {
+                        return value.toFixed(3); // Ensures the ticks are displayed with three decimal places
+                    }
+                }
+            },
+        },
+    },
+});
 </script>
 {% endblock content %}
