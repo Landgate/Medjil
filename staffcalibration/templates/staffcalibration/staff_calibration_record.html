@@ -246,7 +246,6 @@
                     <th class="text-center">Action</th>
                 </tr>
                 {% for element in queryset_history %}
-                    {{ element }}
                     {% if not element.isreference %}
                         <tr>
                             <td>{{ element.job_number }}</td>
