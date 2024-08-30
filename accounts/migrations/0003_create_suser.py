@@ -32,11 +32,6 @@ def forwards_func(apps, schema_editor):
         Group(name='Admin'),
     ])
     
-##    uname = input("Enter your email: ")
-##    pword1 = input("Enter a password: ")
-##    pword2 = input("Re-confirm your password: ")
-    
-##    if pword1 == pword2:
     CustomUser.objects.create_superuser(
             email=os.environ.get('EMAIL_HOST_USER'),  
             password=os.environ.get('EMAIL_HOST_PASSWORD'),

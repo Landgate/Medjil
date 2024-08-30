@@ -18,7 +18,10 @@
 from django.db import models
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import Group
 from django.utils.translation import gettext_lazy as _
+from django.core.exceptions import PermissionDenied
+from django.http import HttpResponse
 
 import hashlib
 import uuid
@@ -49,20 +52,6 @@ class MedjilTOTPDevice(TOTPDevice):
     def rotate_session_key(self):
         self.session_key = uuid.uuid4()
         self.save(update_fields=['session_key'])
-
-class MedjilTOTPDeviceAdmin(TOTPDeviceAdmin):
-    list_display = TOTPDeviceAdmin.list_display + ['created_at', 'last_used_at']
-    
-    def name(self, obj):
-        # return the value of the field you want to display
-        return obj.name
-        name.short_description = 'Device Name'
-        
-    def get_form(self, request, obj=None, **kwargs):
-        form = super().get_form(request, obj, **kwargs)
-        form.base_fields['name'].label = 'Device Name'
-        return form  
-
 
 def generate_short_hash():
     # Generate a UUID, hash it, and take the first 8 characters

@@ -15,10 +15,16 @@
 '''
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.models import Group
+from django.http.request import HttpRequest
 from django.urls import path, reverse
 from django.contrib.auth import REDIRECT_FIELD_NAME
-from .models import MedjilTOTPDevice, MedjilTOTPDeviceAdmin
+from django.core.exceptions import PermissionDenied
+from .models import MedjilTOTPDevice
+from django_otp.plugins.otp_totp.admin import TOTPDeviceAdmin
+
+from django.shortcuts import render
 
 from .views import AdminSetupTwoFactorAuthView, AdminConfirmTwoFactorAuthView
 
@@ -157,6 +163,28 @@ admin_site.index_title = 'Medjil Site Administration'
 #######################################################################
 admin_site.register(CustomUser, CustomUserAdmin)
 
+class MedjilTOTPDeviceAdmin(TOTPDeviceAdmin):
+    list_display = TOTPDeviceAdmin.list_display + ['created_at', 'last_used_at']
+    
+    def name(self, obj):
+        # return the value of the field you want to display
+        return obj.name
+        name.short_description = 'Device Name'
+        
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        form.base_fields['name'].label = 'Device Name'
+        return form  
+    
+    def changelist_view(self, request, extra_context=None):
+        return super().changelist_view(request, extra_context)
+    
+    def change_view(self, request, object_id, form_url='', extra_context=None):
+        admin_group = Group.objects.get(name='Geodesy')
+        if request.user.groups.filter(name = admin_group.name).exists():
+            return render(request, 'accounts/403.html', status=403)
+        return super().change_view(request, object_id, form_url, extra_context)
+    
 admin_site.register(MedjilTOTPDevice, MedjilTOTPDeviceAdmin)
 
 class Roles(Group):
@@ -173,6 +201,11 @@ class RolesAdmin(admin.ModelAdmin):
     ordering = (
         'pk', 'name',
     )
+    # Hide Group table from Geodesy Group
+    def has_module_permission(self, request):
+        if request.user.groups.filter(name='Geodesy').exists():
+            return False
+        return True
 
 @admin.register(Company, site=admin_site)
 class CompanyAdmin(admin.ModelAdmin):
@@ -180,6 +213,8 @@ class CompanyAdmin(admin.ModelAdmin):
     search_fields = ('company_name', 'company_abbrev',)
     class Meta:
         model = Company
+
+    search_fields = ('company_name', 'company_abbrev',)
       
 @admin.register(Calibration_Report_Notes, site=admin_site)
 class CalibrationReportNotesAdmin(admin.ModelAdmin):
