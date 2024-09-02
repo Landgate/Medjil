@@ -3,9 +3,26 @@
 Individual states and territories have regulations that require the Surveyor-General (or an institution) to arrange for a standard or standards to be available to enable surveyors to comply with requirements to calibrate measuring equipment. Regular calibration of survey instrumentation is required to ensure the distances measured are legally traceable back to the national standard, currently provided by the National Measurement Act 1960.
 
 
-
 Medjil is an on-line instrument calibration portal that allows for rigorous calibration of baselines (the standard) and survey equipment (e.g. EDM Instrumentation or levelling staff).
 This code is a Django-based open-source web application developed by Landgate. 
+
+# Medjil Beta testing
+
+Medjil is now available for Beta testing. We are seeking expressions of interest from stakeholders to test Medjil and provide feedback.
+Press [Start Testing](http://medjil.lb.landgate.wa.gov.au) to begin. 
+
+## Major Points
+
+- **Production Environment URL**: http://medjil.lb.landgate.wa.gov.au/
+- Please send your feedback to geodesy@landgate.wa.gov.au
+- When you sign up, you will be assigned normal user permissions. (You will need to supply us your log-in details to be given the permissions of a Verifying Authority)
+- Data from our staff-calibration portal has been migrated and users who have previously registered can use the same log in.
+- Feedback is welcome immediately but no later than **31 Dec 2024**.
+- We aim to launch Medjil in **March 2025** with the re-calibration of the WA EDM baselines.
+- The database from Medjil Beta testing will be cleared before the official launch.
+- After the official launch of Medjil, we plan to decommission Baseline.exe software.
+
+Medjil is a serverless application on AWS. Please allow a few seconds for it to wake up. Attached is a quick reference guide that might be helpful to new users.
 
 ### Requirements
 Python 3.8 or higher plus see requirements.txt
@@ -88,7 +105,7 @@ Groups can contain list of permissions
 
 
 ### License
-Copyright © 2020-2023 Western Australian Land Information Authority.
+Copyright © 2020-2024 Western Australian Land Information Authority.
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
 
