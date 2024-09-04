@@ -22,7 +22,10 @@ Press [Start Testing](http://medjil.lb.landgate.wa.gov.au) to begin.
 - The database from Medjil Beta testing will be cleared before the official launch.
 - After the official launch of Medjil, we plan to decommission Baseline.exe software.
 
-Medjil is a serverless application on AWS. Please allow a few seconds for it to wake up. Attached is a quick reference guide that might be helpful to new users.
+Medjil is a serverless application on AWS. Please allow a few seconds for it to wake up. [Here](./Medjil-QuickUserGuide.pdf) is a quick reference guide that might be helpful to new users. To download the guide, right-click the link and select "Save link as...".
+
+# Medjil Cloning and Local development
+To clone and contribute to development in a local, off-line environment, please consider the following information.
 
 ### Requirements
 Python 3.8 or higher plus see requirements.txt
