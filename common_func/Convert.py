@@ -41,7 +41,7 @@ from baseline_calibration.models import (
     Certified_Distance,
     Pillar_Survey,
     Std_Deviation_Matrix)
-from geodepy.geodesy import grid2geo, rho
+from geodepy.geodesy import grid2geo, rho, nu
 
 
 def db_std_units(orig_val, orig_unit):
@@ -348,7 +348,7 @@ def baseline_qry(frm_data):
     baseline_llh = grid2geo(float(baseline_enz['zone__avg']),
                             float(baseline_enz['easting__avg']),
                             float(baseline_enz['northing__avg']))
-    baseline['d_radius'] = rho(baseline_llh[0])
+    baseline['d_radius'] = (rho(baseline_llh[0])*nu(baseline_llh[0]))**0.5
     
     return baseline
         
