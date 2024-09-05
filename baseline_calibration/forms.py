@@ -195,13 +195,6 @@ class EDM_ObservationForm(forms.ModelForm):
         fields = ['use_for_alignment','use_for_distance']
         labels = {'id': 'Obs #',}
         
-    
-class Certified_DistanceForm(forms.ModelForm):                
-    class Meta:
-        model = Certified_Distance
-        fields = '__all__'
-        exclude = ('uploaded_on', 'modified_on')
-
 
 class PillarSurveyUpdateForm(forms.ModelForm):                
     class Meta:
@@ -209,7 +202,7 @@ class PillarSurveyUpdateForm(forms.ModelForm):
         fields = ['zero_point_correction','zpc_uncertainty',
                   'variance','degrees_of_freedom',
                   'html_report']      
-
+               
 
 class PillarSurveyApprovalsForm(forms.ModelForm):                
     class Meta:
@@ -227,12 +220,30 @@ class PillarSurveyApprovalsForm(forms.ModelForm):
             'data_checked_date': forms.DateInput(
                 attrs={'type': 'date', 'input_formats': ['%d-%m-%Y']}),
         }
+        
+    
+class Certified_DistanceForm(forms.ModelForm):                
+    class Meta:
+        model = Certified_Distance
+        fields = '__all__'
+        exclude = ('uploaded_on', 'modified_on')
+        widgets = {
+            'pillar_survey': forms.HiddenInput(),
+            'from_pillar': forms.HiddenInput(),
+            'to_pillar': forms.HiddenInput(),
+        }
+        
     
 class Std_Deviation_MatrixForm(forms.ModelForm):                
     class Meta:
         model = Std_Deviation_Matrix
         fields = '__all__'
         exclude = ('uploaded_on', 'modified_on')
+        widgets = {
+            'pillar_survey': forms.HiddenInput(),
+            'from_pillar': forms.HiddenInput(),
+            'to_pillar': forms.HiddenInput(),
+        }
         
         
 class Uncertainty_BudgetForm(forms.ModelForm):

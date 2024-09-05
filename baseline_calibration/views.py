@@ -1006,7 +1006,7 @@ def certified_distances_home(request, id):
         if cd.pillar_survey not in pillar_surveys:
             pillar_surveys.append(cd.pillar_survey)
             
-    pillars = set([cd.to_pillar for cd in certified_distances_obj])
+    pillars = list(OrderedDict.fromkeys(cd.to_pillar for cd in certified_distances_obj))
     first_pillar_survey = certified_distances_obj.first().pillar_survey
     
     # Organise into a dictionary grouped by pillar survey
@@ -1125,15 +1125,42 @@ def certified_distances_edit(request, id):
             form = Certified_DistanceForm, 
             extra = 0)
         
-        obj = Certified_Distance.objects.filter(
+        certified_distances_obj = Certified_Distance.objects.filter(
             pillar_survey = id)
-        
-        pillar_survey_formset = certified_distances(
+                
+        certified_distances_formset = certified_distances(
             request.POST or None,
-            queryset=obj)
-    
+            prefix='formset1',
+            queryset=certified_distances_obj)
+
+        std_deviation_matrix = modelformset_factory(
+            Std_Deviation_Matrix,
+            form = Std_Deviation_MatrixForm, 
+            extra = 0)
+        
+        std_deviation_matrix_obj = Std_Deviation_Matrix.objects.filter(
+            pillar_survey = id)
+                       
+        std_deviation_matrix_formset = std_deviation_matrix(
+            request.POST or None,
+            prefix='formset2',
+            queryset=std_deviation_matrix_obj)
+          
+        if certified_distances_formset.is_valid() and std_deviation_matrix_formset.is_valid():
+            certified_distances_formset.save()
+            std_deviation_matrix_formset.save()
+            
+            next_url = request.POST.get('next', 'calibrationsites:home')
+            return redirect(next_url)
+            
         context = {
-            'pillar_survey_formset': pillar_survey_formset}
+            'certified_distances_obj':certified_distances_obj,
+            'combined': zip(certified_distances_obj, certified_distances_formset),
+            'certified_distances_formset': certified_distances_formset,
+            'std_deviation_matrix_formset': std_deviation_matrix_formset,
+            'std_combined': list(
+                zip(std_deviation_matrix_obj, std_deviation_matrix_formset))
+            }
         
         return render(request, 'baseline_calibration/certified_distances_form.html', context)
 

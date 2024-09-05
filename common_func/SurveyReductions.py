@@ -672,7 +672,7 @@ def add_calib_uc(uc_sources, calib, pillar_survey):
             'k':calib['hygro'].zpc_coverage_factor,
             'description':'Hygrometer calibrated correction factor'})
     
-    if pillar_survey['uncertainty_budget'].auto_humi_rounding:
+    if pillar_survey['hygrometer'] and pillar_survey['uncertainty_budget'].auto_humi_rounding:
         uc_sources.append(
             {'group': '06',
             'ab_type':'B',

@@ -24,67 +24,114 @@
 <article class="post">
   <div class="flexbox-container_IB">
     <div class="flexbox-item_1600_IB">
-      <form id='id_html_form' style="font-size:10.0pt;width:4500px;" action="" class="site-form" method="post" autocomplete="off">
+      <form id='id_html_form' style="width:4500px;" action="" class="site-form" method="post" autocomplete="off">
         <div class="flexbox-item_1600_IB">
           <h1 style="text-align:center">Certified Distances</h1>
+          <p class="text-center">
+              <i>Certified Distances computed from {{ certified_distances_obj.0.pillar_survey }} pillar survey</i>
+          </p>
         </div>
-        {% if form.non_field_errors %}
-	        <div class="mt-1 mb-2 non-field-errors">
-		        {% for error in form.non_field_errors %}
-		          <p style="color:Red;">{{ error }}</p>
-		        {% endfor %}
-	        </div>
-        {% endif %}
         {% csrf_token %}
         <div class="flexbox-item_1600_IB">
+          {{ certified_distances_formset.management_form }}
           <table id="id_formset_container" style="font-size:10pt;width:100%">
-            <!--colgroup>
-              <col span="1" style="width: 15%;">
-              <col span="1" style="width: 35%;">
-              <col span="1" style="width: 12%;">
-              <col span="1" style="width: 5%;">
+            <colgroup>
+              <col span="1" style="width: 0%;">
+              <col span="1" style="width: 0%;">
+              <col span="1" style="width: 0%;">
               <col span="1" style="width: 10%;">
-              <col span="1" style="width: 8%;">
-              <col span="1" style="width: 6%;">
-              <col span="1" style="width: 5%;">
-              <col span="1" style="width: 4%;">
-            </colgroup-->
-            {{ pillar_survey_formset.management_form }}
+              <col span="1" style="width: 10%;">
+              <col span="1" style="width: 10%;">
+              <col span="1" style="width: 10%;">
+              <col span="1" style="width: 10%;">
+              <col span="1" style="width: 10%;">
+            </colgroup>
             <tr>
-            	{% for field in pillar_survey_formset|first %}
-	              {% if field.label != "Id" %}
-	              	<th Title="{{ field.help_text }}">{{ field.label|title }}</th>
+            	{% for field in certified_distances_formset|first %}
+	              {% if not field.label == "Id" and not field.label == "Pillar survey" %}
+	              	  <th Title="{{ field.help_text }}">{{ field.label|title }}</th>
+              	  {% else %}
+                  	  <th></th>
 	              {% endif %}
-              {% endfor %}
+                {% endfor %}
             </tr>
-            {% for form in pillar_survey_formset %}
-	            {% if form.non_field_errors %}
-		            <div class="mt-1 mb-2 non-field-errors">
-		          	  {% for error in form.non_field_errors %}
-		            	  <p style="color:Red;">{{ error }}</p>
-		              {% endfor %}
-		            </div>
-	            {% endif %}
-	            
+            {% for cd, form in combined %}	            
 	            <tr id=data-form-index_{{forloop.counter0}}>
 	            	{% for field in form %}
-	            	  <td Title="{{ field.help_text }}">{{ field }}</td>
+                        <td title="{{ field.help_text }}">
+                            {{ field }}
+                            {% if field.errors %}
+                                <br>
+                                {% for error in field.errors %}
+                                    <p style="color:Red;">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                            {% if field.label == "From pillar" %}
+                                {{ cd.from_pillar.name }}
+                            {% elif field.label == "To pillar" %}
+                                {{ cd.to_pillar.name }}
+                            {% endif %}
+                        </td>
 	              {% endfor %}
-	              {% if form.errors %}
-	              <tr>
-	              	{% for field in form %}
-	                <td>
-	                	{% for error in field.errors %}
-	                  <p style="color:Red;">{{ error }}</p>
-	                  {% endfor %}
-	                </td>
-	                {% endfor %}
-	              </tr>
-	              {% endif %}
+       	          {% if form.non_field_errors %}
+           	          <tr>
+       		          <td class="mt-1 mb-2 non-field-errors">
+       		        	  {% for error in form.non_field_errors %}
+           		          	  <p style="color:Red;">{{ error }}</p>
+       		              {% endfor %}
+       		          </td>
+       		          </tr>
+       	          {% endif %}
 	            </tr>
             {% endfor %}
           </table>
         </div>
+        <div class="flexbox-item_1600_IB">
+            <h1 style="text-align:center">Standard Deviation Matrix</h1>
+            <p class="text-center">
+                <i>Matrix values derived from the CoFactorMatrix at one-sigma</i>
+            </p>
+        </div>
+        <div class="flexbox-item_1600_IB">
+          {{ std_deviation_matrix_formset.management_form }}
+          <table id="id_formset_container" style="font-size:10pt;width:100%">
+            <tr>
+                <th style="text-align:right; white-space:nowrap;">From pillars</th>
+            	{% for cd in certified_distances_obj %}
+                	{% if not forloop.last %}
+                        <th rowspan="2">{{ cd.to_pillar.name }}</th>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+            <tr>
+                <th>To pillars</th>
+            </tr>
+           	{% for cd in certified_distances_obj %}
+               	{% if not forloop.first %}
+                    <tr id=sdev-form-index_{{forloop.counter0}}>
+                        <td>{{ cd.to_pillar.name }}</td>
+                        {% for sdev, form in std_combined %}
+                            {% if cd.to_pillar.id == sdev.to_pillar.id %}
+                                <td>
+                                    {% for field in form %}
+                                        {{ field }}
+                                        {% if field.errors %}
+                                            <br>
+                                            {% for error in field.errors %}
+                                                <p style="color:Red;">{{ error }}</p>
+                                            {% endfor %}
+                                        {% endif %}
+                                    {% endfor %}
+                                </td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                {% endif %}
+            {% endfor %}
+            
+          </table>
+        </div>
+        
         {% if request.GET.next %}
         <input type="hidden" name="next" value="{{ request.GET.next }}">
         {% endif %}
