@@ -21,6 +21,7 @@ staticfiles
 # Media
 ###################
 media/CalibrationSite
+media/edmi_calibration
 media/media
 media/RangeCalibration
 media/StaffCalibration
