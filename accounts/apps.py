@@ -16,10 +16,22 @@
 
 '''
 from django.apps import AppConfig
-
+from django.db.models.signals import post_migrate
+from django.dispatch import receiver
 
 class AppAccountsConfig(AppConfig):
     name = 'accounts'
 
     def ready(self):
         import accounts.signals  # noqa
+
+        @receiver(post_migrate)
+        def connect_signals(sender, **kwargs):
+            from django.db.models.signals import post_save
+            from .models import CustomUser
+            from accounts.signals import set_admin_permissions
+            
+            from accounts.signals import set_geodesy_permissions
+
+            post_save.connect(set_admin_permissions, sender=CustomUser)
+            post_save.connect(set_geodesy_permissions, sender=CustomUser)

@@ -17,11 +17,15 @@
 '''
 from django import forms
 from django.db.models import Q
+from django.db.models import Case, When, Value, IntegerField
+from django.core.exceptions import ValidationError
+import csv
 from django.core.exceptions import NON_FIELD_ERRORS
 
 from instruments.models import Staff, DigitalLevel
 from .models import StaffCalibrationRecord
 from calibrationsites.models import CalibrationSite
+
 
 # Prepare forms
 class CustomClearableFileInput(forms.ClearableFileInput):
@@ -102,6 +106,24 @@ class StaffCalibrationForm(forms.ModelForm):
         if not user.is_staff:
             self.fields['inst_staff'].queryset = Staff.objects.filter(staff_owner=user.company)
             self.fields['inst_level'].queryset = DigitalLevel.objects.filter(level_owner=user.company)
+        else:
+            queryset1 = Staff.objects.annotate(
+                is_top=Case(
+                    When(staff_owner=user.company, then=Value(1)),
+                    default=Value(0),
+                    output_field=IntegerField(),
+                    )
+                ).order_by('-is_top')  # Adjust the ordering as needed
+            self.fields['inst_staff'].queryset = queryset1
+
+            queryset2 = DigitalLevel.objects.annotate(
+                is_top=Case(
+                    When(level_owner=user.company, then=Value(1)),
+                    default=Value(0),
+                    output_field=IntegerField(),
+                    )
+                ).order_by('-is_top')  # Adjust the ordering as needed
+            self.fields['inst_level'].queryset = queryset2
         
         self.fields['site_id'].queryset = CalibrationSite.objects.filter(site_type = 'staff_range')
             
@@ -131,4 +153,16 @@ class StaffCalibrationForm(forms.ModelForm):
                 'unique_together': "%(model_name)s's %(field_labels)s appears to exist already. Please check the records and calibrate again.",
             }
         }
+
+    def clean_field_file(self):
+        field_file = self.cleaned_data.get('field_file')
+        if field_file.name.endswith('.csv'):
+            reader = csv.reader(field_file.read().decode('utf-8').splitlines()) 
+            for row in reader:
+                if not row[0].isdigit():
+                    raise ValidationError(f'The file appears to contain headers or invalid rows. Please check and upload it again.')
+        else:
+            raise ValidationError('Invalid file type. Please upload a CSV file.') 
+        field_file.seek(0)
+        return field_file
 

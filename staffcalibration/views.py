@@ -194,18 +194,14 @@ def create_record(request):
 ################################################################################
 # Handle Data
 def reading_data(csv_file):
-    message = ''
     data = []
-
     csv_file = csv_file.read().decode('utf-8').splitlines()
     reader = csv.reader(csv_file)
     #loop over the lines and save them in db. If error , store as string and then display
-    for row in reader:                    
+    for row in reader:               
         if row[0].isdigit():
             data.append(row)
-        else: 
-            continue
-    return data, message
+    return data
 
 # Preprocess staff readings to calculate the height differences between pins
 def preprocess_reading(dataset):
@@ -405,9 +401,9 @@ def calibrate(request):
             # Field files
             field_book = data['field_book']
             field_file = data['field_file']
-            
+
             # Read data and start computing
-            staff_reading, message = reading_data(field_file)
+            staff_reading = reading_data(field_file)
             if len(staff_reading) > 0:
                 # Get the reference data from BarCodeRangeParam
                 if BarCodeRangeParam.objects.filter(site_id = site_id).exists():
@@ -510,8 +506,8 @@ def calibrate(request):
                     messages.warning(request, 'The calibration site - ' + site_id.site_name + ' is not calibrated yet by the Site Operater. Please contact the Site Operator to use this site for staff calibration.' )    
                     return redirect('staffcalibration:calibrate')
             else:
-                messages.warning(request, 'Opps! Looks like you data is invalid. Please format your data as per the guidelines.' )    
-                return redirect('staffcalibration:calibrate')
+                messages.warning(request, 'Opps! Looks like you data is invalid. Please check and submit again.' )    
+                form = StaffCalibrationForm(user=request.user)
     else:
         form = StaffCalibrationForm(user=request.user)
     return render(request, 'staffcalibration/staff_calibration_form.html', {'form':form})
