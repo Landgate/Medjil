@@ -21,7 +21,7 @@ import csv
 from io import TextIOWrapper
 import numpy as np
 from statistics import mean, pstdev
-from django.db.models import Avg
+from django.db.models import Avg, Count
 from django.forms.models import model_to_dict
 from django.db.models import Q
 
@@ -310,9 +310,11 @@ def baseline_qry(frm_data):
     baseline={}
     if 'baseline' in frm_data:
         baseline['site'] = frm_data['baseline']
-        baseline['history'] = (Certified_Distance.objects.select_related().filter(
-                pillar_survey__baseline__pk = frm_data['baseline'].pk)
-                .order_by('pillar_survey__survey_date','to_pillar__order'))
+        baseline['history'] = (Pillar_Survey.objects.annotate(
+            num_cd=Count('certified_distance')).filter(num_cd__gt=0).filter(
+                baseline__pk=frm_data['baseline'].pk)
+                .order_by('survey_date'))
+
     
     if 'auto_base_calibration' in frm_data:
         if frm_data['auto_base_calibration']:

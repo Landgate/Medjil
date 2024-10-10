@@ -919,7 +919,7 @@ def validate_survey(pillar_survey, baseline=None, calibrations=None,
             for p, cnt in pillar_cnt.items():
                 if cnt < 2:
                     Errs.append('Pillar "' + str(p) + '" has been observed from ' 
-                                + str(cnt) + ' other pillars.')
+                                + str(cnt) + ' other pillars for determining the certified distance.')
             
             #'use_for_alignment' checks
             # setups used for alignment survey must have first and last pillar
@@ -935,7 +935,7 @@ def validate_survey(pillar_survey, baseline=None, calibrations=None,
                     for single_obs in p['grp_from_pillar']:
                         single_obs['use_for_alignment'] = False
             
-            # Each pillar must be observed from at least 2 other pillars
+            # Each pillar must be observed from a pillar setup the includes the first and last pillar
             bays=[]
             pillar_cnt = dict(zip(pillars,[0]*len(pillars)))
             for o in raw_edm_obs.values():
@@ -948,9 +948,11 @@ def validate_survey(pillar_survey, baseline=None, calibrations=None,
                         pillar_cnt[o['to_pillar']]+=1
             
             for p, cnt in pillar_cnt.items():
-                if cnt < 2:
-                    Errs.append('Pillar "' + str(p) + '" has only been observed from ' 
-                                + str(cnt) + ' other pillars for determining the offset.')
+                if cnt < 1:
+                    Errs.append(
+                        'Pillar "' + str(p) + '" has been observed from ' + str(cnt)
+                        + ' other pillar setup that include the first and last'
+                        + 'pillar. This is required for determining the offset.')
                         
             #Each baseline calibration pillar survey must have from first to last pillar
             if not [0, len(pillars) - 1] in bays:

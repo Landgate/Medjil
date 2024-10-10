@@ -19,7 +19,7 @@ from collections import OrderedDict
 from datetime import date
 from django.contrib.auth.decorators import login_required
 from django.core.serializers.json import DjangoJSONEncoder
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.forms import formset_factory, modelformset_factory
 from django.forms.models import model_to_dict
 from django.http import QueryDict
@@ -30,6 +30,7 @@ from math import sqrt
 from statistics import mean
 import numpy as np
 
+from calibrationsites.models import Pillar
 from .forms import (
     PillarSurveyForm,
     UploadSurveyFiles,
@@ -37,7 +38,6 @@ from .forms import (
     EDM_ObservationForm,
     Certified_DistanceForm,
     Std_Deviation_MatrixForm,
-    PillarSurveyUpdateForm,
     Uncertainty_BudgetForm,
     Uncertainty_Budget_SourceForm,
     AccreditationForm,
@@ -519,7 +519,7 @@ def calibrate2(request,id):
     
             ISO_test=[]
             if baseline['history'].count() > 1:
-                prev=baseline['history'].last().pillar_survey
+                prev=baseline['history'].last()
                 ISO_test.append(ISO_test_b({'dof':prev.degrees_of_freedom,
                                             'Variance': prev.variance},
                                             chi_test))
@@ -663,41 +663,42 @@ def calibrate2(request,id):
                     for c in calib['edmi'].values()]
     
             #prepare the data for the comparison to history graph
-            ini_surv={}
-            surveys={}         
-            for cd, colour in zip(baseline['history'],back_colours):                
-                if cd.from_pillar.name != cd.to_pillar.name:
-                    survey = cd.pillar_survey.pk
-                    if not survey in surveys.keys():
-                        dte = cd.pillar_survey.survey_date.isoformat()
-                        surveys[survey] = {'date':dte, 
-                                           'bays':[]}
-                    #find the initial values
-                    if not cd.to_pillar.name in ini_surv:
-                        ini_surv[cd.to_pillar.name]=float(cd.distance)
-                    
-                    surveys[survey]['bays'].append(
-                        {'to_pillar':cd.to_pillar.name,
-                         'diff_to_initial': ini_surv[cd.to_pillar.name]-float(cd.distance),
-                         'chart_colour':colour})
-            
-            surveys[id] = {'date':pillar_survey['survey_date'].isoformat(),
-                            'bays':[]}
-            for cd in certified_dists:
-                diff = 0
-                if baseline['history']: 
-                    diff = ini_surv[cd['to_pillar']]-cd['Reduced_distance']
-                surveys[id]['bays'].append(
-                    {'to_pillar':cd['to_pillar'],
-                     'diff_to_initial': diff,
-                     'chart_colour':'#808080'}
-                    )
-            baseline['history'] = surveys
-            baseline['pillar_meta'] = []
-            for p in baseline['pillars']:
-                baseline['pillar_meta'].append(model_to_dict(p))
-                baseline['pillar_meta'][-1]['reduced_level'] = (
-                    float(raw_lvl_obs[p.name]['reduced_level']))
+            surveys={}
+            if baseline['history']: 
+                first_cds = baseline['history'].first().certified_distances()[1:]
+                colour_index = 0
+                for ps in baseline['history']:
+                    colour = back_colours[colour_index]
+                    colour_index += 1
+                    if colour_index > len(back_colours): colour_index = 0
+                    dte = ps.survey_date.isoformat()
+                    surveys[ps.pk] = {'date':dte, 
+                                       'bays':[]}
+                    for cd_0, cd in zip(first_cds, ps.certified_distances()[1:]):
+                         if cd.from_pillar.name != cd.to_pillar.name:
+                            surveys[ps.pk]['bays'].append(
+                                {'to_pillar':cd.to_pillar.name,
+                                 'diff_to_initial': float(cd.distance) - float(cd_0.distance),
+                                 'chart_colour':colour})
+                
+                # add the survey currently being processed to the dataset
+                surveys[id] = {'date':pillar_survey['survey_date'].isoformat(),
+                                'bays':[]}
+                for cd_0, cd in zip(first_cds, certified_dists):
+                    diff = 0
+                    if baseline['history']: 
+                        diff = float(cd_0.distance)-cd['Reduced_distance']
+                    surveys[id]['bays'].append(
+                        {'to_pillar':cd['to_pillar'],
+                         'diff_to_initial': diff,
+                         'chart_colour':'#808080'}
+                        )
+                baseline['history'] = surveys
+                baseline['pillar_meta'] = []
+                for p in baseline['pillars']:
+                    baseline['pillar_meta'].append(model_to_dict(p))
+                    baseline['pillar_meta'][-1]['reduced_level'] = (
+                        float(raw_lvl_obs[p.name]['reduced_level']))
             
             context = {'pillar_survey':pillar_survey,
                        'calib':calib,
@@ -998,27 +999,13 @@ def accreditation_delete(request, id):
 
 @login_required(login_url="/accounts/login") 
 def certified_distances_home(request, id):
-    certified_distances_obj = Certified_Distance.objects.filter(
-        pillar_survey__baseline_id = id).order_by('pillar_survey__survey_date')
-    
-    pillar_surveys = []
-    for cd in certified_distances_obj:
-        if cd.pillar_survey not in pillar_surveys:
-            pillar_surveys.append(cd.pillar_survey)
-            
-    pillars = list(OrderedDict.fromkeys(cd.to_pillar for cd in certified_distances_obj))
-    first_pillar_survey = certified_distances_obj.first().pillar_survey
-    
-    # Organise into a dictionary grouped by pillar survey
-    certified_distances_list = []
-    for pillar_survey in pillar_surveys:
-        cd=[]
-        for pillar in pillars:
-            cd.append(
-                certified_distances_obj.filter(
-                    pillar_survey = pillar_survey.id,
-                    to_pillar = pillar))
-        certified_distances_list.append(cd)
+    pillar_surveys = (Pillar_Survey.objects.annotate(
+        num_cd=Count('certified_distance')).filter(num_cd__gt=0).filter(
+            baseline__pk=id)
+            .order_by('survey_date'))
+    first_pillar_survey = pillar_surveys.first()
+    pillars = Pillar.objects.filter(
+        site_id = id).order_by('order')
     
     # Calculate data for graph
     back_colours = ['#FF0000', '#800000', '#FFFF00', '#808000', 
@@ -1030,33 +1017,27 @@ def certified_distances_home(request, id):
     dataset2 = []
     dataset3 = []
     i=0
-    for pillar in pillars:
+    for pillar in pillars[1:]:
         data1 =[]
         data2 =[]
         data3 =[]
         for pillar_survey in pillar_surveys:
             data1.append(
-                certified_distances_obj.get(
-                pillar_survey = pillar_survey.id,
+                pillar_survey.certified_distances().get(
                 to_pillar = pillar).distance
-                - certified_distances_obj.get(
-                    pillar_survey = first_pillar_survey.id,
+                - first_pillar_survey.certified_distances().get(
                     to_pillar = pillar).distance
                 )
             data2.append(
-                certified_distances_obj.get(
-                pillar_survey = pillar_survey.id,
+                pillar_survey.certified_distances().get(
                 to_pillar = pillar).offset
-                - certified_distances_obj.get(
-                    pillar_survey = first_pillar_survey.id,
+                - first_pillar_survey.certified_distances().get(
                     to_pillar = pillar).offset
                 )
             data3.append(
-                certified_distances_obj.get(
-                pillar_survey = pillar_survey.id,
+                pillar_survey.certified_distances().get(
                 to_pillar = pillar).reduced_level
-                - certified_distances_obj.get(
-                    pillar_survey = first_pillar_survey.id,
+                - first_pillar_survey.certified_distances().get(
                     to_pillar = pillar).reduced_level
                 )
 
@@ -1105,7 +1086,7 @@ def certified_distances_home(request, id):
     graph2_data = json.dumps(graph2_data, cls=DjangoJSONEncoder)
     graph3_data = json.dumps(graph3_data, cls=DjangoJSONEncoder)
     context = {
-        'certified_distances_list': certified_distances_list,
+        'pillar_surveys':pillar_surveys,
         'graph1_datasets': graph1_data,
         'graph2_datasets': graph2_data,
         'graph3_datasets': graph3_data}

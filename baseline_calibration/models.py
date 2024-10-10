@@ -486,6 +486,11 @@ class Pillar_Survey(models.Model):
     def __str__(self):
         return f'{self.baseline} ({self.survey_date})'
 
+    def certified_distances(self):
+        queryset = Certified_Distance.objects.filter(
+            pillar_survey = self.pk).order_by('to_pillar__order')
+        return queryset
+
 
 class EDM_Observation(models.Model):
     pillar_survey = models.ForeignKey(

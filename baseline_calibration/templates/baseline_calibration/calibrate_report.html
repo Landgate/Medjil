@@ -895,7 +895,7 @@ let Data2 = []
     dat = [];
         {% for p in survey.bays %}
         bgColor.push('{{ p.chart_colour }}');
-        dat.push('{{ p.diff_to_initial|multiply:1000|floatformat:2  }}');
+        dat.push('{{ p.diff_to_initial|multiply:1000|floatformat:2 }}');
         {% endfor %}
     Data2.push({
         label: "{{ survey.date|safe }}",

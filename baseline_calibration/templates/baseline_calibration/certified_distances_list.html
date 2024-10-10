@@ -51,39 +51,38 @@ limitations under the License.
             {% endif %}
             <div>
                 <div id="certified-distances-list">
-                    {% if certified_distances_list %}
+                    {% if pillar_surveys %}
                         <table style="width:100%">
                             <tr>
                                 <th class="text-center font-semibold text-base text-gray-900"></th>
-                                <th colspan="{{certified_distances_list.0|length}}" class="text-center font-semibold text-base text-gray-900">Pillar Distances (m)</th>
+                                <th colspan="{{ pillar_surveys.0.certified_distances|length|add:-1 }}" class="text-center font-semibold text-base text-gray-900">Pillar Distances (m)</th>
                                 <th class="text-center font-semibold text-base text-gray-900"></th>
                             </tr>
                       
-                            {% for ps in certified_distances_list %}
+                            {% for ps in pillar_surveys %}
                                 <tr>
                                     {% if forloop.first %}
                                         <!-- Create the header row-->
                                         <tr>
                                             <th class="text-left font-semibold text-base text-gray-900">Pillar Survey</th>
-                                            {% for cd in ps %}
-                                              {% for bay in cd %}
-                                                <th class="text-center font-semibold text-base text-gray-900">{{ bay.from_pillar.name }} - {{ bay.to_pillar.name }}</th>
-                                              {% endfor %}
+                                            {% for cd in ps.certified_distances %}
+                                                {% if not forloop.first %}
+                                                    <th class="text-center font-semibold text-base text-gray-900">{{ cd.from_pillar.name }} - {{ cd.to_pillar.name }}</th>
+                                                {% endif %}
                                             {% endfor %}
                                             <th class="text-center font-semibold text-base text-gray-900"></th>
                                         </tr>
                                     {% endif %}
                               
-                                    <td>{{ ps.0.0.pillar_survey }}</td>
-                                    {% for cd in ps %}
-                                        {% for bay in cd %}
-                                            <!-- put the distances in cells one at a time-->
-                                            <td class="text-right">{{ bay.distance|floatformat:5 }}</td>
+                                    <td>{{ ps.survey_date }}</td>
+                                        {% for cd in ps.certified_distances %}
+                                            {% if not forloop.first %}
+                                                <td class="text-right">{{ cd.distance|floatformat:5 }}</td>
+                                            {% endif %}
                                         {% endfor %}
-                                    {% endfor %}
                                     <td>{% if request.user.is_staff %}
                                         <span class="flex justify-around items-center text-center">
-                                            <a href="{% url 'baseline_calibration:certified_distances_edit' id=ps.0.0.pillar_survey.id %}?next={{request.path}}" class="px-2" id="add_spec">
+                                            <a href="{% url 'baseline_calibration:certified_distances_edit' id=ps.id %}?next={{request.path}}" class="px-2" id="add_spec">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000" class="bi bi-pencil-fill" id = "edit-view" viewBox="0 0 16 16">
                                                     <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"></path>
                                                 </svg>
@@ -106,35 +105,30 @@ limitations under the License.
                         <table style="width:100%">
                             <tr>
                                 <th class="text-center font-semibold text-base text-gray-900"></th>
-                                <th colspan="{{certified_distances_list.0|length}}" class="text-center font-semibold text-base text-gray-900">Pillar Offsets (m)</th>
+                                <th colspan="{{ pillar_surveys.0.certified_distances|length }}" class="text-center font-semibold text-base text-gray-900">Pillar Offsets (m)</th>
                                 <th class="text-center font-semibold text-base text-gray-900"></th>
                             </tr>
                       
-                            {% for ps in certified_distances_list %}
+                            {% for ps in pillar_surveys %}
                                 <tr>
                                     {% if forloop.first %}
                                           <!-- Create the header row-->
                                           <tr>
                                               <th class="text-left font-semibold text-base text-gray-900">Pillar Survey</th>
-                                          {% for cd in ps %}
-                                            {% for bay in cd %}
-                                              <th class="text-center font-semibold text-base text-gray-900">{{ bay.to_pillar.name }}</th>
-                                            {% endfor %}
-                                          {% endfor %}
+                                              {% for cd in ps.certified_distances %}
+                                                  <th class="text-center font-semibold text-base text-gray-900">{{ cd.to_pillar.name }}</th>
+                                              {% endfor %}
                                               <th class="text-center font-semibold text-base text-gray-900"></th>
                                           </tr>
                                     {% endif %}
                                 
-                                    <td>{{ ps.0.0.pillar_survey }}</td>
-                                    {% for cd in ps %}
-                                        {% for bay in cd %}
-                                            <!-- put the offsets in cells one at a time-->
-                                            <td class="text-right">{{ bay.offset|floatformat:3 }}</td>
+                                    <td>{{ ps.survey_date }}</td>
+                                        {% for cd in ps.certified_distances %}
+                                            <td class="text-right">{{ cd.offset|floatformat:3 }}</td>
                                         {% endfor %}
-                                    {% endfor %}
                                     <td>{% if request.user.is_staff %}
                                         <span class="flex justify-around items-center text-center">
-                                            <a href="{% url 'baseline_calibration:certified_distances_edit' id=ps.0.0.pillar_survey.id %}?next={{request.path}}" class="px-2" id="add_spec">
+                                            <a href="{% url 'baseline_calibration:certified_distances_edit' id=ps.id %}?next={{request.path}}" class="px-2" id="add_spec">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000" class="bi bi-pencil-fill" id = "edit-view" viewBox="0 0 16 16">
                                                     <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"></path>
                                                 </svg>
@@ -157,35 +151,30 @@ limitations under the License.
                         <table style="width:100%">
                             <tr>
                                 <th class="text-center font-semibold text-base text-gray-900"></th>
-                                <th colspan="{{certified_distances_list.0|length}}" class="text-center font-semibold text-base text-gray-900">Pillar Heights (m)</th>
+                                <th colspan="{{ pillar_surveys.0.certified_distances|length }}" class="text-center font-semibold text-base text-gray-900">Pillar Heights (m)</th>
                                 <th class="text-center font-semibold text-base text-gray-900"></th>
                             </tr>
                       
-                            {% for ps in certified_distances_list %}
+                            {% for ps in pillar_surveys %}
                                 <tr>
                                     {% if forloop.first %}
                                           <!-- Create the header row-->
                                           <tr>
                                               <th class="text-left font-semibold text-base text-gray-900">Pillar Survey</th>
-                                          {% for cd in ps %}
-                                            {% for bay in cd %}
-                                              <th class="text-center font-semibold text-base text-gray-900">{{ bay.to_pillar.name }}</th>
-                                            {% endfor %}
-                                          {% endfor %}
+                                              {% for cd in ps.certified_distances %}
+                                                  <th class="text-center font-semibold text-base text-gray-900">{{ cd.to_pillar.name }}</th>
+                                              {% endfor %}
                                               <th class="text-center font-semibold text-base text-gray-900"></th>
                                           </tr>
                                     {% endif %}
                                 
-                                    <td>{{ ps.0.0.pillar_survey }}</td>
-                                    {% for cd in ps %}
-                                        {% for bay in cd %}
-                                            <!-- put the heights in cells one at a time-->
-                                            <td class="text-right">{{ bay.reduced_level|floatformat:3 }}</td>
+                                    <td>{{ ps.survey_date }}</td>
+                                        {% for cd in ps.certified_distances %}
+                                                <td class="text-right">{{ cd.reduced_level|floatformat:3 }}</td>
                                         {% endfor %}
-                                    {% endfor %}
                                     <td>{% if request.user.is_staff %}
                                         <span class="flex justify-around items-center text-center">
-                                            <a href="{% url 'baseline_calibration:certified_distances_edit' id=ps.0.0.pillar_survey.id %}?next={{request.path}}" class="px-2" id="add_spec">
+                                            <a href="{% url 'baseline_calibration:certified_distances_edit' id=ps.id %}?next={{request.path}}" class="px-2" id="add_spec">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000" class="bi bi-pencil-fill" id = "edit-view" viewBox="0 0 16 16">
                                                     <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"></path>
                                                 </svg>
