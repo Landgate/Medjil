@@ -33,8 +33,10 @@ def LSA(A, x, P):
 
     # (ISO 17123-4:2012 eq.9)
     r = A @ y - x
-    # (ISO 17123-4:2012 eq.14)
-    So = sqrt((r.T @ P @ r) / dof)
+    # (Baseline Eq eq.7.2)
+    variance_factor = (r.T @ P @ r) / dof
+    # (ISO 17123-4:2012 eq.14 & Baseline Eq eq.7.5)
+    So = sqrt((r.T @ r) / dof)
 
     # Standard residuals
     # (Baseline Eq eq.7.15)
@@ -42,16 +44,17 @@ def LSA(A, x, P):
     std_residuals = r / np.sqrt(np.diagonal(sigma_vv))
 
     # chi-squared test
-    chi_upper = max((dof * So ** 2) / chi2.ppf(0.975, dof),
-                    (dof * So ** 2) / chi2.ppf(0.025, dof))
-    chi_lower = min((dof * So ** 2) / chi2.ppf(0.975, dof),
-                    (dof * So ** 2) / chi2.ppf(0.025, dof))
+    chi_upper = max((dof * variance_factor) / chi2.ppf(0.975, dof),
+                    (dof * variance_factor) / chi2.ppf(0.025, dof))
+    chi_lower = min((dof * variance_factor) / chi2.ppf(0.975, dof),
+                    (dof * variance_factor) / chi2.ppf(0.025, dof))
     chi_test = {'chi_lower': chi_lower,
-                'Variance': So ** 2,
+                'So': So,
+                'Variance': variance_factor,
                 'chi_upper': chi_upper,
                 'dof': dof,
                 'k': t.ppf(1 - 0.025, df=dof)}
-    if chi_lower < So ** 2 and So ** 2 < chi_upper:
+    if chi_lower < variance_factor and variance_factor < chi_upper:
         chi_test['test'] = 'Passes'
     else:
         chi_test['test'] = 'Fails'
@@ -84,12 +87,16 @@ def ISO_test_a(Insts, chi_test, Rnge=[{'distance': 100}]):
     k1 = float(Insts['prism'].prism_specs.manu_unc_k)
     c1 = float(Insts['prism'].prism_specs.manu_unc_const) / k1
     dof = chi_test['dof']
-    exp_std_dev = sqrt(chi_test['Variance'])
+    # Convert So to mm
+    # ISO 17123:4-2012 B.3 Calculation 
+    # Please note the worked example converts the So to mm. The value of 
+    So = chi_test['So'] /1000
+    
     for d in Rnge:
         d['Manu_Spec'] = (
             sqrt( c1**2 + (c0 + d['distance'] * ppm / 1000)**2)) / 1000
         d['test_value'] = (chi2.ppf(0.95, dof) / dof) * d['Manu_Spec']
-        d['accept'] = exp_std_dev < d['test_value']
+        d['accept'] = So < d['test_value']
     test_a = {
         'test': 'A',
         'hypothesis': 'The experimental standard deviation, s, is smaller than or equal to the manufacturers specifications for the Instrument and prism combination.',
