@@ -435,7 +435,7 @@ def calibrate2(request,id):
                 'zero_point_correction': matrix_y[0]['value'],
                 'zpc_uncertainty': matrix_y[0]['uncertainty'],
                 'zpc_coverage_factor': chi_test['k'],
-                'standard_deviation': sqrt(chi_test['Variance']),
+                'standard_deviation': chi_test['So'],
                 'degrees_of_freedom': chi_test['dof'],
                 'scale_correction_factor': matrix_y[1]['value'] + 1,
                 'scf_uncertainty': matrix_y[1]['uncertainty'],
@@ -486,13 +486,16 @@ def calibrate2(request,id):
                      {'distance':600}])
                 )
             
-            if len(calib['edmi']) > 1:
+            if calib['edmi']:
+                prev = calib['edmi'].first()
                 ISO_test.append(
                     ISO_test_b(
-                        {'Variance':(calib['edmi'][1]['standard_deviation'])**2,
-                         'dof': calib['edmi'][1]['degrees_of_freedom']},
+                        {'So': prev['standard_deviation'],
+                         'dof': prev['degrees_of_freedom']},
                         chi_test)
                     )
+            else:
+                report_notes.append('The ISO 17123:4 Test B statistical test has not been performed due to insufficient historical records.')
                 
             ISO_test.append(
                 ISO_test_c(

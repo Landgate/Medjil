@@ -1,6 +1,6 @@
 '''
 
-   © 2023 Western Australian Land Information Authority
+   © 2024 Western Australian Land Information Authority
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -81,22 +81,19 @@ def LSA(A, x, P):
 
 
 def ISO_test_a(Insts, chi_test, Rnge=[{'distance': 100}]):
+    # Please note the database units for specifications are in mm
     k0 = float(Insts['edm'].edm_specs.manu_unc_k)
     ppm = float(Insts['edm'].edm_specs.manu_unc_ppm) / k0
-    c0 = float(Insts['edm'].edm_specs.manu_unc_const) / k0
+    c0 = (float(Insts['edm'].edm_specs.manu_unc_const)/1000) / k0
     k1 = float(Insts['prism'].prism_specs.manu_unc_k)
-    c1 = float(Insts['prism'].prism_specs.manu_unc_const) / k1
+    c1 = (float(Insts['prism'].prism_specs.manu_unc_const)/1000) / k1
     dof = chi_test['dof']
-    # Convert So to mm
-    # ISO 17123:4-2012 B.3 Calculation 
-    # Please note the worked example converts the So to mm. The value of 
-    So = chi_test['So'] /1000
     
     for d in Rnge:
-        d['Manu_Spec'] = (
-            sqrt( c1**2 + (c0 + d['distance'] * ppm / 1000)**2)) / 1000
+        edm_spec = c0 + d['distance'] * ppm /1000000
+        d['Manu_Spec'] = sqrt( c1**2 + edm_spec**2)
         d['test_value'] = (chi2.ppf(0.95, dof) / dof) * d['Manu_Spec']
-        d['accept'] = So < d['test_value']
+        d['accept'] = chi_test['So'] < d['test_value']
     test_a = {
         'test': 'A',
         'hypothesis': 'The experimental standard deviation, s, is smaller than or equal to the manufacturers specifications for the Instrument and prism combination.',
@@ -107,13 +104,14 @@ def ISO_test_a(Insts, chi_test, Rnge=[{'distance': 100}]):
 
 
 def ISO_test_b(prev_chi_test, chi_test):
-    if chi_test['dof'] == prev_chi_test['dof']:
-        test_value = chi_test['Variance'] / prev_chi_test['Variance']
+    if (chi_test['dof'] == prev_chi_test['dof']
+        and chi_test['So'] and prev_chi_test['So']):
+        test_value = (chi_test['So']**2) / (prev_chi_test['So']**2)
         lower_lmt = 1 / (f.ppf(0.975, chi_test['dof'], chi_test['dof']))
         upper_lmt = f.ppf(0.975, chi_test['dof'], chi_test['dof'])
         test_b = {
             'test': 'B',
-            'hypothesis': 'The standard deviation, s belong to the same population as the standard deviation obtained in the previous report for this instrumentation',
+            'hypothesis': 'The experimental standard deviation, s belong to the same population as the standard deviation obtained in the previous report for this instrumentation',
             'accept': lower_lmt <= test_value <= upper_lmt
         }
     else:
@@ -126,16 +124,23 @@ def ISO_test_b(prev_chi_test, chi_test):
 
 
 def ISO_test_c(zpc, zpc_std_dev, chi_test):
-    exp_std_dev = sqrt(chi_test['Variance'])
-    std_uc = zpc_std_dev * exp_std_dev
-    test_value = t.ppf(0.975, chi_test['dof']) * std_uc
-    test_c = {
-        'test': 'C',
-        'hypothesis': (
-            'The zero-point correction, δ, is equal to zero \n'
-            + f'zero-point correction: {round(zpc,5)}m \n'
-            + f'zero-point correction standard deviation: {round(zpc_std_dev,5)}m'),
-        'accept': zpc <= test_value
-    }
+    exp_std_dev = chi_test['So']
+    try:
+        std_uc = zpc_std_dev * exp_std_dev
+        test_value = t.ppf(0.975, chi_test['dof']) * std_uc
+        test_c = {
+            'test': 'C',
+            'hypothesis': (
+                'The zero-point correction, δ, is equal to zero \n'
+                + f'zero-point correction: {round(zpc,5)}m \n'
+                + f'zero-point correction standard deviation: {round(zpc_std_dev,5)}m'),
+            'accept': zpc <= test_value
+        }
+    except:
+        test_c = {
+            'test': 'C',
+            'hypothesis': 'Test could not be performed.',
+            'accept': ''
+        }
     return test_c
 

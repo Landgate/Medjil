@@ -1,6 +1,6 @@
 '''
 
-   © 2023 Western Australian Land Information Authority
+   © 2024 Western Australian Land Information Authority
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 '''
 #instruments
 from django.db import models
-from django.db.models import Q
 from django.urls import reverse
 from django.core.validators  import (
     MaxValueValidator, 
@@ -27,7 +26,9 @@ from django.conf import settings
 from accounts.models import (
     CustomUser,
     Company)
-from common_func.validators import *
+from common_func.validators import (
+    validate_profanity,
+    validate_file_size)
 from datetime import date
 from math import sin, cos, pi
 
@@ -250,12 +251,12 @@ class EDM_Specification(models.Model):
     )
     manu_unc_const = models.FloatField(
         validators=[MinValueValidator(0.0), MaxValueValidator(10.0)],
-        help_text="Accuracy = A mm ± B ppm, Uncertainty Constant = A",
+        help_text="Uncertainty = A mm ± B ppm, Uncertainty Constant = A",
         verbose_name='manufacturers uncertainty constant'
     )
     manu_unc_ppm = models.FloatField(
         validators=[MinValueValidator(0.0), MaxValueValidator(10.0)],
-        help_text="Accuracy = A mm ± B ppm, Uncertainty ppm = B",
+        help_text="Uncertainty = A mm ± B ppm, Uncertainty ppm = B",
         verbose_name='manufacturers parts per million uncertainty'
     )
     manu_unc_k = models.FloatField(
@@ -775,8 +776,8 @@ class EDMI_certificate (models.Model):
         
     standard_deviation = models.FloatField(
         validators = [MinValueValidator(0.00000), MaxValueValidator(10.00000)],
-        help_text="Results of measurement standard deviation (m)",
-        verbose_name="Standard Deviation")
+        help_text="Experimental Standard Deviation of single observation (m) ISO 17123-4:2012 eq.14",
+        verbose_name= 'Experimental Standard Deviation')
     degrees_of_freedom = models.IntegerField(
         validators = [MinValueValidator(1), MaxValueValidator(500)],
         help_text="Degrees of freedom of calibration",
@@ -941,7 +942,7 @@ class Specifications_Recommendations(models.Model):
         null=True, blank=True)
     manu_unc_const = models.FloatField(
         validators=[MinValueValidator(0.0), MaxValueValidator(10.0)],
-        help_text="Accuracy = A mm ± B ppm, Uncertainty Constant = A",
+        help_text="Uncertainty = A mm ± B ppm, Uncertainty Constant = A",
         verbose_name='Manufacturers uncertainty constant',
         null=True, blank=True)
     units_manu_unc_const = models.CharField(        
@@ -951,7 +952,7 @@ class Specifications_Recommendations(models.Model):
         
     manu_unc_ppm = models.FloatField(
         validators=[MinValueValidator(0.0), MaxValueValidator(10.0)],
-        help_text="Accuracy = A mm ± B ppm, Uncertainty ppm = B",
+        help_text="Uncertainty = A mm ± B ppm, Uncertainty ppm = B",
         verbose_name='Manufacturers ppm uncertainty',
         null=True, blank=True)
     units_manu_unc_ppm = models.CharField(        

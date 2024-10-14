@@ -1,6 +1,6 @@
 '''
 
-   © 2023 Western Australian Land Information Authority
+   © 2024 Western Australian Land Information Authority
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -323,7 +323,7 @@ def baseline_qry(frm_data):
                 Pillar_Survey.objects.filter(
                     baseline = frm_data['site'].pk,
                     survey_date__lte = frm_data['survey_date'])
-                .exclude(variance__isnull = True)
+                .exclude(experimental_std_dev__isnull = True)
                 .order_by('-survey_date'))[0]
         else:
             baseline['calibrated_baseline'] = frm_data['calibrated_baseline']

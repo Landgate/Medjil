@@ -451,9 +451,10 @@ class Pillar_Survey(models.Model):
         validators = [MinValueValidator(0.00000), MaxValueValidator(0.10000)],
         help_text="Uncertainty of the zero point correction (m) at 95% Confidence Level",
         verbose_name= 'zero point correction uncertainty')
-    variance = models.FloatField(
+    experimental_std_dev = models.FloatField(
         blank = True, null=True,
-        help_text="Variance of least squares adjustment of the calibration")
+        help_text="Experimental Standard Deviation of single observation (m) ISO 17123-4:2012 eq.14",
+        verbose_name= 'Experimental Standard Deviation')
     degrees_of_freedom = models.IntegerField(
         blank = True, null=True,
         validators = [MinValueValidator(1), MaxValueValidator(500)],

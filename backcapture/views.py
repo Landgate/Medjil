@@ -1,6 +1,6 @@
 '''
 
-   © 2023 Western Australian Land Information Authority
+   © 2024 Western Australian Land Information Authority
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -214,7 +214,7 @@ def create_medjil_model(rx, request, commit_errors):
         
         rx_make = rx['InstrumentMake'][rx_model['InstrumentMake_fk']]
         make = rx_make['manufacturer'].upper().strip()
-        zpc = rx_model['manu_unc_const']
+        zpc = rx_model['manu_unc_const'] * 1000
         ppm = rx_model['manu_unc_ppm']
         model = rx_model['name'].strip()
                
@@ -588,7 +588,7 @@ def import_dli(request):
                         fieldnotes_upload = None,
                         zero_point_correction = 0,
                         zpc_uncertainty = float(rx['BaselineAccuracy'][job['baseline_fk']]['UncertaintyConstant'])/1000,
-                        variance = 1,
+                        experimental_std_dev = 0.001,
                         degrees_of_freedom = int(len(uniq_bays) - len(pillars)),
                         )
                     if created: 
@@ -703,10 +703,7 @@ def import_dli(request):
                                 hygro_calib_applied = True,
                                 uncertainty_budget = rx_UC_budget,
                                 outlier_criterion = 3,
-                                test_cyclic = test_cyclic,
-                                # variance = 1,
-                                # degrees_of_freedom = len(uniq_bays)-2,
-                                # k = 1.996
+                                test_cyclic = test_cyclic
                                 )
                             )
                         commit_successes.append(job["name"])

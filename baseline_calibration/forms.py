@@ -82,7 +82,7 @@ class PillarSurveyForm(forms.ModelForm):
         exclude = (
             'psychrometer', 'psy_calib_applied',
             'zero_point_correction','zpc_uncertainty',
-            'variance','degrees_of_freedom',
+            'experimental_std_dev','degrees_of_freedom',
             'uploaded_on', 'modified_on',
             'html_report',
             'data_entered_person','data_entered_position','data_entered_date',
@@ -200,7 +200,7 @@ class PillarSurveyUpdateForm(forms.ModelForm):
     class Meta:
         model = Pillar_Survey
         fields = ['zero_point_correction','zpc_uncertainty',
-                  'variance','degrees_of_freedom',
+                  'experimental_std_dev','degrees_of_freedom',
                   'html_report']      
                
 

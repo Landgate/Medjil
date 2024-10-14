@@ -316,6 +316,10 @@
             <td class="text-left"> {{ chi_test.Variance|floatformat:2 }} </td>
         </tr>
         <tr>
+            <td class="text-left">Experimental Standard Deviation (m)</td>
+            <td class="text-left"> {{ chi_test.So|floatformat:5 }} </td>
+        </tr>
+        <tr>
             <td class="text-left">Number of Degrees of Freedom</td>
             <td class="text-left"> {{ chi_test.dof }}  </td>
         </tr>
@@ -421,7 +425,7 @@
                 <td>{{ t.test }}</td>
                 {% if 'test_ranges' in t.keys %}
                     <td class="text-left">
-                        {{ t.hypothesis }}
+                        <p>{{ t.hypothesis }}</p>
                         <table style="margin-left:auto;margin-right:auto;font-size:10.0pt;">
                             <tr>
                                 <th>Distance (m)</th>

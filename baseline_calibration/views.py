@@ -53,17 +53,17 @@ from .models import (
     Std_Deviation_Matrix)
 from geodepy.survey import radiations
 from common_func.Convert import (
+    baseline_qry,
     csv2dict,
     Calibrations_qry, 
-    baseline_qry)
+    report_notes_qry,
+    uncertainty_qry)
 from common_func.SurveyReductions import (
     validate_survey,
     apply_calib,
     get_mets_params,
     edm_mets_correction,
     adjust_alignment_survey,
-    report_notes_qry,
-    uncertainty_qry,
     add_calib_uc,
     reduce_sets_of_obs, 
     edm_std_function, 
@@ -277,7 +277,7 @@ def calibrate2(request,id):
     pillar_survey_form.is_valid()
     pillar_survey = pillar_survey_form.cleaned_data
     pillar_survey.update({'pk':id})
-    pillar_survey.update({'variance':query_dict['variance']})
+    pillar_survey.update({'experimental_std_dev':query_dict['experimental_std_dev']})
     
     # Get the raw_edm_obs and the raw_lvl_obs in dict like cleaned form data
     formset = modelformset_factory(EDM_Observation,
@@ -518,14 +518,21 @@ def calibrate2(request,id):
                 o['std_residual'] = residuals[o['id']]['std_residual']
     
             ISO_test=[]
-            if baseline['history'].count() > 1:
-                prev=baseline['history'].last()
-                ISO_test.append(ISO_test_b({'dof':prev.degrees_of_freedom,
-                                            'Variance': prev.variance},
-                                            chi_test))
-            ISO_test.append(ISO_test_c(matrix_y[-1]['value'],
-                                       matrix_y[-1]['std_dev'],
-                                       chi_test))
+            if baseline['history'].count() > 0:
+                prev=baseline['history'].first()
+                ISO_test.append(
+                    ISO_test_b(
+                        {'dof':prev.degrees_of_freedom,
+                         'So': prev.experimental_std_dev},
+                        chi_test))
+            else:
+                report_notes.append('The ISO 17123:4 Test B statistical test has not been performed due to insufficient historical records.')
+                
+            ISO_test.append(
+                ISO_test_c(
+                    matrix_y[-1]['value'],
+                    matrix_y[-1]['std_dev'],
+                    chi_test))
             
             #-------------- Extract pillar to pillar uncertainties from VCV---------------#
             # Formula 6.10 (6.13) - Adjustment Computation (Ghilani) 4th Edition
@@ -720,7 +727,7 @@ def calibrate2(request,id):
                 'zero_point_correction': matrix_y[n]['value'],
                 'zpc_uncertainty': matrix_y[n]['std_dev'],
                 'degrees_of_freedom': chi_test['dof'],
-                'variance': chi_test['Variance'],
+                'experimental_std_dev': chi_test['So'],
                 'html_report': html_report
                 }           
             
@@ -744,7 +751,7 @@ def calibrate2(request,id):
             psu_obj.zero_point_correction = psu['zero_point_correction']
             psu_obj.zpc_uncertainty = psu['zpc_uncertainty']
             psu_obj.degrees_of_freedom = psu['degrees_of_freedom']
-            psu_obj.variance = psu['variance']
+            psu_obj.experimental_std_dev = psu['experimental_std_dev']
             psu_obj.html_report = psu['html_report']
             psu_obj.save()
             

@@ -56,7 +56,7 @@
                   <td>{{ pillar_survey.survey_date }} </td>
                   <td>{{ pillar_survey.accreditation.accredited_company.company_abbrev }}</td>
                   <td>{{ pillar_survey.observer }} </td>
-                  {% if pillar_survey.variance is not null %}
+                  {% if pillar_survey.experimental_std_dev is not null %}
                       <td>{{ pillar_survey.modified_on }}</td>
                   {% else %}
                       <td>In progress ..</td>

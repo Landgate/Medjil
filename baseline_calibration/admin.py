@@ -1,6 +1,6 @@
 '''
 
-   © 2023 Western Australian Land Information Authority
+   © 2024 Western Australian Land Information Authority
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -83,7 +83,7 @@ class Pillar_SurveyAdmin(admin.ModelAdmin):
               ('Calibrated Baseline', { 
               'fields': (
               ('zero_point_correction','zpc_uncertainty'),
-              'degrees_of_freedom', 'variance')
+              'degrees_of_freedom', 'experimental_std_dev')
               }),
               ('Approavals', { 
               'fields': (
@@ -186,7 +186,7 @@ try:
                 ('Calibrated Baseline', { 
                 'fields': (
                 ('zero_point_correction','zpc_uncertainty'),
-                'degrees_of_freedom', 'variance')
+                'degrees_of_freedom', 'experimental_std_dev')
                 }),
                 ('Approavals', { 
                 'fields': (

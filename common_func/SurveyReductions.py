@@ -1,6 +1,6 @@
 '''
 
-   © 2023 Western Australian Land Information Authority
+   © 2024 Western Australian Land Information Authority
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -16,7 +16,9 @@
 
 '''
 import numpy as np
-from common_func.Convert import *
+from common_func.Convert import (
+    group_list,
+    db_std_units)
 from math import sqrt, sin, cos, radians, pi
 from datetime import date
 from statistics import mean
@@ -727,7 +729,7 @@ def validate_survey(pillar_survey, baseline=None, calibrations=None,
                 Pillar_Survey.objects.filter(
                     baseline = site_pk ,
                     survey_date__lte = pillar_survey['survey_date'])
-                .exclude(variance__isnull = True)
+                .exclude(experimental_std_dev__isnull = True)
                 .order_by('-survey_date'))
             if len(qry_obj) == 0:
                 Errs.append(
