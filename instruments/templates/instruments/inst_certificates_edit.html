@@ -257,14 +257,14 @@ function convertUnits() {
                 let convertedValue, uc;
     
                 if (selectedUnit === "a.x") {
-                    convertedValue = 1 + inputValue.value;
-                    uc = ucValue ? ucValue.value : undefined;
+                    convertedValue = 1 + Number(inputValue.value);
+                    uc = ucValue ? Number(ucValue.value) : undefined;
                 } else if (selectedUnit === "ppm") {
-                    convertedValue = 1 + inputValue.value * 1e-6;
-                    uc = ucValue ? (ucValue.value * 1e-6) : undefined;
+                    convertedValue = 1 + Number(inputValue.value) * 1e-6;
+                    uc = ucValue ? Number(ucValue.value) * 1e-6 : undefined;
                 } else {
-                    convertedValue = inputValue.value * conversionFactor;
-                    uc = ucValue ? ucValue.value * conversionFactor : undefined;
+                    convertedValue = Number(inputValue.value) * conversionFactor;
+                    uc = ucValue ? Number(ucValue.value) * conversionFactor : undefined;
                 }
     
                 // Update the values
