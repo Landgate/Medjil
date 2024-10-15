@@ -54,7 +54,7 @@
             <div class="flexbox-item_1600_IB">
                 <table id='form_table'>
                     <colgroup>
-                        <col span="1" width="30%">
+                        <col span="1" width="31%">
                         <col span="1" width="20%">
                         <col span="1" width="20%">
                         <col span="1" width="20%">
@@ -219,6 +219,25 @@ function toggleCyclic() {
         }
     }
 }
+
+
+// Function to chnage the label on the scale correction factor to indicate if 
+// it is calculating the corrected distance or instrument correction.
+document.addEventListener("DOMContentLoaded", function() {
+    var selectElement = document.getElementById("id_units_scf");
+    var labelElement = document.querySelector('label[for="id_scale_correction_factor"]');
+
+    if (selectElement && labelElement) {
+        selectElement.addEventListener("change", function() {
+            var selectedValue = this.value;
+            if (selectedValue === "A.x") {
+                labelElement.innerHTML = "Scale Correction Factor (scf)";
+            } else {
+                labelElement.innerHTML = "IC - Scale Correction Factor (scf):";
+            }
+        });
+    }
+});
 
 
 // Function to convert units to database standards

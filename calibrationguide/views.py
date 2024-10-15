@@ -1,6 +1,6 @@
 '''
 
-   © 2023 Western Australian Land Information Authority
+   © 2024 Western Australian Land Information Authority
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,21 +20,11 @@ from django.shortcuts import render, redirect
 from calibrationsites.models import CalibrationSite
 
 def guide_view(request):
-    # inst_objs = CalibrationInstruction.objects.all()
-    # img_objs = InstructionImage.objects.all()
-    # context = {
-    #     'inst_objs' : inst_objs,
-    #     'img_objs' : img_objs,
-    # }
+    # Display the manual as html page
     return render(request, 'calibrationguide/calibrationguide_view.html', context={})
 
 def manual_view(request):
-    # inst_objs = TechnicalManual.objects.all()
-    # img_objs = ManualImage.objects.all()
-    # context = {
-    #     'inst_objs' : inst_objs,
-    #     'img_objs' : img_objs,
-    # }
+    # Display the manual as html page
     return render(request, 'calibrationguide/calibrationmanual_view.html', context={})
 
 def read_manual(request, manual_name):

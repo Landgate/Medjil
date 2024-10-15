@@ -254,7 +254,7 @@
                   baselines using distance meters as prescribed by the National Standards Commission: written by Dr.
                   J.M.Rüeger, School of Surveying, University of New South Wales. P.O. Box 1, Kensington, N.S.W. 2033
                </li>
-               <li>“Electronic Distance Measurements” J.M.Rüeger</li>
+               <li>“Electronic Distance Measurements” J.M.Rüeger, 1996</li>
                <li>Draft Verifying Authorities Handbook 2001</li>
                <li>IAG resolutions at it’s XXIIth General Assembly in Birmingham, 1999</li>
                <li>Optics and optical instruments - Field procedures for testing geodetic and surveying instruments, ISO
@@ -578,7 +578,12 @@
                <p>&emsp;&emsp;IC = Instrument Correction</p>
                <p>&emsp;&emsp;D = Distance</p>
                <p>&emsp;&emsp;zpc = Zero Point Correction</p>
-               <p>&emsp;&emsp;scf = Scale Correction Factor (1:x)</p>
+               <p>&emsp;&emsp;scf = Scale Correction Factor (a.x)</p>
+               
+               <p>&emsp;&emsp;&emsp;Note: scf as (a.x) = scf - 1, where scf is expressed as (A.x)</p>
+               <p>&emsp;&emsp;&emsp;&emsp;Corrected Distance = scf * d + zpc, where scf is expressed as (A.x)</p>
+               <p>&emsp;&emsp;&emsp;&emsp;Instrument Correction  = scf * d + zpc, where scf is expressed as (a.x)</p>
+               <p>&emsp;&emsp;&emsp;&emsp;Instrument Correction  = scf * d * 1e-6 + zpc, where scf is expressed as scf (ppm)</p>
                <p>&emsp;&emsp;U = Instrument Unit Length (m) - wavelength/2</p>
                <p>&emsp;&emsp;1C, 2C, 3C and 4C = Cyclic (short periodic) parameters</p>
                <p>By default Medjil estimates only zpc and scf. However, Medjil is also capable of solving for cyclic
@@ -670,7 +675,7 @@
                <div id="EDMI-Chapter4_1_2">
                   <h4>4.1.2 EDMI correction</h4>
                   <p>EDMI calibration corrections are sourced from the most recent instrument calibration certificate current prior to the date of baseline survey:</p>
-                  <div>c<sub>EDMI</sub> = sfc * d + zpc</div>
+                  <div>c<sub>EDMI</sub> = scf * d + zpc</div>
                   <br>
                   <p>If the meteorological corrections have not been applied to EDMI readings prior to upload,
                     atmospheric calibration corrections will be applied prior to calculating the first velocity correction.</p>
@@ -724,7 +729,7 @@
                   alt="Creating EDM Model using EDM specification lookup table">
                   <br>
                   <p>These parameters are assigned to the EDM model and are used for all instruments of that model associated with the company. The Manufacturers Uncertainty Constant, Manufacturers Parts Per Million Uncertainty
-                     and Manufacturers Uncertainty Coverage Factor are required fields. These are used by Medjil to perform the statistical test recommended in ISO 17123-4:2012 (see Section 7). </p>
+                     and Manufacturers Uncertainty Coverage Factor are required fields. Most manufacturers state the accuracy of their instruments as a standard deviation at 68% confidence level (J.M.Rüeger, 1996). These are used by Medjil to perform the statistical test recommended in ISO 17123-4:2012 (see Section 7). </p>
                   <p>Medjil treats phase and pulse measuring instruments differently (first velocity correction is different) thus the pulse instruments must have mets applied before importing data to Medjil.</p>
                   <p>
                       Solving for cyclic errors can be performed for both types of instruments and is an option when performing and EDMI Calibration.
@@ -1050,7 +1055,7 @@
                   <br>
                   <p>
                      <b>EDM scale factor</b> = Uncertainty related to the EDM scale factor can be specified in parts per
-                     million (ppm), percent (%), scalar(x:1) or a ratio (1:x). All error sources belonging to this group
+                     million (ppm), percent (%) or scalar(a.x). All error sources belonging to this group
                      will be combined before the contribution to the total uncertainty of the calibration according to the
                      following formula:
                   </p>
@@ -1064,7 +1069,7 @@
                      a Type B estimate based on prior knowledge and experience.</p>
                   <p>
                      <b>EDMI measurement</b> = Uncertainty relating to the EDMI measurement can be specified in metres
-                     (m), millimetres (mm), parts per million (ppm), percent (%), scalar(x:1) or a ratio (1:x). All error
+                     (m), millimetres (mm), parts per million (ppm), percent (%) or scalar(a.x). All error
                      sources belonging to this group will be combined before the contribution to the total uncertainty of the
                      calibration according to the following formula:
                   </p>
@@ -1136,7 +1141,7 @@
                   <p>
                      <b>Certified distances</b> = Uncertainty relating to the certified distances can be specified in
                      metres
-                     (m), millimetres (mm), parts per million (ppm), percent (%), scalar(x:1) or a ratio (1:x). All
+                     (m), millimetres (mm), parts per million (ppm), percent (%) or scalar(a.x). All
                      error
                      sources belonging to this group will be combined before the contribution to the total uncertainty
                      of the
@@ -1350,12 +1355,12 @@
                         <p>&emsp;&emsp;S<sub>IC</sub> = Standard uncertainty of the Instrument Correction</p>
                         <p>&emsp;&emsp;D = Distance</p>
                         <p>&emsp;&emsp;S<sub>zpc</sub> = Standard uncertainty of the Zero Point Correction (m)</p>
-                        <p>&emsp;&emsp;S<sub>scf</sub> = Standard uncertainty of the Scale Correction Factor (1:x)</p>
+                        <p>&emsp;&emsp;S<sub>scf</sub> = Standard uncertainty of the Scale Correction Factor (a.x)</p>
                         <p>&emsp;&emsp;U = Instrument Unit Length (m)</p>
-                        <p>&emsp;&emsp;S<sub>1</sub> = Standard uncertainty of the term 1 - Cyclic (1:x)</p>
-                        <p>&emsp;&emsp;S<sub>2</sub> = Standard uncertainty of the term 2 - Cyclic (1:x)</p>
-                        <p>&emsp;&emsp;S<sub>3</sub> = Standard uncertainty of the term 3 - Cyclic (1:x)</p>
-                        <p>&emsp;&emsp;S<sub>4</sub> = Standard uncertainty of the term 4 - Cyclic (1:x)</p>
+                        <p>&emsp;&emsp;S<sub>1</sub> = Standard uncertainty of the term 1 - Cyclic (a.x)</p>
+                        <p>&emsp;&emsp;S<sub>2</sub> = Standard uncertainty of the term 2 - Cyclic (a.x)</p>
+                        <p>&emsp;&emsp;S<sub>3</sub> = Standard uncertainty of the term 3 - Cyclic (a.x)</p>
+                        <p>&emsp;&emsp;S<sub>4</sub> = Standard uncertainty of the term 4 - Cyclic (a.x)</p>
                         <p> (b) if the calibration of the EDMI has not tested for cyclic errors, has found them to be insignificant:</p>
                         <div>$$ S_{IC}=S_{zpc}+S_{scf}D\ \ \ (Eq. 5.10)$$ </div>
                         <p>The uncertainty is calculated according to the following formula:</p>

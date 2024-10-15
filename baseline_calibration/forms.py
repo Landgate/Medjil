@@ -266,14 +266,14 @@ class Uncertainty_BudgetForm(forms.ModelForm):
             'auto_EDMI_scf':
                 {'group':"EDM Scale factor", 
                  'description': "EDMI Reg13 Scale correction factor (Baseline Only)",
-                 'units': "x:1",
+                 'units': "a.x",
                  'type': "B",
                  'distribution': "N",
                  'origin': "Instument Register"},
             'auto_EDMI_scf_drift':
                 {'group':"EDM Scale factor",
                  'description': "EDM Scale correction factor drift over time (Baseline Only)",
-                 'units': "x:1",
+                 'units': "a.x",
                  'type': "B",
                  'distribution': "N",
                  'origin': "Instument Register"},

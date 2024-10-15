@@ -339,7 +339,11 @@
     <h2 class="text-center">Estimated Instrument Correction</h2>
     <div class="flexbox-container_IB">
         <div class="flexbox-item_800_IB">
-            <p>The estimated instrument correction (IC) is to be added to the slope distances measured by EDMI set of {{ pillar_survey.edm.edm_specs.edm_model.make.make }} {{ pillar_survey.edm.edm_specs.edm_model.model }} EDM instrument (S/N:{{ pillar_survey.edm.edm_number }}) and prism (S/N:{{ pillar_survey.prism.prism_number }}) using the following formula:</p>
+            <p>The estimated instrument correction (IC) is to be added to the slope distances measured by the EDMI set {{ pillar_survey.edm.edm_specs.edm_model.make.make }} {{ pillar_survey.edm.edm_specs.edm_model.model }} EDM instrument (S/N:{{ pillar_survey.edm.edm_number }}) and prism (S/N:{{ pillar_survey.prism.prism_number }}) using the following formula:</p>
+            <p class="text-center">
+                <B>IC = zpc + (scf - 1) * D</B>
+            </p>
+            <p>The corrected distance in metres is calculated using the following formula:<p>
             {% if pillar_survey.parameters|length > 4 %}
                 <p class="text-center">
                     <B>D' = zpc + scf * D + 1C * Sin(2 * &#8508 * D/U) + 2C * Cos(2 * &#8508 * D/U) + 3C * Sin(4 * &#8508 * D/U) + 4C * Cos(4 * &#8508 * D/U)</B>
@@ -355,11 +359,11 @@
             {% endif %}
             <br>Where:
             <div style="margin-left: 5%; margin-top: 0; padding-top: 0;">
-                D' = Corrected Distance (m) = D + IC
-                <br>IC = Instrument Correction (m)
+                IC = Instrument Correction (m)
+                <br>D' = Corrected Distance (m)
                 <br>D = Distance (m)
                 <br>zpc = Zero Point Correction (m)
-                <br>scf = Scale Correction Factor (a.x)
+                <br>scf = Scale Correction Factor (A.x)
                 {% if pillar_survey.parameters|length > 2 %}
                     <br>U = Instrument Unit Length (m)
                     <br>1C = Cyclic error parameter 1 (m)
@@ -728,7 +732,7 @@
         <tr>
             <th>Date</th>
             <th colspan = 2>Zero Point Correction (m)</th>
-            <th colspan = 2>Scale Correction Factor (a.x)</th>
+            <th colspan = 2>Scale Correction Factor (A.x)</th>
             <th colspan = 2>1C (m)</th>
             <th colspan = 2>2C (m)</th>
             <th colspan = 2>3C (m)</th>

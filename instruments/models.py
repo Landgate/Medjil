@@ -631,10 +631,10 @@ class EDMI_certificate (models.Model):
     scale_correction_factor = models.FloatField(
         validators = [MinValueValidator(0.00000000), MaxValueValidator(2.00000000)],
         help_text=(
-            "eg. &#010" +
-            "Corrected Reading = scf.d + zpc, Scale Correction Factor = scf (A.x) &#010" +
-            "Instrument Correction  = scf.d + zpc, Scale Correction Factor = scf (a.x) &#010" +
-            "Instrument Correction  = scf.d.1e-6 + zpc, Scale Correction Factor = scf (ppm)"),
+            "Note: scf as (A.x) = 1 + scf as (a.x) &#010" +
+            "Corrected Distance = scf.d + zpc, where scf is expressed as (A.x) &#010" +
+            "Instrument Correction  = scf.d + zpc, where scf is expressed as (a.x) &#010" +
+            "Instrument Correction  = scf.d.1e-6 + zpc, where scf is expressed as scf (ppm)"),
         verbose_name= 'Scale Correction Factor (scf)')
     scf_uncertainty = models.FloatField(
         validators = [MinValueValidator(0.00000000), MaxValueValidator(10.00000000)],
