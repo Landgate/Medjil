@@ -214,7 +214,7 @@ def create_medjil_model(rx, request, commit_errors):
         
         rx_make = rx['InstrumentMake'][rx_model['InstrumentMake_fk']]
         make = rx_make['manufacturer'].upper().strip()
-        zpc = rx_model['manu_unc_const'] * 1000
+        zpc = float(rx_model['manu_unc_const']) * 1000
         ppm = rx_model['manu_unc_ppm']
         model = rx_model['name'].strip()
                
