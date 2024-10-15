@@ -51,6 +51,18 @@ class Migration(migrations.Migration):
             ),
         ),
         migrations.AlterField(
+            model_name="edmi_certificate",
+            name="scale_correction_factor",
+            field=models.FloatField(
+                help_text="Note: scf as (A.x) = 1 + scf as (a.x) &#010Corrected Distance = scf.d + zpc, where scf is expressed as (A.x) &#010Instrument Correction  = scf.d + zpc, where scf is expressed as (a.x) &#010Instrument Correction  = scf.d.1e-6 + zpc, where scf is expressed as scf (ppm)",
+                validators=[
+                    django.core.validators.MinValueValidator(0.0),
+                    django.core.validators.MaxValueValidator(2.0),
+                ],
+                verbose_name="Scale Correction Factor (scf)",
+            ),
+        ),
+        migrations.AlterField(
             model_name="specifications_recommendations",
             name="manu_unc_const",
             field=models.FloatField(
