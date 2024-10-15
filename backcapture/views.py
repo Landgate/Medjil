@@ -303,9 +303,18 @@ def create_medjil_insts(rx, request, commit_errors):
                     edm_custodian = request.user,
                     comment = rx_inst['comments'],
                     edm_specs = specs)
-        except Exception as e:
-            commit_errors.append(
-                f"Error creating EDM Instrument SN {rx_inst['serial_number']} in Medjil: {e}")
+        except:
+            try:
+                specs = rx_specs['medjil_specs_pk']
+                if rx_inst['inst_type'] == 'E':
+                    rx_inst['medjil_pk'], _ = EDM_Inst.objects.get_or_create(
+                        edm_number = rx_inst['serial_number'] + ' (Baseline.exe)',
+                        edm_custodian = request.user,
+                        comment = rx_inst['comments'],
+                        edm_specs = specs)
+            except Exception as e:
+                commit_errors.append(
+                    f"Error creating EDM Instrument SN {rx_inst['serial_number']} in Medjil: {e}")
         try:
             if rx_inst['inst_type'] == 'P':
                 rx_inst['medjil_pk'], _ = Prism_Inst.objects.get_or_create(
@@ -313,9 +322,17 @@ def create_medjil_insts(rx, request, commit_errors):
                     prism_custodian = request.user,
                     comment = rx_inst['comments'],
                     prism_specs = specs)
-        except Exception as e:
-            commit_errors.append(
-                f"Error creating Prism Instrument SN {rx_inst['serial_number']} in Medjil: {e}")
+        except:
+            try:
+                if rx_inst['inst_type'] == 'P':
+                    rx_inst['medjil_pk'], _ = Prism_Inst.objects.get_or_create(
+                        prism_number = rx_inst['serial_number'] + ' (Baseline.exe)',
+                        prism_custodian = request.user,
+                        comment = rx_inst['comments'],
+                        prism_specs = specs)
+            except Exception as e:
+                commit_errors.append(
+                    f"Error creating Prism Instrument SN {rx_inst['serial_number']} in Medjil: {e}")
             
     return rx, commit_errors
 
