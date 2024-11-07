@@ -399,7 +399,7 @@ def import_dli(request):
         Backcapture_History.objects.filter(created_on__lt=threshold).delete()
         commit_count = Backcapture_History.objects.filter(user=request.user).count()
         
-        if commit_count >=30:
+        if commit_count >=300:
             importForm.add_error(None, 'Error - You have exceeded your number of database imports for today.')
     
     if importForm.is_valid():
