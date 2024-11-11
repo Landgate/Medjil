@@ -315,7 +315,8 @@ def calibrate2(request,id):
                                                       'Mets_Correction',
                                                       'raw_slope_dist',
                                                       'slope_dist',],
-                                            std_list=['slope_dist'])
+                                            std_list=['slope_dist'],
+                                            mask_by='use_for_distance')
             
             edm_trend = edm_std_function(edm_observations, 
                                          uc_budget['stddev_0_adj'])           #y = Ax + B
