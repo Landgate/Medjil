@@ -152,7 +152,7 @@ def calibrate1(request, id):
                                         raw_edm_obs=raw_edm_obs)
             
             if len(Check_Errors['Errors']) > 0:
-                return render(request, 'baseline_calibration/errors_report.html', 
+                return render(request, 'edm_calibration/errors_report.html', 
                               {'Check_Errors':Check_Errors})
         else:
             qs = uEDM_Observation.objects.filter(pillar_survey__pk=id)
@@ -269,7 +269,7 @@ def calibrate2(request,id):
                                         raw_edm_obs=raw_edm_obs)
             
             if len(Check_Errors['Errors']) > 0:
-                return render(request, 'baseline_calibration/errors_report.html', 
+                return render(request, 'edm_calibration/errors_report.html', 
                               {'Check_Errors':Check_Errors})
                               
             #----------------- Query notes and Uncertainty -----------------#
