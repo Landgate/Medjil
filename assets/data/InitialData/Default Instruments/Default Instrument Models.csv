@@ -163,7 +163,9 @@ prism,Sokkia,0/30 Poly prism
 prism,Trimble,360 Prism
 prism,Trimble,Mini Prism
 prism,Trimble,Small Monitoring Prism
+prism,Trimble,Traverse Prism (-35mm)
 prism,Trimble,Large Monitoring Prism
+prism,Topcon,ATP1
 baro,DRUCK,DPI740
 thermo,DELTA OHM,HD 2301.0R - HP472ACR
 hygro,DELTA OHM,HD 2301.0R - HP472ACR
