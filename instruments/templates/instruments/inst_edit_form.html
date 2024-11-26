@@ -103,21 +103,23 @@
 <script src="{% static 'js/instrument/instrument.js' %}"></script>
 <script src="{% static 'js/instrument/popups.js' %}"></script>
 
-
 <script>
     const db_makes = {{ makes|safe }};
     const db_models = {{ models|safe }};
 
-    // Disable fields 
+    // Disable fields if they exist
     const isCalibrated = document.getElementById('id_iscalibrated');
     const isReference = document.getElementById('id_isreference');
-    if (document.getElementById('object_id').value) {
-        isCalibrated.disabled = true;
+    const objectId = document.getElementById('object_id');
+
+    if (objectId && objectId.value) {
+        if (isCalibrated) {
+            isCalibrated.disabled = true;
+        }
         if (isReference) {
             isReference.disabled = true;
         }
-    } 
-    
+    }
 </script>
 
 {% endblock %}

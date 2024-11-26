@@ -80,22 +80,35 @@ var wrapper = document.querySelector('.wrapper');
 // Replace the whole wrapper with its own contents
 // wrapper.outerHTML = wrapper.innerHTML;
 
-function changeToPrintFormat() {
-  event.preventDefault();
-  // Create a new stylesheet for print styles
-  var printStyles = document.createElement('style');
-  printStyles.setAttribute('media', 'print');
-  document.head.appendChild(printStyles);
+function changeToPrintFormat(event) {
+    event.preventDefault();
 
-  // Add CSS rules for print styles
-  printStyles.sheet.insertRule('body { font-size: 12pt; }', 0);
-  printStyles.sheet.insertRule('.no-print { display: none; }', 0);
+    // Select the header element
+    var header = document.querySelector('.page-header'); // Replace with your header's class or ID
 
-  // Trigger the print dialog
-  window.print();
+    // Store the original position
+    var originalPosition = header.style.position;
 
-  // Remove the print styles after printing
-  document.head.removeChild(printStyles);
+    // Change the header's position for printing
+    header.style.position = 'static'; // or 'relative'
+
+    // Create a new stylesheet for print styles
+    var printStyles = document.createElement('style');
+    printStyles.setAttribute('media', 'print');
+    document.head.appendChild(printStyles);
+
+    // Add CSS rules for print styles
+    printStyles.sheet.insertRule('body { font-size: 12pt; }', 0);
+    printStyles.sheet.insertRule('.no-print { display: none; }', 0);
+
+    // Trigger the print dialog
+    window.print();
+
+    // Revert the header's position after printing
+    header.style.position = originalPosition;
+
+    // Remove the print styles after printing
+    document.head.removeChild(printStyles);
 }
 
 // Call the function when a button or link is clicked, for example
