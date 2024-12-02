@@ -191,7 +191,8 @@ def register_edit(request, inst_disp, tab, id):
                                             inst_type = inst_disp)
 
         if inst_disp == 'staff':
-            tmplate = 'staffcalibration/staff_calibration_record_form.html'
+            # tmplate = 'staffcalibration/staff_calibration_record_form.html'
+            tmplate = 'staffcalibration/staff_calibration_form.html'
             if id == 'None':
                 form = StaffCalibrationRecordForm(request.POST or None,
                                             request.FILES or None,

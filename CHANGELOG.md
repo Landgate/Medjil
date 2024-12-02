@@ -7,7 +7,16 @@ This code is a Django-based open-source web application developed by Landgate.
 Medjil is now available for Beta testing. We are seeking expressions of interest from stakeholders to test Medjil and provide feedback. 
 Press [Start Testing](http://medjil.lb.landgate.wa.gov.au) to begin. 
 
-## Issues & Fixes
+## Issues Fixed 
+* In the lists of staff calibrations and staff calibration certificates the action buttons and to edits or delete a record are missing.
+    - Buttons added (?)
+* Cancelling the “Edit Barcoded Staff Certificate” interface (in the levelling registry) jumps to barcoded staff register in the dashboard. 
+    - Url reverse corrected (?)
+* In the same interface there is a reference to"Step of".
+    - Template changed in *instruments/views.py > register_edit* 
+
+
+## Additions | Fixes | Changes 
 ### [1.0.10] - 2024-11-26 - [Kent Wheeler]
 Added 
 * Site name added to baseline calibration report  
