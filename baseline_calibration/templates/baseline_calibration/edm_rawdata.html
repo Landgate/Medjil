@@ -21,7 +21,7 @@
 
 <article class="post">
     <div class="post-content">
-        <form id="edm-rawDataForm" action="" style="font-size:10.0pt;max-width: 100%;" class="site-form" method="post" enctype="multipart/form-data">
+        <form id="edm-rawDataForm" action="" style="font-size:10.0pt;max-width: 100%;overflow-x: auto;" class="site-form" method="post" enctype="multipart/form-data">
             <div class="mb-5 px-2 site-form-header bg-indigo-300 rounded">
                 <h2 class="text-center">Imported EDM Observations</h2>
             </div>
@@ -31,15 +31,15 @@
                 	<br>Please select/deselect the observations in the following table to use for the alignment and/or distance calculations.
                 </p>
             </div>
-            <div class="flexbox-container_IB" style="width: 100%;">
+            <div class="flexbox-container_center_IB" style="width: 100%;">
                 <div class="flexbox-item_400_IB">
                     <i>* Click the table headers to sort table</i>
                 </div>
-                <div class="flexbox-item_IB" style="width: 100%;text-align:right">
+                <div class="flexbox-item_center_IB" style="width: 100%;text-align:right">
                     <a href="#bottom">Scroll to bottom &#128317</a>
                 </div>
             </div>
-            <div class="flexbox-container_IB flexbox-item_IB" style="min-width: 600px;max-width: 100%;">
+            <div class="flexbox-container_IB flexbox-item_center_IB" style="min-width: 600px;max-width: 100%;">
                 {% csrf_token %}
                 <table id="obsTable">
                     {{ edm_obs_formset.management_form }}
@@ -52,7 +52,7 @@
                                 <th onclick="sortTable(this)"> To Pillar </th>
                                 <th onclick="sortTable(this)"> Instrument Height (m)</th>
                                 <th onclick="sortTable(this)"> Target Height (m)</th>
-                                <th onclick="sortTable(this)"> Slope Distance (m)</th>
+                                <th onclick="sortTable(this)"> Raw Slope Distance (m)</th>
                                 <th onclick="sortTable(this)"> Offset (m)</th>
                                 <th onclick="sortTable(this)"> Raw Temperature (°C)</th>
                                 {% if raw.raw_temperature2 %}<th onclick="sortTable(this)"> Raw Temperature2 (°C)</th>{% endif %}
