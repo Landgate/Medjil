@@ -766,19 +766,19 @@ def calibrate2(request,id):
                     from_pillar = cd['from_pillar'],
                     to_pillar = cd['to_pillar'],
                     defaults = cd)
-            if not created:
-                cd_obj.distance = cd['distance']
-                cd_obj.a_uncertainty = cd['a_uncertainty']
-                cd_obj.k_a_uncertainty = cd['k_a_uncertainty']
-                cd_obj.combined_uncertainty = cd['combined_uncertainty']
-                cd_obj.k_combined_uncertainty = cd['k_combined_uncertainty']
-                cd_obj.offset = cd['offset']
-                cd_obj.os_uncertainty = cd['os_uncertainty']
-                cd_obj.k_os_uncertainty = cd['k_os_uncertainty']
-                cd_obj.reduced_level = cd['reduced_level']
-                cd_obj.rl_uncertainty = cd['rl_uncertainty']
-                cd_obj.k_rl_uncertainty = cd['k_rl_uncertainty']
-                cd_obj.save()
+                if not created:
+                    cd_obj.distance = cd['distance']
+                    cd_obj.a_uncertainty = cd['a_uncertainty']
+                    cd_obj.k_a_uncertainty = cd['k_a_uncertainty']
+                    cd_obj.combined_uncertainty = cd['combined_uncertainty']
+                    cd_obj.k_combined_uncertainty = cd['k_combined_uncertainty']
+                    cd_obj.offset = cd['offset']
+                    cd_obj.os_uncertainty = cd['os_uncertainty']
+                    cd_obj.k_os_uncertainty = cd['k_os_uncertainty']
+                    cd_obj.reduced_level = cd['reduced_level']
+                    cd_obj.rl_uncertainty = cd['rl_uncertainty']
+                    cd_obj.k_rl_uncertainty = cd['k_rl_uncertainty']
+                    cd_obj.save()
                
             # Commit the standard deviations
             bay = request.session['bay_' + str(id)]
@@ -793,9 +793,9 @@ def calibrate2(request,id):
                     to_pillar=baseline['pillars'].get(name=p1),
                     defaults = {
                         'std_uncertainty':sqrt(vv)})
-            if not created:
-                vv_obj.std_uncertainty = sqrt(vv)
-                vv_obj.save()
+                if not created:
+                    vv_obj.std_uncertainty = sqrt(vv)
+                    vv_obj.save()
                                 
             return redirect('baseline_calibration:calibration_home')
 
