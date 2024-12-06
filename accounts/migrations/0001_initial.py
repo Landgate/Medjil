@@ -34,6 +34,21 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
+            name='Location',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('name', models.CharField(
+                        validators=[common_func.validators.validate_profanity],
+                        max_length=200, unique=True)),
+                ('statecode', models.CharField(
+                        validators=[common_func.validators.validate_profanity],
+                        max_length=3)),
+            ],
+            options={
+                'ordering': ['name'],
+            },
+        ),
+        migrations.CreateModel(
             name='Company',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
@@ -81,6 +96,7 @@ class Migration(migrations.Migration):
                 ('date_joined', models.DateTimeField(default=django.utils.timezone.now, verbose_name='date joined')),
                 ('email', accounts.models.LowerCaseEmailField(error_messages={'unique': 'The user with that email address already exists.'}, max_length=150, unique=True, verbose_name='email address')),
                 ('company', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='accounts.company')),
+                ('locations', models.ManyToManyField(blank=True, to="accounts.location")),
                 ('groups', models.ManyToManyField(blank=True, help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.', related_name='user_set', related_query_name='user', to='auth.group', verbose_name='groups')),
                 ('user_permissions', models.ManyToManyField(blank=True, help_text='Specific permissions for this user.', related_name='user_set', related_query_name='user', to='auth.permission', verbose_name='user permissions')),
             ],

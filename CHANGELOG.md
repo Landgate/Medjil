@@ -8,15 +8,41 @@ Medjil is now available for Beta testing. We are seeking expressions of interest
 Press [Start Testing](http://medjil.lb.landgate.wa.gov.au) to begin. 
 
 ## Issues Fixed 
+* 
 * In the lists of staff calibrations and staff calibration certificates the action buttons and to edits or delete a record are missing.
     - Buttons added (?)
 * Cancelling the “Edit Barcoded Staff Certificate” interface (in the levelling registry) jumps to barcoded staff register in the dashboard. 
     - Url reverse corrected (?)
-* In the same interface there is a reference to"Step of".
-    - Template changed in *instruments/views.py > register_edit* 
 
 
 ## Additions | Fixes | Changes 
+### [1.0.12] - 2024-12-06 - [Khandu]
+Fixed
+* Removed Group - "Landgate" & "Geodesy" and replaced by "Verifying Authority". All Survey Team Members added to Admin Group by Default. All Landgate NATA members added to VerifyingAuthority
+	-*accounts/apps.py*
+	-*accounts/signals.py*
+	-*accounts/migrations/0003_create_suser.py*
+	
+Added
+* Added a model named Location in accounts/models.py
+* Added a locations field for CustomUser model as a ManyToMany to Location. This is allow Users to have multiple locations. 
+	-*accounts/models.py*
+* Added the new field locations to Admin Site
+	-*accounts/admin.py*
+	-*accounts/sites.py*
+* Added the new field locations to forms - UserSignUp, CustomUserChangeForm
+* Added user.locations.set(form.cleaned_data['locations']) in user_signup function in views.py
+	-*accounts/views.py*
+
+Changed
+* 
+
+
+### [1.0.11] - 2024-12-02 - [Khandu]
+Fixed
+* Edit Barcoded Staff Certificate template showing *Step of*. Changed template under 
+    - *instruments/views.py > register_edit* 
+
 ### [1.0.10] - 2024-11-26 - [Kent Wheeler]
 Added 
 * Site name added to baseline calibration report  

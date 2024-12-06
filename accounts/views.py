@@ -190,37 +190,37 @@ def user_signup(request):
     if request.method=="POST":
         form = SignupForm(data = request.POST)
         form2 = CompanyForm(data = request.POST)
-        
         # if company is Others, both forms must validate
         # if company is not Others, form2 does not need to validate
         if ((form.is_valid() and request.POST['company']!='1')
             or (form.is_valid() and form2.is_valid())
             ):
+            #data = form.cleaned_data
             email = form.cleaned_data.get('email')
             user = form.save(commit=False)
             user.is_active = False
-            
+           
             if user.company.company_abbrev == "OTH":
                 user_company = form2.save()
                 user.company = user_company
-                
+            # Save the user first before assigning the locations    
             user.save()
-
+            # Save location
+            user.locations.set(form.cleaned_data['locations'])
+            user.save()
             # Assign Groups
-            geodesy_group = ['kent.wheeler@landgate.wa.gov.au', 
-                                'khandu.k@landgate.wa.gov.au', 
-                                'khandu@landgate.wa.gov.au', 
-                                'vanessa.ung@landgate.wa.gov.au', 
-                                'brendon.hellmund@landgate.wa.gov.au',
-                                'tony.castelli@landgate.wa.gov.au', 
-                                'ireneusz.baran@landgate.wa.gov.au',
-                                'irek.baran@landgate.wa.gov.au'
+            admin_group = ['kent.wheeler@landgate.wa.gov.au', 
+                            'khandu.k@landgate.wa.gov.au', 
+                            'khandu@landgate.wa.gov.au', 
+                            'vanessa.ung@landgate.wa.gov.au', 
+                            'brendon.hellmund@landgate.wa.gov.au',
+                            'tony.castelli@landgate.wa.gov.au', 
+                            'ireneusz.baran@landgate.wa.gov.au',
+                            'irek.baran@landgate.wa.gov.au'
                             ]
-            if email.endswith('landgate.wa.gov.au'):
-                user.groups.add(Group.objects.get(name = 'Landgate'))
 
-            if email in geodesy_group:
-                user.groups.add(Group.objects.get(name = 'Geodesy'))
+            if email in admin_group:
+                user.groups.add(Group.objects.get(name = 'Admin'))
                 user.is_staff = True
             user.save()
             
@@ -518,4 +518,22 @@ def calibration_report_notes_delete(request, report_disp, id):
     try_delete_protected(request, delete_obj)
     
     return redirect ('accounts:calibration_report_notes_list', report_disp=report_disp)
+
+# from .forms import AuStatesForm
+# def states_view(request):
+#     if request.method == 'POST':
+#         form = AuStatesForm(request.POST)
+#         if form.is_valid():
+#             # form_instance = form.save(commit=False)
+#             states = form.cleaned_data.get('states')
+#             # form_instance.save()
+#             return redirect ('accounts:user_account')
+#             # do something with your results
+#     else:
+#         form = AuStatesForm
+
+#     context = {
+#         'form': form
+#         }
     
+#     return render(request, 'accounts/render_states.html', context)

@@ -21,14 +21,34 @@ from __future__ import unicode_literals
 
 from django.db import migrations
 
+# States
+locations = [
+    {'name' : 'Australian Capital Territory', 'statecode' : 'ACT'},
+    {'name' : 'New South Wales', 'statecode' : 'NSW'},
+    {'name' : 'Northern Territory', 'statecode' : 'NT'},
+    {'name' : 'Queensland', 'statecode' : 'QLD'},
+    {'name' : 'South Australia', 'statecode' : 'SA'},
+    {'name' : 'Tasmania', 'statecode' : 'TAS'},
+    {'name' : 'Victoria', 'statecode' : 'VIC'},
+    {'name' : 'Western Australia', 'statecode' : 'WA'},
+    {'name' : 'Others', 'statecode' : 'OTH'},
+]
+
+#########################################################################
 def load_initial_data(apps, schema_editor):
     Company = apps.get_model("accounts", "Company")
+    Location = apps.get_model("accounts", "Location")
 
     company = Company.objects.create(
         company_abbrev = 'OTH', company_name = 'Others', company_secret_key='')
     company = Company.objects.create(
         company_abbrev = 'LG', company_name = 'Landgate')
 
+    for locate in locations:
+        obj = Location.objects.get_or_create(
+            name = locate['name'],
+            statecode = locate['statecode']
+        )
 def reverse_func(apps, schema_editor):
     Company = apps.get_model("accounts", "Company")
 

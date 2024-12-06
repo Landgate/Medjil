@@ -25,7 +25,7 @@ from datetime import datetime
 
 countries = [
     {'name': 'Australia'},
-    {'name' : 'Germany'}
+    {'name' : 'Others'}
 ]
 
 states = [
@@ -37,7 +37,7 @@ states = [
     {'country' : 'Australia' , 'name' : 'Tasmania', 'statecode' : 'TAS'},
     {'country' : 'Australia' , 'name' : 'Victoria', 'statecode' : 'VIC'},
     {'country' : 'Australia' , 'name' : 'Western Australia', 'statecode' : 'WA'},
-    {'country' : 'Germany' , 'name' : 'Bavaria', 'statecode' : 'BY'},
+    {'country' : 'Others' , 'name' : 'Others', 'statecode' : 'OTH'},
 ]
 
 localities = [
@@ -45,7 +45,7 @@ localities = [
     {'statecode' : 'WA',  'name' : 'Bentley', 'postcode' : '6102'},
     {'statecode' : 'WA',  'name' : 'Kalgoorlie-Boulder', 'postcode' : '6430'},
     {'statecode' : 'WA',  'name' : 'Busselton-Vasse', 'postcode' : '6280'},
-    {'statecode' : 'BY',  'name' : 'Munchen', 'postcode' : '80290'},
+    {'statecode' : 'OTH',  'name' : 'Others', 'postcode' : '99999'},
 ]
 
 #########################################################################

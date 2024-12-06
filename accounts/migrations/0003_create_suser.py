@@ -27,27 +27,23 @@ def forwards_func(apps, schema_editor):
     Group = apps.get_model("auth", "Group")
     db_alias = schema_editor.connection.alias
     Group.objects.using(db_alias).bulk_create([
-        Group(name='Landgate'),
-        Group(name='Geodesy'),
         Group(name='Admin'),
+        Group(name='Verifying_Authority'),
     ])
     
     CustomUser.objects.create_superuser(
             email=os.environ.get('EMAIL_HOST_USER'),  
             password=os.environ.get('EMAIL_HOST_PASSWORD'),
-        company= Company.objects.get(company_abbrev='LG')
+        # company= Company.objects.get(company_abbrev='LG')
             )
-##    else:
-##        print("Your passwords do not match. Start again!")
-##        sys.exit()
 
 def reverse_func(apps, schema_editor):
     Group = apps.get_model("auth", "Group")
     # delete groups
     Group.objects.filter(
         name__in=[
-            'Landgate',
-            'Geodesy'
+            'Admin',
+            'Verifying_Authority'
         ]
     ).delete()
     

@@ -102,6 +102,8 @@ class StaffCalibrationRecordFormOnTheGo(forms.ModelForm):
 class StaffCalibrationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user')
+        groups = list(user.groups.values_list('name', flat=True))
+        locations = list(user.locations.values_list('statecode', flat=True))
         super(StaffCalibrationForm, self).__init__(*args, **kwargs)
         if not user.is_staff:
             self.fields['inst_staff'].queryset = Staff.objects.filter(staff_owner=user.company)
@@ -125,7 +127,11 @@ class StaffCalibrationForm(forms.ModelForm):
                 ).order_by('-is_top')  # Adjust the ordering as needed
             self.fields['inst_level'].queryset = queryset2
         
-        self.fields['site_id'].queryset = CalibrationSite.objects.filter(site_type = 'staff_range')
+        # self.fields['site_id'].queryset = CalibrationSite.objects.filter(site_type = 'staff_range' )
+        if not 'Verifying_Authority' in groups:
+            self.fields['site_id'].queryset = CalibrationSite.objects.filter(Q(site_type = 'staff_range') & Q(state__statecode__in = locations))
+        else:
+            self.fields['site_id'].queryset = CalibrationSite.objects.filter(site_type = 'staff_range')
             
         self.fields['site_id'].empty_label = '--- Select one ---'
         self.fields['inst_staff'].empty_label = '--- Select one ---'

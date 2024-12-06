@@ -68,6 +68,7 @@ def compute_correction_factor(newdataset, refdataset, coef, ave_temp, std_temp):
     return round(sf_0,8), round(sf_1,7), round(grad_uncertainty,5), adj_correction
 ###############################################################
 def load_data(apps, schema_editor):  
+    Location = apps.get_model('accounts', 'Location')
     Company = apps.get_model('accounts', 'Company')
     User = apps.get_model('accounts', 'CustomUser')
     CalibrationSite = apps.get_model("calibrationsites", "CalibrationSite")
@@ -114,12 +115,14 @@ def load_data(apps, schema_editor):
                 field = data[i]['fields']
                 if 'accounts.customuser' == data[i]['model']:
                     authority = AuthorityTable[AuthorityTable[:,0] == field['authority']][0]
-                    # Create Company
                     try: 
+                        # Create Company
                         com_obj, created = Company.objects.get_or_create(
                                 company_name = authority[1], 
                                 company_abbrev = authority[2]
                         )
+                        location_obj = Location.objects.filter(statecode  = 'WA')
+                        # Create Object
                         user_obj, created = User.objects.get_or_create(
                             email = field['email'],
                             password = field['password'],
@@ -132,6 +135,8 @@ def load_data(apps, schema_editor):
                             date_joined = field['date_joined'],
                             last_login = field['last_login'],
                         )
+                        user_obj.locations.set(location_obj)
+                        user_obj.save()
                     except IntegrityError:
                         pass
                     StaffUsers.append([pk, field['email'], authority[1]])

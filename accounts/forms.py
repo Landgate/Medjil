@@ -23,7 +23,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.forms import ReadOnlyPasswordHashField, UserCreationForm, UserChangeForm, SetPasswordForm
 from django.contrib.auth.forms import AuthenticationForm
 
-from .models import CustomUser, Company,  Calibration_Report_Notes
+from .models import CustomUser, Company,  Calibration_Report_Notes, Location
 
 class SignupForm(UserCreationForm):
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
@@ -39,11 +39,17 @@ class SignupForm(UserCreationForm):
         label='Company Secret Key',
         widget=forms.TextInput(
             attrs={'placeholder': "Existing users from this company with Medjil login's have access to this key."}))
-    
+        
+    locations = forms.ModelMultipleChoiceField(
+        queryset = Location.objects.all(),
+        label = 'Location Group (only select the ones applicable to you)',
+        widget = forms.CheckboxSelectMultiple,
+        error_messages = {'required': 'Please select at least one location group.'})
+        
     class Meta:
         model = CustomUser
         fields = (
-            'email', 'first_name', 'last_name', 'company', 'csk', 'password1', 'password2')
+            'email', 'first_name', 'last_name', 'company',  'csk', 'locations', 'password1', 'password2')
     
     def clean_email(self):
         return self.cleaned_data.get('email').lower()
@@ -65,6 +71,12 @@ class SignupForm(UserCreationForm):
                 raise forms.ValidationError("The Company Secret Key is incorrect. Existing users from this company with Medjil login's have access to this key.")
         return csk
     
+    def clean_locations(self):
+        locations = self.cleaned_data.get('locations')
+        if not locations:
+            raise forms.ValidationError("Please choose at least one location group.")
+        return locations
+    
     def save(self, commit=True):
         user = super().save(commit=False)
         user.set_password(self.cleaned_data["password1"])
@@ -73,7 +85,6 @@ class SignupForm(UserCreationForm):
         return user
 
 class CustomUserChangeForm(ModelForm):
-   
     csk = forms.CharField(
         required=False,
         label='Company Secret Key')
@@ -85,7 +96,7 @@ class CustomUserChangeForm(ModelForm):
         
     class Meta:
         model = CustomUser
-        fields = ['first_name','last_name','email', 'company']
+        fields = ['first_name','last_name','email', 'company', 'csk', 'locations']
 
     def clean_csk(self):
         company = self.cleaned_data.get('company')
@@ -95,8 +106,7 @@ class CustomUserChangeForm(ModelForm):
             if not Company.objects.filter(id=company.id, company_secret_key=csk).exists():
                 raise forms.ValidationError("The Company Secret Key is incorrect. Existing users from this company with Medjil login's have access to this key.")
         return csk
-    
-    
+        
 class LoginForm(forms.ModelForm):
     '''
     Form for logging users

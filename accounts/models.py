@@ -22,6 +22,8 @@ from django.contrib.auth.models import Group
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
+from django.core.validators  import RegexValidator
+from django.core.exceptions import ValidationError
 
 import hashlib
 import uuid
@@ -31,6 +33,7 @@ from django.utils import timezone
 
 from common_func.validators import validate_profanity
 
+alphanumeric = RegexValidator(r'^[A-Z]*$', 'Only capital letters are allowed')
 # Create your models here.
 class MedjilTOTPDevice(TOTPDevice):
     # created_sat = models.DateTimeField(auto_now_add=True, null=True)
@@ -80,8 +83,24 @@ class Company(models.Model):
     
     def save(self, *args, **kwargs):
         self.company_abbrev = self.company_abbrev.upper()
-        super().save(*args, **kwargs)
-    
+        super().save(*args, **kwargs)  
+
+class Location(models.Model):
+    name = models.CharField(
+        max_length=40,
+        help_text="Enter the full name of State/Region, e.g., Western Australia",
+        verbose_name='State'
+    )
+    statecode = models.CharField(
+        max_length=3,
+        null=True,
+        validators=[alphanumeric],
+        help_text="Enter State Code with a max. of three letters, e.g., WA",
+        verbose_name='State Code'
+    )
+
+    def __str__(self):
+        return self.name
         
 ####### CUSTOM MANAGER TO MAKE EMAIL AS UNIQUE ID INSTEAD OF USERNAME ######
 class CustomUserManager(BaseUserManager):
@@ -145,6 +164,8 @@ class CustomUser(AbstractUser):
             'unique': _("The user with that email address already exists.")
             }
     )
+
+    locations =  models.ManyToManyField(Location, blank = True)
     
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
@@ -154,7 +175,9 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.email.lower()
     
-
+    def get_locations(self):
+        return ", ".join([str(p) for p in self.locations.all()])
+    
 class Calibration_Report_Notes(models.Model):
     company = models.ForeignKey(Company, on_delete = models.CASCADE, null = False)
     report_types = (

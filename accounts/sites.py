@@ -35,6 +35,7 @@ from .models import (CustomUser,
                     Company,
                     Calibration_Report_Notes,
                     MedjilTOTPDevice,
+                    Location,
                     )                   
 
 # medjil_super_site.register(CustomUser)
@@ -45,7 +46,7 @@ class CustomUserAdmin(UserAdmin):
     list_filter = ('company', 'is_active',)
 
     list_display = (
-        'email', 'first_name', 'last_name', 'company', 'is_active', 'is_staff', 'date_joined', 'last_login', 'get_groups',
+        'email', 'first_name', 'last_name', 'company', 'get_locations', 'is_active', 'is_staff', 'date_joined', 'last_login', 'get_groups',
     )
 
     fieldsets = (
@@ -53,7 +54,7 @@ class CustomUserAdmin(UserAdmin):
             'fields': ('email', 'password')
         }),
         ('Personal info', {
-            'fields': ('first_name', 'last_name', 'company')
+            'fields': ('first_name', 'last_name', 'company', 'locations')
         }),
         ('Permissions', {
             'fields': (
@@ -71,7 +72,7 @@ class CustomUserAdmin(UserAdmin):
             'fields': ('email', 'password1', 'password2')
         }),
         ('Personal info', {
-            'fields': ('first_name', 'last_name', 'company')
+            'fields': ('first_name', 'last_name', 'company', 'locations')
         }),
         ('Permissions', {
             'fields': (
@@ -97,13 +98,21 @@ medjil_super_site.register(Group)
 
 medjil_super_site.register(MedjilTOTPDevice)
 
+@admin.register(Location, site=medjil_super_site)
+class LocationAdmin(admin.ModelAdmin):
+    list_display = ('name', 'statecode',)
+    search_fields = ('statecode',)
+    class Meta:
+        model = Location
+    ordering = ( 'name', )
+
 @admin.register(Company, site=medjil_super_site)
 class CompanyAdmin(admin.ModelAdmin):
     list_display = ('company_name', 'company_abbrev',)
     search_fields = ('company_name', 'company_abbrev',)
     class Meta:
         model = Company
-      
+
 @admin.register(Calibration_Report_Notes, site=medjil_super_site)
 class CalibrationReportNotesAdmin(admin.ModelAdmin):
     list_display = ['company', 'report_type', 'note_type']

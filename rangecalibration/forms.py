@@ -15,6 +15,7 @@
    limitations under the License.
 
 '''
+from django.db.models import Q
 from django import forms
 from django.core.exceptions import NON_FIELD_ERRORS
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -41,12 +42,20 @@ class RangeCalibrationUpdateForm(forms.Form):
 class RangeForm1(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
+        groups = list(user.groups.values_list('name', flat=True))
+        locations = list(user.locations.values_list('statecode', flat=True))
         super(RangeForm1, self).__init__(*args, **kwargs)
         self.fields['inst_staff'].queryset = Staff.objects.filter(staff_owner = user.company,
                                                                    staff_type__exact = "invar")
         self.fields['inst_level'].queryset = DigitalLevel.objects.filter(level_owner = user.company)
         self.fields['observer'].widget.attrs['placeholder'] = 'Enter the name of Observer, if other than you.'
         self.fields['observer_isme'].widget.attrs['checked'] = False
+
+        # Filter sites based on location
+        if not 'Verifying_Authority' in groups:
+            self.fields['site_id'].queryset = CalibrationSite.objects.filter(Q(site_type = 'staff_range') & Q(state__statecode__in = locations))
+        else:
+            self.fields['site_id'].queryset = CalibrationSite.objects.filter(site_type = 'staff_range')
 
         self.fields['site_id'].empty_label = '--- Select one ---'
         self.fields['inst_staff'].empty_label = '--- Select one ---'

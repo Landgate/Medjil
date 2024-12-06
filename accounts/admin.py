@@ -29,7 +29,7 @@ from django.shortcuts import render
 from .views import AdminSetupTwoFactorAuthView, AdminConfirmTwoFactorAuthView
 
 # Register your models here.
-from .models import CustomUser, Company, Calibration_Report_Notes
+from .models import CustomUser, Company, Calibration_Report_Notes, Location
 ##############################################################################
 ############################ BUILD A CUSTOM ADMIN SITE #######################
 ##############################################################################
@@ -104,7 +104,7 @@ class CustomUserAdmin(UserAdmin):
     list_filter = ('company', 'is_active',)
 
     list_display = (
-        'email', 'first_name', 'last_name', 'company', 'is_active', 'is_staff', 'date_joined', 'last_login', 'get_groups',
+        'email', 'first_name', 'last_name', 'company', 'get_locations', 'is_active', 'is_staff', 'date_joined', 'last_login', 'get_groups',
     )
 
     fieldsets = (
@@ -112,7 +112,7 @@ class CustomUserAdmin(UserAdmin):
             'fields': ('email', 'password')
         }),
         ('Personal info', {
-            'fields': ('first_name', 'last_name', 'company')
+            'fields': ('first_name', 'last_name', 'company', 'locations')
         }),
         ('Permissions', {
             'fields': (
@@ -130,7 +130,7 @@ class CustomUserAdmin(UserAdmin):
             'fields': ('email', 'password1', 'password2')
         }),
         ('Personal info', {
-            'fields': ('first_name', 'last_name', 'company')
+            'fields': ('first_name', 'last_name', 'company', 'locations')
         }),
         ('Permissions', {
             'fields': (
@@ -145,7 +145,7 @@ class CustomUserAdmin(UserAdmin):
 
     search_fields = ('email', 'company',)
     ordering = ( 'company', 'email', )
-
+    
     def get_groups(self, obj):
         return ','.join(x for x in obj.groups.values_list('name', flat=True))
 
@@ -207,14 +207,19 @@ class RolesAdmin(admin.ModelAdmin):
             return False
         return True
 
+@admin.register(Location, site=admin_site)
+class LocationAdmin(admin.ModelAdmin):
+    list_display = ('name', 'statecode',)
+    search_fields = ('statecode',)
+    class Meta:
+        model = Location
+
 @admin.register(Company, site=admin_site)
 class CompanyAdmin(admin.ModelAdmin):
     list_display = ('company_name', 'company_abbrev','company_secret_key')
     search_fields = ('company_name', 'company_abbrev',)
     class Meta:
         model = Company
-
-    search_fields = ('company_name', 'company_abbrev',)
       
 @admin.register(Calibration_Report_Notes, site=admin_site)
 class CalibrationReportNotesAdmin(admin.ModelAdmin):
