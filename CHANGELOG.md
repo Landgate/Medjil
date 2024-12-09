@@ -17,6 +17,14 @@ Press [Start Testing](http://medjil.lb.landgate.wa.gov.au) to begin.
 
 ## Additions | Fixes | Changes 
 ### [1.0.12] - 2024-12-06 - [Khandu]
+Added
+* Added filter based on location group in forms.py in RangeCalibration/forms.py
+	-*RangeCalibration/forms.py*
+* Added filter based on location group * Role in forms.py in staffcalibration/forms.py
+	- *staffcalibration/forms.py*
+* All tested and working - github updated
+
+### [1.0.12] - 2024-12-04 - [Khandu]
 Fixed
 * Removed Group - "Landgate" & "Geodesy" and replaced by "Verifying Authority". All Survey Team Members added to Admin Group by Default. All Landgate NATA members added to VerifyingAuthority
 	-*accounts/apps.py*
@@ -33,9 +41,6 @@ Added
 * Added the new field locations to forms - UserSignUp, CustomUserChangeForm
 * Added user.locations.set(form.cleaned_data['locations']) in user_signup function in views.py
 	-*accounts/views.py*
-
-Changed
-* 
 
 
 ### [1.0.11] - 2024-12-02 - [Khandu]
