@@ -26,6 +26,7 @@ urlpatterns = [
     path('calibrate2/<int:id>', views.calibrate2, name = 'calibrate2'),
     path('certificate/<int:id>', views.certificate, name = 'certificate'),
     path('report/<int:id>', views.report, name = 'report'),
+    path('bulk_report_download/', views.bulk_report_download, name = 'bulk_report_download'),
     path('pillar_survey_del/<int:id>', views.pillar_survey_del, name = 'pillar_survey_del'),
     path('intercomparison_home', views.intercomparison_home, name = 'intercomparison_home'),
     path('intercomparison/<slug:id>', views.intercomparison, name = 'intercomparison'),

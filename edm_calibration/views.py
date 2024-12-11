@@ -15,21 +15,22 @@
    limitations under the License.
 
 '''
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.core.serializers.json import DjangoJSONEncoder
 from django.forms import modelformset_factory
 from django.forms.models import model_to_dict
-from django.http import QueryDict
+from django.http import QueryDict, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
 from django.urls import reverse
 
-
 from collections import OrderedDict
 from math import pi, sin, cos, sqrt
-from datetime import date
+from datetime import date, timedelta
 import json
+import pandas as pd
+
 from common_func.Convert import (
     baseline_qry,
     Calibrations_qry,
@@ -61,6 +62,7 @@ from .forms import (
     PillarSurveyApprovals,
     EDMI_certificateForm,
     Inter_ComparisonForm,
+    BulkEDMIReportForm
     )
 from .models import (
     EDMI_certificate,
@@ -76,6 +78,10 @@ from common_func.LeastSquares import (
 from common_func.validators import try_delete_protected
 from baseline_calibration.models import (
     Uncertainty_Budget_Source)
+
+
+def is_staff(user):
+    return user.is_staff
 
     
 @login_required(login_url="/accounts/login")
@@ -763,3 +769,46 @@ def intercomparison(request, id=None):
                           {'html_report': html_report})
 
     return render(request, 'edm_calibration/intercomparison_edit.html', {'form': form})
+
+
+@login_required(login_url="/accounts/login")
+@user_passes_test(is_staff)
+def bulk_report_download(request):
+    if request.method == 'POST':
+        form = BulkEDMIReportForm(request.POST)
+        if form.is_valid():
+            baseline = form.cleaned_data['baseline']
+            from_date = form.cleaned_data['from_date']
+            to_date = form.cleaned_data['to_date']
+            
+            # Set default values if dates are not provided
+            if not from_date:
+                from_date = date(1800, 1, 1)
+            if not to_date:
+                to_date = date.today() + timedelta(days=1)
+            
+            # Filter based on date range
+            data = uPillar_Survey.objects.filter(
+                site=baseline,
+                survey_date__range=[from_date, to_date]
+            ).select_related('certificate').values('certificate__html_report')
+            
+            if not data.exists():
+                # No data found, return to form with an error message
+                return render(request, 'edm_calibration/bulk_report_download.html', {
+                    'form': form,
+                    'error': 'No data found for the selected baseline and date range.'
+                })
+            
+            baseline_name = baseline.site_name
+            df = pd.DataFrame(data)
+            # Create a response object and set the appropriate headers
+            response = HttpResponse(content_type='text/csv')
+            response['Content-Disposition'] = f'attachment; filename="{baseline_name}_edmi_clibration_reports.html"'
+            # Write the DataFrame to the response without the header
+            df.to_csv(path_or_buf=response, index=False, header=False)
+            return response
+    else:
+        form = BulkEDMIReportForm()
+
+    return render(request, 'edm_calibration/bulk_report_download.html', {'form': form})

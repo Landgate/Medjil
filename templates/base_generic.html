@@ -179,6 +179,20 @@
                                 <div class="sub-item-description">Customise endnotes calibration reports</div>
                             </a>
                         </li>
+                        {% if user.is_staff %}
+                        <li class="sub-items">
+                            <a href="{% url 'baseline_calibration:bulk_report_download' %}">
+                                <div class="sub-item-header">Baseline Calibration Data Downloads</div>
+                                <div class="sub-item-description">Bulk download of Baseline calibration reports</div>
+                            </a>  
+                        </li>
+                        <li class="sub-items">
+                            <a href="{% url 'edm_calibration:bulk_report_download' %}">
+                                <div class="sub-item-header">EDMI Calibration Data Downloads</div>
+                                <div class="sub-item-description">Bulk download of Baseline calibration reports</div>
+                            </a>  
+                        </li>  
+                        {% endif %}
                     </ul>
                 </li>
                 <li class="nav-item has-subnav"><a tabindex="0">Resources</a>

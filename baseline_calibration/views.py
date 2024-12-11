@@ -16,19 +16,20 @@
 
 '''
 from collections import OrderedDict
-from datetime import date
+from datetime import date, timedelta
 from django.contrib.auth.decorators import login_required
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models import Q, Count
 from django.forms import formset_factory, modelformset_factory
 from django.forms.models import model_to_dict
-from django.http import QueryDict
+from django.http import QueryDict, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
 import json
 from math import sqrt
 from statistics import mean
 import numpy as np
+import pandas as pd
 
 from calibrationsites.models import Pillar
 from .forms import (
@@ -41,7 +42,8 @@ from .forms import (
     Uncertainty_BudgetForm,
     Uncertainty_Budget_SourceForm,
     AccreditationForm,
-    PillarSurveyApprovalsForm)
+    PillarSurveyApprovalsForm,
+    BulkBaselineReportForm)
 from .models import (
     Pillar_Survey,
     EDM_Observation,
@@ -1153,4 +1155,43 @@ def certified_distances_edit(request, id):
         return render(request, 'baseline_calibration/certified_distances_form.html', context)
 
 
+@login_required(login_url="/accounts/login") 
+def bulk_report_download(request):
+    if request.method == 'POST':
+        form = BulkBaselineReportForm(request.POST)
+        if form.is_valid():
+            baseline = form.cleaned_data['baseline']
+            from_date = form.cleaned_data['from_date']
+            to_date = form.cleaned_data['to_date']
+            
+            # Set default values if dates are not provided
+            if not from_date:
+                from_date = date(1800, 1, 1)
+            if not to_date:
+                to_date = date.today() + timedelta(days=1)
+            
+            # Filter based on date range
+            data = Pillar_Survey.objects.filter(
+                baseline=baseline,
+                survey_date__range=[from_date, to_date]
+            ).values("html_report")
+            
+            if not data.exists():
+                # No data found, return to form with an error message
+                return render(request, 'baseline_calibration/bulk_report_download.html', {
+                    'form': form,
+                    'error': 'No data found for the selected baseline and date range.'
+                })
+            
+            baseline_name = baseline.site_name
+            df = pd.DataFrame(data)
+            # Create a response object and set the appropriate headers
+            response = HttpResponse(content_type='text/csv')
+            response['Content-Disposition'] = f'attachment; filename="{baseline_name}_baseline_clibration_reports.html"'
+            # Write the DataFrame to the response without the header
+            df.to_csv(path_or_buf=response, index=False, header=False)
+            return response
+    else:
+        form = BulkBaselineReportForm()
 
+    return render(request, 'baseline_calibration/bulk_report_download.html', {'form': form})

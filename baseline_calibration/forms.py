@@ -415,3 +415,20 @@ class AccreditationForm(forms.ModelForm):
                 attrs={'accept' : '.pdf, .jpg, .jpeg, .png, .tif',
                        'required': False})
            }
+
+
+class BulkBaselineReportForm(forms.Form):
+    # Form used for bulk downloading calibration html reports
+    # called by .view def bulk_report_download
+    baseline = forms.ModelChoiceField(
+        queryset=CalibrationSite.objects.filter(
+            site_type='baseline'), 
+        label="Select Baseline")
+    from_date = forms.DateField(
+        widget=forms.DateInput(attrs={'type': 'date'}),
+        label="From Date",
+        required=False)
+    to_date = forms.DateField(
+        widget=forms.DateInput(attrs={'type': 'date'}), 
+        label="To Date",
+        required=False)

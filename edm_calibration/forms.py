@@ -211,4 +211,19 @@ class Inter_ComparisonForm(forms.ModelForm):
                 attrs={'type': 'date', 'format': '%d-%m-%Y'}),
         }
 
-        
+
+class BulkEDMIReportForm(forms.Form):
+    # Form used for bulk downloading calibration html reports
+    # called by .view def bulk_report_download
+    baseline = forms.ModelChoiceField(
+        queryset=CalibrationSite.objects.filter(
+            site_type='baseline'), 
+        label="Select Baseline")
+    from_date = forms.DateField(
+        widget=forms.DateInput(attrs={'type': 'date'}),
+        label="From Date",
+        required=False)
+    to_date = forms.DateField(
+        widget=forms.DateInput(attrs={'type': 'date'}), 
+        label="To Date",
+        required=False)
