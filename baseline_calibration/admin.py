@@ -55,7 +55,7 @@ class Pillar_SurveyAdmin(admin.ModelAdmin):
               'fields': 
               ('baseline',
               ('survey_date','computation_date'),
-              ('accreditation', 'apply_lum')
+              ('accreditation','apply_lum'),
               ('weather','observer'),
               'job_number',
               'comment',
@@ -162,7 +162,7 @@ try:
                   'fields': 
                   ('baseline',
                   ('survey_date','computation_date'),
-                  ('accreditation', 'apply_lum')
+                  ('accreditation','apply_lum'),
                   ('weather','observer'),
                   'job_number',
                   'comment',
