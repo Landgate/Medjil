@@ -61,6 +61,7 @@ class EDM_SpecificationAdmin(admin.ModelAdmin):
               ('edm_make_name', 'edm_model_name', 'edm_type'), 
               ('manu_unc_const', 'manu_unc_ppm', 'manu_unc_k'),
               ('unit_length', 'frequency', 'carrier_wavelength', 'manu_ref_refrac_index'),
+              ('c_term', 'd_term'),
               'measurement_increments']
 
 @admin.register(EDM_Inst, site=admin_site)
@@ -113,8 +114,9 @@ class EDMI_certificateAdmin(admin.ModelAdmin):
               ('cyclic_two', 'cyc_2_uncertainty','cyc_2_coverage_factor','cyc_2_std_dev'),
               ('cyclic_three', 'cyc_3_uncertainty','cyc_3_coverage_factor','cyc_3_std_dev'),
               ('cyclic_four', 'cyc_4_uncertainty','cyc_4_coverage_factor','cyc_4_std_dev'),
-              ('standard_deviation', 'html_report'),
-              'certificate_upload']
+              ('standard_deviation', 'degrees_of_freedom'),
+              'certificate_upload',
+              'html_report']
 
 @admin.register(Mets_certificate, site=admin_site)
 class Mets_certificateAdmin(admin.ModelAdmin):
@@ -158,6 +160,7 @@ try:
                   ('edm_make_name', 'edm_model_name', 'edm_type'), 
                   ('manu_unc_const', 'manu_unc_ppm', 'manu_unc_k'),
                   ('unit_length', 'frequency', 'carrier_wavelength', 'manu_ref_refrac_index'),
+                  ('c_term', 'd_term'),
                   'measurement_increments']
 
     @admin.register(EDM_Inst, site=medjil_super_site)
@@ -206,8 +209,9 @@ try:
                 ('cyclic_two', 'cyc_2_uncertainty','cyc_2_coverage_factor','cyc_2_std_dev'),
                 ('cyclic_three', 'cyc_3_uncertainty','cyc_3_coverage_factor','cyc_3_std_dev'),
                 ('cyclic_four', 'cyc_4_uncertainty','cyc_4_coverage_factor','cyc_4_std_dev'),
-                ('standard_deviation', 'html_report'),
-                'certificate_upload']
+                ('standard_deviation', 'degrees_of_freedom'),
+                'certificate_upload',
+                'html_report']
 
     @admin.register(Mets_certificate, site=medjil_super_site)
     class Mets_certificateAdmin(admin.ModelAdmin):

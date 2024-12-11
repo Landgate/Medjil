@@ -55,14 +55,16 @@ class Pillar_SurveyAdmin(admin.ModelAdmin):
               'fields': 
               ('baseline',
               ('survey_date','computation_date'),
-              'accreditation',
+              ('accreditation', 'apply_lum')
               ('weather','observer'),
               'job_number',
+              'comment',
               'fieldnotes_upload')
               }),
               ('Survey Instrumentation', {
               'fields': (
               ('edm','prism','edmi_calib_applied','mets_applied'),
+              'co2_content',
               ('level','staff','staff_calib_applied'))
               }),
               ('Meterological Instrumentation', { 
@@ -83,7 +85,8 @@ class Pillar_SurveyAdmin(admin.ModelAdmin):
               ('Calibrated Baseline', { 
               'fields': (
               ('zero_point_correction','zpc_uncertainty'),
-              'degrees_of_freedom', 'experimental_std_dev')
+              ('degrees_of_freedom', 'experimental_std_dev'),
+              'html_report')
               }),
               ('Approavals', { 
               'fields': (
@@ -106,7 +109,8 @@ class EDM_ObservationAdmin(admin.ModelAdmin):
               ('hz_direction','raw_slope_dist'),
               ('raw_temperature','raw_temperature2'),
               ('raw_pressure','raw_pressure2'),
-              ('raw_humidity','raw_humidity2')]
+              ('raw_humidity','raw_humidity2'),
+              ('use_for_alignment','use_for_distance'),]
 
 
 #admin.site.register(Level_Observation)
@@ -154,47 +158,50 @@ try:
         list_display = ('baseline','survey_date','job_number')
         list_filter = ('baseline','job_number',)
         fieldsets = (
-                ('Documentation', {
-                'fields': 
-                ('baseline',
-                ('survey_date','computation_date'),
-                'accreditation',
-                ('weather','observer'),
-                'job_number',
-                'fieldnotes_upload')
-                }),
-                ('Survey Instrumentation', {
-                'fields': (
-                ('edm','prism','edmi_calib_applied','mets_applied'),
-                ('level','staff','staff_calib_applied'))
-                }),
-                ('Meterological Instrumentation', { 
-                'fields':
-                (('thermometer','thermo_calib_applied'),
-                ('barometer','baro_calib_applied'),
-                ('hygrometer','hygro_calib_applied'),
-                ('thermometer2','thermo2_calib_applied'),
-                ('barometer2','baro2_calib_applied'),
-                ('hygrometer2','hygro2_calib_applied'),
-                ('psychrometer','psy_calib_applied'))
-                }),
-                ('Statistical parameters', { 
-                'fields': (
-                'uncertainty_budget',
-                'outlier_criterion')
-                }),
-                ('Calibrated Baseline', { 
-                'fields': (
-                ('zero_point_correction','zpc_uncertainty'),
-                'degrees_of_freedom', 'experimental_std_dev')
-                }),
-                ('Approavals', { 
-                'fields': (
-                ('data_entered_person','data_checked_person'),
-                ('data_entered_position','data_checked_position'),
-                ('data_entered_date','data_checked_date')
-                )
-                }))
+                  ('Documentation', {
+                  'fields': 
+                  ('baseline',
+                  ('survey_date','computation_date'),
+                  ('accreditation', 'apply_lum')
+                  ('weather','observer'),
+                  'job_number',
+                  'comment',
+                  'fieldnotes_upload')
+                  }),
+                  ('Survey Instrumentation', {
+                  'fields': (
+                  ('edm','prism','edmi_calib_applied','mets_applied'),
+                  'co2_content',
+                  ('level','staff','staff_calib_applied'))
+                  }),
+                  ('Meterological Instrumentation', { 
+                  'fields':
+                  (('thermometer','thermo_calib_applied'),
+                  ('barometer','baro_calib_applied'),
+                  ('hygrometer','hygro_calib_applied'),
+                  ('thermometer2','thermo2_calib_applied'),
+                  ('barometer2','baro2_calib_applied'),
+                  ('hygrometer2','hygro2_calib_applied'),
+                  ('psychrometer','psy_calib_applied'))
+                  }),
+                  ('Statistical parameters', { 
+                  'fields': (
+                  'uncertainty_budget',
+                  'outlier_criterion')
+                  }),
+                  ('Calibrated Baseline', { 
+                  'fields': (
+                  ('zero_point_correction','zpc_uncertainty'),
+                  ('degrees_of_freedom', 'experimental_std_dev'),
+                  'html_report')
+                  }),
+                  ('Approavals', { 
+                  'fields': (
+                  ('data_entered_person','data_checked_person'),
+                  ('data_entered_position','data_checked_position'),
+                  ('data_entered_date','data_checked_date')
+                  )
+                  }))
 
         # inlines = [EDM_ObservationInline, Level_ObservationInline, Certified_DistanceInline,Std_Deviation_MatrixInline]
         inlines = [Certified_DistanceInline,]
@@ -209,7 +216,8 @@ try:
                   ('hz_direction','raw_slope_dist'),
                   ('raw_temperature','raw_temperature2'),
                   ('raw_pressure','raw_pressure2'),
-                  ('raw_humidity','raw_humidity2')]
+                  ('raw_humidity','raw_humidity2'),
+                  ('use_for_alignment','use_for_distance'),]
 
 
     #admin.site.register(Level_Observation)
