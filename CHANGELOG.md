@@ -16,6 +16,14 @@ Press [Start Testing](http://medjil.lb.landgate.wa.gov.au) to begin.
 
 
 ## Additions | Fixes | Changes 
+### [1.0.13] - 2024-12-11 - [Kent Wheeler]
+Added
+* Added baseline_calibration/bulk_report_download/ url, form and html for bulk download of calibration data on specified baselines
+* Added edm_calibration/bulk_report_download/ url, form and html for bulk download of edmi calibration data from specified baselines
+* django.contrib.auth.decorators import user_passes_test added to edm_calibration/view.py
+
+* All tested and working - github updated
+
 ### [1.0.12] - 2024-12-06 - [Khandu]
 Added
 * Added filter based on location group in forms.py in RangeCalibration/forms.py
