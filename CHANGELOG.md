@@ -16,6 +16,15 @@ Press [Start Testing](http://medjil.lb.landgate.wa.gov.au) to begin.
 
 
 ## Additions | Fixes | Changes 
+### [1.0.14] - 2024-12-11 - [Kent Wheeler]
+Fixed
+* Included missing fields in Admin site
+	-*baseline_calibration/admin.py*
+	-*edm_calibration/admin.py*
+	-*instruments/admin.py*
+
+* All tested and working - github updated
+
 ### [1.0.13] - 2024-12-11 - [Kent Wheeler]
 Added
 * Added baseline_calibration/bulk_report_download/ url, form and html for bulk download of calibration data on specified baselines
