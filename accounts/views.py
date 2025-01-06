@@ -1,6 +1,6 @@
 '''
 
-   © 2023 Western Australian Land Information Authority
+   © 2025 Western Australian Land Information Authority
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -19,19 +19,17 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.views import PasswordResetConfirmView
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
-from django.views.decorators.csrf import csrf_exempt
 from .token_generator import account_activation_token
 from django.core.mail import EmailMessage
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.urls import reverse_lazy
-from django.core.exceptions import ValidationError
 from django import forms
 from django.views.generic import FormView, TemplateView
 import qrcode
@@ -39,20 +37,11 @@ import qrcode.image.svg
 
 from django.contrib.auth.models import Group
 from django.db.models.functions import Lower
-from django.db.models import Q
-# from django_otp.plugins.otp_totp.models import TOTPDevice
-from io import BytesIO
-from base64 import b64encode, b32decode
 import qrcode
 import qrcode.image.svg
 
-from django.core.exceptions import ObjectDoesNotExist
-from io import BytesIO
-from base64 import b64encode, b32decode
 import qrcode
 import qrcode.image.svg
-from django.core.exceptions import ValidationError
-from django_otp import user_has_device
 
 from common_func.validators import try_delete_protected
 from .models import (
@@ -69,6 +58,10 @@ from .forms import (
     CustomSetPasswordForm,
     CompanyForm, 
     calibration_report_notesForm)
+
+
+def is_staff(user):
+    return user.is_staff
 
 
 # Create your views here.
@@ -375,8 +368,7 @@ def user_profile(request):
     if request.method=='POST':
         form = CustomUserChangeForm(data=request.POST, instance=request.user)
         if form.is_valid():
-            user = form.save(commit=False)
-            user.save()
+            form.save()
             messages.success(request, 'Your profile is updated successfully')
             return redirect ('accounts:user_account')
     else:
@@ -384,6 +376,7 @@ def user_profile(request):
     return render(request, 'accounts/user_profile_update.html', {'form': form})
 
 # Update user - possible by admin/staff only
+@user_passes_test(is_staff)
 def user_update_for_admin(request, email):
     user = get_object_or_404(CustomUser, email=email)
     form = CustomUserChangeForm(request.POST or None, instance = user)
@@ -397,6 +390,7 @@ def user_update_for_admin(request, email):
     return render(request, 'accounts/user_profile_update.html', context)
 
 # Delete user - possible by admin/staff only
+@user_passes_test(is_staff)
 def user_delete_for_admin(request, email):
     this_user = get_object_or_404(CustomUser, email=email)
     try_delete_protected(request, this_user)
@@ -404,6 +398,7 @@ def user_delete_for_admin(request, email):
     return redirect('accounts:user_account')
 
 # Update company - possible by admin/staff only
+@user_passes_test(is_staff)
 def company_create(request):
     form = CompanyForm(request.POST or None)
     if form.is_valid():
@@ -426,6 +421,7 @@ def company_update(request, id):
     return render(request, 'accounts/company_update.html', context)
 
 # Delete company - possible by admin/staff only
+@user_passes_test(is_staff)
 def company_delete(request, id):
     try:
         company = Company.objects.get(id=id)
@@ -518,22 +514,3 @@ def calibration_report_notes_delete(request, report_disp, id):
     try_delete_protected(request, delete_obj)
     
     return redirect ('accounts:calibration_report_notes_list', report_disp=report_disp)
-
-# from .forms import AuStatesForm
-# def states_view(request):
-#     if request.method == 'POST':
-#         form = AuStatesForm(request.POST)
-#         if form.is_valid():
-#             # form_instance = form.save(commit=False)
-#             states = form.cleaned_data.get('states')
-#             # form_instance.save()
-#             return redirect ('accounts:user_account')
-#             # do something with your results
-#     else:
-#         form = AuStatesForm
-
-#     context = {
-#         'form': form
-#         }
-    
-#     return render(request, 'accounts/render_states.html', context)

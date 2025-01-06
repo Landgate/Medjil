@@ -16,6 +16,22 @@ Press [Start Testing](http://medjil.lb.landgate.wa.gov.au) to begin.
 
 
 ## Additions | Fixes | Changes 
+### [1.0.16] - 2025-01-06 - [Kent Wheeler]
+Fixed
+* Add security to accounts with user_passes_test
+	-*accounts/views.py*
+* Fix bug def user_profile not saving locations
+	-*accounts/views.py*
+
+### [1.0.15] - 2025-01-06 - [Kent Wheeler]
+Fixed
+* Add Queensland, and SA baselines to initial migration
+* Visibility of baselines restricted according to user location settings
+	-*baseline_calibration/admin.py*
+	-*edm_calibration/admin.py*
+	
+* All tested and working - github updated
+
 ### [1.0.14] - 2024-12-11 - [Kent Wheeler]
 Fixed
 * Included missing fields in Admin site
