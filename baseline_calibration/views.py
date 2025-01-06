@@ -17,7 +17,7 @@
 '''
 from collections import OrderedDict
 from datetime import date, timedelta
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models import Q, Count
 from django.forms import formset_factory, modelformset_factory
@@ -83,50 +83,40 @@ from common_func.LeastSquares import (
 from common_func.validators import try_delete_protected
 
 
-@login_required(login_url="/accounts/login") 
+def is_staff(user):
+    return user.is_staff
+
+
+@login_required(login_url="/accounts/login")
+@user_passes_test(is_staff)
 def calibration_home(request):
-    sqlstring = ("""
-        SELECT baseline_calibration_pillar_survey.id,
-        survey_date, 
-        observer, 
-        job_number,
-        accredited_company_id,
-        baseline_calibration_certified_distance.modified_on
-        FROM (baseline_calibration_pillar_survey 
-        LEFT JOIN baseline_calibration_accreditation 
-        ON  baseline_calibration_accreditation.id = accreditation_id)
-        LEFT OUTER JOIN baseline_calibration_certified_distance
-        ON baseline_calibration_pillar_survey.id = pillar_survey_id
-        WHERE (distance = 0 or distance ISNULL)
-        ORDER BY baseline_id ASC, survey_date DESC""")
-    if request.user.is_superuser:
-        pillar_surveys = Pillar_Survey.objects.raw(sqlstring)
-    else:
-        sqlstring.replace('ORDER BY ', 'AND accredited_company_id ='
-                          + str(request.user.company.id) +' ORDER BY ')
-        pillar_surveys = Pillar_Survey.objects.raw(sqlstring)
-        
-    context = {
-        'pillar_surveys': pillar_surveys}
+    locations = list(request.user.locations.values_list('statecode', flat=True))
     
+    pillar_surveys = Pillar_Survey.objects.filter(
+        Q(certified_distance__isnull=True) | Q(certified_distance__distance=0)
+        & Q(baseline__state__statecode__in = locations)
+        ).order_by('baseline_id', '-survey_date')
+
+    context = {
+        'pillar_surveys': pillar_surveys
+    }
     return render(request, 'baseline_calibration/baseline_calibration_home.html', context)
 
 
-@login_required(login_url="/accounts/login") 
+@login_required(login_url="/accounts/login")
+@user_passes_test(is_staff)
 def pillar_survey_del(request, id):
-    # unless staff, only allow delete if record belongs to company
-    if request.user.is_staff:
-        delete_obj = Pillar_Survey.objects.get(id=id)
-    else:
-        delete_obj = Pillar_Survey.objects.get(
-            id=id,
-            accreditation__accredited_company = request.user.company)
+    # only allow delete if record belongs to company
+    delete_obj = Pillar_Survey.objects.get(
+        id=id,
+        accreditation__accredited_company = request.user.company)
     try_delete_protected(request, delete_obj)
     
     return redirect('baseline_calibration:calibration_home')
 
 
 @login_required(login_url="/accounts/login") 
+@user_passes_test(is_staff)
 def calibrate1(request, id):
     # GET or invalid goto form for Pillar Survey
     # POST will commit form and redirect to Calibrate2
@@ -262,6 +252,7 @@ def calibrate1(request, id):
             'survey_files':upload_survey_files})
 
 @login_required(login_url="/accounts/login") 
+@user_passes_test(is_staff)
 def calibrate2(request,id):
     # If this is a get request:
     #     select or deselect the edm observations for the calibration and offset
@@ -803,6 +794,7 @@ def calibrate2(request,id):
 
 
 @login_required(login_url="/accounts/login") 
+@user_passes_test(is_staff)
 def report(request, id):    
     # This uses the html report saved to the database to popluate the report
     # It also loads the approvals form that can be edited and saved.
@@ -820,12 +812,9 @@ def report(request, id):
 
 @login_required(login_url="/accounts/login") 
 def uc_budgets(request):
-    if request.user.is_staff:
-        uc_budget_list = Uncertainty_Budget.objects.all()
-    else:
-        uc_budget_list = Uncertainty_Budget.objects.filter(
-            Q(name = 'Default', company__company_name = 'Landgate')|
-            Q(company = request.user.company))
+    uc_budget_list = Uncertainty_Budget.objects.filter(
+        Q(name = 'Default', company__company_name = 'Landgate')|
+        Q(company = request.user.company))
     
     context = {
         'uc_budget_list': uc_budget_list}
@@ -883,16 +872,20 @@ def uc_budget_create(request):
 
 @login_required(login_url="/accounts/login") 
 def uc_budget_edit(request, id=None):
-       
+    user_company = request.user.company
+    
     uc_sources = modelformset_factory(
         Uncertainty_Budget_Source,
         form=Uncertainty_Budget_SourceForm, 
         extra=0)
     qs = Uncertainty_Budget_Source.objects.filter(
-                            uncertainty_budget = id)
+        uncertainty_budget__company = user_company,
+        uncertainty_budget = id)
     formset = uc_sources(request.POST or None, queryset=qs)
     
-    obj = get_object_or_404(Uncertainty_Budget, id=id)
+    obj = get_object_or_404(
+        Uncertainty_Budget, id=id, 
+        company=request.user.company)
     uc_budget = Uncertainty_BudgetForm(
         request.POST or None, 
         sources = formset,
@@ -929,13 +922,10 @@ def uc_budget_edit(request, id=None):
 
 @login_required(login_url="/accounts/login") 
 def uc_budget_delete(request, id):
-    # unless staff, only allow delete if record belongs to company
-    if request.user.is_staff:
-        delete_obj = Uncertainty_Budget.objects.get(id=id)
-    else:
-        delete_obj = Uncertainty_Budget.objects.get(
-            id=id,
-            accredited_company = request.user.company)
+    # only allow delete if record belongs to company
+    delete_obj = Uncertainty_Budget.objects.get(
+        id=id,
+        company = request.user.company)
     try_delete_protected(request, delete_obj)
     
     return redirect('baseline_calibration:uc_budgets')
@@ -943,12 +933,9 @@ def uc_budget_delete(request, id):
 
 @login_required(login_url="/accounts/login") 
 def accreditations(request):
-    # unless staff, only list records that belong to company
-    if request.user.is_staff:
-        accreditation_list = Accreditation.objects.all()
-    else:
-        accreditation_list = Accreditation.objects.filter(
-            accredited_company = request.user.company)
+    # Only list records that belong to company
+    accreditation_list = Accreditation.objects.filter(
+        accredited_company = request.user.company)
     
     context = {
         'accreditation_list': accreditation_list}
@@ -966,7 +953,9 @@ def accreditation_edit(request, id=None):
                                           user=request.user)
         context['Header'] = 'Input Accreditation Details'
     else:
-        obj = get_object_or_404(Accreditation, id=id)
+        obj = get_object_or_404(
+            Accreditation, id=id,
+            accredited_company=request.user.company)
         obj.valid_from_date = obj.valid_from_date.isoformat()
         obj.valid_to_date = obj.valid_to_date.isoformat()
         accreditation = AccreditationForm(request.POST or None,
@@ -993,13 +982,10 @@ def accreditation_edit(request, id=None):
 
 @login_required(login_url="/accounts/login") 
 def accreditation_delete(request, id):
-    # unless staff, only allow delete if record belongs to company
-    if request.user.is_staff:
-        delete_obj = Accreditation.objects.get(id=id)
-    else:
-        delete_obj = Accreditation.objects.get(
-            id=id,
-            accredited_company = request.user.company)
+    # Only allow delete if record belongs to company
+    delete_obj = Accreditation.objects.get(
+        id=id,
+        accredited_company = request.user.company)
 
     try_delete_protected(request, delete_obj)
     
@@ -1007,6 +993,7 @@ def accreditation_delete(request, id):
 
 
 @login_required(login_url="/accounts/login") 
+@user_passes_test(is_staff)
 def certified_distances_home(request, id):
     pillar_surveys = (Pillar_Survey.objects.annotate(
         num_cd=Count('certified_distance')).filter(num_cd__gt=0).filter(
@@ -1107,6 +1094,7 @@ def certified_distances_home(request, id):
 
 
 @login_required(login_url="/accounts/login") 
+@user_passes_test(is_staff)
 def certified_distances_edit(request, id):
     # only available to staff
     if request.user.is_staff:

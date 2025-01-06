@@ -50,9 +50,12 @@ class CustomClearableFileInput(forms.ClearableFileInput):
 class PillarSurveyForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
+        locations = list(user.locations.values_list('statecode', flat=True))
+        
         super(PillarSurveyForm, self).__init__(*args, **kwargs)
         self.fields['baseline'].queryset = CalibrationSite.objects.filter(
-            site_type = 'baseline')
+            Q(site_type = 'baseline') 
+            & Q(state__statecode__in = locations))
         self.fields['edm'].queryset = EDM_Inst.objects.filter(
             edm_specs__edm_owner = user.company)
         self.fields['prism'].queryset = Prism_Inst.objects.filter(

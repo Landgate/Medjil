@@ -25,7 +25,9 @@ from .models import (
     uEDM_Observation,
     Inter_Comparison)
 
-from baseline_calibration.models import Uncertainty_Budget
+from baseline_calibration.models import (
+    Uncertainty_Budget,
+    Pillar_Survey)
 from instruments.models import (
     EDM_Inst,
     Prism_Inst, 
@@ -42,37 +44,33 @@ class CustomClearableFileInput(forms.ClearableFileInput):
 class CalibrateEdmForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
+        locations = list(user.locations.values_list('statecode', flat=True))
         super(CalibrateEdmForm, self).__init__(*args, **kwargs)
+        
         self.fields['site'].queryset = CalibrationSite.objects.filter(
-            site_type = 'baseline')
+            Q(site_type = 'baseline') &
+            Q(state__statecode__in = locations))
+        self.fields['calibrated_baseline'].queryset = Pillar_Survey.objects.filter(
+            baseline__state__statecode__in = locations)
         self.fields['uncertainty_budget'].queryset = Uncertainty_Budget.objects.filter(
             Q(company = user.company) | 
             Q(name = 'Default', company__company_name = 'Landgate'))
         self.fields['auto_base_calibration'].required = False
         self.fields['calibrated_baseline'].required = False
-        if user.is_superuser:
-            self.fields['edm'].queryset = EDM_Inst.objects.all()
-            self.fields['prism'].queryset = Prism_Inst.objects.all()
-            self.fields['thermometer'].queryset = Mets_Inst.objects.filter(
-                mets_specs__inst_type = 'thermo')
-            self.fields['barometer'].queryset = Mets_Inst.objects.filter(
-                mets_specs__inst_type = 'baro')
-            self.fields['hygrometer'].queryset = Mets_Inst.objects.filter(
-                mets_specs__inst_type = 'hygro')
-        else:
-            self.fields['edm'].queryset = EDM_Inst.objects.filter(
-                edm_specs__edm_owner = user.company)
-            self.fields['prism'].queryset = Prism_Inst.objects.filter(
-                prism_specs__prism_owner = user.company)
-            self.fields['thermometer'].queryset = Mets_Inst.objects.filter(
-                mets_specs__inst_type = 'thermo',
-                mets_specs__mets_owner = user.company)
-            self.fields['barometer'].queryset = Mets_Inst.objects.filter(
-                mets_specs__inst_type = 'baro',
-                mets_specs__mets_owner = user.company)
-            self.fields['hygrometer'].queryset = Mets_Inst.objects.filter(
-                mets_specs__inst_type = 'hygro',
-                mets_specs__mets_owner = user.company)
+
+        self.fields['edm'].queryset = EDM_Inst.objects.filter(
+            edm_specs__edm_owner = user.company)
+        self.fields['prism'].queryset = Prism_Inst.objects.filter(
+            prism_specs__prism_owner = user.company)
+        self.fields['thermometer'].queryset = Mets_Inst.objects.filter(
+            mets_specs__inst_type = 'thermo',
+            mets_specs__mets_owner = user.company)
+        self.fields['barometer'].queryset = Mets_Inst.objects.filter(
+            mets_specs__inst_type = 'baro',
+            mets_specs__mets_owner = user.company)
+        self.fields['hygrometer'].queryset = Mets_Inst.objects.filter(
+            mets_specs__inst_type = 'hygro',
+            mets_specs__mets_owner = user.company)
             
     class Meta:
         model = uPillar_Survey
@@ -190,15 +188,12 @@ class Inter_ComparisonForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
         super(Inter_ComparisonForm, self).__init__(*args, **kwargs)
-        if not user.is_superuser:
-            self.fields['edm'].queryset = EDM_Inst.objects.filter(
-                edm_specs__edm_owner = user.company)
-            self.fields['prism'].queryset = Prism_Inst.objects.filter(
-                prism_specs__prism_owner = user.company)
-        else:
-            self.fields['edm'].queryset = EDM_Inst.objects.all()
-            self.fields['prism'].queryset = Prism_Inst.objects.all()
-            
+        
+        self.fields['edm'].queryset = EDM_Inst.objects.filter(
+            edm_specs__edm_owner = user.company)
+        self.fields['prism'].queryset = Prism_Inst.objects.filter(
+            prism_specs__prism_owner = user.company)
+                    
     class Meta:
         model = Inter_Comparison
         fields = '__all__'

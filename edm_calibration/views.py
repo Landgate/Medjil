@@ -86,11 +86,10 @@ def is_staff(user):
     
 @login_required(login_url="/accounts/login")
 def edm_calibration_home(request):
-    if request.user.is_superuser:
-        pillar_surveys = uPillar_Survey.objects.all()
-    else:        
-        pillar_surveys = uPillar_Survey.objects.select_related('edm').filter(
-            edm__edm_specs__edm_owner = request.user.company.id)
+    locations = list(request.user.locations.values_list('statecode', flat=True))
+    pillar_surveys = uPillar_Survey.objects.select_related('edm').filter(
+        edm__edm_specs__edm_owner = request.user.company.id,
+        site__state__statecode__in = locations)
         
     context = {
         'pillar_surveys': pillar_surveys}
@@ -118,20 +117,27 @@ def calibrate1(request, id):
     if id == 'None':
         qs=''
         ini_data = {'computation_date':date.today().isoformat()}
-        pillar_survey = CalibrateEdmForm(request.POST or None,
-                                request.FILES or None,
-                                user=request.user,
-                                initial=ini_data)
-        upload_survey_files = UploadSurveyFiles(request.POST or None,
-                                                request.FILES or None)
+        pillar_survey = CalibrateEdmForm(
+            request.POST or None,
+            request.FILES or None,
+            user=request.user,
+            initial=ini_data)
+        upload_survey_files = UploadSurveyFiles(
+            request.POST or None,
+            request.FILES or None)
     else:
-        qs = get_object_or_404(uPillar_Survey, id=id)
-        pillar_survey = CalibrateEdmForm(request.POST or None,
-                                         request.FILES or None,
-                                         instance = qs,
-                                         user = request.user)
-        upload_survey_files = ChangeSurveyFiles(request.POST or None,
-                                                request.FILES or None)
+        qs = get_object_or_404(
+            uPillar_Survey,
+            id=id,
+            edm__edm_specs__edm_owner = request.user.company.id)
+        pillar_survey = CalibrateEdmForm(
+            request.POST or None,
+            request.FILES or None,
+            instance = qs,
+            user = request.user)
+        upload_survey_files = ChangeSurveyFiles(
+            request.POST or None,
+            request.FILES or None)
 
     if pillar_survey.is_valid() and upload_survey_files.is_valid():
         frm = pillar_survey.cleaned_data
@@ -140,8 +146,9 @@ def calibrate1(request, id):
         # Check the baseline has a valid calibration
         Check_Errors = validate_survey(pillar_survey = frm)
         if len(Check_Errors['Errors']) > 0:
-            return render(request, 'edm_calibration/errors_report.html', 
-                          {'Check_Errors': Check_Errors})
+            return render(
+                request, 'edm_calibration/errors_report.html',
+                {'Check_Errors': Check_Errors})
     #----------------- Query related fields -----------------#
         calib = Calibrations_qry(frm)
         baseline = baseline_qry(frm)
@@ -152,14 +159,16 @@ def calibrate1(request, id):
             for v in raw_edm_obs.values():
                 v['use_for_distance'] = True
                                    
-            Check_Errors = validate_survey(pillar_survey=frm,
-                                        baseline=baseline,
-                                        calibrations=calib,
-                                        raw_edm_obs=raw_edm_obs)
+            Check_Errors = validate_survey(
+                pillar_survey=frm,
+                baseline=baseline,
+                calibrations=calib,
+                raw_edm_obs=raw_edm_obs)
             
             if len(Check_Errors['Errors']) > 0:
-                return render(request, 'edm_calibration/errors_report.html', 
-                              {'Check_Errors':Check_Errors})
+                return render(
+                    request, 'edm_calibration/errors_report.html', 
+                    {'Check_Errors':Check_Errors})
         else:
             qs = uEDM_Observation.objects.filter(pillar_survey__pk=id)
             raw_edm_obs = {}
@@ -225,7 +234,9 @@ def calibrate2(request,id):
     
     #----------------- Query site, surveys, instruments and calibrations -----------------#
     # Get the pillar_survey in dict like cleaned form data
-    ps_qs = uPillar_Survey.objects.get(id=id)
+    ps_qs = uPillar_Survey.objects.get(
+        id=id,
+        edm__edm_specs__edm_owner = request.user.company.id)
     query_dict = QueryDict('', mutable=True)
     query_dict.update(model_to_dict(ps_qs))
     pillar_survey_form = CalibrateEdmForm(query_dict, user=request.user)
@@ -603,7 +614,10 @@ def certificate(request, id):
     # This uses the html report saved to the database to popluate the certificate
     # It also loads the approvals form that can be edited and saved.    
     edmi_certificate_qs = get_object_or_404(EDMI_certificate, id=id)
-    pillar_survey_qs = get_object_or_404(uPillar_Survey, certificate_id=id)
+    pillar_survey_qs = get_object_or_404(
+        uPillar_Survey,
+        certificate_id=id,
+        edm__edm_specs__edm_owner = request.user.company.id)
     ps_approvals = PillarSurveyApprovals(
         request.POST or None, instance=pillar_survey_qs)
     if ps_approvals.is_valid():
@@ -622,7 +636,10 @@ def certificate(request, id):
 def report(request, id):
     # This uses the html report saved to the database to popluate the certificate
     # It also loads the approvals form that can be edited and saved. 
-    pillar_survey_qs = get_object_or_404(uPillar_Survey, certificate_id=id)
+    pillar_survey_qs = get_object_or_404(
+        uPillar_Survey,
+        certificate_id=id,
+        edm__edm_specs__edm_owner = request.user.company.id)
     ps_approvals = PillarSurveyApprovals(
         request.POST or None, instance=pillar_survey_qs)
     if ps_approvals.is_valid():
@@ -637,11 +654,9 @@ def report(request, id):
 
 @login_required(login_url="/accounts/login") 
 def intercomparison_home(request):
-    if request.user.is_superuser:
-        intercomparisons = Inter_Comparison.objects.all()
-    else:        
-        intercomparisons = Inter_Comparison.objects.select_related('edm').filter(
-            edm__edm_specs__edm_owner = request.user.company.id)
+   
+    intercomparisons = Inter_Comparison.objects.select_related('edm').filter(
+        edm__edm_specs__edm_owner = request.user.company.id)
         
     context = {
         'intercomparisons': intercomparisons}
@@ -660,7 +675,9 @@ def intercomparison_report(request, id):
 
 @login_required(login_url="/accounts/login") 
 def intercomparison_del(request, id):
-    delete_obj = Inter_Comparison.objects.get(id=id)
+    delete_obj = Inter_Comparison.objects.get(
+        id=id,
+        edm__edm_specs__edm_owner = request.user.company.id)
     try_delete_protected(request, delete_obj)
     
     return redirect('edm_calibration:intercomparison_home')
@@ -676,7 +693,10 @@ def intercomparison(request, id=None):
             user=request.user,
             initial=ini_data)
     else:
-        qs = get_object_or_404(Inter_Comparison, pk=id) 
+        qs = get_object_or_404(
+            Inter_Comparison,
+            pk=id,
+            edm__edm_specs__edm_owner = request.user.company.id)
         form = Inter_ComparisonForm(
             request.POST or None,
             instance = qs,

@@ -101,6 +101,127 @@ edm_sites = [{
     'operator' : 'Landgate',
     'site_access' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/WA/Kalgoorlie/Kalgoorlie EDM Baseline Access Sketch.pdf'),
     'site_config' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/WA/Kalgoorlie/Kalgoorlie EDM Baseline Pillar Configuration.pdf')
+},{
+   'site_type' : 'baseline',
+    'site_name' : 'Mawson Lakes',
+    'site_address' : 'University of South Australia Mawson Lakes Campus',
+    'country' : 'Australia',
+    'state' : 'SA',
+    'locality': 'Mawson Lakes',
+    'no_of_pillars': 7,
+    'operator' : 'Office of the Surveyor-General - SA',
+    'site_access' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/SA/Mawson Lakes/2024-09-03-Mawson_baseline_access_diagram.pdf'),
+    'site_config' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/SA/Mawson Lakes/2024-09-03-Mawson_baseline_access_diagram.pdf')
+},{
+   'site_type' : 'baseline',
+    'site_name' : 'QLD.CABO2',
+    'site_address' : 'Dances Road',
+    'country' : 'Australia',
+    'state' : 'QLD',
+    'locality': 'Caboolture',
+    'no_of_pillars': 7,
+    'operator' : 'Department of Natural Resources & Mines, Manufacturing & Regional & Rural Development',
+    'site_access' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Caboolture/2024-11-14-caboolture-baseline-location-map.pdf'),
+    'site_config' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Caboolture/2024-11-14-caboolture-baseline-location-map.pdf')
+},{
+   'site_type' : 'baseline',
+    'site_name' : 'QLD.EURE1',
+    'site_address' : '698 Eureka Station Road',
+    'country' : 'Australia',
+    'state' : 'QLD',
+    'locality': 'Eureka',
+    'no_of_pillars': 7,
+    'operator' : 'Department of Natural Resources & Mines, Manufacturing & Regional & Rural Development',
+    'site_access' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Eureka/blank.pdf'),
+    'site_config' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Eureka/blank.pdf')
+},{
+   'site_type' : 'baseline',
+    'site_name' : 'QLD.GOLD3',
+    'site_address' : 'Shelter Road',
+    'country' : 'Australia',
+    'state' : 'QLD',
+    'locality': 'Coombabah',
+    'no_of_pillars': 7,
+    'operator' : 'Department of Natural Resources & Mines, Manufacturing & Regional & Rural Development',
+    'site_access' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Coombabah/2024-11-14-gold-coast-baseline-location-map.pdf'),
+    'site_config' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Coombabah/2024-11-14-gold-coast-baseline-location-map.pdf')
+},{
+   'site_type' : 'baseline',
+    'site_name' : 'QLD.GOON1',
+    'site_address' : 'Goonyella Riverside Mine Access Rd',
+    'country' : 'Australia',
+    'state' : 'QLD',
+    'locality': 'Moranbah',
+    'no_of_pillars': 7,
+    'operator' : 'Department of Natural Resources & Mines, Manufacturing & Regional & Rural Development',
+    'site_access' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Moranbah/2024-11-14-goonyella-baseline-location-map.pdf'),
+    'site_config' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Moranbah/2024-11-14-goonyella-baseline-location-map.pdf')
+},{
+   'site_type' : 'baseline',
+    'site_name' : 'QLD.LEYB1',
+    'site_address' : '10km northeast of Leyburn',
+    'country' : 'Australia',
+    'state' : 'QLD',
+    'locality': 'Leyburn',
+    'no_of_pillars': 7,
+    'operator' : 'Department of Natural Resources & Mines, Manufacturing & Regional & Rural Development',
+    'site_access' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Leyburn/2024-11-19-leyburn-baseline-location-map.pdf'),
+    'site_config' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Leyburn/2024-11-19-leyburn-baseline-location-map.pdf')
+},{
+   'site_type' : 'baseline',
+    'site_name' : 'QLD.MACK2',
+    'site_address' : 'Mackay Regional Botanic Gardens',
+    'country' : 'Australia',
+    'state' : 'QLD',
+    'locality': 'Mackay',
+    'no_of_pillars': 7,
+    'operator' : 'Department of Natural Resources & Mines, Manufacturing & Regional & Rural Development',
+    'site_access' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Mackay/2024-11-19-mackay-baseline-location-map.pdf'),
+    'site_config' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Mackay/2024-11-19-mackay-baseline-location-map.pdf')
+},{
+   'site_type' : 'baseline',
+    'site_name' : 'QLD.MICA2',
+    'site_address' : '5km south of the Mount Isa',
+    'country' : 'Australia',
+    'state' : 'QLD',
+    'locality': 'Mount Isa',
+    'no_of_pillars': 7,
+    'operator' : 'Department of Natural Resources & Mines, Manufacturing & Regional & Rural Development',
+    'site_access' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Mount Isa/2024-11-19-mica-creek-baseline-location-map.pdf'),
+    'site_config' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Mount Isa/2024-11-19-mica-creek-baseline-location-map.pdf')
+},{
+   'site_type' : 'baseline',
+    'site_name' : 'QLD.TOWN2',
+    'site_address' : 'This baseline is located adjacent to the high voltage power lines on the northern side and parallel',
+    'country' : 'Australia',
+    'state' : 'QLD',
+    'locality': 'Townsville',
+    'no_of_pillars': 7,
+    'operator' : 'Department of Natural Resources & Mines, Manufacturing & Regional & Rural Development',
+    'site_access' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Townsville/2024-11-19-townsville-location-map.pdf'),
+    'site_config' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Townsville/2024-11-19-townsville-location-map.pdf')
+},{
+   'site_type' : 'baseline',
+    'site_name' : 'QLD.TUNG1',
+    'site_address' : 'Tungamull, along a disused railway line just east of Rockhampton',
+    'country' : 'Australia',
+    'state' : 'QLD',
+    'locality': 'Tungamull',
+    'no_of_pillars': 7,
+    'operator' : 'Department of Natural Resources & Mines, Manufacturing & Regional & Rural Development',
+    'site_access' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Tungamull/2024-11-19-tungamull-baseline-location-map.pdf'),
+    'site_config' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Tungamull/2024-11-19-tungamull-baseline-location-map.pdf')
+},{
+   'site_type' : 'baseline',
+    'site_name' : 'QLD.WALK1',
+    'site_address' : 'Opposite side of the Kennedy Highway to the Walkamin Agricultural Research Station',
+    'country' : 'Australia',
+    'state' : 'QLD',
+    'locality': 'Walkamin',
+    'no_of_pillars': 7,
+    'operator' : 'Department of Natural Resources & Mines, Manufacturing & Regional & Rural Development',
+    'site_access' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Walkamin/2024-11-19-walkamin-baseline-location-map.pdf'),
+    'site_config' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Walkamin/2024-11-19-walkamin-baseline-location-map.pdf')
 }]
 
 site_types = (

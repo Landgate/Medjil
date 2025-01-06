@@ -41,6 +41,17 @@ states = [
 ]
 
 localities = [
+    {'statecode' : 'QLD',  'name' : 'Caboolture', 'postcode' : '4510'},
+    {'statecode' : 'QLD',  'name' : 'Eureka', 'postcode' : '4660'},
+    {'statecode' : 'QLD',  'name' : 'Coombabah', 'postcode' : '4216'},
+    {'statecode' : 'QLD',  'name' : 'Moranbah', 'postcode' : '4744'},
+    {'statecode' : 'QLD',  'name' : 'Leyburn', 'postcode' : '4365'},
+    {'statecode' : 'QLD',  'name' : 'Mackay', 'postcode' : '4740'},
+    {'statecode' : 'QLD',  'name' : 'Mount Isa', 'postcode' : '4825'},
+    {'statecode' : 'QLD',  'name' : 'Townsville', 'postcode' : '4810'},
+    {'statecode' : 'QLD',  'name' : 'Tungamull', 'postcode' : '4702'},
+    {'statecode' : 'QLD',  'name' : 'Walkamin', 'postcode' : '4872'},
+    {'statecode' : 'SA',  'name' : 'Mawson Lakes', 'postcode' : '5095'},
     {'statecode' : 'WA',  'name' : 'Boya', 'postcode' : '6056'},
     {'statecode' : 'WA',  'name' : 'Bentley', 'postcode' : '6102'},
     {'statecode' : 'WA',  'name' : 'Kalgoorlie-Boulder', 'postcode' : '6430'},

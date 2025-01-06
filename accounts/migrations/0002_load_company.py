@@ -43,6 +43,10 @@ def load_initial_data(apps, schema_editor):
         company_abbrev = 'OTH', company_name = 'Others', company_secret_key='')
     company = Company.objects.create(
         company_abbrev = 'LG', company_name = 'Landgate')
+    company = Company.objects.create(
+        company_abbrev = 'OSG SA', company_name = 'Office of the Surveyor-General - SA')
+    company = Company.objects.create(
+        company_abbrev = 'DNRMMRRD', company_name = 'Department of Natural Resources & Mines, Manufacturing & Regional & Rural Development')
 
     for locate in locations:
         obj = Location.objects.get_or_create(
