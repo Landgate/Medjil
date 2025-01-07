@@ -316,7 +316,7 @@ class EDM_Specification(models.Model):
         unique_together = ("edm_make_name", "edm_model_name", "edm_owner")
 
     def __str__(self):
-        return f'{self.edm_make_name} {self.edm_model_name} ({self.edm_owner.company_abbrev})'
+        return f'{self.edm_make_name} {self.edm_model_name}'
 
     def save(self, *args, **kwargs):
         self.edm_make_name = self.edm_make_name.upper()
@@ -368,7 +368,7 @@ class EDM_Inst(models.Model):
     modified_on = models.DateTimeField(auto_now=True, null=True)
 
     class Meta:
-        ordering = ['edm_specs']
+        ordering = ['edm_specs__edm_make_name', 'edm_specs__edm_model_name', 'edm_number']
         unique_together = ('edm_specs', 'edm_number')
         verbose_name = "EDM Instrument"
 
@@ -473,7 +473,7 @@ class Prism_Inst(models.Model):
     modified_on = models.DateTimeField(auto_now=True, null=True)
 
     class Meta:
-        ordering = ['prism_specs']
+        ordering = ['prism_specs__prism_make_name', 'prism_specs__prism_model_name', 'prism_number']
         unique_together = ('prism_specs', 'prism_number')
         verbose_name = "Prism Instrument"
 
@@ -595,7 +595,7 @@ class Mets_Inst(models.Model):
     modified_on = models.DateTimeField(auto_now=True, null=True)
 
     class Meta:
-        ordering = ['mets_specs']
+        ordering = ['mets_specs__mets_make_name', 'mets_specs__mets_model_name', 'mets_number']
         unique_together = ('mets_specs', 'mets_number')
         verbose_name = "Meteorological Instrument"
 

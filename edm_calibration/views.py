@@ -17,6 +17,7 @@
 '''
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
+from django.core.exceptions import ValidationError
 from django.core.serializers.json import DjangoJSONEncoder
 from django.forms import modelformset_factory
 from django.forms.models import model_to_dict
@@ -192,7 +193,7 @@ def calibrate1(request, id):
             delete_edm_obs = uEDM_Observation.objects.filter(pillar_survey=id)
             delete_edm_obs.delete()
             for o in raw_edm_obs.values():
-                uEDM_Observation.objects.create(
+                edm_obs = uEDM_Observation(
                     pillar_survey = ps_instance,
                     from_pillar = baseline['pillars'].get(name=o['from_pillar']),
                     to_pillar = baseline['pillars'].get(name=o['to_pillar']),
@@ -203,14 +204,15 @@ def calibrate1(request, id):
                     raw_pressure = o['raw_pressure'],
                     raw_humidity = o['raw_humidity'],
                     use_for_distance = o['use_for_distance'])
-                            
+                try:
+                    edm_obs.full_clean()  # Validate the model instance
+                    edm_obs.save()  # Save to the database if validation passes
+                except ValidationError as e:
+                    # Add validation errors to messages
+                    for field, error in e.message_dict.items():
+                        for msg in error:
+                            messages.error(request, field + ': '+ msg)
         return redirect('edm_calibration:calibrate2', id=id)
-
-    else:
-        for e in pillar_survey.errors:
-            print(e)
-        for e in upload_survey_files.errors:
-            print(e)
             
     headers = {'page0':'EDMI Calibration Details',
                 'page1': 'Instrumentation Details',
@@ -320,23 +322,25 @@ def calibrate2(request,id):
                 o['Bay'] = o['from_pillar'] + ' - ' + o['to_pillar']
             
             # Group raw data by bays, calc averages and experimental std dev
-            edm_observations = group_list(raw_edm_obs.values(),
-                                            group_by='Bay',
-                                            labels_list=['from_pillar',
-                                                         'to_pillar'],
-                                            avg_list=['inst_ht',
-                                                      'tgt_ht',
-                                                      'Temp',
-                                                      'Pres',
-                                                      'Humid',
-                                                      'Mets_Correction',
-                                                      'raw_slope_dist',
-                                                      'slope_dist',],
-                                            std_list=['slope_dist'],
-                                            mask_by='use_for_distance')
+            edm_observations = group_list(
+                raw_edm_obs.values(),
+                group_by='Bay',
+                labels_list=['from_pillar',
+                             'to_pillar'],
+                avg_list=['inst_ht',
+                          'tgt_ht',
+                          'Temp',
+                          'Pres',
+                          'Humid',
+                          'Mets_Correction',
+                          'raw_slope_dist',
+                          'slope_dist',],
+                std_list=['slope_dist'],
+                mask_by='use_for_distance')
             
-            edm_trend = edm_std_function(edm_observations, 
-                                         uc_budget['stddev_0_adj'])           #y = Ax + B
+            edm_trend = edm_std_function(
+                edm_observations, 
+                uc_budget['stddev_0_adj'])           #y = Ax + B
                            
             matrix_A = []
             matrix_x = []

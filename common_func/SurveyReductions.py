@@ -1,6 +1,6 @@
 '''
 
-   © 2024 Western Australian Land Information Authority
+   © 2025 Western Australian Land Information Authority
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -132,9 +132,9 @@ def adjust_alignment_survey(raw_edm_obs, pillars):
     #-------------------------------------------------------------------------------#
 def apply_calib(obs, applied, calib=[],scf=1,zpc=0,
                 c1=0, c2=0, c3=0, c4=0, unit_length=1):
-    obs0 = float(obs)
+
     if applied  == True:
-        obs1 = obs0
+        return obs, 0
     else:
         if hasattr(calib,'scale_correction_factor'): scf=calib.scale_correction_factor
         if hasattr(calib,'zero_point_correction'): zpc=calib.zero_point_correction
@@ -143,16 +143,16 @@ def apply_calib(obs, applied, calib=[],scf=1,zpc=0,
         if hasattr(calib,'c3'): c3=calib.cyclic_three
         if hasattr(calib,'c4'): c4=calib.cyclic_four
         
-        two_pi_obs0_unit_length = 2 * pi * obs0 / unit_length
-        four_pi_obs0_unit_length = 4 * pi * obs0 / unit_length
-        obs1 = (zpc + obs0*scf
+        two_pi_obs0_unit_length = 2 * pi * obs / unit_length
+        four_pi_obs0_unit_length = 4 * pi * obs / unit_length
+        obs1 = (zpc + obs*scf
                 + c1 * sin(two_pi_obs0_unit_length) 
                 + c2 * cos(two_pi_obs0_unit_length)
                 + c3 * sin(four_pi_obs0_unit_length)
                 + c4 * cos(four_pi_obs0_unit_length))
-    correction = obs1 - obs0
-    
-    return obs1, correction
+        correction = obs1 - obs
+        
+        return obs1, correction
 
 
 def get_mets_params(edm, mets_applied=True):
@@ -692,8 +692,7 @@ def add_calib_uc(uc_sources, calib, pillar_survey):
 def is_float(n):
     try:
         float(n)
-    except ValueError as e:
-        print(e)
+    except:
         return False
     else:
         return True
@@ -839,7 +838,7 @@ def validate_survey(pillar_survey, baseline=None, calibrations=None,
             if pillar_survey['hygrometer2']: required_clms.append('raw_humidity2')
                 
         first_o = next(iter(raw_edm_obs.values()))
-        file_clms = [k for k, v in first_o.items() if v is not None]
+        file_clms = [k for k in first_o.keys()]
         if all(key in file_clms for key in required_clms):
             edm_file_checked = True
         else:
@@ -883,11 +882,11 @@ def validate_survey(pillar_survey, baseline=None, calibrations=None,
                         Errs.append(f'Horizontal Direction "{o["hz_direction"]}" is invalid')
             if not is_float(o['raw_slope_dist']):
                 Errs.append(f"Slope distance {o['raw_slope_dist']} is invalid")
-            if not is_float(o['raw_temperature']):
+            if not is_float(o['raw_temperature']) and not o['raw_temperature'] is None:
                 Errs.append(f"Temperature reading {o['raw_temperature']} is invalid")
-            if not is_float(o['raw_pressure']):
+            if not is_float(o['raw_pressure']) and not o['raw_pressure'] is None:
                 Errs.append(f"Pressure reading {o['raw_pressure']} is invalid")
-            if not is_float(o['raw_humidity']):
+            if not is_float(o['raw_humidity']) and not o['raw_humidity'] is None:
                 Errs.append(f"Humidity reading {o['raw_humidity']} is invalid")
             
             # Check pillar names are valid

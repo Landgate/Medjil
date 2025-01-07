@@ -51,18 +51,18 @@
                 </tr>
                 </thead>
                 <tbody>
-                {% for typeid, inst_type in inst_types %}
+                {% for inst_type in inst_types %}
                   {% if forloop.first %}
                   <tr>
                     <td><span><i class="fa-solid fa-caret-right"></i></span></td>
-                    <td>{{ typeid }}</td>
-                    <td>{{ inst_type }}</td>
+                    <td>{{ inst_type.abbr }}</td>
+                    <td>{{ inst_type.name }}</td>
                   </tr>
                   {% else %}
                   <tr>
                     <td><span></span></td>
-                    <td>{{ typeid }}</td>
-                    <td>{{ inst_type }}</td>
+                    <td>{{ inst_type.abbr }}</td>
+                    <td>{{ inst_type.name }}</td>
                   </tr>
                   {% endif %}
                 {% endfor %}

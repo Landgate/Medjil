@@ -62,14 +62,16 @@ from staffcalibration.models import StaffCalibrationRecord
 from common_func.Convert import db_std_units
 
 
+INST_TYPES = [{'abbr':x[0], 'name':x[1]} 
+              for x in InstrumentModel.inst_type.field.choices 
+              if x[0] not in [None, 'others']]
+
 # Instrument Settings 
 @login_required(login_url="/accounts/login")
 def instrument_settings(request):
-    inst_types = [[x[0], x[1]] for x in InstrumentModel.inst_type.field.choices if x[0] not in [None, 'others']]
-
     inst_makes = InstrumentMake.objects.exclude(make_abbrev = 'OTH').order_by('make_abbrev')
     context = {
-        'inst_types': inst_types,
+        'inst_types': INST_TYPES,
         'inst_makes': inst_makes
 
     }
@@ -306,21 +308,21 @@ def register_delete(request, inst_disp, tab, id):
 @login_required(login_url="/accounts/login")
 def instrument_register(request, inst_disp):
 
-    inst_types = [{'abbr':x[0], 'name':x[1]} 
-                  for x in InstrumentModel.inst_type.field.choices 
-                  if x[0] not in [None, 'others']]
-    
-    table_headings = {'certificates': ['Number',
-                                     'Calibration Date',
-                                     'Zero Point Correction',
-                                     'Action']}
+    table_headings = {'certificates': [
+        'Number',
+        'Calibration Date',
+        'Zero Point Correction',
+        'Action']}
     tabs = {}
     
     ################ EDM TAB #################
     if inst_disp == 'edm':
-        tabs['models_list'] = EDM_Specification.objects.all()
-        tabs['insts_list'] = EDM_Inst.objects.all()
-        tabs['certificates_list'] = (EDMI_certificate.objects.all()
+        tabs['models_list'] = EDM_Specification.objects.filter(
+            edm_owner = request.user.company)
+        tabs['insts_list'] = EDM_Inst.objects.filter(
+            edm_specs__edm_owner = request.user.company)
+        tabs['certificates_list'] = (EDMI_certificate.objects
+            .filter(edm__edm_specs__edm_owner = request.user.company)
             .order_by('edm__edm_number', '-calibration_date')
             .values('pk', 'edm__edm_number', 'prism__prism_number',
                     'calibration_date',
@@ -334,97 +336,59 @@ def instrument_register(request, inst_disp):
             'Scale Correction Factor',
             'Zero Point Correction (m)',
             'Action']
-        
-        if not request.user.is_staff:
-            tabs['models_list'] = tabs['models_list'].filter(
-                edm_owner = request.user.company)
-            tabs['insts_list'] = tabs['insts_list'].filter(
-                edm_specs__edm_owner = request.user.company)
-            tabs['certificates_list'] = tabs['certificates_list'].filter(
-                edm__edm_specs__edm_owner = request.user.company)
     
     ################ PRISM TAB #################
     if inst_disp == 'prism':
-        if not request.user.is_staff:
-            tabs['models_list'] = Prism_Specification.objects.filter(
-                prism_owner = request.user.company)
-            tabs['insts_list'] = Prism_Inst.objects.filter(
-                prism_specs__prism_owner = request.user.company)
-        else:
-            tabs['models_list'] = Prism_Specification.objects.all()
-            tabs['insts_list'] = Prism_Inst.objects.all()
+        tabs['models_list'] = Prism_Specification.objects.filter(
+            prism_owner = request.user.company)
+        tabs['insts_list'] = Prism_Inst.objects.filter(
+            prism_specs__prism_owner = request.user.company)
     
     ################ LEVEL TAB #################
     if inst_disp == 'level':
-        if not request.user.is_staff:
-            tabs['insts_list'] = DigitalLevel.objects.filter(
-                level_owner = request.user.company)
-        else:
-            tabs['insts_list'] = DigitalLevel.objects.all()
+        tabs['insts_list'] = DigitalLevel.objects.filter(
+            level_owner = request.user.company)
     
     ################ STAFF TAB #################
     if inst_disp == 'staff':
-        table_headings['certificates']= ['Staff Number',
-                                         'Calibration Date',
-                                         'Scale Factor',
-                                         'Graduation Uncertainty',
-                                         'Action']
+        table_headings['certificates']= [
+            'Staff Number',
+            'Calibration Date',
+            'Scale Factor',
+            'Graduation Uncertainty',
+            'Action']
 
-        tabs['insts_list'] = Staff.objects.all()
-        tabs['certificates_list'] = (StaffCalibrationRecord.objects.all()
+        tabs['insts_list'] = Staff.objects.filter(
+            staff_owner = request.user.company)
+        tabs['certificates_list'] = (StaffCalibrationRecord.objects
+            .filter(inst_staff__staff_owner = request.user.company)
             .order_by('-calibration_date', 'inst_staff__staff_number')
             .values('pk', 'inst_staff__staff_number',
                     'calibration_date',
                     'scale_factor', 'grad_uncertainty','calibration_report'))
-
-        if not request.user.is_staff:
-            tabs['insts_list'] = tabs['insts_list'].filter(
-                staff_owner = request.user.company)
-            tabs['certificates_list'] = tabs['certificates_list'].filter(
-                inst_staff__staff_owner = request.user.company)
-
             
     ################ METS TAB #################
     if (inst_disp == 'baro' or inst_disp == 'thermo' 
         or inst_disp == 'hygro' or inst_disp == 'psy'):
         
         tabs['models_list'] = Mets_Specification.objects.filter(
-            inst_type = inst_disp)
+            inst_type = inst_disp, mets_owner = request.user.company)
         tabs['insts_list'] = Mets_Inst.objects.filter(
-            mets_specs__inst_type = inst_disp)
+            mets_specs__inst_type = inst_disp, mets_specs__mets_owner = request.user.company)
         tabs['certificates_list'] = (Mets_certificate.objects.filter(
-            instrument__mets_specs__inst_type = inst_disp)
+            instrument__mets_specs__inst_type = inst_disp, instrument__mets_specs__mets_owner = request.user.company)
             .order_by('instrument__mets_number', '-calibration_date')
             .values('pk', 'instrument__mets_number',
                     'calibration_date',
                     'zero_point_correction'))
-        
-    if (not request.user.is_staff 
-        and (inst_disp == 'baro' or inst_disp == 'thermo' 
-        or inst_disp == 'hygro' or inst_disp == 'psy')):
-        tabs['models_list'] = tabs['models_list'].filter(
-            mets_owner = request.user.company)
-        tabs['insts_list'] = tabs['insts_list'].filter(
-            mets_specs__mets_owner = request.user.company)
-        tabs['certificates_list'] = tabs['certificates_list'].filter(
-            instrument__mets_specs__mets_owner = request.user.company)
-            
+                    
     context = {
         'inst_disp': inst_disp,
-        'inst_types': inst_types,
+        'inst_types': INST_TYPES,
         'tabs': tabs,
         'table_headings':table_headings
     }
     return render(request, 'instruments/instrument_register.html', context)
-
-
-instrument_types = [
-        {'abbr': 'edm', 'name': 'Electronic Distance Measurement (EDM)'},
-        {'abbr': 'prism', 'name': 'Prism'}, 
-        {'abbr': 'level', 'name': 'Digital Level'}, 
-        {'abbr': 'staff', 'name': 'Barcoded Staff'},
-        {'abbr': 'met', 'name': 'Meteorological Station'}
-    ]
 
 
 @login_required(login_url="/accounts/login") 

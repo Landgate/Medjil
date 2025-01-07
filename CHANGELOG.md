@@ -16,6 +16,32 @@ Press [Start Testing](http://medjil.lb.landgate.wa.gov.au) to begin.
 
 
 ## Additions | Fixes | Changes 
+### [1.0.16] - 2025-01-07 - [Kent Wheeler]
+Additions
+* Add link to backcapture to dashboard for VA
+	-*templates/base_generic.html*
+    -*backcapture/templates/backcapture/import_dli.html*
+    -*backcapture/templates/backcapture/import_report.html*
+* Editing and Deleting Baseline calibrations restriced to users company
+    -*baseline_calibration/templates/baseline_calibration/baseline_calibration_home.html*
+
+Changes
+* Filtering Instrument register restriced to users company
+* Ordering of Instrument models set to align with def __str__
+    -*instruments/views.py*
+    -*instruments/models.py*
+    -*instruments/templates/instruments/inst_global_settings.html*
+* EDM observation file changes to allow null mets observations.
+    -*common_func/Convert.py*
+    -*common_func/SurveyReductions.py*
+
+Fixes
+* Importing EDM observations checks model validations
+	-*edm_calibration/views.py*
+    -*edm_calibration/templates/edm_calibration/edm_rawdata.html*
+   	-*baseline_calibration/views.py*
+    -*baseline_calibration/templates/baseline_calibration/edm_rawdata.html*
+
 ### [1.0.16] - 2025-01-06 - [Kent Wheeler]
 Fixed
 * Add security to accounts with user_passes_test

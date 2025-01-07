@@ -467,12 +467,11 @@ def calibration_report_notes_list(request, report_disp):
         {'abbr':x[0], 'name':x[1]} 
         for x in Calibration_Report_Notes.report_type.field.choices]
 
-    note_list = (Calibration_Report_Notes.objects.filter(
-        report_type = report_disp)
+    note_list = (Calibration_Report_Notes.objects
+        .filter(report_type = report_disp, company = request.user.company)
         .order_by('note_type', 'company'))
             
     if not request.user.is_staff:
-        note_list = note_list.filter(company = request.user.company)
         report_types = [{'abbr': 'E', 'name': 'EDMI Calibration'}]
         
     context = {
@@ -489,7 +488,9 @@ def calibration_report_notes_edit(request, report_disp, id):
         form = calibration_report_notesForm(
             request.POST or None, user=request.user)
     else:
-        obj = get_object_or_404(Calibration_Report_Notes, id = id)
+        obj = get_object_or_404(
+            Calibration_Report_Notes, id = id,
+            company = request.user.company)
         form = calibration_report_notesForm(
             request.POST or None,
             instance = obj, user = request.user)
@@ -510,7 +511,9 @@ def calibration_report_notes_edit(request, report_disp, id):
 @login_required(login_url="/accounts/login")
 def calibration_report_notes_delete(request, report_disp, id):
     
-    delete_obj = Calibration_Report_Notes.objects.get(id=id)
+    delete_obj = Calibration_Report_Notes.objects.get(
+        id=id,
+        company = request.user.company)
     try_delete_protected(request, delete_obj)
     
     return redirect ('accounts:calibration_report_notes_list', report_disp=report_disp)

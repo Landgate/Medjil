@@ -21,6 +21,16 @@
 
 <article class="post">
     <div class="post-content">
+        {% if messages %}
+            <ul class="message-list">
+                {% for message in messages %}
+                    <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|safe }}</li>
+                {% endfor %}
+            </ul>
+            <br>
+        {% endif %}
+    </div>
+    <div class="post-content">
         <form id="edm-rawDataForm" action="" style="font-size:10.0pt;max-width: 100%;overflow-x: auto;" class="site-form" method="post" enctype="multipart/form-data">
             <div class="mb-5 px-2 site-form-header bg-indigo-300 rounded">
                 <h2 class="text-center">Imported EDM Observations</h2>

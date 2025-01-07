@@ -18,6 +18,8 @@
 from collections import OrderedDict
 from datetime import date, timedelta
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib import messages
+from django.core.exceptions import ValidationError
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models import Q, Count
 from django.forms import formset_factory, modelformset_factory
@@ -207,7 +209,7 @@ def calibrate1(request, id):
                 if not frm['barometer2']: o['raw_pressure2']=None
                 if not frm['hygrometer2']: o['raw_humidity2']=None
                 
-                EDM_Observation.objects.create(
+                edm_obs = EDM_Observation(
                     pillar_survey=ps_instance,
                     from_pillar=from_pillar_id,
                     to_pillar=to_pillar_id,
@@ -223,7 +225,16 @@ def calibrate1(request, id):
                     raw_humidity2=o['raw_humidity2'],
                     use_for_alignment=o['use_for_alignment'],
                     use_for_distance=o['use_for_distance'],
-                )
+                    )
+                try:
+                    edm_obs.full_clean()  # Validate the model instance
+                    edm_obs.save()  # Save to the database if validation passes
+                except ValidationError as e:
+                    # Add validation errors to messages
+                    for field, error in e.message_dict.items():
+                        for msg in error:
+                            messages.error(request, field + ': '+ msg)
+                            
         # Commit all the reduced levels
         if survey_files['lvl_file']:
             delete_lvl_obs = Level_Observation.objects.filter(pillar_survey=id)
@@ -231,12 +242,20 @@ def calibrate1(request, id):
             for l in raw_lvl_obs.values():
                 pillar_id = baseline['pillars'].get(name=l['pillar'])
 
-                Level_Observation.objects.create(
+                level_obs = Level_Observation(
                     pillar_survey=ps_instance,
                     pillar=pillar_id,
                     reduced_level=l['reduced_level'],
                     rl_standard_deviation=l['std_dev']
-                )
+                    )
+                try:
+                    level_obs.full_clean()  # Validate the model instance
+                    level_obs.save()  # Save to the database if validation passes
+                except ValidationError as e:
+                    # Add validation errors to messages
+                    for field, error in e.message_dict.items():
+                        for msg in error:
+                            messages.error(request, field + ': '+ msg)
         
         return redirect('baseline_calibration:calibrate2', id=id)
             
@@ -250,6 +269,7 @@ def calibrate1(request, id):
             'form': pillar_survey,
             'qs':qs,
             'survey_files':upload_survey_files})
+
 
 @login_required(login_url="/accounts/login") 
 @user_passes_test(is_staff)

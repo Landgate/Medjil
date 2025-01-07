@@ -1,6 +1,6 @@
 '''
 
-   © 2024 Western Australian Land Information Authority
+   © 2025 Western Australian Land Information Authority
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -107,8 +107,11 @@ def csv2dict(csv_file, clms=None, key_names=-1):
         clms = convert_headings(headers)
     clms.append('line')
     
+    def replace_empty_with_none(row):
+        return [None if cell == '' else cell for cell in row]
+    
     # Use dictionary comprehension for speed
-    return {str(row[key_names] if key_names != -1 else index + 1): dict(zip(clms, row + [str(index + 1)]))
+    return {str(row[key_names] if key_names != -1 else index + 1): dict(zip(clms, replace_empty_with_none(row) + [str(index + 1)]))
             for index, row in enumerate(reader) if len(row) >= len(clms)-1}
 
 
@@ -196,15 +199,15 @@ def group_list(raw_list, group_by, labels_list=[], avg_list=[], sum_list=[], std
             continue
 
         for ky in avg_list:
-            values = [float(v.get(ky, 0)) for v in group[group_ky]]
+            values = [float(v.get(ky, 0)) for v in group[group_ky] if v.get(ky, 0)]
             group[ky] = mean(values) if values else 0
 
         for ky in std_list:
-            values = [float(v.get(ky, 0)) for v in group[group_ky]]
+            values = [float(v.get(ky, 0)) for v in group[group_ky] if v.get(ky, 0)]
             group['std_' + ky] = pstdev(values) if len(values) > 1 else 0
 
         for ky in sum_list:
-            values = [float(v.get(ky, 0)) for v in group[group_ky]]
+            values = [float(v.get(ky, 0)) for v in group[group_ky] if v.get(ky, 0)]
             group['sum_' + ky] = sum(values)
 
     for group_value in pop_list:
