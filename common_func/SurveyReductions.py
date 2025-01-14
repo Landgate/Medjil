@@ -155,37 +155,6 @@ def apply_calib(obs, applied, calib=[],scf=1,zpc=0,
         return obs1, correction
 
 
-def get_mets_params(edm, mets_applied=True):
-    if not mets_applied:
-        c = edm.edm_specs.c_term
-        d = edm.edm_specs.d_term
-        if not c or not d:
-            mets_parameters = first_vel_params(
-                edm.edm_specs.carrier_wavelength/1000,
-                edm.edm_specs.frequency,
-                edm.edm_specs.manu_ref_refrac_index)
-            if not edm.edm_specs.c_term:
-                edm.edm_specs.c_term = mets_parameters[0]
-            if not edm.edm_specs.d_term:
-                edm.edm_specs.d_term = mets_parameters[1]
-        
-
-def edm_mets_correction(o, edm, mets_applied, co2_content=None):
-    if not mets_applied:
-        o['Mets_Correction'] = first_vel_corrn(
-            dist = float(o['raw_slope_dist']),
-            first_vel_param = (float(edm.edm_specs.c_term),
-                               float(edm.edm_specs.d_term)),
-            temp = o['Temp'],
-            pressure = o['Pres'],
-            rel_humidity = o['Humid'],
-            CO2_ppm = co2_content,
-            wavelength = edm.edm_specs.carrier_wavelength/1000)
-    else:
-        o['Mets_Correction'] = 0
-    return o
-
-
 def get_delta_os(alignment_survey,o):
     os1 = float(alignment_survey[o['from_pillar']]['offset'])
     os2 = float(alignment_survey[o['to_pillar']]['offset'])
@@ -879,7 +848,7 @@ def validate_survey(pillar_survey, baseline=None, calibrations=None,
     if raw_edm_obs and baseline and edm_file_checked:
         pop_list=[]
         for k, o in raw_edm_obs.items():
-            #check the values of all data
+            # check the values of all data
             if not is_float(o['inst_ht']):
                 Errs.append(f'instrument height "{o["inst_ht"]}" is invalid')
             if not is_float(o['tgt_ht']):
@@ -910,6 +879,20 @@ def validate_survey(pillar_survey, baseline=None, calibrations=None,
                 Errs.append(f'Pillar "{o["to_pillar"]}" is not a valid pillar name.'
                             f'The observation "{o["from_pillar"]}--{o["to_pillar"]}" '
                             'has been removed from the data')
+            
+            # create a note for all excluded observations
+            if not o['use_for_distance']:
+                Wrns.append(
+                    f'The observation "{o["from_pillar"]}--{o["to_pillar"]}" '
+                    f' with a raw slope distance of "{o["raw_slope_dist"]}"'
+                    ' has been excluded by the user during processing.')
+            if 'use_for_alignment' in o:
+                if not o['use_for_alignment']:
+                    Wrns.append(
+                        f'The observation "{o["from_pillar"]}--{o["to_pillar"]}" '
+                        f' with a raw slope distance of "{o["raw_slope_dist"]}"'
+                        ' has been excluded from the calculation of pillar offsets by the user during processing.')
+                
         for pop_it in pop_list:
             raw_edm_obs.pop(pop_it, None)
     

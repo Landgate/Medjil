@@ -42,9 +42,7 @@ from common_func.Convert import (
     group_list)
 from common_func.SurveyReductions import (
     validate_survey,
-    get_mets_params,
     apply_calib,
-    edm_mets_correction,
     edm_std_function,
     offset_slope_correction,
     slope_certified_dist,

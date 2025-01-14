@@ -65,8 +65,6 @@ from common_func.Convert import (
 from common_func.SurveyReductions import (
     validate_survey,
     apply_calib,
-    get_mets_params,
-    edm_mets_correction,
     adjust_alignment_survey,
     add_calib_uc,
     reduce_sets_of_obs, 
@@ -326,11 +324,6 @@ def calibrate2(request,id):
     calib = Calibrations_qry(pillar_survey)
     baseline = baseline_qry(pillar_survey)
     
-    # Set the C and D terms for atmospheric corrections
-    get_mets_params(
-        pillar_survey['edm'], 
-        pillar_survey['mets_applied'])
-    
     for o in raw_edm_obs.values():
         #----------------- Instrument Corrections -----------------#
         (o['Temp'], o['Temp1'], o['Temp2']) =  (
@@ -339,6 +332,8 @@ def calibrate2(request,id):
             o['raw_pressure'], o['raw_pressure'], o['raw_pressure2'])
         (o['Humid'], o['Humid1'], o['Humid2']) = (
             o['raw_humidity'], o['raw_humidity'], o['raw_humidity2'])
+        
+        # average mets obseravtions for multiple readings
         if pillar_survey['thermometer2']:
             if calib['them']:
                 o['Temp1'], _ = calib['them'].apply_calibration(
@@ -392,10 +387,15 @@ def calibrate2(request,id):
             pillar_survey['edmi_calib_applied'],
             calib['edmi'].first(),
             unit_length = pillar_survey['edm'].edm_specs.unit_length)
-        o = edm_mets_correction(o, 
-                                pillar_survey['edm'],
-                                pillar_survey['mets_applied'],
-                                pillar_survey['co2_content'])
+        
+        if not pillar_survey['mets_applied']:
+            o['Mets_Correction'] = (
+                pillar_survey['edm'].edm_specs.atmospheric_correction(
+                    o = o,
+                    co2_content=pillar_survey['co2_content'])
+            )
+        else:
+            o['Mets_Correction'] = 0
         
         o['slope_dist'] = (float(o['raw_slope_dist'] )
                            + o['Calibration_Correction']
