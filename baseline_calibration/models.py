@@ -275,7 +275,7 @@ def get_upload_to_location(instance, filename):
         instance.baseline.site_name, 
         instance.accreditation.accredited_company.company_abbrev, 
         creation_date+'-'+ filename)
-
+ 
 
 class Pillar_Survey(models.Model):
     baseline = models.ForeignKey(

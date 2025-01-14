@@ -165,7 +165,7 @@ class CustomUser(AbstractUser):
             }
     )
 
-    locations =  models.ManyToManyField(Location, blank = True)
+    locations =  models.ManyToManyField(Location, blank = True, help_text="Select the ones that applies to you.")
     
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []

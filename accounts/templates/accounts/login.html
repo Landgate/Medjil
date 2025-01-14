@@ -54,7 +54,7 @@
              <div class="form-container">
                  <table>
                      {% for field in login_form %}
-                         <tr>
+                         <tr title="{{ field.help_text }}">
                              <td width="20%">{{ field.label_tag }}</td>
                              <td width="50"> 
                                  {{ field }}
