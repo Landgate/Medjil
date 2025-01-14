@@ -227,7 +227,7 @@ def calibrate1(request, id):
 
 @login_required(login_url="/accounts/login") 
 def calibrate2(request,id):
-  # try:
+  try:
     # If this is a get request:
     #     select or deselect the edm observations for the calibration
     # If this is a post request: and edm_obs_formset.is_valid
@@ -617,12 +617,12 @@ def calibrate2(request,id):
             
             return render(request, 'edm_calibration/display_report.html', context)
   
-  # except Exception as e:
-  #     # any missed errors are caught here
-  #     messages.error(request, f"An error occurred: {str(e)}")
-  #     messages.error(request, f"{o}")
-  #     return render(request, 'edm_calibration/errors_report.html', 
-  #                   {'Check_Errors':Check_Errors})
+  except Exception as e:
+      # any missed errors are caught here
+      messages.error(request, f"An error occurred: {str(e)}")
+      messages.error(request, f"{o}")
+      return render(request, 'edm_calibration/errors_report.html', 
+                    {'Check_Errors':Check_Errors})
 
 @login_required(login_url="/accounts/login") 
 def certificate(request, id):
