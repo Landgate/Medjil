@@ -153,8 +153,7 @@
                             </td>
                             <td class="text-left">{{ element.modified_on|date:"d/m/Y" }}</td>
                             <td class="text-left">Open</td>
-
-                            {% if user.is_staff %}
+                            {% if user.is_staff and user.company.company_name|stringformat:'s' == element.operator|stringformat:'s' %}
                                 <td class="text-left">
                                     <a class="a_link px-2" href="{{ element.get_absolute_url }}">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000" class="bi bi-pencil-fill" id = "edit-view" viewBox="0 0 16 16">
@@ -274,7 +273,7 @@
                             <td class="text-left">{{ element.modified_on|date:"d/m/Y" }}</td>
                             <td class="text-left">Open</td>
 
-                            {% if user.is_staff %}
+                            {% if user.is_staff and user.company.company_name|stringformat:'s' == element.operator|stringformat:'s' %}
                                 <td class="text-left">
                                     <a class="a_link" href="{{ element.get_absolute_url }}">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000" class="bi bi-pencil-fill" id = "edit-view" viewBox="0 0 16 16">

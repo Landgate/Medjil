@@ -66,6 +66,8 @@ def site_home(request):
         'state_list': state_list,
         
     }
+    # print(request.user.company.company_name)
+    # print(staff_ranges.operator)
     return render(request, 'calibrationsites/calibrationsite_home.html', context)
 ###########################################################################
 # Detailed view
