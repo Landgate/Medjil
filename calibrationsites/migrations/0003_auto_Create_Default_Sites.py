@@ -39,8 +39,8 @@ boya = {
     'locality': 'Boya',
     'no_of_pillars': '21',
     'operator' : 'Landgate',
-    'site_access' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/Staff Range/Australia/WA/Boya/Access/Boya Access Sketch.pdf'),
-    'site_config' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/Staff Range/Australia/WA/Boya/Access/Boya Pin Configuration.pdf'),
+    'site_access_plan' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/Staff Range/Australia/WA/Boya/Access/Boya Access Plan.pdf'),
+    'site_booking_sheet' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/Staff Range/Australia/WA/Boya/Access/Boya Booking Sheet.pdf'),
 }    
 
 muncheng = {
@@ -52,8 +52,8 @@ muncheng = {
     'locality': 'Others',
     'no_of_pillars': '',
     'operator' : 'Landgate',
-    'site_access' : '',
-    'site_config' : '',
+    'site_access_plan' : '',
+    'site_booking_sheet' : '',
 }    
 #########################################################################
 ################################ EDM ####################################
@@ -66,8 +66,8 @@ edm_sites = [{
     'locality': 'Bentley',
     'no_of_pillars': 11,
     'operator' : 'Landgate',
-    'site_access' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/WA/Curtin/Curtin EDM Baseline Access Sketch.pdf'),
-    'site_config' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/WA/Curtin/Curtin EDM Baseline Pillar Configuration.pdf')
+    'site_access_plan' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/WA/Curtin/Curtin EDM Baseline Access Sketch.pdf'),
+    'site_booking_sheet' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/WA/Curtin/Curtin_EDM_Booking_Sheet_2021.pdf')
 },{
     'site_type' : 'baseline',
     'site_name' : 'Curtin 12 Pillar',
@@ -77,8 +77,8 @@ edm_sites = [{
     'locality': 'Bentley',
     'no_of_pillars': 12,
     'operator' : 'Landgate',
-    'site_access' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/WA/Curtin/Curtin EDM Baseline Access Sketch.pdf'),
-    'site_config' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/WA/Curtin/Curtin EDM Baseline Pillar Configuration.pdf')
+    'site_access_plan' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/WA/Curtin/Curtin EDM Baseline Access Sketch.pdf'),
+    'site_booking_sheet' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/WA/Curtin/Curtin_EDM_Booking_Sheet_2021.pdf')
 },{
     'site_type' : 'baseline',
     'site_name' : 'Busselton',
@@ -88,8 +88,8 @@ edm_sites = [{
     'locality': 'Busselton-Vasse',
     'no_of_pillars': 6,
     'operator' : 'Landgate',
-    'site_access' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/WA/Busselton/Busselton EDM Baseline Access Sketch.pdf'),
-    'site_config' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/WA/Busselton/Busselton EDM Baseline Pillar Configuration.pdf'),
+    'site_access_plan' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/WA/Busselton/Busselton EDM Baseline Access Sketch.pdf'),
+    'site_booking_sheet' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/WA/Busselton/Busselton_EDM_Booking_Sheet_2021.pdf'),
 },{
    'site_type' : 'baseline',
     'site_name' : 'Kalgoorlie',
@@ -99,8 +99,8 @@ edm_sites = [{
     'locality': 'Kalgoorlie-Boulder',
     'no_of_pillars': 8,
     'operator' : 'Landgate',
-    'site_access' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/WA/Kalgoorlie/Kalgoorlie EDM Baseline Access Sketch.pdf'),
-    'site_config' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/WA/Kalgoorlie/Kalgoorlie EDM Baseline Pillar Configuration.pdf')
+    'site_access_plan' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/WA/Kalgoorlie/Kalgoorlie EDM Baseline Access Sketch.pdf'),
+    'site_booking_sheet' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/WA/Kalgoorlie/Kalgoorlie_EDM_Booking_Sheet_2021.pdf')
 },{
    'site_type' : 'baseline',
     'site_name' : 'Mawson Lakes',
@@ -110,8 +110,8 @@ edm_sites = [{
     'locality': 'Mawson Lakes',
     'no_of_pillars': 7,
     'operator' : 'Office of the Surveyor-General - SA',
-    'site_access' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/SA/Mawson Lakes/2024-09-03-Mawson_baseline_access_diagram.pdf'),
-    'site_config' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/SA/Mawson Lakes/2024-09-03-Mawson_baseline_access_diagram.pdf')
+    'site_access_plan' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/SA/Mawson Lakes/2024-09-03-Mawson_baseline_access_diagram.pdf'),
+    #'site_booking_sheet' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/SA/Mawson Lakes/2024-09-03-Mawson_baseline_access_diagram.pdf')
 },{
    'site_type' : 'baseline',
     'site_name' : 'QLD.CABO2',
@@ -121,8 +121,8 @@ edm_sites = [{
     'locality': 'Caboolture',
     'no_of_pillars': 7,
     'operator' : 'Department of Natural Resources & Mines, Manufacturing & Regional & Rural Development',
-    'site_access' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Caboolture/2024-11-14-caboolture-baseline-location-map.pdf'),
-    'site_config' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Caboolture/2024-11-14-caboolture-baseline-location-map.pdf')
+    'site_access_plan' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Caboolture/2024-11-14-caboolture-baseline-location-map.pdf'),
+    #'site_booking_sheet' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Caboolture/2024-11-14-caboolture-baseline-location-map.pdf')
 },{
    'site_type' : 'baseline',
     'site_name' : 'QLD.EURE1',
@@ -132,8 +132,8 @@ edm_sites = [{
     'locality': 'Eureka',
     'no_of_pillars': 7,
     'operator' : 'Department of Natural Resources & Mines, Manufacturing & Regional & Rural Development',
-    'site_access' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Eureka/blank.pdf'),
-    'site_config' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Eureka/blank.pdf')
+    'site_access_plan' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Eureka/blank.pdf'),
+    #'site_booking_sheet' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Eureka/blank.pdf')
 },{
    'site_type' : 'baseline',
     'site_name' : 'QLD.GOLD3',
@@ -143,8 +143,8 @@ edm_sites = [{
     'locality': 'Coombabah',
     'no_of_pillars': 7,
     'operator' : 'Department of Natural Resources & Mines, Manufacturing & Regional & Rural Development',
-    'site_access' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Coombabah/2024-11-14-gold-coast-baseline-location-map.pdf'),
-    'site_config' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Coombabah/2024-11-14-gold-coast-baseline-location-map.pdf')
+    'site_access_plan' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Coombabah/2024-11-14-gold-coast-baseline-location-map.pdf'),
+    #'site_booking_sheet' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Coombabah/2024-11-14-gold-coast-baseline-location-map.pdf')
 },{
    'site_type' : 'baseline',
     'site_name' : 'QLD.GOON1',
@@ -154,8 +154,8 @@ edm_sites = [{
     'locality': 'Moranbah',
     'no_of_pillars': 7,
     'operator' : 'Department of Natural Resources & Mines, Manufacturing & Regional & Rural Development',
-    'site_access' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Moranbah/2024-11-14-goonyella-baseline-location-map.pdf'),
-    'site_config' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Moranbah/2024-11-14-goonyella-baseline-location-map.pdf')
+    'site_access_plan' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Moranbah/2024-11-14-goonyella-baseline-location-map.pdf'),
+    #'site_booking_sheet' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Moranbah/2024-11-14-goonyella-baseline-location-map.pdf')
 },{
    'site_type' : 'baseline',
     'site_name' : 'QLD.LEYB1',
@@ -165,8 +165,8 @@ edm_sites = [{
     'locality': 'Leyburn',
     'no_of_pillars': 7,
     'operator' : 'Department of Natural Resources & Mines, Manufacturing & Regional & Rural Development',
-    'site_access' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Leyburn/2024-11-19-leyburn-baseline-location-map.pdf'),
-    'site_config' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Leyburn/2024-11-19-leyburn-baseline-location-map.pdf')
+    'site_access_plan' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Leyburn/2024-11-19-leyburn-baseline-location-map.pdf'),
+    #'site_booking_sheet' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Leyburn/2024-11-19-leyburn-baseline-location-map.pdf')
 },{
    'site_type' : 'baseline',
     'site_name' : 'QLD.MACK2',
@@ -176,8 +176,8 @@ edm_sites = [{
     'locality': 'Mackay',
     'no_of_pillars': 7,
     'operator' : 'Department of Natural Resources & Mines, Manufacturing & Regional & Rural Development',
-    'site_access' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Mackay/2024-11-19-mackay-baseline-location-map.pdf'),
-    'site_config' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Mackay/2024-11-19-mackay-baseline-location-map.pdf')
+    'site_access_plan' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Mackay/2024-11-19-mackay-baseline-location-map.pdf'),
+    #'site_booking_sheet' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Mackay/2024-11-19-mackay-baseline-location-map.pdf')
 },{
    'site_type' : 'baseline',
     'site_name' : 'QLD.MICA2',
@@ -187,8 +187,8 @@ edm_sites = [{
     'locality': 'Mount Isa',
     'no_of_pillars': 7,
     'operator' : 'Department of Natural Resources & Mines, Manufacturing & Regional & Rural Development',
-    'site_access' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Mount Isa/2024-11-19-mica-creek-baseline-location-map.pdf'),
-    'site_config' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Mount Isa/2024-11-19-mica-creek-baseline-location-map.pdf')
+    'site_access_plan' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Mount Isa/2024-11-19-mica-creek-baseline-location-map.pdf'),
+    #'site_booking_sheet' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Mount Isa/2024-11-19-mica-creek-baseline-location-map.pdf')
 },{
    'site_type' : 'baseline',
     'site_name' : 'QLD.TOWN2',
@@ -198,8 +198,8 @@ edm_sites = [{
     'locality': 'Townsville',
     'no_of_pillars': 7,
     'operator' : 'Department of Natural Resources & Mines, Manufacturing & Regional & Rural Development',
-    'site_access' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Townsville/2024-11-19-townsville-location-map.pdf'),
-    'site_config' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Townsville/2024-11-19-townsville-location-map.pdf')
+    'site_access_plan' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Townsville/2024-11-19-townsville-location-map.pdf'),
+    #'site_booking_sheet' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Townsville/2024-11-19-townsville-location-map.pdf')
 },{
    'site_type' : 'baseline',
     'site_name' : 'QLD.TUNG1',
@@ -209,8 +209,8 @@ edm_sites = [{
     'locality': 'Tungamull',
     'no_of_pillars': 7,
     'operator' : 'Department of Natural Resources & Mines, Manufacturing & Regional & Rural Development',
-    'site_access' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Tungamull/2024-11-19-tungamull-baseline-location-map.pdf'),
-    'site_config' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Tungamull/2024-11-19-tungamull-baseline-location-map.pdf')
+    'site_access_plan' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Tungamull/2024-11-19-tungamull-baseline-location-map.pdf'),
+    #'site_booking_sheet' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Tungamull/2024-11-19-tungamull-baseline-location-map.pdf')
 },{
    'site_type' : 'baseline',
     'site_name' : 'QLD.WALK1',
@@ -220,8 +220,8 @@ edm_sites = [{
     'locality': 'Walkamin',
     'no_of_pillars': 7,
     'operator' : 'Department of Natural Resources & Mines, Manufacturing & Regional & Rural Development',
-    'site_access' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Walkamin/2024-11-19-walkamin-baseline-location-map.pdf'),
-    'site_config' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Walkamin/2024-11-19-walkamin-baseline-location-map.pdf')
+    'site_access_plan' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Walkamin/2024-11-19-walkamin-baseline-location-map.pdf'),
+    #'site_booking_sheet' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/QLD/Walkamin/2024-11-19-walkamin-baseline-location-map.pdf')
 }]
 
 site_types = (
@@ -257,8 +257,8 @@ def load_initial_data(apps, schema_editor):
         locality = Locality.objects.get(name = boya['locality']),
         no_of_pillars = boya['no_of_pillars'],
         operator = Company.objects.get(company_name = boya['operator']),
-        site_access = File(open(boya['site_access'], 'rb'), name = boya['site_access'].split('/')[-1]),
-        site_config = File(open(boya['site_config'], 'rb'), name = boya['site_config'].split('/')[-1]),
+        site_access_plan = File(open(boya['site_access_plan'], 'rb'), name = boya['site_access_plan'].split('/')[-1]),
+        site_booking_sheet = File(open(boya['site_booking_sheet'], 'rb'), name = boya['site_booking_sheet'].split('/')[-1]),
     )
     
     munchen_site, created = CalibrationSite.objects.get_or_create(
@@ -275,22 +275,36 @@ def load_initial_data(apps, schema_editor):
     )
     
     for edm_site in edm_sites:
-        site, created = CalibrationSite.objects.get_or_create(
-            site_type = edm_site['site_type'],
-            site_name = edm_site['site_name'],
-            site_address = edm_site['site_address'],
-            country = Country.objects.get(name = edm_site['country']),
-            state = State.objects.get(statecode = edm_site['state']),
-            locality = Locality.objects.get(name = edm_site['locality']),
-            no_of_pillars = edm_site['no_of_pillars'],
-            operator = Company.objects.get(company_name = edm_site['operator']),
-            site_access = File(open(edm_site['site_access'], 'rb'), name = edm_site['site_access'].split('/')[-1]),
-            site_config = File(open(edm_site['site_config'], 'rb'), name = edm_site['site_config'].split('/')[-1]),
-        )
+        try:
+            site, created = CalibrationSite.objects.get_or_create(
+                site_type = edm_site['site_type'],
+                site_name = edm_site['site_name'],
+                site_address = edm_site['site_address'],
+                country = Country.objects.get(name = edm_site['country']),
+                state = State.objects.get(statecode = edm_site['state']),
+                locality = Locality.objects.get(name = edm_site['locality']),
+                no_of_pillars = edm_site['no_of_pillars'],
+                operator = Company.objects.get(company_name = edm_site['operator']),
+                site_access_plan = File(open(edm_site['site_access_plan'], 'rb'), name = edm_site['site_access_plan'].split('/')[-1]),
+                site_booking_sheet = File(open(edm_site['site_booking_sheet'], 'rb'), name = edm_site['site_booking_sheet'].split('/')[-1]),
+            )
+        except KeyError:
+            site, created = CalibrationSite.objects.get_or_create(
+                site_type = edm_site['site_type'],
+                site_name = edm_site['site_name'],
+                site_address = edm_site['site_address'],
+                country = Country.objects.get(name = edm_site['country']),
+                state = State.objects.get(statecode = edm_site['state']),
+                locality = Locality.objects.get(name = edm_site['locality']),
+                no_of_pillars = edm_site['no_of_pillars'],
+                operator = Company.objects.get(company_name = edm_site['operator']),
+                site_access_plan = File(open(edm_site['site_access_plan'], 'rb'), name = edm_site['site_access_plan'].split('/')[-1]),
+                # site_booking_sheet = File(open(edm_site['site_booking_sheet'], 'rb'), name = edm_site['site_booking_sheet'].split('/')[-1]),
+            )
 
 def reverse_func(apps, schema_editor):
     CalibrationSite = apps.get_model('calibrationsites', 'CalibrationSite')
-    Calibration.objects.filter(site_name = boya['site_name']).delete()
+    CalibrationSite.objects.filter(site_name = boya['site_name']).delete()
     
 
 class Migration(migrations.Migration):

@@ -151,19 +151,19 @@ class CalibrationSite(models.Model):
         verbose_name='Authority',
     )
     description = models.TextField(blank=True, null=True)
-    site_access = models.FileField(
+    site_access_plan = models.FileField(
         upload_to=get_upload_to_location,
         null=True,
         validators=[validate_file_size],
-        help_text="Upload a pdf diagram showing an access to the location",
-        verbose_name='Access Summary'
+        help_text="Upload a pdf file showing an access to the location",
+        verbose_name='Access Plan'
     )
-    site_config = models.FileField(
+    site_booking_sheet = models.FileField(
         upload_to=get_upload_to_location,
         null=True,
         validators=[validate_file_size],
-        help_text="Upload a pdf diagram showing the location of pins or pillars",
-        verbose_name='Site Configuration'
+        help_text="Upload a pdf file containing the booking sheet",
+        verbose_name='Booking Sheet'
     )
     uploaded_on = models.DateTimeField(auto_now_add=True, null=True)
     modified_on = models.DateTimeField(auto_now=True, null=True)
@@ -180,19 +180,19 @@ class CalibrationSite(models.Model):
         Return url if self.site_access is not None, 
         'url' exist and has a value, else, return None.
         """
-        if self.site_access:
-            return getattr(self.site_access, 'url', None)
+        if self.site_access_plan:
+            return getattr(self.site_access_plan, 'url', None)
         return None
     
     
     @property
-    def config_url(self):
+    def booking_url(self):
         """
         Return url if self.site_config is not None, 
         'url' exist and has a value, else, return None.
         """
-        if self.site_config:
-            return getattr(self.site_config, 'url', None)
+        if self.site_booking_sheet:
+            return getattr(self.site_booking_sheet, 'url', None)
         return None
 
 

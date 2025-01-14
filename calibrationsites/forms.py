@@ -44,8 +44,8 @@ class CalibrationSiteForm(forms.ModelForm):
         fields = '__all__' 
         widgets = {
                 'description': forms.TextInput(attrs={'class': 'text-area'}),
-                'site_access' : forms.FileInput(attrs={'accept' : '.pdf'}),
-                'site_config' : forms.FileInput(attrs={'accept' : '.pdf'})
+                'site_access_plan' : forms.FileInput(attrs={'accept' : '.pdf'}),
+                'site_booking_sheet' : forms.FileInput(attrs={'accept' : '.pdf'})
             }
 
 
@@ -81,10 +81,10 @@ class CalibrationSiteUpdateForm(forms.ModelForm):
     class Meta:
         model = CalibrationSite
         # fields = '__all__' # ('name', 'birthdate', 'country', 'state', 'locality', )
-        fields = ['site_type', 'site_name', 'no_of_pillars', 'site_access', 'site_config'] 
+        fields = ['site_type', 'site_name', 'no_of_pillars', 'site_access_plan', 'site_booking_sheet'] 
         widgets = {
-                'site_access' : forms.ClearableFileInput(attrs={'accept' : '.pdf'}),
-                'site_config' : forms.ClearableFileInput(attrs={'accept' : '.pdf'})
+                'site_access_plan' : forms.ClearableFileInput(attrs={'accept' : '.pdf'}),
+                'site_booking_sheet' : forms.ClearableFileInput(attrs={'accept' : '.pdf'})
             }
 
     def __init__(self, *args, **kwargs):

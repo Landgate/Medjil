@@ -8,7 +8,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("calibrationsites", "0005_alter_calibrationsite_site_access_and_more"),
+        ("calibrationsites", "0004_auto_Create_Default_Pillars"),
         ("edm_calibration", "0001_initial"),
     ]
 

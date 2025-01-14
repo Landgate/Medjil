@@ -84,8 +84,8 @@
                                 <th class="text-left">Address</th>
                                 <th class="text-left">State</th>
                                 <th class="text-left">Operator</th>
-                                <th class="text-left">Access</th>
-                                <th class="text-left">Plan</th>
+                                <th class="text-left">Access Plan</th>
+                                <th class="text-left">Booking Sheet</th>
                                 <th class="text-left">Updated</th>
                                 <th class="text-left">Status</th>
                                 {% if user.is_staff %}
@@ -127,8 +127,8 @@
                                 {% endif %}
                             </td>
                             <td class="text-left">
-                                {% if element.config_url %}
-                                    <a href="{{ element.config_url|default_if_none:'#' }}" target="__blank">
+                                {% if element.booking_url %}
+                                    <a href="{{ element.booking_url|default_if_none:'#' }}" target="__blank">
                                         <svg id="report-view" width="16" height="16" viewBox="0 0 50 50">
                                         <g transform="translate(0,50) scale(0.100000,-0.100000)" fill="#000000" stroke="none">
                                         <path d="M92 493 c-34 -14 -42 -59 -42 -251 0 -176 1 -191 21 -216 l20 -26
@@ -203,8 +203,8 @@
                                 <th class="text-left">Address</th>
                                 <th class="text-left">State</th>
                                 <th class="text-left">Operator</th>
-                                <th class="text-left">Access</th>
-                                <th class="text-left">Plan</th>
+                                <th class="text-left">Access Plan</th>
+                                <th class="text-left">Booking Sheet</th>
                                 <th class="text-left">Updated</th>
                                 <th class="text-left">Status</th>
                                 {% if user.is_staff %}
@@ -246,8 +246,8 @@
                                 {% endif %}
                             </td>
                             <td class="text-left">
-                                {% if element.config_url %}
-                                    <a href="{{ element.config_url|default_if_none:'#' }}" target="__blank">
+                                {% if element.booking_url %}
+                                    <a href="{{ element.booking_url|default_if_none:'#' }}" target="__blank">
                                         <svg id="report-view" width="16" height="16" viewBox="0 0 50 50">
                                         <g transform="translate(0,50) scale(0.100000,-0.100000)" fill="#000000" stroke="none">
                                         <path d="M92 493 c-34 -14 -42 -59 -42 -251 0 -176 1 -191 21 -216 l20 -26
