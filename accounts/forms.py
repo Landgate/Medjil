@@ -145,7 +145,7 @@ class OTPAuthenticationForm(forms.Form):
     """
     """
     otp_token = forms.CharField(
-        required=False, widget=forms.TextInput(attrs={'autocomplete': 'off'})
+        required=False, widget=forms.TextInput(attrs={'placeholder': 'Insert the 6-digit code from the Authenticator App', 'autocomplete': 'off'})
     )
 
     def __init__(self, user, request=None, *args, **kwargs):
