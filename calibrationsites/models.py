@@ -119,6 +119,18 @@ class CalibrationSite(models.Model):
         unique=True,
         verbose_name='Site Name'
     )
+    site_statuses = (
+        (None, '--- Select Status ---'),
+        ('open', 'Open'),
+        ('closed', 'Closed'),
+    )
+    site_status = models.CharField(
+        max_length=20,
+        choices=site_statuses,
+        null=True,
+        blank=True,
+        verbose_name='Site Status'
+    )
     site_address = models.CharField(
         max_length=100,
         null=True,
@@ -188,7 +200,7 @@ class CalibrationSite(models.Model):
     @property
     def booking_url(self):
         """
-        Return url if self.site_config is not None, 
+        Return url if self.site_booking is not None, 
         'url' exist and has a value, else, return None.
         """
         if self.site_booking_sheet:

@@ -81,7 +81,7 @@ class CalibrationSiteUpdateForm(forms.ModelForm):
     class Meta:
         model = CalibrationSite
         # fields = '__all__' # ('name', 'birthdate', 'country', 'state', 'locality', )
-        fields = ['site_type', 'site_name', 'no_of_pillars', 'site_access_plan', 'site_booking_sheet'] 
+        fields = ['site_type', 'site_name', 'site_status', 'no_of_pillars', 'site_access_plan', 'site_booking_sheet'] 
         widgets = {
                 'site_access_plan' : forms.ClearableFileInput(attrs={'accept' : '.pdf'}),
                 'site_booking_sheet' : forms.ClearableFileInput(attrs={'accept' : '.pdf'})
@@ -100,8 +100,8 @@ class CalibrationSiteUpdateForm(forms.ModelForm):
                 self.fields['state'].queryset = State.objects.filter(country_id=country_id).order_by('name')
             except (ValueError, TypeError):
                 pass  # invalid input from the client; ignore and fallback to empty City queryset
-        elif self.instance.pk:
-            self.fields['state'].queryset = self.instance.country.state_set.order_by('name')
+        #elif self.instance.pk:
+        #    self.fields['state'].queryset = self.instance.country.state_set.order_by('name')
 
         if 'state' in self.data:
             try:
@@ -110,8 +110,8 @@ class CalibrationSiteUpdateForm(forms.ModelForm):
                 self.fields['locality'].queryset = Locality.objects.filter(state__id = state_id, country__id = country_id)
             except(ValueError, TypeError):
                 pass
-        elif self.instance.pk:
-            self.fields['locality'].queryset = self.instance.state.locality_set.order_by('name')
+        #elif self.instance.pk:
+        #    self.fields['locality'].queryset = self.instance.state.locality_set.order_by('name')
 
 #########################################################################
 class CountryForm(forms.ModelForm):

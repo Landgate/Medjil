@@ -40,15 +40,16 @@ class PillarInline(admin.TabularInline):
 
 @admin.register(CalibrationSite, site=admin_site)
 class CalibrationSiteAdmin(admin.ModelAdmin):
-    list_display = ['id', 'site_name', 'site_type', 'site_address', 'country', 'locality', 'operator', 'uploaded_on', 'modified_on']
+    list_display = ['id', 'site_name', 'site_type', 'site_status', 'site_address', 'country', 'locality', 'operator', 'uploaded_on', 'modified_on']
     list_filter = ['site_type']
     fields = ['site_type', 
+              'site_status', 
             ('site_name', 'no_of_pillars'),
             'site_address', 
             ('country', 'state', 'locality'),
             'operator',
-            'site_access',
-            'site_config' ]
+            'site_access_plan',
+            'site_booking_sheet' ]
 
     inlines = [
         PillarInline,
@@ -69,15 +70,16 @@ try:
 
     @admin.register(CalibrationSite, site=medjil_super_site)
     class CalibrationSiteAdmin(admin.ModelAdmin):
-        list_display = ['id', 'site_name', 'site_type', 'site_address', 'country', 'locality', 'operator', 'uploaded_on', 'modified_on']
+        list_display = ['id', 'site_name', 'site_type', 'site_status', 'site_address', 'country', 'locality', 'operator', 'uploaded_on', 'modified_on']
         list_filter = ['site_type']
         fields = ['site_type', 
+                  'site_status',
                 ('site_name', 'no_of_pillars'),
                 'site_address', 
                 ('country', 'state', 'locality'),
                 'operator',
-                'site_access',
-                'site_config' ]
+                'site_access_plan',
+                'site_booking_sheet' ]
 
         inlines = [
             PillarInline,

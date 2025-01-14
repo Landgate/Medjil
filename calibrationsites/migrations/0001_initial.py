@@ -71,6 +71,7 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('site_type', models.CharField(blank=True, choices=[(None, '--- Select Type ---'), ('baseline', 'EDM Calibration Baseline'), ('staff_lab', 'Staff Calibration Laboratory'), ('staff_range', 'Staff Calibration Range')], max_length=20, null=True, verbose_name='Site Type')),
                 ('site_name', models.CharField(help_text='Name for the Calibration Site', max_length=100, unique=True, verbose_name='Site Name')),
+                ('site_status', models.CharField(blank=True, choices=[(None, '--- Select Status ---'), ('open', 'Open'), ('closed', 'Closed')], max_length=20, null=True, verbose_name='Site Status')),
                 ('site_address', models.CharField(help_text='Address for the Calibration Site, e.g., Kent Street, Curtin University', max_length=100, null=True, verbose_name='Site Address')),
                 ('no_of_pillars', models.IntegerField(blank=True, help_text='Enter the number of pins or baseline pillars, if applicable', null=True, verbose_name='Number of Pillars/Pins')),
                 ('description', models.TextField(blank=True, null=True)),

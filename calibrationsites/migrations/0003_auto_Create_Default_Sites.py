@@ -33,6 +33,7 @@ import os
 boya = {
     'site_type' : 'staff_range',
     'site_name' : 'Boya',
+    'site_status': 'open',
     'site_address' : 'Victor Road, Darlington',
     'country' : 'Australia',
     'state' : 'WA',
@@ -46,6 +47,7 @@ boya = {
 muncheng = {
     'site_type' : 'staff_lab',
     'site_name' : 'Geodetic Laboratory at Munich',
+    'site_status': 'open',
     'site_address' : 'Technical University of Munich',
     'country' : 'Others',
     'state' : 'OTH',
@@ -60,6 +62,7 @@ muncheng = {
 edm_sites = [{
     'site_type' : 'baseline',
     'site_name' : 'Curtin',
+    'site_status': 'open',
     'site_address' : 'Kent Street',
     'country' : 'Australia',
     'state' : 'WA',
@@ -71,6 +74,7 @@ edm_sites = [{
 },{
     'site_type' : 'baseline',
     'site_name' : 'Curtin 12 Pillar',
+    'site_status': 'open',
     'site_address' : 'Kent Street',
     'country' : 'Australia',
     'state' : 'WA',
@@ -82,6 +86,7 @@ edm_sites = [{
 },{
     'site_type' : 'baseline',
     'site_name' : 'Busselton',
+    'site_status': 'open',
     'site_address' : 'Busselton Bypass Road',
     'country' : 'Australia',
     'state' : 'WA',
@@ -93,6 +98,7 @@ edm_sites = [{
 },{
    'site_type' : 'baseline',
     'site_name' : 'Kalgoorlie',
+    'site_status': 'open',
     'site_address' : 'Piccadilly Street',
     'country' : 'Australia',
     'state' : 'WA',
@@ -104,6 +110,7 @@ edm_sites = [{
 },{
    'site_type' : 'baseline',
     'site_name' : 'Mawson Lakes',
+    'site_status': 'open',
     'site_address' : 'University of South Australia Mawson Lakes Campus',
     'country' : 'Australia',
     'state' : 'SA',
@@ -115,6 +122,7 @@ edm_sites = [{
 },{
    'site_type' : 'baseline',
     'site_name' : 'QLD.CABO2',
+    'site_status': 'open',
     'site_address' : 'Dances Road',
     'country' : 'Australia',
     'state' : 'QLD',
@@ -126,6 +134,7 @@ edm_sites = [{
 },{
    'site_type' : 'baseline',
     'site_name' : 'QLD.EURE1',
+    'site_status': 'open',
     'site_address' : '698 Eureka Station Road',
     'country' : 'Australia',
     'state' : 'QLD',
@@ -137,6 +146,7 @@ edm_sites = [{
 },{
    'site_type' : 'baseline',
     'site_name' : 'QLD.GOLD3',
+    'site_status': 'open',
     'site_address' : 'Shelter Road',
     'country' : 'Australia',
     'state' : 'QLD',
@@ -148,6 +158,7 @@ edm_sites = [{
 },{
    'site_type' : 'baseline',
     'site_name' : 'QLD.GOON1',
+    'site_status': 'open',
     'site_address' : 'Goonyella Riverside Mine Access Rd',
     'country' : 'Australia',
     'state' : 'QLD',
@@ -159,6 +170,7 @@ edm_sites = [{
 },{
    'site_type' : 'baseline',
     'site_name' : 'QLD.LEYB1',
+    'site_status': 'open',
     'site_address' : '10km northeast of Leyburn',
     'country' : 'Australia',
     'state' : 'QLD',
@@ -170,6 +182,7 @@ edm_sites = [{
 },{
    'site_type' : 'baseline',
     'site_name' : 'QLD.MACK2',
+    'site_status': 'open',
     'site_address' : 'Mackay Regional Botanic Gardens',
     'country' : 'Australia',
     'state' : 'QLD',
@@ -181,6 +194,7 @@ edm_sites = [{
 },{
    'site_type' : 'baseline',
     'site_name' : 'QLD.MICA2',
+    'site_status': 'open',
     'site_address' : '5km south of the Mount Isa',
     'country' : 'Australia',
     'state' : 'QLD',
@@ -192,6 +206,7 @@ edm_sites = [{
 },{
    'site_type' : 'baseline',
     'site_name' : 'QLD.TOWN2',
+    'site_status': 'open',
     'site_address' : 'This baseline is located adjacent to the high voltage power lines on the northern side and parallel',
     'country' : 'Australia',
     'state' : 'QLD',
@@ -203,6 +218,7 @@ edm_sites = [{
 },{
    'site_type' : 'baseline',
     'site_name' : 'QLD.TUNG1',
+    'site_status': 'open',
     'site_address' : 'Tungamull, along a disused railway line just east of Rockhampton',
     'country' : 'Australia',
     'state' : 'QLD',
@@ -214,6 +230,7 @@ edm_sites = [{
 },{
    'site_type' : 'baseline',
     'site_name' : 'QLD.WALK1',
+    'site_status': 'open',
     'site_address' : 'Opposite side of the Kennedy Highway to the Walkamin Agricultural Research Station',
     'country' : 'Australia',
     'state' : 'QLD',
@@ -231,7 +248,11 @@ site_types = (
         ('staff_lab', 'Staff Calibration Laboratory'),
         ('staff_range','Staff Calibration Range'),               
         )
-        
+site_statuses = (
+        (None, '--- Select Status ---'),
+        ('open', 'Open'),
+        ('closed', 'Closed'),
+    )        
 #########################################################################
 def get_upload_to_location(instance, filename):
     creation_date = date.today().strftime('%Y-%m-%d')
@@ -251,6 +272,7 @@ def load_initial_data(apps, schema_editor):
     boya_site, created = CalibrationSite.objects.get_or_create(
         site_type = boya['site_type'],
         site_name = boya['site_name'],
+        site_status = boya['site_status'],
         site_address = boya['site_address'],
         country = Country.objects.get(name = boya['country']),
         state = State.objects.get(statecode = boya['state']),
@@ -264,6 +286,7 @@ def load_initial_data(apps, schema_editor):
     munchen_site, created = CalibrationSite.objects.get_or_create(
         site_type = muncheng['site_type'],
         site_name = muncheng['site_name'],
+        site_status = muncheng['site_status'],
         site_address = muncheng['site_address'],
         country = Country.objects.get(name = muncheng['country']),
         state = State.objects.get(statecode = muncheng['state']),
@@ -279,6 +302,7 @@ def load_initial_data(apps, schema_editor):
             site, created = CalibrationSite.objects.get_or_create(
                 site_type = edm_site['site_type'],
                 site_name = edm_site['site_name'],
+                site_status = edm_site['site_status'],
                 site_address = edm_site['site_address'],
                 country = Country.objects.get(name = edm_site['country']),
                 state = State.objects.get(statecode = edm_site['state']),
@@ -292,6 +316,7 @@ def load_initial_data(apps, schema_editor):
             site, created = CalibrationSite.objects.get_or_create(
                 site_type = edm_site['site_type'],
                 site_name = edm_site['site_name'],
+                site_status = edm_site['site_status'],
                 site_address = edm_site['site_address'],
                 country = Country.objects.get(name = edm_site['country']),
                 state = State.objects.get(statecode = edm_site['state']),

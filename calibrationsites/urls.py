@@ -46,7 +46,7 @@ urlpatterns = [
     # path('create-site/', views.CreateCalibrationSiteWizard.as_view(FORMS), name = 'create-site'),
     # path('site/test/', views.test_view, name = 'test'),
     
-    path('site/<int:id>/site_update', views.site_update, name = 'site-update'),
+    path('site/<int:id>/site_update/', views.site_update, name = 'site-update'),
     path('site/<int:id>/pillar_create/', views.pillar_create, name = 'pillar-create'),
 
     # Detailed view

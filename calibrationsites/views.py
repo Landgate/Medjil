@@ -301,15 +301,16 @@ class CreateCalibrationSiteWizard(LoginRequiredMixin, NamedUrlSessionWizardView)
         try:
             site = CalibrationSite.objects.create(
                 site_name = site_name,
-                site_type = site_form_data['site_type'],
+                site_type = site_type, #site_form_data['site_type'],
                 site_address = site_form_data['site_address'],
+                site_status = site_form_data['site_status'],
                 locality = site_form_data['locality'],
                 state = site_form_data['state'],
                 country = site_form_data['country'],
                 no_of_pillars = site_form_data['no_of_pillars'],
                 operator = site_form_data['operator'],
-                site_access = site_form_data['site_access'],
-                site_config = site_form_data['site_config']
+                site_access_plan = site_form_data['site_access_plan'],
+                site_booking_sheet = site_form_data['site_booking_sheet']
             )
         except:
             site = CalibrationSite.objects.get(site_name = site_name)

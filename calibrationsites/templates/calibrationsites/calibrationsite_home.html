@@ -271,7 +271,7 @@
                                 {% endif %}
                             </td>
                             <td class="text-left">{{ element.modified_on|date:"d/m/Y" }}</td>
-                            <td class="text-left">Open</td>
+                            <td class="text-left">{{ element.site_status }}</td>
 
                             {% if user.is_staff and user.company.company_name|stringformat:'s' == element.operator|stringformat:'s' %}
                                 <td class="text-left">

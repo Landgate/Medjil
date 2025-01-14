@@ -261,7 +261,7 @@
     }
 
     // File handling
-    const siteAccessInput = document.getElementById('id_site_form-site_access');
+    const siteAccessInput = document.getElementById('id_site_form-site_access_plan');
     
     siteAccessInput.addEventListener('change', (e) => {
         const selectedFile = siteAccessInput.files[0];
@@ -272,21 +272,6 @@
     if (storedFile) {
         siteAccessInput.files[0] = storedFile
     }
-
-    // window.addEventListener('popstate', (e) => {
-    //     const storedFile = window.sessionStorage.getItem('selectedFile');
-    //     if (storedFile) {
-    //      siteAccessInput.files = [storedFile];
-    //     }
-    // });
-    // // Set a flag to detect page reload
-    // window.onbeforeunload = function() {
-    //         sessionStorage.setItem("is_reloaded", true);
-    //     };
-
-    // window.onload = function() {
-    //     sessionStorage.clear();
-    // }
 
     window.onload = function() {
         var inputs = document.getElementsByTagName('input');
