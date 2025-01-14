@@ -227,6 +227,7 @@ def calibrate1(request, id):
 
 @login_required(login_url="/accounts/login") 
 def calibrate2(request,id):
+  # try:
     # If this is a get request:
     #     select or deselect the edm observations for the calibration
     # If this is a post request: and edm_obs_formset.is_valid
@@ -298,10 +299,6 @@ def calibrate2(request,id):
                                                 calib,
                                                 pillar_survey)
             
-            # Set the C and D terms for atmospheric corrections
-            get_mets_params(
-                pillar_survey['edm'], 
-                pillar_survey['mets_applied'])
             for o in raw_edm_obs.values():
                 #----------------- Instrument Corrections -----------------#
                 o['Temp'],c = apply_calib(o['raw_temperature'],
@@ -313,14 +310,17 @@ def calibrate2(request,id):
                 o['Humid'],c = apply_calib(o['raw_humidity'],
                                             pillar_survey['hygro_calib_applied'],
                                             calib['hygro'])
-                o = edm_mets_correction(o, 
-                                        pillar_survey['edm'],
-                                        pillar_survey['mets_applied'])
+                if not pillar_survey['mets_applied']:
+                    o['Mets_Correction'] = (
+                        pillar_survey['edm'].edm_specs.atmospheric_correction(o)
+                    )
+                else:
+                    o['Mets_Correction'] = 0
                 
                 o['slope_dist'] = (float(o['raw_slope_dist'] )
                                    + o['Mets_Correction'])
                 o['Bay'] = o['from_pillar'] + ' - ' + o['to_pillar']
-            
+
             # Group raw data by bays, calc averages and experimental std dev
             edm_observations = group_list(
                 raw_edm_obs.values(),
@@ -383,15 +383,18 @@ def calibrate2(request,id):
                 
                 #----------------- Least Squares -----------------#
                 #----------------- compile Design matrix, weight Matrix -----------------#
-                d_term = ((2*pi*o['Reduced_distance'])
-                          / pillar_survey['edm'].edm_specs.unit_length)
-                o['d_term'] = d_term
                 a_row = [1,
-                         o['Reduced_distance'],
-                         sin(d_term),
-                         cos(d_term),
-                         sin(2*d_term),
-                         cos(2*d_term)]
+                         o['Reduced_distance']]
+                # Do not test for cyclic errors if unit length is not specified
+                if pillar_survey['edm'].edm_specs.unit_length:
+                    d_term = ((2*pi*o['Reduced_distance'])
+                              / pillar_survey['edm'].edm_specs.unit_length)
+                    o['d_term'] = d_term
+                    a_row.append([
+                        sin(d_term),
+                        cos(d_term),
+                        sin(2*d_term),
+                        cos(2*d_term)])
                 matrix_A.append(a_row)
               
                 frm = baseline['certified_dist'][o['from_pillar']]['distance']
@@ -403,11 +406,13 @@ def calibrate2(request,id):
                 P_row[len(matrix_x)-1] = (1/
                         (o['uc_combined']['std_dev']*float(pillar_survey['scalar']))**2)
                 matrix_P.append(P_row)
-            
+                
             if not pillar_survey['test_cyclic']:
                 matrix_A = [a[:2] for a in matrix_A]
                 order_cmt = ['zero']
                 report_notes.append('User input for this calibration requested that no test for cyclic errors be performed.')
+            elif not pillar_survey['edm'].edm_specs.unit_length:
+                report_notes.append('Testing for cyclic errors during this calibration was not possible because the unit lenght of the Instrument has not been specified in the Instrument Model Specifications.')
             
             # run LSA with 6, 4 then 2 parameters
             # Check t-student test results after each LSA to determine if the end 2 cyclic errors are significant
@@ -611,7 +616,13 @@ def calibrate2(request,id):
                        'hidden':[edmi_certificate]}
             
             return render(request, 'edm_calibration/display_report.html', context)
-
+  
+  # except Exception as e:
+  #     # any missed errors are caught here
+  #     messages.error(request, f"An error occurred: {str(e)}")
+  #     messages.error(request, f"{o}")
+  #     return render(request, 'edm_calibration/errors_report.html', 
+  #                   {'Check_Errors':Check_Errors})
 
 @login_required(login_url="/accounts/login") 
 def certificate(request, id):

@@ -31,6 +31,10 @@ from common_func.validators import (
     validate_file_size)
 from datetime import date
 from math import sin, cos, pi
+import math
+import re
+from geodepy.survey import (
+    first_vel_corrn, first_vel_params)
 
 
 User = settings.AUTH_USER_MODEL
@@ -63,7 +67,29 @@ edm_types = (
     ('ph','Phase'),
     ('pu','Pulse'),
 )
-        
+
+def eval_string_formulas(formula_str, **variables):
+    """
+    Calculate the result of formulas specified as a string using the provided variables.
+    
+    :param formula_str: The formulas as a string, separated by semicolons.
+    :param variables: The variables to be used in the formulas.
+    :return: The result of the final formula.
+    """
+    try:
+        # Split the formula string into individual formulas
+        formulas = re.split(r'[;\n]+', formula_str.strip())
+        for i, formula in enumerate(formulas):
+            formula = formula.strip()
+            if formula: # Evaluate each formula and update the variables dictionary
+                if i == len(formulas) - 1 and '=' not in formula:
+                    formula = f"result = {formula}"
+                exec(formula, {'math': math}, variables)
+        # Return the result of the last formula
+        return variables
+    except Exception as e:
+        raise RuntimeError(f"An error occurred while evaluating line {i +1}: {str(e)}")
+    
 class InstrumentMake(models.Model):
     make = models.CharField(
         max_length=25,
@@ -228,17 +254,20 @@ class Staff(models.Model):
 class EDM_Specification(models.Model):
     edm_model_name = models.CharField(
         validators=[validate_profanity],
-        max_length=25,
+        max_length=256,
+        help_text='Type name or select from suggestions',
         verbose_name="EDM Model Name"
     )
     edm_make_name = models.CharField(
         validators=[validate_profanity],
         max_length=25,
+        help_text='Type name or select from suggestions',
         verbose_name="EDM Make Name"
     )
     edm_owner = models.ForeignKey(
         Company,
         on_delete=models.PROTECT,
+        help_text='These parameters will be available to all user profiles associated with this company.',
         verbose_name='EDM Owner'
     )
 
@@ -250,34 +279,49 @@ class EDM_Specification(models.Model):
         verbose_name='EDM type'
     )
     manu_unc_const = models.FloatField(
-        validators=[MinValueValidator(0.0), MaxValueValidator(10.0)],
-        help_text="Uncertainty = A mm ± B ppm, Uncertainty Constant = A",
-        verbose_name='manufacturers uncertainty constant'
+        validators=[MinValueValidator(0.0), MaxValueValidator(50.0)],
+        help_text=("Uncertainty = A mm ± B ppm at 95% confidence level.&#010"+
+                   "Uncertainty Constant = A &#010"+
+                   "WARNING: Most manufacturers state the accuracy of their instruments as a standard deviation at 68% confidence level &#010"+
+                   "These 68% confidence level values must be multiplied by the coverage factor to be at 95% confidence level."),
+        verbose_name='manufacturers uncertainty constant',
+        null=True,
+        blank=True
     )
     manu_unc_ppm = models.FloatField(
-        validators=[MinValueValidator(0.0), MaxValueValidator(10.0)],
-        help_text="Uncertainty = A mm ± B ppm, Uncertainty ppm = B",
-        verbose_name='manufacturers parts per million uncertainty'
+        validators=[MinValueValidator(0.0), MaxValueValidator(50.0)],
+        help_text=("Uncertainty = A mm ± B ppm at 95% confidence level.&#010"+
+                   "Uncertainty ppm = B &#010"+
+                   "WARNING: Most manufacturers state the accuracy of their instruments as a standard deviation at 68% confidence level &#010"+
+                   "These 68% confidence level values must be multiplied by the coverage factor to be at 95% confidence level."),
+        verbose_name='manufacturers parts per million uncertainty',
+        null=True,
+        blank=True
     )
     manu_unc_k = models.FloatField(
         validators=[MinValueValidator(1.0), MaxValueValidator(5.0)],
-        help_text="Coverage factor at 95% Confidence Level eg. 2.0",
+        help_text=("Coverage factor at 95% Confidence Level eg. 2.0 &#010"+
+                   "WARNING: Most manufacturers state the accuracy of their instruments as a standard deviation at 68% confidence level &#010"+
+                   "if the coverage factor is not specified it can generally be assumed to be k=2.0"),
         default=2.0,
-        verbose_name='manufacturers uncertainty coverage factor'
+        verbose_name='manufacturers uncertainty coverage factor',
+        null=True,
+        blank=True
     )
 
     unit_length = models.FloatField(
-        validators=[MinValueValidator(0.0), MaxValueValidator(10000.0)],
-        help_text="Unit Length (m)"
+        validators=[MinValueValidator(0.0), MaxValueValidator(50.0)],
+        help_text="Unit Length (m)",
+        null=True,
+        blank=True
     )
     frequency = models.FloatField(
-        validators=[MinValueValidator(1), MaxValueValidator(100000000)],
         help_text="Frequency (Hz)",
         null=True,
         blank=True
     )
     carrier_wavelength = models.FloatField(
-        validators=[MinValueValidator(0), MaxValueValidator(1000)],
+        validators=[MinValueValidator(0), MaxValueValidator(10000)],
         help_text="Carrier Wavelength (nm)",
         null=True,
         blank=True
@@ -290,23 +334,32 @@ class EDM_Specification(models.Model):
         blank=True
     )
 
-    c_term = models.DecimalField(
-        max_digits=6, decimal_places=2,
+    c_term = models.FloatField(
+        validators=[MinValueValidator(200), MaxValueValidator(500)],
         help_text="Coefficients C for first velocity correction eg 281.8",
         null=True,
         blank=True
     )
-    d_term = models.DecimalField(
-        max_digits=5, decimal_places=2,
+    d_term = models.FloatField(
+        validators=[MinValueValidator(50), MaxValueValidator(200)],
         help_text="Coefficients D for first velocity correction eg 79.39",
         null=True,
         blank=True
     )
+    atmos_corr_formula = models.TextField(
+        help_text=("Express the formula for metres of atmospheric correction using python notation. Use the variables d, t, p, and h. &#010"+
+                   " where: &#010 d = distance (m)&#010 t = temperature (°C)&#010"+
+                   " p = pressure (hPa)&#010 h = relative humidity (%)"),
+        verbose_name='Custom atmospheric correction formula',
+        blank=True, 
+        null=True
+    )
 
     measurement_increments = models.DecimalField(
         max_digits=9, decimal_places=6,
+        default=0.0001,
         validators=[MinValueValidator(0.000000001)],
-        help_text="Resolution of the measurement eg. 0.01"
+        help_text="Resolution of the measurement, how many decimal places are recorded eg. 0.01"
     )
     created_on = models.DateTimeField(auto_now_add=True, null=True)
     modified_on = models.DateTimeField(auto_now=True, null=True)
@@ -322,6 +375,55 @@ class EDM_Specification(models.Model):
         self.edm_make_name = self.edm_make_name.upper()
         super().save(*args, **kwargs)
         
+    def atmospheric_correction(self, o, co2_content=None):
+        """    
+        This method calculates the atmospheric correction for a given observation.
+        If `atmos_corr_formula` is provided, it will be used to calculate the correction.
+        Otherwise, geodepy formulas will be used.
+    
+        Parameters:
+        - o (dict): A dictionary containing observation data with keys 'raw_slope_dist', 'Temp', 'Pres', and 'Humid'.
+        - co2_content (float, optional): The CO2 content in parts per million (ppm). Defaults to None.
+    
+        Returns:
+        - float: The calculated atmospheric correction in metres.
+        """
+        if self.atmos_corr_formula:
+            variables = {
+                'd': float(o['raw_slope_dist']),
+                't': o['Temp'],  
+                'p': o['Pres'],
+                'h': o['Humid']
+            }
+            results = eval_string_formulas(self.atmos_corr_formula, **variables)
+            return results['result']
+                
+        mets_parameters = [self.c_term, self.d_term]
+        if not self.c_term or not self.d_term:
+            mets_parameters = list(
+                first_vel_params(
+                    self.carrier_wavelength / 1000,
+                    self.frequency,
+                    self.manu_ref_refrac_index
+                ))
+        if self.c_term:
+            mets_parameters[0] = self.c_term
+        if self.d_term:
+            mets_parameters[1] = self.d_term
+        # return the terms so that they can be used on the report.
+        # but these will not be committed to the instrument specifications.
+        [self.c_term, self.d_term] = mets_parameters
+        
+        return first_vel_corrn(
+            dist=float(o['raw_slope_dist']),
+            first_vel_param=mets_parameters,
+            temp=o['Temp'],
+            pressure=o['Pres'],
+            rel_humidity=o['Humid'],
+            CO2_ppm=co2_content,
+            wavelength=self.carrier_wavelength / 1000
+        )
+
         
 def get_upload_to_edm_photos(instance, filename):
     modified_date = date.today().strftime('%Y%m%d')
@@ -405,13 +507,17 @@ class Prism_Specification(models.Model):
     manu_unc_const = models.FloatField(
         validators=[MinValueValidator(0.0), MaxValueValidator(10.0)],
         help_text="Manufacturers centring accuracy = ±1mm",
-        verbose_name='manufacturers uncertainty constant'
+        verbose_name='manufacturers uncertainty constant',
+        null=True,
+        blank=True
     )
     manu_unc_k = models.FloatField(
         validators=[MinValueValidator(1.0), MaxValueValidator(5.0)],
         help_text="Coverage factor at 95% Confidence Level eg. 2.0",
         default=2.00,
-        verbose_name='manufacturers uncertainty coverage factor'
+        verbose_name='manufacturers uncertainty coverage factor',
+        null=True,
+        blank=True
     )
     created_on = models.DateTimeField(auto_now_add=True, null=True)
     modified_on = models.DateTimeField(auto_now=True, null=True)
@@ -941,8 +1047,11 @@ class Specifications_Recommendations(models.Model):
         verbose_name='EDM type',
         null=True, blank=True)
     manu_unc_const = models.FloatField(
-        validators=[MinValueValidator(0.0), MaxValueValidator(10.0)],
-        help_text="Uncertainty = A mm ± B ppm, Uncertainty Constant = A",
+        validators=[MinValueValidator(0.0), MaxValueValidator(50.0)],
+        help_text=("Uncertainty = A mm ± B ppm at 95% confidence level.&#010"+
+                   "Uncertainty Constant = A &#010"+
+                   "Most manufacturers state the accuracy of their instruments as a standard deviation at 68% confidence level &#010"+
+                   "These 68% confidence level values must be multiplied by the coverage factor to be at 95% confidence level."),
         verbose_name='Manufacturers uncertainty constant',
         null=True, blank=True)
     units_manu_unc_const = models.CharField(        
@@ -951,8 +1060,11 @@ class Specifications_Recommendations(models.Model):
         null=True, blank=True)
         
     manu_unc_ppm = models.FloatField(
-        validators=[MinValueValidator(0.0), MaxValueValidator(10.0)],
-        help_text="Uncertainty = A mm ± B ppm, Uncertainty ppm = B",
+        validators=[MinValueValidator(0.0), MaxValueValidator(50.0)],
+        help_text=("Uncertainty = A mm ± B ppm at 95% confidence level.&#010"+
+                   "Uncertainty ppm = B &#010"+
+                   "Most manufacturers state the accuracy of their instruments as a standard deviation at 68% confidence level &#010"+
+                   "These 68% confidence level values must be multiplied by the coverage factor to be at 95% confidence level."),
         verbose_name='Manufacturers ppm uncertainty',
         null=True, blank=True)
     units_manu_unc_ppm = models.CharField(        
@@ -961,13 +1073,15 @@ class Specifications_Recommendations(models.Model):
        null=True, blank=True)
     manu_unc_k = models.FloatField(
         validators=[MinValueValidator(1.0), MaxValueValidator(5.0)],
-        help_text="Coverage factor at 95% Confidence Level eg. 2.0",
+        help_text=("Coverage factor at 95% Confidence Level eg. 2.0 &#010"+
+                   "Most manufacturers state the accuracy of their instruments as a standard deviation at 68% confidence level &#010"+
+                   "if the coverage factor is not specified it can generally be assumed to be k=2.0"),
         default=2.0,
         verbose_name='Manufacturers uncertainty coverage factor',
         null=True, blank=True)
 
     unit_length = models.FloatField(
-        validators=[MinValueValidator(0.0), MaxValueValidator(10000.0)],
+        validators=[MinValueValidator(0.0), MaxValueValidator(50.0)],
         help_text="Unit Length (m)",
         verbose_name='Unit Length',
         null=True, blank=True)
@@ -976,7 +1090,6 @@ class Specifications_Recommendations(models.Model):
        choices=length_units,
        null=True, blank=True)
     frequency = models.FloatField(
-        validators=[MinValueValidator(1), MaxValueValidator(100000000)],
         help_text="Frequency (Hz)",
         verbose_name='Frequency',
         null=True, blank=True)
@@ -985,7 +1098,7 @@ class Specifications_Recommendations(models.Model):
        choices=freq_units,
        null=True, blank=True)
     carrier_wavelength = models.FloatField(
-        validators=[MinValueValidator(0), MaxValueValidator(1000)],
+        validators=[MinValueValidator(0), MaxValueValidator(10000)],
         help_text="Carrier Wavelength (nm)",
         verbose_name='Carrier wavelength',
         null=True, blank=True)
@@ -999,19 +1112,26 @@ class Specifications_Recommendations(models.Model):
         verbose_name='Manufacturers reference refractive index',
         null=True, blank=True)
 
-    c_term = models.DecimalField(
-        max_digits=6, decimal_places=2,
+    c_term = models.FloatField(
+        validators=[MinValueValidator(200), MaxValueValidator(500)],
         help_text="Coefficients C for first velocity correction eg 281.8",
         verbose_name='C term',        
         null=True, blank=True)
-    d_term = models.DecimalField(
-        max_digits=5, decimal_places=2,
+    d_term = models.FloatField(
+        validators=[MinValueValidator(50), MaxValueValidator(200)],
         help_text="Coefficients D for first velocity correction eg 79.39",
         verbose_name='D term',     
         null=True, blank=True)
     
     remark = models.CharField(max_length=500, null=True, blank=True,
                               verbose_name='Remark')
+    
+    atmos_corr_formula = models.TextField(
+        help_text="Express the formula for metres of atmospheric correction using python notation. Use the variables d, t, p, and h. &#010where: &#010 d = distance (m)&#010 t = temperature (°C)&#010 p = pressure (hPa)&#010 h = relative humidity (%)",
+        verbose_name='Custom atmospheric correction formula',
+        blank=True, 
+        null=True
+    )
     
     
     def __str__(self):

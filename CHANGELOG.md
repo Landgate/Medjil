@@ -8,7 +8,6 @@ Medjil is now available for Beta testing. We are seeking expressions of interest
 Press [Start Testing](http://medjil.lb.landgate.wa.gov.au) to begin. 
 
 ## Issues Fixed 
-* 
 * In the lists of staff calibrations and staff calibration certificates the action buttons and to edits or delete a record are missing.
     - Buttons added (?)
 * Cancelling the “Edit Barcoded Staff Certificate” interface (in the levelling registry) jumps to barcoded staff register in the dashboard. 
@@ -16,54 +15,88 @@ Press [Start Testing](http://medjil.lb.landgate.wa.gov.au) to begin.
 
 
 ## Additions | Fixes | Changes 
-### [1.0.16] - 2025-01-07 - [Kent Wheeler]
+### [1.0.18] - 2025-01-14 - [Kent Wheeler]
 Additions
-* Add link to backcapture to dashboard for VA
-	-*templates/base_generic.html*
-    -*backcapture/templates/backcapture/import_dli.html*
-    -*backcapture/templates/backcapture/import_report.html*
-* Editing and Deleting Baseline calibrations restriced to users company
-    -*baseline_calibration/templates/baseline_calibration/baseline_calibration_home.html*
+* atmos_corr_formula added to edm_specification model
+  - *instruments/migrations/0004_auto_recommended_specifications.py*
+  - *instruments/migrations/0005_alter_staff_iscalibrated_alter_staff_isreference_and_more.py*
+  - *instruments/migrations/0006_changes_from_beta_testing.py*
+  - *instruments/forms.py*
+  - *instruments/models.py*
+  - *common_func/Convert.py*
+  - *instruments/templates/instruments/inst_spec_edm_edit_popup_form.html*
+  - *calibrationguide/templates/calibrationguide/edmi_calibration_manual.html*
+* add instrument specifications supplied by Aptella and UPG
+  - *assets/data/InitialData/Specification Recommendations/Edm Specification Recommendations.csv*
+  - *assets/data/InitialData/Default Instruments/Default Instrument Models.csv*
 
 Changes
-* Filtering Instrument register restriced to users company
-* Ordering of Instrument models set to align with def __str__
-    -*instruments/views.py*
-    -*instruments/models.py*
-    -*instruments/templates/instruments/inst_global_settings.html*
+* EDM specifications changed to accept minimal parameters
+  - *edm_calibration\templates\edm_calibration\calibrate_report.html*
+  - *calibrationguide\templates\calibrationguide\edmi_calibration_manual.html*
+  - *baseline_calibration\templates\baseline_calibration\errors_report.html*
+  - *edm_calibration\templates\edm_calibration\errors_report.html*
+  - *instruments\templates\instruments\inst_certificates_edit.html*
+  - *instruments\templates\instruments\inst_edit_form.html*
+  - *instruments\templates\instruments\inst_model_create_form.html*
+  - *assets\data\InitialData\Specification Recommendations\Edm Specification Recommendations.csv*
+  - *instruments\migrations\0006_changes_from_beta_testing.py*
+  - *common_func\LeastSquares.py*
+  - *common_func\SurveyReductions.py*
+  - *instruments\models.py*
+  - *baseline_calibration\views.py*
+  - *edm_calibration\views.py*
+  - *instruments\views.py*
+
+
+### [1.0.17] - 2025-01-07 - [Kent Wheeler]
+Additions
+* Add link to backcapture to dashboard for VA
+  - *templates/base_generic.html*
+  - *backcapture/templates/backcapture/import_dli.html*
+  - *backcapture/templates/backcapture/import_report.html*
+* Editing and Deleting Baseline calibrations restricted to users company
+  - *baseline_calibration/templates/baseline_calibration/baseline_calibration_home.html*
+
+Changes
+* Filtering Instrument register restricted to users company
+* Ordering of Instrument models set to align with `def __str__`
+  - *instruments/views.py*
+  - *instruments/models.py*
+  - *instruments/templates/instruments/inst_global_settings.html*
 * EDM observation file changes to allow null mets observations.
-    -*common_func/Convert.py*
-    -*common_func/SurveyReductions.py*
+  - *common_func/Convert.py*
+  - *common_func/SurveyReductions.py*
 
 Fixes
 * Importing EDM observations checks model validations
-	-*edm_calibration/views.py*
-    -*edm_calibration/templates/edm_calibration/edm_rawdata.html*
-   	-*baseline_calibration/views.py*
-    -*baseline_calibration/templates/baseline_calibration/edm_rawdata.html*
+	- *edm_calibration/views.py*
+    - *edm_calibration/templates/edm_calibration/edm_rawdata.html*
+   	- *baseline_calibration/views.py*
+    - *baseline_calibration/templates/baseline_calibration/edm_rawdata.html*
 
 ### [1.0.16] - 2025-01-06 - [Kent Wheeler]
 Fixed
 * Add security to accounts with user_passes_test
-	-*accounts/views.py*
+	- *accounts/views.py*
 * Fix bug def user_profile not saving locations
-	-*accounts/views.py*
+	- *accounts/views.py*
 
 ### [1.0.15] - 2025-01-06 - [Kent Wheeler]
 Fixed
 * Add Queensland, and SA baselines to initial migration
 * Visibility of baselines restricted according to user location settings
-	-*baseline_calibration/admin.py*
-	-*edm_calibration/admin.py*
+	- *baseline_calibration/admin.py*
+	- *edm_calibration/admin.py*
 	
 * All tested and working - github updated
 
 ### [1.0.14] - 2024-12-11 - [Kent Wheeler]
 Fixed
 * Included missing fields in Admin site
-	-*baseline_calibration/admin.py*
-	-*edm_calibration/admin.py*
-	-*instruments/admin.py*
+	- *baseline_calibration/admin.py*
+	- *edm_calibration/admin.py*
+	- *instruments/admin.py*
 
 * All tested and working - github updated
 
@@ -78,7 +111,7 @@ Added
 ### [1.0.12] - 2024-12-06 - [Khandu]
 Added
 * Added filter based on location group in forms.py in RangeCalibration/forms.py
-	-*RangeCalibration/forms.py*
+	- *RangeCalibration/forms.py*
 * Added filter based on location group * Role in forms.py in staffcalibration/forms.py
 	- *staffcalibration/forms.py*
 * All tested and working - github updated
@@ -86,20 +119,20 @@ Added
 ### [1.0.12] - 2024-12-04 - [Khandu]
 Fixed
 * Removed Group - "Landgate" & "Geodesy" and replaced by "Verifying Authority". All Survey Team Members added to Admin Group by Default. All Landgate NATA members added to VerifyingAuthority
-	-*accounts/apps.py*
-	-*accounts/signals.py*
-	-*accounts/migrations/0003_create_suser.py*
+	- *accounts/apps.py*
+	- *accounts/signals.py*
+	- *accounts/migrations/0003_create_suser.py*
 	
 Added
 * Added a model named Location in accounts/models.py
 * Added a locations field for CustomUser model as a ManyToMany to Location. This is allow Users to have multiple locations. 
-	-*accounts/models.py*
+	- *accounts/models.py*
 * Added the new field locations to Admin Site
-	-*accounts/admin.py*
-	-*accounts/sites.py*
+	- *accounts/admin.py*
+	- *accounts/sites.py*
 * Added the new field locations to forms - UserSignUp, CustomUserChangeForm
 * Added user.locations.set(form.cleaned_data['locations']) in user_signup function in views.py
-	-*accounts/views.py*
+	- *accounts/views.py*
 
 
 ### [1.0.11] - 2024-12-02 - [Khandu]

@@ -67,7 +67,8 @@ def add_landgate_instruments(apps, schema_editor):
             manu_ref_refrac_index = safe_float(spec['manu_ref_refrac_index']),
             c_term = safe_float(spec['c_term']),
             d_term = safe_float(spec['d_term']),
-            remark = spec['remark']
+            remark = spec['remark'],
+            atmos_corr_formula = spec['atmos_corr_formula']
             )
 
 def reverse_func(apps, schema_editor):
@@ -80,8 +81,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('instruments', '0001_initial'),
-        ('instruments', '0002_auto_load_default_instruments'),
-        ('instruments', '0003_auto_load_landgate_instruments')
+        ('instruments', '0006_changes_from_beta_testing')
     ]
 
     operations = [

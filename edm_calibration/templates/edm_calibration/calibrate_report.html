@@ -79,11 +79,21 @@
         <div class="flexbox-item_800_IB flexbox-item-left_IB">The first velocity atmospheric corrections were applied to the raw observations prior to data import to Medjil.</div>
     {% else %}
         <div class="flexbox-item_800_IB flexbox-item-left_IB">
-        Raw EDM measurements imported to Medjil have been corrected with the first velocity correction using the following parameters:
+        {% if pillar_survey.edm.edm_specs.atmos_corr_formula %}
+        <p>Raw EDM measurements imported to Medjil have been corrected with the first velocity correction using the following formula:</p>
+            <ul style="padding-left: 40px;">
+            {% for f_row in pillar_survey.edm.edm_specs.atmos_corr_formula.splitlines %}
+                {{ f_row }}<br>
+            {% endfor %}
+            </ul>
+        </p>
+        {% else %}
+        <p>Raw EDM measurements imported to Medjil have been corrected with the first velocity correction using the following parameters:</p>
         <ul style="padding-left: 40px;">
             <li><b>C Term</b> = {{ pillar_survey.edm.edm_specs.c_term }}</li>
             <li><b>D Term</b> = {{ pillar_survey.edm.edm_specs.d_term }}</li>
         </ul>
+        {% endif %}
         </div>
     {% endif %}
     </div>
@@ -715,6 +725,7 @@
         <canvas id="surveyed-vs-certified-Chart" style="max-width:800px"></canvas>
     </div>
 </div>
+{% if pillar_survey.edm.edm_specs.unit_length %}
 <div class="text-center">
     <h2>Return Phase Angle of Observed Distances</h2>
     <div id="charts" class="flex flex-col justify-end items-center">
@@ -726,6 +737,7 @@
         </div>
     </div>
 </div>
+{% endif %}
 <div class="text-center">
     <h2>EDMI Calibration History</h2>
     <table style="margin-left:auto;margin-right:auto;font-size:10.0pt;width:800px;">
@@ -975,9 +987,9 @@ new Chart(document.getElementById("surveyed-vs-certified-Chart"), {
 });
 
 </script>
+{% if pillar_survey.edm.edm_specs.unit_length %}
 <script>
 // Script to produce the Return Phase Angle Chart
-
 let Sinewave = [];
 for (let a = 0; a
     <= 360; a+=5) {
@@ -1044,6 +1056,7 @@ new Chart("return-phase-angle-Chart", {
 });
 
 </script>
+{% endif %}
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {

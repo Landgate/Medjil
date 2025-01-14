@@ -41,7 +41,7 @@
                 <div class="flexbox-container_IB">
                     <div class="flexbox-item_800_IB flexbox-item-left_IB">
                         {% for e in Check_Errors.Errors %}
-                            <p>{{e}}</p>
+                            <p>{{e|safe}}</p>
                         {% endfor %}
                     </div>
                 </div>
@@ -52,7 +52,7 @@
                 <div class="flexbox-container_IB">
                     <div class="flexbox-item_800_IB flexbox-item-left_IB">
                         {% for w in Check_Errors.Warnings %}
-                            <p>{{forloop.counter}}. {{w}}</p>
+                            <p>{{forloop.counter}}. {{w|safe}}</p>
                         {% endfor %}
                     </div>
                 </div>

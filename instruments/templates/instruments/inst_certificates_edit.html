@@ -61,7 +61,7 @@
                         <col span="1" width="10%">
                     </colgroup>
                     {% for field in form %}
-                        <tr title="{{ field.help_text|safe }}">
+                        <tr {% if field.help_text %} title="{{ field.help_text|safe }}" {% endif %}>
                             {% if 'units_' not in field.name and '_uncertainty' not in field.name and '_coverage_factor' not in field.name %}
                                 <td>{{ field.label_tag }}</td>
                                 {% if 'zero_point_correction' == field.name %}

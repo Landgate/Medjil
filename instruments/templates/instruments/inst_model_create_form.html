@@ -49,7 +49,7 @@
             <table>
                 {% for field in form %}
                     {% if field.name == 'inst_make' %}
-                        <tr id="id_make_name" title="{{ field.help_text|safe }}">
+                        <tr id="id_make_name" {% if field.help_text %} title="{{ field.help_text|safe }}" {% endif %}>
                             <td width="30%" class="pxl-5 text-sm text-blue-500">{{ field.label_tag }}</td>
                             <td width="70%" class="text-sm text-blue-500"> {{ field }}
                                 {% for error in field.errors %}
@@ -61,7 +61,7 @@
                             </td>
                         </tr>
                     {% elif field.name == 'inst_abbrev' %}
-                        <tr id="id_make_abbrev" title="{{ field.help_text|safe }}">
+                        <tr id="id_make_abbrev" {% if field.help_text %} title="{{ field.help_text|safe }}" {% endif %}>
                             <td width="30%" class="pxl-5 text-sm text-blue-500">{{ field.label_tag }}</td>
                             <td width="70%" class="text-sm text-blue-500"> {{ field }}
                                 {% for error in field.errors %}
@@ -73,7 +73,7 @@
                             </td>
                         </tr>
                     {% else %}
-                        <tr title="{{ field.help_text|safe }}">
+                        <tr {% if field.help_text %} title="{{ field.help_text|safe }}" {% endif %}>
                             <td width="30%">{{ field.label_tag }}</td>
                             <td width="70%"> {{ field }}
                                 {% for error in field.errors %}
@@ -86,7 +86,7 @@
                         </tr>
                     {% endif %}
                 {% endfor %}
-                <tr title="{{ field.help_text|safe }}">
+                <tr {% if field.help_text %} title="{{ field.help_text|safe }}" {% endif %}>
                     <td width="30%">{{ form.model.label_tag }}</td>
                     <td width="70%"> {{ form.model }}
                         {% for error in form.model.errors %}

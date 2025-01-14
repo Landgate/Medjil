@@ -24,6 +24,8 @@ from statistics import mean, pstdev
 from django.db.models import Avg, Count
 from django.forms.models import model_to_dict
 from django.db.models import Q
+import re
+import math
 
 from instruments.models import (
     EDM_Inst,
@@ -99,7 +101,9 @@ def convert_headings(raw_headings):
 
 
 def csv2dict(csv_file, clms=None, key_names=-1):
-    # No need to open csv_file as it's already an InMemoryUploadedFile object
+    # Read in a csv to a dictionary of dictionaries.
+    # If no column names are provided, convert headers to column names for keys in the child dictionary
+    # Use the nth column for the keys of the parent dictionary. If key_names is -1, use the row index as the key
     csv_file = TextIOWrapper(csv_file, encoding='utf-8-sig')
     reader = csv.reader(csv_file)
     headers = next(reader)

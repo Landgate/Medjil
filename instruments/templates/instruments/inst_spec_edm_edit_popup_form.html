@@ -113,7 +113,7 @@
                     </td>
                 </tr>
                 <!-- Manufacturers Accuracy Statement -->
-                <tr title="{{ form.manu_unc_const.help_text }}">
+                <tr title="{{ form.manu_unc_const.help_text|safe }}">
                     <td width="35%">{{ form.manu_unc_const.label|title }} <a href= "{% url 'calibrationguide:read_manual' manual_name='edmi_calibration_manual.html' %}#EDMI-Chapter5" target="_blank" onclick="return PopupTechnicalManual(this);"> &#x1F6C8</a></td>
                     <td width="45%">{{ form.manu_unc_const }}
                         {% for error in form.manu_unc_const.errors %}
@@ -122,7 +122,7 @@
                     </td>
                     <td width="15%">{{ form.units_manu_unc_const }}</td>
                 </tr>
-                <tr title="{{ form.manu_unc_ppm.help_text }}">
+                <tr title="{{ form.manu_unc_ppm.help_text|safe }}">
                     <td width="35%">{{ form.manu_unc_ppm.label|title }} <a href= "{% url 'calibrationguide:read_manual' manual_name='edmi_calibration_manual.html' %}#EDMI-Chapter5" target="_blank" onclick="return PopupTechnicalManual(this);"> &#x1F6C8</a></td>
                     <td width="45%">{{ form.manu_unc_ppm }}
                         {% for error in form.manu_unc_ppm.errors %}
@@ -131,7 +131,7 @@
                     </td>
                     <td width="15%">{{ form.units_manu_unc_ppm }}</td>
                 </tr>
-                <tr title="{{ form.manu_unc_k.help_text }}">
+                <tr title="{{ form.manu_unc_k.help_text|safe }}">
                     <td width="35%">{{ form.manu_unc_k.label|title }} <a href= "{% url 'calibrationguide:read_manual' manual_name='edmi_calibration_manual.html' %}#EDMI-Chapter5" target="_blank" onclick="return PopupTechnicalManual(this);"> &#x1F6C8</a></td>
                     <td width="45%">{{ form.manu_unc_k }}
                         {% for error in form.manu_unc_k.errors %}
@@ -215,6 +215,14 @@
                         {% endfor %}
                     </td>
                     <td width="15%">{{ form.units_measurement_inc }}</td>
+                </tr>
+                <tr title="{{ form.atmos_corr_formula.help_text|safe }}">
+                    <td width="35%" style="vertical-align: top;">{{ form.atmos_corr_formula.label|title }} <a href= "{% url 'calibrationguide:read_manual' manual_name='edmi_calibration_manual.html' %}#EDMI-Chapter4_2_1Note" target="_blank" onclick="return PopupTechnicalManual(this);"> &#x1F6C8</a></td>
+                    <td width="45%" spellcheck="false">{{ form.atmos_corr_formula }}
+                        {% for error in form.atmos_corr_formula.errors %}
+                            <p class="error error-danger">{{ error }}</p>
+                        {% endfor %}
+                    </td>
                 </tr>
             </table>
 

@@ -304,10 +304,11 @@ def refline_std_dev(o, alignment_survey, edm):
     
     # Mets #
     if ('Temp' in o.keys() and 'Pres' in o.keys() and 'Humid' in o.keys()):
-        K, L, M = mets_partial_differentials(edm.edm_specs.manu_ref_refrac_index,
-                                             o['Temp'] or 15,
-                                             o['Pres'] or 1013.25,
-                                             o['Humid'] or 60)
+        K, L, M = mets_partial_differentials(
+            edm.edm_specs.manu_ref_refrac_index or 1.000286338,
+            o['Temp'] or 15,
+            o['Pres'] or 1013.25,
+            o['Humid'] or 60)
         # '04' Temperature
         if ('04' in uc_budget.keys() and 'Reduced_distance' in o.keys()):
             uc_budget['04']['ui'] = (o['Reduced_distance'] *
@@ -735,6 +736,15 @@ def validate_survey(pillar_survey, baseline=None, calibrations=None,
                     'There is no calibration of the ' + site
                     + ' baseline for the ' + pillar_survey['survey_date'].strftime("%d %b, %Y")
                     + ' when your EDMI calibration survey was observed.')
+
+        # Errors for testing cyclic errors
+        if  pillar_survey['test_cyclic']:
+            if not pillar_survey['edm'].edm_specs.unit_length:
+                Errs.append(
+                    'In order for Medjil to test for cyclic errors, the instrument '
+                    'unit length must be specified.'
+                    ' Insufficient data has been supplied for the EDM'
+                    ' Instrument Model used for this calibration.')
     
     # Instrumentation Selection Errors
     ucb = pillar_survey['uncertainty_budget']
@@ -981,24 +991,46 @@ def validate_survey(pillar_survey, baseline=None, calibrations=None,
         for n in pillars:
             if not n in lvl_nmes: Errs.append('Pillar "' + n + '" is not listed in the level file.')
 
-
-    if not pillar_survey['mets_applied']:
-        c = pillar_survey['edm'].edm_specs.c_term
-        d = pillar_survey['edm'].edm_specs.d_term
-        w = pillar_survey['edm'].edm_specs.carrier_wavelength
-        if any(x is None for x in [c,d,w]) == None:
-            inputs = [
+            
+    # Errors and warnings for applying atmospheric corrections to EDM observations
+    # additional errors are also raised by raise ValueError in imported modules.
+    atmos_corr_formula = pillar_survey['edm'].edm_specs.atmos_corr_formula
+    if not atmos_corr_formula: atmos_corr_formula = ''
+    if not pillar_survey['mets_applied'] and len(atmos_corr_formula) == 0:
+        inputs1 = [
+            pillar_survey['edm'].edm_specs.c_term,
+            pillar_survey['edm'].edm_specs.d_term]
+        if any(x is None for x in inputs1):
+            inputs2 = [
                 pillar_survey['edm'].edm_specs.frequency,
-                pillar_survey['edm'].edm_specs.manu_ref_refrac_index]
-            if any(x is None for x in inputs) == None:
+                pillar_survey['edm'].edm_specs.carrier_wavelength]
+            if any(x is None for x in inputs2):
                 Errs.append(
                     'In order for Medjil to apply atmospheric corrections,'
-                    ' either the carrier wavelength, C-term and D-term must be specified'
-                    ' or the carrier wavelength, modulation frequency and'
-                    ' manufacturers refractive index must be specified'
-                    ' insufficient data has been supplied for the EDM'
-                    'Instrument used for this calibration')
-                
+                    ' a Custom atmospheric correction formula must be specified for the model of the EDM Instrument. &#010'
+                    ' If this field is blank, the carrier wavelength, C-term and D-term must be specified. &#010'
+                    ' If any of those fields are blank, the carrier wavelength, modulation frequency and'
+                    ' manufacturers refractive index must be specified.'
+                    ' Insufficient data has been supplied for the EDM'
+                    ' Instrument Model used for this calibration.')
+            inputs3 = [
+                pillar_survey['edm'].edm_specs.manu_ref_refrac_index,
+                pillar_survey['edm'].edm_specs.frequency]
+            if inputs3 == [None,None]:
+                Errs.append(
+                    'In order for Medjil to apply atmospheric corrections,'
+                    ' th Manufacturers reference refractive index and frequency can not both be null.'
+                    ' Insufficient data has been supplied for the EDM'
+                    ' Instrument Model used for this calibration.')
+            inputs4 = [
+                pillar_survey['edm'].edm_specs.manu_ref_refrac_index,
+                pillar_survey['edm'].edm_specs.unit_length]
+            if inputs4 == [None,None]:
+                Errs.append(
+                    'In order for Medjil to apply atmospheric corrections,'
+                    ' the Manufacturers reference refractive index and unit length can not both be null.'
+                    ' Insufficient data has been supplied for the EDM'
+                    ' Instrument Model used for this calibration.')
     
     # Date Warnings
     if pillar_survey['mets_applied']:

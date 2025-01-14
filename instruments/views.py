@@ -228,26 +228,32 @@ def register_edit(request, inst_disp, tab, id):
 
         # Convert input to database standard units
         if inst_disp != 'hygro':
-            if 'units_manu_unc_const' in frm.keys():
+            manu_unc_const = frm.get('manu_unc_const')
+            if manu_unc_const:
                 instance.manu_unc_const, _ = db_std_units(
                     frm['manu_unc_const'],frm['units_manu_unc_const'])
                 if inst_disp == 'edm' or inst_disp == 'prism':
                     instance.manu_unc_const =instance.manu_unc_const * 1000
                 
-            if 'units_manu_unc_ppm' in frm.keys():
+            manu_unc_ppm = frm.get('manu_unc_ppm')
+            if manu_unc_ppm:
                 manu_ppm, _ = db_std_units(
                     frm['manu_unc_ppm'], frm['units_manu_unc_ppm'])
                 if manu_ppm: instance.manu_unc_ppm = manu_ppm * 1e6 
-            if 'units_frequency' in frm.keys(): 
+            frequency = frm.get('frequency')
+            if frequency: 
                 instance.frequency, _ = db_std_units(frm['frequency'],frm['units_frequency'])
-            if 'units_unit_length' in frm.keys():
+            unit_length = frm.get('unit_length')
+            if unit_length: 
                 instance.unit_length, _ = db_std_units(
                     frm['unit_length'],frm['units_unit_length'])
-            if 'units_carrier_wavelength' in frm.keys():
+            carrier_wavelength = frm.get('carrier_wavelength')
+            if carrier_wavelength: 
                 c_wave, _ = db_std_units(
                     frm['carrier_wavelength'], frm['units_carrier_wavelength'])
                 if c_wave: instance.carrier_wavelength = c_wave * 1e9
-            if 'units_measurement_inc' in frm.keys():
+            measurement_increments = frm.get('measurement_increments')
+            if measurement_increments:
                 instance.measurement_increments, _ = db_std_units(
                     frm['measurement_increments'], frm['units_measurement_inc'])
     

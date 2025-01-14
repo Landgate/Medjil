@@ -235,7 +235,30 @@ class EDM_SpecificationForm(forms.ModelForm):
             self.fields['edm_owner'].disabled = True
             self.fields['edm_owner'].queryset = Company.objects.filter(
                 company_name = user.company)
-
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        atmos_corr_formula = cleaned_data.get('atmos_corr_formula')
+        
+        if atmos_corr_formula:
+            # Filter out form-specific fields
+            model_fields = {field.name for field in EDM_Specification._meta.get_fields()}
+            model_data = {key: value for key, value in cleaned_data.items() if key in model_fields}
+            
+            edm_spec = EDM_Specification(**model_data)
+            try:
+                # Attempt to run the atmospheric_correction method wtih stp
+                o = {'raw_slope_dist': 100,
+                    'Temp': 25,
+                    'Pres': 1013,
+                    'Humid': 60}
+                edm_spec.atmospheric_correction(o)
+            except Exception as e:
+                # If an error occurs, raise a validation error for the atmos_corr_formula field
+                self.add_error('atmos_corr_formula', f"Test calulation failed: {str(e)}")
+        
+        return cleaned_data
+    
     class Meta:
         model = EDM_Specification
         fields = '__all__'

@@ -59,7 +59,7 @@
             </div>
             <table>
                 {% for field in form %}
-                    <tr title="{{ field.help_text|safe }}">
+                    <tr {% if field.help_text %} title="{{ field.help_text|safe }}" {% endif %}>
                         <td width="25%">
                             <strong>{{ field.label_tag }}</strong>
                         </td>

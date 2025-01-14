@@ -79,33 +79,84 @@ edm,Nikon,XF HP
 edm,Pentax,R 2500NS
 edm,Pentax,W 2800N
 edm,Pentax,R 2505
-edm,Sokkia,SET 1X
-edm,Sokkia,SET 2X
-edm,Sokkia,SET 3X
-edm,Sokkia,SET 4X
-edm,Sokkia,SET 5X
-edm,Sokkia,iM 50
-edm,Sokkia,iM 100
-edm,Sokkia,FX
-edm,Sokkia,iX 600
-edm,Sokkia,iX 1200
-edm,Topcon,GM 50
-edm,Topcon,GM 100
-edm,Topcon,OS 200
-edm,Topcon,OS Series
+edm,Sokkia,SET 1
+edm,Sokkia,SET 2
+edm,Sokkia,SET 3
+edm,Sokkia,SET 4
+edm,Sokkia,SET 5
+edm,Sokkia,iM-50
+edm,Sokkia,iM-100
+edm,Sokkia,FX-200
+edm,Sokkia,iX-600
+edm,Sokkia,iX-1200
+edm,Sokkia,NET05AX2A
+edm,Sokkia,NET1AX2A
+edm,Sokkia,SX-100
+edm,Sokkia,DX-100AC
+edm,Sokkia,DX-200AC
+edm,Topcon,GM-50
+edm,Topcon,DS-100AC
+edm,Topcon,DS-200AC
+edm,Topcon,DS-200i
+edm,Topcon,GM-100
+edm,Topcon,GT-1200
+edm,Topcon,GT-600
+edm,Topcon,MS05AX2A
+edm,Topcon,MS1AX2A
+edm,Topcon,OS-200
+edm,Topcon,PS-100
+edm,Topcon,PS-101A
+edm,Topcon,PS-200
 edm,Topcon,GPT 3500
-edm,Topcon,GTL 1200
-edm,Topcon,GT 1200/600
 edm,Topcon,GTL 1000
 edm,Topcon,GT 500V
 edm,Topcon,IS-3 Series
 edm,Topcon,MS AXII
-edm,Trimble,S 5
-edm,Trimble,S 7
-edm,Trimble,S 9 HP
-edm,Trimble,S 9 HP
+edm,Trimble,"3300 DR, 3600 DR (Elta panel, CU 600, ACU)"
+edm,Trimble,5500 / 5600 DR STD
+edm,Trimble,C5 HP
+edm,Trimble,"M1 DR-2”/5”, M3-3”/-5” NPL, M3 DR-3”/-5” (NPL model 2010/13)"
+edm,Trimble,"M3 DR-2”, M3 DR-1”/2” (NPR model 2010/12/13)"
+edm,Trimble,RPT600 Layout Station
+edm,Trimble,RTS555 DR/RTS655 DR
+edm,Trimble,RTS633 DR 300+
+edm,Trimble,RTS633 DR Plus
+edm,Trimble,RTS771 DR HP/RTS773 DR HP
+edm,Trimble,RTS873 DR HP
+edm,Trimble,S3 DR
+edm,Trimble,S5 DR Plus
+edm,Trimble,S6 DR 300+
+edm,Trimble,S6 DR Plus
+edm,Trimble,S6 High Precision
+edm,Trimble,S7 DR Plus
+edm,Trimble,S8 DR HP
+edm,Trimble,S8 DR Plus
+edm,Trimble,S9 DR Plus
+edm,Trimble,S9 HP SPS610 DR STD
+edm,Trimble,SPS 630 DR 300+
+edm,Trimble,SPS 710 DR 300+
+edm,Trimble,SPS 930 DR 300+
+edm,Trimble,SPS620 DR/SPS720 DR
+edm,Trimble,SPS630 DR Plus
+edm,Trimble,SPS730 DR 300+
+edm,Trimble,SPS730 DR Plus
+edm,Trimble,SPS930 DR Plus
+edm,Trimble,Trimble 3600 with IR EDM
+edm,Trimble,Trimble 5600
+edm,Trimble,Trimble 5600 DR200+
+edm,Trimble,Trimble 5600 DR300+
+edm,Trimble,TS525
+edm,Trimble,TS635
+edm,Trimble,TS835
+edm,Trimble,VX DR Plus Spatial Station
+edm,Trimble,VX Spatial Station
 edm,Trimble,SX 12
 edm,Trimble,SX 10
+edm,Trimble,S 5
+edm,Trimble,S 6
+edm,Trimble,S 7
+edm,Trimble,S 8
+edm,Trimble,S 9
 edm,Trimble,C 5
 edm,Trimble,C 3
 edm,Trimble,C 5 HP
