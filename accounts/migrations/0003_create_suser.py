@@ -34,7 +34,7 @@ def forwards_func(apps, schema_editor):
     CustomUser.objects.create_superuser(
             email=os.environ.get('EMAIL_HOST_USER'),  
             password=os.environ.get('EMAIL_HOST_PASSWORD'),
-        # company= Company.objects.get(company_abbrev='LG')
+            company= Company.objects.get(company_abbrev='LG')
             )
 
 def reverse_func(apps, schema_editor):

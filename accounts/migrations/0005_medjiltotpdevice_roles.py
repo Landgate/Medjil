@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
     dependencies = [
         ("otp_totp", "0003_add_timestamps"),
         ("auth", "0012_alter_user_first_name_max_length"),
-        ("accounts", "0004_load_report_notes"),
+        ("accounts", "0003_create_suser"),
     ]
 
     operations = [

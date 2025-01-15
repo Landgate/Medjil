@@ -63,4 +63,39 @@ class Migration(migrations.Migration):
                 verbose_name="Valid To Date",
             ),
         ),
+        migrations.AlterField(
+            model_name="edm_observation",
+            name="hz_direction",
+            field=models.DecimalField(
+                decimal_places=26,
+                max_digits=32,
+                validators=[
+                    django.core.validators.MinValueValidator(0),
+                    django.core.validators.MaxValueValidator(361),
+                ],
+            ),
+        ),
+        migrations.AlterField(
+            model_name="edm_observation",
+            name="raw_slope_dist",
+            field=models.DecimalField(
+                decimal_places=25,
+                max_digits=29,
+                validators=[
+                    django.core.validators.MinValueValidator(1),
+                    django.core.validators.MaxValueValidator(1500),
+                ],
+                verbose_name="slope distance",
+            ),
+        ),
+        migrations.AlterField(
+            model_name="level_observation",
+            name="reduced_level",
+            field=models.DecimalField(decimal_places=24, max_digits=27),
+        ),
+        migrations.AlterField(
+            model_name="level_observation",
+            name="rl_standard_deviation",
+            field=models.DecimalField(decimal_places=24, max_digits=27),
+        ),
     ]

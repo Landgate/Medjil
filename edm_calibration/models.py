@@ -187,8 +187,8 @@ class uEDM_Observation(models.Model):
         verbose_name= 'Target height')
     
     raw_slope_dist = models.DecimalField(
-        max_digits=9, decimal_places=5,
-        validators=[MinValueValidator(1), MaxValueValidator(1000)],
+        max_digits=29, decimal_places=25,
+        validators=[MinValueValidator(1), MaxValueValidator(1500)],
         verbose_name= 'slope distance')
     
     raw_temperature = models.FloatField(

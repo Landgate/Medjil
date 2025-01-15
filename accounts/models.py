@@ -179,34 +179,61 @@ class CustomUser(AbstractUser):
         return ", ".join([str(p) for p in self.locations.all()])
     
 class Calibration_Report_Notes(models.Model):
-    company = models.ForeignKey(Company, on_delete = models.CASCADE, null = False)
-    report_types = (
+    from calibrationsites.models import CalibrationSite, Pillar
+    from baseline_calibration.models import Accreditation
+    
+    calibration_types = (
         ('B','Baseline Calibration'),
         # ('R','Range Calibration'),
         ('E', 'EDMI Calibration'),
         # ('S', 'Staff Calibration')
         )
-    report_type = models.CharField(max_length=1,
-        choices=report_types,
-        help_text="Report type that the notes will be added to",
-        unique=False,
-        )
-    note_types = (
-        ('M','All Reports'),
-        ('C','Company Specific'),
-        )
-    note_type = models.CharField(max_length=1,
-        choices=note_types,
-        help_text="Notes can be either company specific or appear on all users reports",
-        unique=False,
-        )    
+    who_created_note = models.ForeignKey(
+        Company, on_delete = models.CASCADE,
+        help_text="Used for filtering the endnotes home page")
+    
+    calibration_type = models.CharField(
+        max_length=1,
+        choices=calibration_types,
+        help_text="Report type that the notes will be added to",)
+    
+    verifying_authority = models.ForeignKey(
+        Company, on_delete = models.CASCADE,
+        help_text="Notes will be created on all reports related to this Verifying Authority",
+        related_name='verifying_authority_notes',
+        null = True, blank = True)
+    
+    accreditation = models.ForeignKey(
+        Accreditation, on_delete = models.CASCADE,
+        help_text="Notes will be created on all reports related to this Verifying Authority",
+        related_name='accreditation_notes',
+        null = True, blank = True)
+    
+    company = models.ForeignKey(
+        Company, on_delete = models.CASCADE, 
+        help_text="Notes will be created on all reports related to this Company",
+        related_name='company_notes',
+        null = True, blank = True)
+    
+    site = models.ForeignKey(
+        CalibrationSite, on_delete = models.CASCADE,
+        help_text="Notes will be created on all reports related to this Site",
+        related_name='site_notes',
+        null = True, blank = True)
+    
+    pillar = models.ForeignKey(
+        Pillar, on_delete = models.CASCADE,
+        help_text="Notes will be created on all reports related to this Pillar",
+        related_name='pillar_notes',
+        null = True, blank = True)
+   
     note = models.TextField(
         null = False, blank = False,
         verbose_name= 'Report Note',
         help_text="Notes will be created at the end of each report")
 
     class Meta:
-        ordering = ['company','report_type','note_type']
+        ordering = ['verifying_authority','company','site', 'pillar']
 
     def __str__(self):
         return f'{self.pk}. {self.company} - {self.get_report_type_display()} ({self.get_note_type_display()})'

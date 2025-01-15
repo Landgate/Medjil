@@ -59,8 +59,8 @@ from geodepy.survey import radiations
 from common_func.Convert import (
     baseline_qry,
     csv2dict,
-    Calibrations_qry, 
-    report_notes_qry,
+    Calibrations_qry,
+    get_endnotes,
     uncertainty_qry)
 from common_func.SurveyReductions import (
     validate_survey,
@@ -383,19 +383,17 @@ def calibrate2(request,id):
                     pillar_survey['hygro_calib_applied'])
             
         c, o['Calibration_Correction'] = apply_calib(
-            o['raw_slope_dist'],
+            float(o['raw_slope_dist']),
             pillar_survey['edmi_calib_applied'],
             calib['edmi'].first(),
             unit_length = pillar_survey['edm'].edm_specs.unit_length)
-        
-        if not pillar_survey['mets_applied']:
-            o['Mets_Correction'] = (
-                pillar_survey['edm'].edm_specs.atmospheric_correction(
-                    o = o,
-                    co2_content=pillar_survey['co2_content'])
-            )
-        else:
-            o['Mets_Correction'] = 0
+
+        o['Mets_Correction'] = (
+            pillar_survey['edm'].edm_specs.atmospheric_correction(
+                o = o,
+                null_correction=pillar_survey['mets_applied'],
+                co2_content=pillar_survey['co2_content'])
+        )
         
         o['slope_dist'] = (float(o['raw_slope_dist'] )
                            + o['Calibration_Correction']
@@ -451,8 +449,11 @@ def calibrate2(request,id):
           
         if edm_obs_formset.is_valid() or not ps_approvals.is_valid():
             #----------------- Query related data -----------------#
-            report_notes = report_notes_qry(
-                company=request.user.company, report_type='B')                
+
+            report_notes = get_endnotes(
+                pillar_survey = ps_qs,
+                company=request.user.company, calibration_type='B')
+            
             uc_budget = uncertainty_qry(pillar_survey)
             uc_budget['sources'] = add_calib_uc(
                 uc_budget['sources'],
@@ -816,7 +817,7 @@ def calibrate2(request,id):
        messages.error(request, f"An error occurred: {str(e)}")
        messages.error(request, f"{o}")
        return render(request, 'edm_calibration/errors_report.html', 
-                     {'Check_Errors':Check_Errors})
+                     {})
 
 @login_required(login_url="/accounts/login") 
 @user_passes_test(is_staff)

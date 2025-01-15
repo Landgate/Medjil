@@ -53,15 +53,11 @@
         <div>              
             <table style="width:920px; margin-left:10px">
                 <tr>
-                    <th width="12%">Company</th>
-                    <th width="12%">Note Type</th>
-                    <th width="76%">Note</th>
+                    <th width="80%">Note</th>
                     <th width="10%">Action</th>
                 </tr>
                 {% for note in note_list %}
                     <tr>
-                        <td>{{ note.company }}</td>
-                        <td>{{ note.note_type }}</td>
                         <td>{{ note.note|slice:"0:80" }} ...</td>
                         <td>
                             <span class="flex justify-around items-center text-center">

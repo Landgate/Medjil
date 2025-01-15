@@ -22,8 +22,11 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import ReadOnlyPasswordHashField, UserCreationForm, UserChangeForm, SetPasswordForm
 from django.contrib.auth.forms import AuthenticationForm
+from django.db.models import Q
 
 from .models import CustomUser, Company,  Calibration_Report_Notes, Location
+from calibrationsites.models import CalibrationSite, Pillar
+from baseline_calibration.models import Accreditation
 
 class SignupForm(UserCreationForm):
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
@@ -185,16 +188,33 @@ class CompanyForm(forms.ModelForm):
 class calibration_report_notesForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
+        locations = list(user.locations.values_list('statecode', flat=True))        
         super(calibration_report_notesForm, self).__init__(*args, **kwargs) 
-        self.initial['company'] = user.company
+        
+        if not user.company.company_name == 'Landgate':
+            self.initial['verifying_authority'] = user.company
+        self.fields['verifying_authority'].queryset = Company.objects.filter(
+            company_name = user.company)
+        self.fields['accreditation'].queryset = Accreditation.objects.filter(
+            accredited_company = user.company)
+        self.fields['site'].queryset = CalibrationSite.objects.filter(
+            Q(site_type = 'baseline') &
+            Q(state__statecode__in = locations))
+        self.fields['pillar'].queryset = Pillar.objects.filter(
+            Q(site_id__site_type = 'baseline') &
+            Q(site_id__state__statecode__in = locations))
+        
         if not user.is_staff:
+            self.fields.pop('verifying_authority', None)
+            self.fields.pop('accreditation', None)
+            self.fields.pop('site', None)
+            self.fields.pop('pillar', None)
             self.fields['company'].disabled = True
             self.fields['company'].queryset = Company.objects.filter(
                 company_name = user.company)
-            self.fields['note_type'].disabled = True
-            self.initial['note_type'] = 'C'
+            self.initial['company'] = user.company
 
     class Meta:
         model = Calibration_Report_Notes
         fields = '__all__'
-        exclude = ('report_type',)
+        exclude = ('calibration_type', 'who_created_note')

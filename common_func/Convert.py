@@ -24,8 +24,6 @@ from statistics import mean, pstdev
 from django.db.models import Avg, Count
 from django.forms.models import model_to_dict
 from django.db.models import Q
-import re
-import math
 
 from instruments.models import (
     EDM_Inst,
@@ -42,7 +40,9 @@ from baseline_calibration.models import (
     Uncertainty_Budget_Source,
     Certified_Distance,
     Pillar_Survey,
-    Std_Deviation_Matrix)
+    Std_Deviation_Matrix,
+    EDM_Observation)
+from edm_calibration.models import uEDM_Observation
 from geodepy.geodesy import grid2geo, rho, nu
 
 
@@ -376,11 +376,37 @@ def uncertainty_qry(frm_data):
     return uc_budget
 
 
-def report_notes_qry(company, report_type):
-    rpt_notes = Calibration_Report_Notes.objects.filter(
-                    Q(report_type = report_type, note_type = 'M') |
-                    Q(report_type = report_type, note_type = 'C',company = company)
-                    ).order_by('-note_type','pk')
+def get_endnotes(pillar_survey, calibration_type, company):
+    if calibration_type == 'B':
+        from_pillars = EDM_Observation.objects.filter(
+            pillar_survey=pillar_survey.id).values_list('from_pillar', flat=True)
+        to_pillars = EDM_Observation.objects.filter(
+            pillar_survey=pillar_survey.id).values_list('to_pillar', flat=True)
+    
+        filters = (
+            Q(calibration_type='B')
+            & (Q(verifying_authority=pillar_survey.accreditation.accredited_company) | Q(site__isnull=True))
+            & (Q(accreditation=pillar_survey.accreditation) | Q(site__isnull=True))
+            & (Q(company=company) | Q(site__isnull=True))
+            & (Q(site=pillar_survey.baseline) | Q(site__isnull=True))
+            & (Q(pillar__id__in=from_pillars) | Q(pillar__id__in=to_pillars) | Q(pillar__isnull=True))
+        )
+    else:
+        from_pillars = uEDM_Observation.objects.filter(
+            pillar_survey=pillar_survey.id).values_list('from_pillar', flat=True)
+        to_pillars = uEDM_Observation.objects.filter(
+            pillar_survey=pillar_survey.id).values_list('to_pillar', flat=True)
+    
+        filters = (
+            Q(calibration_type='I')
+            & (Q(verifying_authority=pillar_survey.calibrated_baseline.accreditation.accredited_company) | Q(site__isnull=True))
+            & (Q(accreditation=pillar_survey.calibrated_baseline.accreditation) | Q(site__isnull=True))
+            & (Q(company=company) | Q(site__isnull=True))
+            & (Q(site=pillar_survey.calibrated_baseline.baseline) | Q(site__isnull=True))
+            & (Q(pillar__id__in=from_pillars) | Q(pillar__id__in=to_pillars) | Q(pillar__isnull=True))
+        )
+        
+    rpt_notes = Calibration_Report_Notes.objects.filter(filters)
     report_notes = []
     for n in rpt_notes:
         report_notes = report_notes + (n.note.split('\n'))

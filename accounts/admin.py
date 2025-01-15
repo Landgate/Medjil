@@ -223,8 +223,10 @@ class CompanyAdmin(admin.ModelAdmin):
       
 @admin.register(Calibration_Report_Notes, site=admin_site)
 class CalibrationReportNotesAdmin(admin.ModelAdmin):
-    list_display = ['company', 'report_type', 'note_type']
-    list_filter = ['company']
+    list_display = ('calibration_type', 'verifying_authority', 'accreditation', 'company', 'site', 'pillar', 'note')
+    list_filter = ('calibration_type', 'verifying_authority','company')
+    class Meta:
+        model = Calibration_Report_Notes
 ##############################################################################
 ##################################### END OF LINE  ###########################
 ##############################################################################

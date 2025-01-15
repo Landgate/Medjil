@@ -375,7 +375,7 @@ class EDM_Specification(models.Model):
         self.edm_make_name = self.edm_make_name.upper()
         super().save(*args, **kwargs)
         
-    def atmospheric_correction(self, o, co2_content=None):
+    def atmospheric_correction(self, o, null_correction=True, co2_content=None):
         """    
         This method calculates the atmospheric correction for a given observation.
         If `atmos_corr_formula` is provided, it will be used to calculate the correction.
@@ -388,6 +388,9 @@ class EDM_Specification(models.Model):
         Returns:
         - float: The calculated atmospheric correction in metres.
         """
+        if null_correction:
+            return 0
+        
         if self.atmos_corr_formula:
             variables = {
                 'd': float(o['raw_slope_dist']),

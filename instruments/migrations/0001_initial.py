@@ -29,7 +29,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ("accounts", "0004_load_report_notes"),
+        ("accounts", "0008_load_report_notes"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 

@@ -37,7 +37,7 @@ from common_func.Convert import (
     Calibrations_qry,
     csv2dict,
     dict_2_html_table,
-    report_notes_qry,
+    get_endnotes,
     uncertainty_qry,
     group_list)
 from common_func.SurveyReductions import (
@@ -291,7 +291,9 @@ def calibrate2(request,id):
                               {'Check_Errors':Check_Errors})
                               
             #----------------- Query notes and Uncertainty -----------------#
-            report_notes = report_notes_qry(company=request.user.company, report_type='E')
+            report_notes = get_endnotes(
+                pillar_survey = ps_qs,
+                company=request.user.company, calibration_type='E')
             uc_budget = uncertainty_qry(pillar_survey)
             uc_budget['sources'] = add_calib_uc(uc_budget['sources'], 
                                                 calib,
@@ -308,12 +310,11 @@ def calibrate2(request,id):
                 o['Humid'],c = apply_calib(o['raw_humidity'],
                                             pillar_survey['hygro_calib_applied'],
                                             calib['hygro'])
-                if not pillar_survey['mets_applied']:
-                    o['Mets_Correction'] = (
-                        pillar_survey['edm'].edm_specs.atmospheric_correction(o)
-                    )
-                else:
-                    o['Mets_Correction'] = 0
+                
+                o['Mets_Correction'] = (
+                    pillar_survey['edm'].edm_specs.atmospheric_correction(
+                        o=o,
+                        null_correction=pillar_survey['mets_applied']))
                 
                 o['slope_dist'] = (float(o['raw_slope_dist'] )
                                    + o['Mets_Correction'])

@@ -336,6 +336,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('calibrationsites', '0002_auto_Create_Default_Locations'),
+        ('accounts', '0002_load_company'),
     ]
 
     operations = [

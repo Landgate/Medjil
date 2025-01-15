@@ -31,6 +31,9 @@
                 {% else %}
                     <h2 class="text-center">Create Report Endnote</h2>
                 {% endif %}
+                <p class="text-center">
+                    <i>End Notes are filtered and applied to all reports with a relation to the specified fields.</i>
+                </p>
             </div>
             <div class="mt-5 mb-3">
                 <!-- {{ form.errors }} -->
@@ -43,19 +46,16 @@
             </div>
             <table>
                 {% for field in form %}
-                    <tr>
+                    <!-- Help text -->
+                    <tr {% if field.help_text %} title="{{ field.help_text|safe }}" {% endif %}>
                         <td width="20%">
                             <strong>{{ field.label_tag }}</strong>
                         </td>
-                        <td width="80%"> {{ field }} 
+                        <td width="80%"style="vertical-align: top;"> {{ field }} 
                             <!-- Errors -->
                             {% for error in field.errors %}
                                 <p class="error error-danger">{{ error }}</p>
                             {% endfor %}
-                            <!-- Help text -->
-                            {% if not field.field.widget.attrs.placeholder and field.help_text %}
-                                <p class="helptext">{{ field.help_text }}</p>
-                            {% endif %}
                         </td>
                     </tr>
                 {% endfor %}               

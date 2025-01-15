@@ -15,6 +15,11 @@ Press [Start Testing](http://medjil.lb.landgate.wa.gov.au) to begin.
 
 
 ## Additions | Fixes | Changes 
+### [1.0.19] - 2025-01-15 - [Kent Wheeler]
+Changes
+* Changes made to EndNotes to allow full flexibility.
+
+## Additions | Fixes | Changes 
 ### [1.0.18] - 2025-01-14 - [Kent Wheeler]
 Additions
 * atmos_corr_formula added to edm_specification model

@@ -25,7 +25,12 @@ from datetime import date
 
 # Create your models here.
 User = settings.AUTH_USER_MODEL
-from instruments.models import EDM_Inst, Prism_Inst, Mets_Inst, DigitalLevel, Staff
+from instruments.models import (
+    EDM_Inst, 
+    Prism_Inst, 
+    Mets_Inst, 
+    DigitalLevel, 
+    Staff)
 from calibrationsites.models import CalibrationSite, Pillar
 from common_func.validators import validate_profanity, validate_file_size
 from accounts.models import Company
@@ -512,11 +517,12 @@ class EDM_Observation(models.Model):
         verbose_name= 'Target height')
     
     hz_direction = models.DecimalField(
-        max_digits=12, decimal_places=6)
+        validators=[MinValueValidator(0), MaxValueValidator(361)],
+        max_digits=32, decimal_places=26)
     
     raw_slope_dist = models.DecimalField(
-        max_digits=9, decimal_places=5,
-        validators=[MinValueValidator(1), MaxValueValidator(1000)],
+        max_digits=29, decimal_places=25,
+        validators=[MinValueValidator(1), MaxValueValidator(1500)],
         verbose_name= 'slope distance')
     
     raw_temperature = models.FloatField(
@@ -561,14 +567,13 @@ class Level_Observation(models.Model):
     pillar = models.ForeignKey(
         Pillar, on_delete = models.CASCADE)
     reduced_level = models.DecimalField(
-        max_digits=7, decimal_places=4)
+        max_digits=27, decimal_places=24)
     rl_standard_deviation = models.DecimalField(
-        max_digits=7, decimal_places=4)
+        max_digits=27, decimal_places=24)
 
     class Meta:
         ordering = ['pillar_survey','pillar__order']
         unique_together  =('pillar_survey','pillar')
-
 
     def __str__(self):
         return f'{self.pillar_survey}: {self.pillar})'
