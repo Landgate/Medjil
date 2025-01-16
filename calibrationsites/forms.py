@@ -25,6 +25,11 @@ from .models import (Country,
                     Pillar)
 from accounts.models import Company
 
+
+class CustomClearableFileInput(forms.ClearableFileInput):
+    template_name = 'custom_widgets/customclearablefileinput.html'
+    
+    
 # Prepare forms
 class CalibrationSiteForm(forms.ModelForm):
     country = forms.ModelChoiceField(empty_label='--- Choose a Country ---',
@@ -76,42 +81,29 @@ class CalibrationSiteForm(forms.ModelForm):
                 pass
         elif self.instance.pk:
             self.fields['locality'].queryset = self.instance.state.locality_set.order_by('name')
+            
+
 #########################################################################
 class CalibrationSiteUpdateForm(forms.ModelForm):
     class Meta:
         model = CalibrationSite
-        # fields = '__all__' # ('name', 'birthdate', 'country', 'state', 'locality', )
-        fields = ['site_type', 'site_name', 'site_status', 'no_of_pillars', 'site_access_plan', 'site_booking_sheet'] 
+        fields = ['site_type', 'site_name', 'site_status', 'site_address', 'no_of_pillars', 'description', 'site_access_plan', 'site_booking_sheet']
         widgets = {
-                'site_access_plan' : forms.ClearableFileInput(attrs={'accept' : '.pdf'}),
-                'site_booking_sheet' : forms.ClearableFileInput(attrs={'accept' : '.pdf'})
-            }
+            'description': forms.TextInput(attrs={'class': 'text-area'}),
+            'site_access_plan' :  CustomClearableFileInput(
+                attrs={'accept' : '.pdf, .jpg, .jpeg, .png, .tif',
+                       'required': False}),
+            'site_booking_sheet' :  CustomClearableFileInput(
+                attrs={'accept' : '.pdf, .jpg, .jpeg, .png, .tif',
+                       'required': False})
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # self.fields['state'].queryset = State.objects.none()
-        # self.fields['locality'].queryset = Locality.objects.none()
         # disable fields
         self.fields['site_type'].disabled = True
+        self.fields['no_of_pillars'].disabled = True
 
-        if 'country' in self.data:
-            try:
-                country_id = int(self.data.get('country'))
-                self.fields['state'].queryset = State.objects.filter(country_id=country_id).order_by('name')
-            except (ValueError, TypeError):
-                pass  # invalid input from the client; ignore and fallback to empty City queryset
-        #elif self.instance.pk:
-        #    self.fields['state'].queryset = self.instance.country.state_set.order_by('name')
-
-        if 'state' in self.data:
-            try:
-                country_id = int(self.data.get('country'))
-                state_id = int(self.data.get('state'))
-                self.fields['locality'].queryset = Locality.objects.filter(state__id = state_id, country__id = country_id)
-            except(ValueError, TypeError):
-                pass
-        #elif self.instance.pk:
-        #    self.fields['locality'].queryset = self.instance.state.locality_set.order_by('name')
 
 #########################################################################
 class CountryForm(forms.ModelForm):
@@ -143,22 +135,12 @@ class PillarForm(forms.ModelForm):
     class Meta:
         model = Pillar
         fields = '__all__'
-        exclude = ('id', 'order',)
+        exclude = ('site_id', 'order',)
         widgets = {
             'height': forms.TextInput(attrs={'placeholder': 'Optional'}),
         }
 
-EditPillarFormSet = modelformset_factory(Pillar, form = PillarForm, 
-                                extra=0, 
-                                # max_num=3, 
-                                can_delete=True)                    
-#########################################################################
-class EditPillarFormSet(EditPillarFormSet):
-    def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user', None)
-        siteid = kwargs.pop('id', None)
-        super(EditPillarFormSet, self).__init__(*args, **kwargs) 
-        self.queryset = Pillar.objects.filter(site_id__exact = siteid)        
+        
 #############################################################################
 class AddPillarForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):

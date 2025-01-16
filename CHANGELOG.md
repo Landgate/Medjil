@@ -14,7 +14,11 @@ Press [Start Testing](http://medjil.lb.landgate.wa.gov.au) to begin.
     - Url reverse corrected (?)
 
 
-## Additions | Fixes | Changes 
+## Additions | Fixes | Changes
+### [1.0.20] - 2025-01-16 - [Kent Wheeler]
+Changes
+* Changes made to have formset editing of calibrationSites details
+
 ### [1.0.19] - 2025-01-15 - [Kent Wheeler]
 Changes
 * Changes made to EndNotes to allow full flexibility.

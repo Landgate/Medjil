@@ -81,14 +81,35 @@ def site_detailed_view(request, id):
                     context = {'site': site,
                                 'pillars': pillars})
 ###########################################################################
+
+
+EditPillarFormSet = modelformset_factory(
+    Pillar, form=PillarForm,
+    extra=0,
+    can_delete=False
+)
+
 @login_required(login_url="/accounts/login") 
 def site_update(request, id):
     site = get_object_or_404(CalibrationSite, id = id)
-    form = CalibrationSiteUpdateForm(request.POST or None, request.FILES or None, instance = site)
-    if form.is_valid():
+    form = CalibrationSiteUpdateForm(
+        request.POST or None, request.FILES or None, instance = site)
+    formset = EditPillarFormSet(
+        request.POST or None, 
+        queryset=Pillar.objects.filter(site_id=site))
+    
+    if form.is_valid() and formset.is_valid():
         form.save()
+        formset.save()
         return redirect('calibrationsites:home')
-    return render(request, 'calibrationsites/calibrationsite_update_form.html', {'form': form})
+
+    context = {
+        'form': form, 
+        'formset': formset}
+    return render(
+        request, 'calibrationsites/calibrationsite_update_form.html', context)
+
+
 #########################################################################
 def missing_elements(L):
     start, end = L[0], L[-1]
@@ -334,30 +355,9 @@ class CreateCalibrationSiteWizard(LoginRequiredMixin, NamedUrlSessionWizardView)
 
 
         return redirect('calibrationsites:home')
-#########################################################################
-class PillarUpdateView(LoginRequiredMixin, generic.CreateView):
-    # model = Pillar
-    template_name = 'calibrationsites/simple_form.html'
 
-    def get(self, *args, **kwargs):
-        formset = EditPillarFormSet(user=self.request.user, id = self.kwargs['id'])
 
-        site_id = kwargs.get('id', None)
-        siteid = CalibrationSite.objects.get(id = site_id)
-        sitetype = siteid.site_type
 
-        return self.render_to_response({'formset': formset, 
-                                        'sitetype': sitetype})
-
-    def post(self, request, *args, **kwargs):
-        formset = EditPillarFormSet(request.POST, user=self.request.user,  id = self.kwargs['id'])
-        if formset.is_valid():
-            instance = formset.save(commit=False)
-            instance = formset.save()
-            return redirect('calibrationsites:home')
-        
-        return self.render_to_response({'formset': formset, 
-                                        'sitetype': sitetype})
 #########################################################################
 ####################### JSON ############################################
 #########################################################################

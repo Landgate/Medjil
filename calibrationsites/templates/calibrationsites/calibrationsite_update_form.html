@@ -22,80 +22,111 @@
 {% block content %}
 
 <article class="post">
-    {% if messages %}
-		<ul class="alert messages">
-		    {% for message in messages %}
-		    <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-		    {% endfor %}
-		</ul>
-		<br>
-	{% endif %}	
-
-    <div class="post-header mt-12 mb-5">
-        <h1 class="post-title">Update Calibration Site Details</h1>
-    </div>
-
-    <div class="post-content">
-      <form action="" class="site-form" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        
-        <table>
-          <colgroup>
-              <col span="1" width="20%">
-              <col span="1" width="70%">
-              <!-- <col span="1" width="10%"> -->
-          </colgroup>
-          </tr>
-          {% for field in form %}
-            <tr>
-              <td>{{ field.label_tag }}</td> 
-              <td> 
-                  {{ field }} 
-                  <!-- Errors -->
-                  {% for error in field.errors %}
-                      <p class="error error-danger">{{ error }}</p>
+    <div class="flexbox-container_IB">
+        {% if messages %}
+            <ul class="alert messages">
+                {% for message in messages %}
+                <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+            <br>
+        {% endif %}
+        <form action="" class="site-form" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ formset.management_form }}
+            <div class="mb-5 site-form-header bg-indigo-300 rounded px-2">
+                <h2 class="text-center">Update Calibration Site Details</h2>
+            </div>
+            <div class="mt-5 mb-3">
+                <!-- {{ form.errors }} -->
+                {% if form.errors or form.non_field_errors %}
+                    {% for error in form.non_field_errors %} 
+                        <p class="error error-danger">** {{ error }}</p>
+                    {% endfor %}
+                    <br>
+                {% endif %}
+            </div>
+            <div class="flexbox-item_1600_IB">
+                <table>
+                  <colgroup>
+                      <col span="1" width="20%">
+                      <col span="1" width="70%">
+                      <!-- <col span="1" width="10%"> -->
+                  </colgroup>
+                  </tr>
+                  {% for field in form %}
+                    <tr {% if field.help_text %} Title=field.help_text|safe {% endif %}>
+                      {% if 'description' in field.name %}
+                          <td style="vertical-align:top">{{ field.label_tag }}</td>
+                      {% else %}
+                          <td>{{ field.label_tag }}</td>
+                      {% endif %}
+                      <td>
+                          {{ field }}
+                          <!-- Errors -->
+                          {% for error in field.errors %}
+                              <p class="error error-danger">{{ error }}</p>
+                          {% endfor %}
+                      </td>
+                  </tr>
                   {% endfor %}
-                  <!-- Help text -->
-                  {% if not field.field.widget.attrs.placeholder and field.help_text %}
-                      <p class="helptext">{{ field.help_text }}</p>
-                  {% endif %}
-              </td>
-              <!-- <td>
-                {% if 'country' in field.name %}
-                    <a href="{% url 'calibrationsites:country-create' %}?next={{request.path}}" class="px-3 py-2 add-button bg-blue-200"><span class="icon-plus">&#43;</span>Add</a>
+        
+                </table>
+            </div>
+<!-- TABLE FOR THE PILLARS -->
+            <div style="width: 100%; text-align: center;">
+                {% if form.site_type.value == 'staff_range' %}
+                    <table style="margin-left:auto;margin-right:auto;font-size:10.0pt;width:400px;">
+                        <tr>
+                            <th>Pin Name</th>
+                        </tr>
+                        {% for pillar in formset %}
+                            <tr>
+                            {% for field in pillar %}
+                            {% if field.name != 'easting' and field.name != 'northing' and field.name != 'zone' %}
+                                <td class="pxl-3" {% if field.help_text %} Title={{ field.help_text|safe }} {% endif %}>{{ field }}
+                                    {% for error in field.errors %}
+                                        <p class="error error-danger">{{ error }}</p>
+                                    {% endfor %}
+                              </td>
+                             {% endif %}
+                            {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </table>
+                {% elif form.site_type.value == 'baseline' %}
+                    <table style="margin-left:auto;margin-right:auto;font-size:10.0pt;width:800px;">
+                        <colgroup>
+                            <col span="1" width="15%">
+                        </colgroup>
+                        <tr>
+                            <th>Pillar Name</th>
+                            <th>Easting (MGA2020)</th>
+                            <th>Northing (MGA2020)</th>
+                            <th>Zone</th>
+                        </tr>
+                        {% for pillar in formset %}
+                            <tr>
+                            {% for field in pillar %}
+                                <td class="pxl-3" {% if field.help_text %} Title={{ field.help_text|safe }} {% endif %}>{{ field }}
+                                    {% for error in field.errors %}
+                                        <p class="error error-danger">{{ error }}</p>
+                                    {% endfor %}
+                              </td>
+                            {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </table>
                 {% endif %}
-                {% if 'state' in field.name %}
-                    <a href="{% url 'calibrationsites:state-create' %}?next={{request.path}}" class="px-3 py-2 add-button bg-blue-200"><span class="icon-plus">&#43;</span>Add</a>
-                {% endif %}
-                {% if 'locality' in field.name %}
-                    <a href="{% url 'calibrationsites:locality-create' %}?next={{request.path}}" class="px-3 py-2 add-button bg-blue-200"><span class="icon-plus">&#43;</span>Add</a>
-                {% endif %}
+            </div>
 
-              </td> -->
-          </tr>   
-          {% endfor %}
-
-        </table>
-
-          <div class="button-container">
-            <span> <a href="{% url 'calibrationsites:home' %}" class="text-blue-500">Cancel</a></span>          	
-            <button class="save-button bg-green-500 hover:bg-green-400" type="submit" >Save</button>
-        </div>
-
+            <div class="button-container">
+                <button type="button" onclick="window.location.href='{% url 'calibrationsites:home' %}'" class="cancelbtn bg-red-500 hover:bg-red-300">Cancel</button>
+                <button class="submit-button bg-green-500 hover:bg-green-400" type="submit" >Save</button>
+            </div>
       </form>
     </div>
 </article>
 
-  <script src="{% static 'js/calibrationsites/calibration_site.js' %}"></script>
-  <!-- <script>
-    document.getElementById('id_site_type').disabled = true;
-    document.getElementById('id_site_name').disabled = true;
-    document.getElementById('id_site_address').disabled = true;
-    document.getElementById('id_country').disabled = true;
-    document.getElementById('id_state').disabled = true;
-    document.getElementById('id_locality').disabled = true;
-    document.getElementById('id_operator').disabled = true;
-    document.getElementById('id_site_type').disabled = true;
-  </script> -->
-  
+
 {% endblock %}
