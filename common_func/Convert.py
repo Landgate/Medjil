@@ -313,14 +313,19 @@ def Calibrations_qry(frm_data):
     return calib
 
 
-def baseline_qry(frm_data):
+def baseline_qry(frm_data,id=None):
     baseline={}
     if 'baseline' in frm_data:
         baseline['site'] = frm_data['baseline']
-        baseline['history'] = (Pillar_Survey.objects.annotate(
-            num_cd=Count('certified_distance')).filter(num_cd__gt=0).filter(
-                baseline__pk=frm_data['baseline'].pk)
-                .order_by('survey_date'))
+        baseline['history'] = (
+            Pillar_Survey.objects.filter(
+                baseline__pk=frm_data['baseline'].pk,)
+            .exclude(id=id,
+                     results__status='check',
+                     results__experimental_std_dev__isnull = True)
+            .select_related('results')
+            .order_by('survey_date')
+        )
 
     
     if 'auto_base_calibration' in frm_data:
@@ -338,13 +343,20 @@ def baseline_qry(frm_data):
     
         sd_m = (Std_Deviation_Matrix.objects
                 .select_related('from_pillar', 'to_pillar')
-                .filter(pillar_survey__pk = baseline['calibrated_baseline'].pk))
+                .filter(pillar_survey__pk = baseline['calibrated_baseline'].pk)
+                .exclude(
+                    pillar_survey__results__status='check',
+                    pillar_survey__results__experimental_std_dev__isnull = True))
         baseline['std_dev_matrix'] = ({s.from_pillar.name + ' - ' + s.to_pillar.name:
                                         model_to_dict(s) for s in sd_m})
 
         cd = (Certified_Distance.objects
                 .select_related('from_pillar', 'to_pillar')
-                .filter(pillar_survey__pk = baseline['calibrated_baseline'].pk))
+                .filter(pillar_survey__pk = baseline['calibrated_baseline'].pk)
+                .exclude(
+                    pillar_survey__results__status='check',
+                    pillar_survey__results__experimental_std_dev__isnull = True))
+                
         baseline['certified_dist'] ={d.to_pillar.name:model_to_dict(d) for d in cd}
         
     baseline['pillars'] = Pillar.objects.filter(

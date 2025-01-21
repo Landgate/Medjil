@@ -23,6 +23,7 @@ from django.forms.fields import Field
 
 from .models import (
     Pillar_Survey,
+    PillarSurveyResults,
     Accreditation, 
     Uncertainty_Budget,
     Uncertainty_Budget_Source,
@@ -199,17 +200,17 @@ class EDM_ObservationForm(forms.ModelForm):
         labels = {'id': 'Obs #',}
         
 
-class PillarSurveyUpdateForm(forms.ModelForm):                
+class PillarSurveyResultsForm(forms.ModelForm):                
     class Meta:
-        model = Pillar_Survey
+        model = PillarSurveyResults
         fields = ['zero_point_correction','zpc_uncertainty',
                   'experimental_std_dev','degrees_of_freedom',
-                  'html_report']      
+                  'status', 're13_upload']      
                
 
 class PillarSurveyApprovalsForm(forms.ModelForm):                
     class Meta:
-        model = Pillar_Survey
+        model = PillarSurveyResults
         fields = [
             'data_entered_person',
             'data_entered_position',

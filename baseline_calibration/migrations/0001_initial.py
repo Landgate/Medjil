@@ -39,10 +39,10 @@ class Migration(migrations.Migration):
             name='Accreditation',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('valid_from_date', models.DateField(help_text='The date the period of appointment commences.')),
-                ('valid_to_date', models.DateField(help_text='The date the period of appointment finishes.')),
-                ('LUM_constant', models.FloatField(validators=[django.core.validators.MinValueValidator(0), django.core.validators.MaxValueValidator(50.0)])),
-                ('LUM_ppm', models.FloatField(validators=[django.core.validators.MinValueValidator(0), django.core.validators.MaxValueValidator(50.0)])),
+                ('valid_from_date', models.DateField(help_text='The date the period of appointment commences.',verbose_name="Valid From Date",)),
+                ('valid_to_date', models.DateField(help_text='The date the period of appointment finishes.', verbose_name="Valid To Date")),
+                ('LUM_constant', models.FloatField(validators=[django.core.validators.MinValueValidator(0),django.core.validators.MaxValueValidator(50.0),],verbose_name="LUM constant",)),
+                ('LUM_ppm', models.FloatField(validators=[django.core.validators.MinValueValidator(0), django.core.validators.MaxValueValidator(50.0)],verbose_name="LUM ppm",)),
                 ('statement', models.TextField(help_text='eg. Accredited as a verifying authority for units of lenght according to ISO 17025:2012', verbose_name='Statement of accreditation')),
                 ('certificate_upload', models.FileField(blank=True, null=True, max_length=1000, upload_to='accreditation_certificates/', validators=[common_func.validators.validate_file_size], verbose_name='Accreditation Certificate')),
                 ('accredited_company', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='accounts.company')),
@@ -76,19 +76,6 @@ class Migration(migrations.Migration):
                 ('psy_calib_applied', models.BooleanField(default=True, help_text='The psychrometer correction has been applied prior to data import.')),
                 ('outlier_criterion', models.DecimalField(decimal_places=1, default=2, help_text='Number of standard deviations for outlier detection threashold.', max_digits=2, validators=[django.core.validators.MinValueValidator(0), django.core.validators.MaxValueValidator(5)])),
                 ('fieldnotes_upload', models.FileField(blank=True, null=True, max_length=1000, upload_to=baseline_calibration.models.get_upload_to_location, validators=[common_func.validators.validate_file_size], verbose_name='Scanned fieldnotes')),
-                ('zero_point_correction', models.FloatField(blank=True, help_text='If: Instrument Correction (m) = 1.00000013.L + 0.0003, Zero Point Correction = 0.0003m', null=True, validators=[django.core.validators.MinValueValidator(-0.1), django.core.validators.MaxValueValidator(0.1)])),
-                ('zpc_uncertainty', models.FloatField(blank=True, help_text='Uncertainty of the zero point correction (m) at 95% Confidence Level', null=True, validators=[django.core.validators.MinValueValidator(0.0), django.core.validators.MaxValueValidator(0.1)], verbose_name='zero point correction uncertainty')),
-                ('variance', models.FloatField(blank=True, help_text='Variance of least squares adjustment of the calibration', null=True)),
-                ('degrees_of_freedom', models.IntegerField(blank=True, help_text='Degrees of freedom of calibration', null=True, validators=[django.core.validators.MinValueValidator(1), django.core.validators.MaxValueValidator(500)])),
-                ('uploaded_on', models.DateTimeField(auto_now_add=True, null=True)),
-                ('modified_on', models.DateTimeField(auto_now=True, null=True)),
-                ('data_entered_person', models.CharField(validators=[common_func.validators.validate_profanity], blank=True, max_length=25, null=True),),
-                ('data_entered_position',models.CharField(validators=[common_func.validators.validate_profanity], blank=True, max_length=25, null=True),),
-                ('data_entered_date', models.DateField(blank=True, null=True)),
-                ('data_checked_person', models.CharField(validators=[common_func.validators.validate_profanity], blank=True, max_length=25, null=True),),
-                ('data_checked_position',models.CharField(validators=[common_func.validators.validate_profanity], blank=True, max_length=25, null=True),),
-                ('data_checked_date', models.DateField(blank=True, null=True)),
-                ('html_report', models.TextField(blank=True, null=True)),
                 ('accreditation', models.ForeignKey(help_text='corresponding certification survey.', null=True, blank=True, on_delete=django.db.models.deletion.SET_NULL, to='baseline_calibration.accreditation')),
                 ('baseline', models.ForeignKey(help_text='Baseline under survey', on_delete=django.db.models.deletion.CASCADE, to='calibrationsites.calibrationsite', verbose_name='Site')),
                 ('edm', models.ForeignKey(help_text='EDM used for survey', on_delete=django.db.models.deletion.PROTECT, to='instruments.edm_inst', verbose_name="EDM")),
@@ -106,6 +93,140 @@ class Migration(migrations.Migration):
             options={
                 'ordering': ['baseline', 'survey_date'],
                 "verbose_name": "Baseline Calibrations",
+            },
+        ),
+        migrations.CreateModel(
+            name="PillarSurveyResults",
+            fields=[
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "zero_point_correction",
+                    models.FloatField(
+                        blank=True,
+                        help_text="If: Instrument Correction (m) = 1.00000013.L + 0.0003, Zero Point Correction = 0.0003m",
+                        null=True,
+                        validators=[
+                            django.core.validators.MinValueValidator(-0.1),
+                            django.core.validators.MaxValueValidator(0.1),
+                        ],
+                    ),
+                ),
+                (
+                    "zpc_uncertainty",
+                    models.FloatField(
+                        blank=True,
+                        help_text="Uncertainty of the zero point correction (m) at 95% Confidence Level",
+                        null=True,
+                        validators=[
+                            django.core.validators.MinValueValidator(0.0),
+                            django.core.validators.MaxValueValidator(0.1),
+                        ],
+                        verbose_name="Zero Point Correction Uncertainty",
+                    ),
+                ),
+                (
+                    "experimental_std_dev",
+                    models.FloatField(
+                        blank=True,
+                        help_text="Experimental Standard Deviation of single observation (m) ISO 17123-4:2012 eq.14",
+                        null=True,
+                        verbose_name="Experimental Standard Deviation",
+                    ),
+                ),
+                (
+                    "degrees_of_freedom",
+                    models.IntegerField(
+                        blank=True,
+                        help_text="Degrees of freedom of calibration",
+                        null=True,
+                        validators=[
+                            django.core.validators.MinValueValidator(1),
+                            django.core.validators.MaxValueValidator(500),
+                        ],
+                    ),
+                ),
+                (
+                    "data_entered_person",
+                    models.CharField(
+                        blank=True,
+                        max_length=25,
+                        null=True,
+                        validators=[common_func.validators.validate_profanity],
+                    ),
+                ),
+                (
+                    "data_entered_position",
+                    models.CharField(
+                        blank=True,
+                        max_length=25,
+                        null=True,
+                        validators=[common_func.validators.validate_profanity],
+                    ),
+                ),
+                ("data_entered_date", models.DateField(blank=True, null=True)),
+                (
+                    "data_checked_person",
+                    models.CharField(
+                        blank=True,
+                        max_length=25,
+                        null=True,
+                        validators=[common_func.validators.validate_profanity],
+                    ),
+                ),
+                (
+                    "data_checked_position",
+                    models.CharField(
+                        blank=True,
+                        max_length=25,
+                        null=True,
+                        validators=[common_func.validators.validate_profanity],
+                    ),
+                ),
+                ("data_checked_date", models.DateField(blank=True, null=True)),
+                ("html_report", models.TextField(blank=True, null=True)),
+                (
+                    "reg13_upload",
+                    models.FileField(
+                        blank=True,
+                        max_length=1000,
+                        null=True,
+                        upload_to=baseline_calibration.models.get_upload_to_location,
+                        validators=[common_func.validators.validate_file_size],
+                        verbose_name="Certificate Upload",
+                    ),
+                ),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[("publish", "Publish"), ("check", "Check Survey")],
+                        default="publish",
+                        max_length=10,
+                        verbose_name="Publish Status",
+                    ),
+                ),
+                ("uploaded_on", models.DateTimeField(auto_now_add=True, null=True)),
+                ("modified_on", models.DateTimeField(auto_now=True, null=True)),
+                (
+                    "pillar_survey",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="results",
+                        to="baseline_calibration.pillar_survey",
+                        verbose_name="Related Pillar Survey",
+                    ),
+                ),
+            ],
+            options={
+                "verbose_name": "Pillar Survey Results",
+                "ordering": ["pillar_survey"],
             },
         ),
         migrations.CreateModel(
@@ -172,8 +293,8 @@ class Migration(migrations.Migration):
             name='Level_Observation',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('reduced_level', models.DecimalField(decimal_places=4, max_digits=7)),
-                ('rl_standard_deviation', models.DecimalField(decimal_places=4, max_digits=7)),
+                ('reduced_level', models.DecimalField(decimal_places=24, max_digits=27)),
+                ('rl_standard_deviation', models.DecimalField(decimal_places=24, max_digits=27)),
                 ('pillar', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='calibrationsites.pillar')),
                 ('pillar_survey', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='baseline_calibration.pillar_survey')),
             ],
@@ -187,8 +308,8 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('inst_ht', models.DecimalField(decimal_places=3, max_digits=4, verbose_name='Instrument height')),
                 ('tgt_ht', models.DecimalField(decimal_places=3, max_digits=4, verbose_name='Target height')),
-                ('hz_direction', models.DecimalField(decimal_places=6, max_digits=12)),
-                ('raw_slope_dist', models.DecimalField(decimal_places=5, max_digits=9, validators=[django.core.validators.MinValueValidator(1), django.core.validators.MaxValueValidator(1000)], verbose_name='slope distance')),
+                ('hz_direction', models.DecimalField(decimal_places=26,max_digits=32,validators=[django.core.validators.MinValueValidator(0),django.core.validators.MaxValueValidator(361),],)),
+                ('raw_slope_dist', models.DecimalField(decimal_places=25,max_digits=29,validators=[django.core.validators.MinValueValidator(1),django.core.validators.MaxValueValidator(1500),],verbose_name="slope distance",)),
                 ('raw_temperature', models.FloatField(blank=True, null=True, validators=[django.core.validators.MinValueValidator(0), django.core.validators.MaxValueValidator(50.0)])),
                 ('raw_pressure', models.FloatField(blank=True, null=True, validators=[django.core.validators.MinValueValidator(0), django.core.validators.MaxValueValidator(1500.0)])),
                 ('raw_humidity', models.FloatField(blank=True, null=True, validators=[django.core.validators.MinValueValidator(0), django.core.validators.MaxValueValidator(100.0)])),

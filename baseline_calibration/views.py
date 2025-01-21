@@ -44,10 +44,12 @@ from .forms import (
     Uncertainty_BudgetForm,
     Uncertainty_Budget_SourceForm,
     AccreditationForm,
+    PillarSurveyResultsForm,
     PillarSurveyApprovalsForm,
     BulkBaselineReportForm)
 from .models import (
     Pillar_Survey,
+    PillarSurveyResults,
     EDM_Observation,
     Level_Observation,
     Accreditation,
@@ -282,14 +284,14 @@ def calibrate2(request,id):
     
     #----------------- Query site, surveys, instruments and calibrations -----------------#
     # Get the pillar_survey in dict like cleaned form data    
-    ps_qs = Pillar_Survey.objects.get(id=id)
+    ps_qs = get_object_or_404(Pillar_Survey, id=id)
+    psr_qs = get_object_or_404(PillarSurveyResults, pillar_survey=id)
     query_dict = QueryDict('', mutable=True)
     query_dict.update(model_to_dict(ps_qs))
     pillar_survey_form = PillarSurveyForm(query_dict, user=request.user)
     pillar_survey_form.is_valid()
     pillar_survey = pillar_survey_form.cleaned_data
     pillar_survey.update({'pk':id})
-    pillar_survey.update({'experimental_std_dev':query_dict['experimental_std_dev']})
     
     # Get the raw_edm_obs and the raw_lvl_obs in dict like cleaned form data
     formset = modelformset_factory(EDM_Observation,
@@ -316,13 +318,13 @@ def calibrate2(request,id):
     
     # Create formsets and forms
     ps_approvals = PillarSurveyApprovalsForm(
-        request.POST or None, instance=ps_qs)
+        request.POST or None, instance=psr_qs)
     
     calib = {}
     baseline={}
     uc_budget = {}
     calib = Calibrations_qry(pillar_survey)
-    baseline = baseline_qry(pillar_survey)
+    baseline = baseline_qry(pillar_survey,id)
     
     for o in raw_edm_obs.values():
         #----------------- Instrument Corrections -----------------#
@@ -381,7 +383,8 @@ def calibrate2(request,id):
                 o['Humid'], _ = calib['hygro'].apply_calibration(
                     o['raw_humidity'],
                     pillar_survey['hygro_calib_applied'])
-            
+        
+        #  Calculate correction values
         c, o['Calibration_Correction'] = apply_calib(
             float(o['raw_slope_dist']),
             pillar_survey['edmi_calib_applied'],
@@ -429,7 +432,7 @@ def calibrate2(request,id):
         # This is a POST request
         if edm_obs_formset.is_valid():
             # create signiture block
-            ps_approvals = PillarSurveyApprovalsForm(instance=ps_qs)
+            ps_approvals = PillarSurveyApprovalsForm(instance=psr_qs)
             # Apply a mask to the raw observations
             # - calculate, check errors and render report
             edm_obs_formset.save()
@@ -537,8 +540,8 @@ def calibrate2(request,id):
                 prev=baseline['history'].first()
                 ISO_test.append(
                     ISO_test_b(
-                        {'dof':prev.degrees_of_freedom,
-                         'So': prev.experimental_std_dev},
+                        {'dof':prev.results.degrees_of_freedom,
+                         'So': prev.results.experimental_std_dev},
                         chi_test))
             else:
                 report_notes.append('The ISO 17123:4 Test B statistical test has not been performed due to insufficient historical records.')
@@ -738,7 +741,7 @@ def calibrate2(request,id):
             
             # create update for pillar survey processing
             n = len(matrix_y)-1
-            request.session['pillar_survey_update_' + str(id)] = {
+            request.session['pillar_survey_result_' + str(id)] = {
                 'zero_point_correction': matrix_y[n]['value'],
                 'zpc_uncertainty': matrix_y[n]['std_dev'],
                 'degrees_of_freedom': chi_test['dof'],
@@ -757,18 +760,21 @@ def calibrate2(request,id):
 
         if ps_approvals.is_valid():
             # Save signiture block
-            ps_obj = ps_approvals.save()
+            psr_obj = ps_approvals.save()
             
             # pillar survey update
-            psu = request.session['pillar_survey_update_' + str(id)]
-            del request.session['pillar_survey_update_' + str(id)]
-            psu_obj = get_object_or_404(Pillar_Survey, id=id)
-            psu_obj.zero_point_correction = psu['zero_point_correction']
-            psu_obj.zpc_uncertainty = psu['zpc_uncertainty']
-            psu_obj.degrees_of_freedom = psu['degrees_of_freedom']
-            psu_obj.experimental_std_dev = psu['experimental_std_dev']
-            psu_obj.html_report = psu['html_report']
-            psu_obj.save()
+            psu = request.session['pillar_survey_result_' + str(id)]
+            del request.session['pillar_survey_result_' + str(id)]
+            PillarSurveyResults.objects.update_or_create(
+                pillar_survey=ps_qs,
+                defaults={
+                    'zero_point_correction': psu['zero_point_correction'],
+                    'zpc_uncertainty': psu['zpc_uncertainty'],
+                    'degrees_of_freedom': psu['degrees_of_freedom'],
+                    'experimental_std_dev': psu['experimental_std_dev'],
+                    'html_report': psu['html_report'],
+                }
+            )
             
             # Commit the certified distances
             cd_formset = request.session['cd_formset_' + str(id)]
@@ -776,24 +782,25 @@ def calibrate2(request,id):
             for cd in cd_formset:
                 cd['from_pillar'] = baseline['pillars'].get(name=cd['from_pillar'])
                 cd['to_pillar'] = baseline['pillars'].get(name=cd['to_pillar'])
-                cd_obj, created = Certified_Distance.objects.get_or_create(
-                    pillar_survey = ps_obj,
-                    from_pillar = cd['from_pillar'],
-                    to_pillar = cd['to_pillar'],
-                    defaults = cd)
-                if not created:
-                    cd_obj.distance = cd['distance']
-                    cd_obj.a_uncertainty = cd['a_uncertainty']
-                    cd_obj.k_a_uncertainty = cd['k_a_uncertainty']
-                    cd_obj.combined_uncertainty = cd['combined_uncertainty']
-                    cd_obj.k_combined_uncertainty = cd['k_combined_uncertainty']
-                    cd_obj.offset = cd['offset']
-                    cd_obj.os_uncertainty = cd['os_uncertainty']
-                    cd_obj.k_os_uncertainty = cd['k_os_uncertainty']
-                    cd_obj.reduced_level = cd['reduced_level']
-                    cd_obj.rl_uncertainty = cd['rl_uncertainty']
-                    cd_obj.k_rl_uncertainty = cd['k_rl_uncertainty']
-                    cd_obj.save()
+            
+                Certified_Distance.objects.update_or_create(
+                    pillar_survey=ps_qs,
+                    from_pillar=cd['from_pillar'],
+                    to_pillar=cd['to_pillar'],
+                    defaults={
+                        'distance': cd['distance'],
+                        'a_uncertainty': cd['a_uncertainty'],
+                        'k_a_uncertainty': cd['k_a_uncertainty'],
+                        'combined_uncertainty': cd['combined_uncertainty'],
+                        'k_combined_uncertainty': cd['k_combined_uncertainty'],
+                        'offset': cd['offset'],
+                        'os_uncertainty': cd['os_uncertainty'],
+                        'k_os_uncertainty': cd['k_os_uncertainty'],
+                        'reduced_level': cd['reduced_level'],
+                        'rl_uncertainty': cd['rl_uncertainty'],
+                        'k_rl_uncertainty': cd['k_rl_uncertainty'],
+                    }
+                )
                
             # Commit the standard deviations
             bay = request.session['bay_' + str(id)]
@@ -802,15 +809,15 @@ def calibrate2(request,id):
             del request.session['sigma_vv_' + str(id)]
             for b, vv in zip(bay, sigma_vv):
                 p0, p1 = b.split(' - ')
-                vv_obj, created = Std_Deviation_Matrix.objects.get_or_create(
-                    pillar_survey=ps_obj,
+            
+                Std_Deviation_Matrix.objects.update_or_create(
+                    pillar_survey=ps_qs,
                     from_pillar=baseline['pillars'].get(name=p0),
                     to_pillar=baseline['pillars'].get(name=p1),
-                    defaults = {
-                        'std_uncertainty':sqrt(vv)})
-                if not created:
-                    vv_obj.std_uncertainty = sqrt(vv)
-                    vv_obj.save()
+                    defaults={
+                        'std_uncertainty': sqrt(vv),
+                    }
+                )
                                 
             return redirect('baseline_calibration:calibration_home')
   except Exception as e:
@@ -824,15 +831,15 @@ def calibrate2(request,id):
 def report(request, id):    
     # This uses the html report saved to the database to popluate the report
     # It also loads the approvals form that can be edited and saved.
-    pillar_survey_qs = get_object_or_404(Pillar_Survey, id=id)
+    psr_qs = get_object_or_404(PillarSurveyResults, pillar_survey=id)
     ps_approvals = PillarSurveyApprovalsForm(
-        request.POST or None, instance=pillar_survey_qs)
+        request.POST or None, instance=psr_qs)
     if ps_approvals.is_valid():
         ps_approvals.save()
         return redirect('baseline_calibration:calibration_home')
     
     context = {'ps_approvals':ps_approvals,
-               'html_report': pillar_survey_qs.html_report}
+               'html_report': psr_qs.html_report}
     return render(request, 'baseline_calibration/display_report.html', context)
 
 
@@ -1124,6 +1131,13 @@ def certified_distances_home(request, id):
 def certified_distances_edit(request, id):
     # only available to staff
     if request.user.is_staff:
+        pillar_survey_results_obj = PillarSurveyResults.objects.filter(
+            pillar_survey = id).first()
+        
+        pillar_survey_results_form = PillarSurveyResultsForm(
+            request.POST or None,
+            instance=pillar_survey_results_obj)
+        
         certified_distances = modelformset_factory(
             Certified_Distance,
             form = Certified_DistanceForm, 
@@ -1158,6 +1172,7 @@ def certified_distances_edit(request, id):
             return redirect(next_url)
             
         context = {
+            'pillar_survey_results_form':pillar_survey_results_form,
             'certified_distances_obj':certified_distances_obj,
             'combined': zip(certified_distances_obj, certified_distances_formset),
             'certified_distances_formset': certified_distances_formset,

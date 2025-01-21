@@ -57,7 +57,7 @@ class Accreditation(models.Model):
         upload_to='accreditation_certificates/',
         null=True,
         blank=True, 
-        max_length=1000,	#This is the start
+        max_length=1000,
         validators=[validate_file_size],
         verbose_name= 'Accreditation Certificate')
                  
@@ -446,40 +446,6 @@ class Pillar_Survey(models.Model):
         max_length=1000,
         validators=[validate_file_size],
         verbose_name= 'Scanned fieldnotes')    
-
-    zero_point_correction = models.FloatField(
-        blank = True, null=True,
-        validators = [MinValueValidator(-0.10000), MaxValueValidator(0.10000)],
-        help_text="If: Instrument Correction (m) = 1.00000013.L + 0.0003, Zero Point Correction = 0.0003m")
-    zpc_uncertainty = models.FloatField(
-        blank = True, null=True,
-        validators = [MinValueValidator(0.00000), MaxValueValidator(0.10000)],
-        help_text="Uncertainty of the zero point correction (m) at 95% Confidence Level",
-        verbose_name= 'zero point correction uncertainty')
-    experimental_std_dev = models.FloatField(
-        blank = True, null=True,
-        help_text="Experimental Standard Deviation of single observation (m) ISO 17123-4:2012 eq.14",
-        verbose_name= 'Experimental Standard Deviation')
-    degrees_of_freedom = models.IntegerField(
-        blank = True, null=True,
-        validators = [MinValueValidator(1), MaxValueValidator(500)],
-        help_text="Degrees of freedom of calibration")
-   
-    data_entered_person = models.CharField(
-        validators=[validate_profanity],max_length=25,null=True, blank=True)
-    data_entered_position = models.CharField(
-        validators=[validate_profanity],max_length=25,null=True, blank=True)
-    data_entered_date = models.DateField(null=True, blank=True)
-    data_checked_person = models.CharField(
-        validators=[validate_profanity],max_length=25,null=True, blank=True)
-    data_checked_position = models.CharField(
-        validators=[validate_profanity],max_length=25,null=True, blank=True)
-    data_checked_date = models.DateField(null=True, blank=True)
-    
-    html_report = models.TextField(blank=True, null=True)
-   
-    uploaded_on = models.DateTimeField(auto_now_add=True, null=True)
-    modified_on = models.DateTimeField(auto_now=True, null=True)
     
     class Meta:
         ordering = ['baseline','survey_date']
@@ -582,6 +548,80 @@ class Level_Observation(models.Model):
 #############################
 ##   CALIBRATED BASELINE   ##
 #############################
+# Status choices for calibrated baseline
+SURVEY_STATUS_CHOICES = [
+    ('publish', 'Publish'),
+    ('check', 'Check Survey'),
+]
+
+class PillarSurveyResults(models.Model):
+    pillar_survey = models.OneToOneField(
+        'Pillar_Survey',
+        on_delete=models.CASCADE,
+        related_name='results',
+        verbose_name="Related Pillar Survey"
+    )
+    zero_point_correction = models.FloatField(
+        blank=True, null=True,
+        validators=[MinValueValidator(-0.10000), MaxValueValidator(0.10000)],
+        help_text="If: Instrument Correction (m) = 1.00000013.L + 0.0003, Zero Point Correction = 0.0003m"
+    )
+    zpc_uncertainty = models.FloatField(
+        blank=True, null=True,
+        validators=[MinValueValidator(0.00000), MaxValueValidator(0.10000)],
+        help_text="Uncertainty of the zero point correction (m) at 95% Confidence Level",
+        verbose_name='Zero Point Correction Uncertainty'
+    )
+    experimental_std_dev = models.FloatField(
+        blank=True, null=True,
+        help_text="Experimental Standard Deviation of single observation (m) ISO 17123-4:2012 eq.14",
+        verbose_name='Experimental Standard Deviation'
+    )
+    degrees_of_freedom = models.IntegerField(
+        blank=True, null=True,
+        validators=[MinValueValidator(1), MaxValueValidator(500)],
+        help_text="Degrees of freedom of calibration"
+    )
+    data_entered_person = models.CharField(
+        validators=[validate_profanity], max_length=25, null=True, blank=True
+    )
+    data_entered_position = models.CharField(
+        validators=[validate_profanity], max_length=25, null=True, blank=True
+    )
+    data_entered_date = models.DateField(null=True, blank=True)
+    data_checked_person = models.CharField(
+        validators=[validate_profanity], max_length=25, null=True, blank=True
+    )
+    data_checked_position = models.CharField(
+        validators=[validate_profanity], max_length=25, null=True, blank=True
+    )
+    data_checked_date = models.DateField(null=True, blank=True)
+    html_report = models.TextField(blank=True, null=True)
+    reg13_upload = models.FileField(
+        upload_to = get_upload_to_location,
+        null=True,
+        blank=True,
+        max_length=1000,
+        validators=[validate_file_size],
+        verbose_name='Certificate Upload'
+    )
+    status = models.CharField(
+        max_length=10,
+        choices=SURVEY_STATUS_CHOICES,
+        default='publish',
+        verbose_name='Publish Status'
+    )
+    uploaded_on = models.DateTimeField(auto_now_add=True, null=True)
+    modified_on = models.DateTimeField(auto_now=True, null=True)
+
+    class Meta:
+        ordering = ['pillar_survey']
+        verbose_name = "Pillar Survey Results"
+
+    def __str__(self):
+        return f'Results for Survey {self.pillar_survey}'
+        
+        
 class Certified_Distance(models.Model):
     pillar_survey = models.ForeignKey(
         Pillar_Survey, on_delete = models.CASCADE)

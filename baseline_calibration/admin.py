@@ -48,35 +48,54 @@ class Uncertainty_Budget_SourceInline(admin.TabularInline):
 
 @admin.register(Pillar_Survey, site=admin_site)
 class Pillar_SurveyAdmin(admin.ModelAdmin):
-    list_display = ('baseline','survey_date','job_number')
+    list_display = ('baseline','survey_date','job_number','comment')
     list_filter = ('baseline','job_number',)
+    search_fields = ['pillar_survey__baseline__site_name']
     fieldsets = (
-              ('Documentation', {
-              'fields': 
-              ('baseline',
-              ('survey_date','computation_date'),
-              ('accreditation','apply_lum'),
-              ('weather','observer'),
-              'job_number',
-              'comment',
-              'fieldnotes_upload')
-              }),
-              ('Survey Instrumentation', {
-              'fields': (
-              ('edm','prism','edmi_calib_applied','mets_applied'),
-              'co2_content',
-              ('level','staff','staff_calib_applied'))
-              }),
-              ('Meterological Instrumentation', { 
-              'fields':
-              (('thermometer','thermo_calib_applied'),
-              ('barometer','baro_calib_applied'),
-              ('hygrometer','hygro_calib_applied'),
-              ('thermometer2','thermo2_calib_applied'),
-              ('barometer2','baro2_calib_applied'),
-              ('hygrometer2','hygro2_calib_applied'),
-              ('psychrometer','psy_calib_applied'))
-              }),
+        ('Documentation', {
+        'fields': 
+        ('baseline',
+        ('survey_date','computation_date'),
+        ('accreditation','apply_lum'),
+        ('weather','observer'),
+        'job_number',
+        'comment',
+        'fieldnotes_upload')
+        }),
+        ('Survey Instrumentation', {
+        'fields': (
+        ('edm','prism','edmi_calib_applied','mets_applied'),
+        'co2_content',
+        ('level','staff','staff_calib_applied'))
+        }),
+        ('Meterological Instrumentation', { 
+        'fields':
+        (('thermometer','thermo_calib_applied'),
+        ('barometer','baro_calib_applied'),
+        ('hygrometer','hygro_calib_applied'),
+        ('thermometer2','thermo2_calib_applied'),
+        ('barometer2','baro2_calib_applied'),
+        ('hygrometer2','hygro2_calib_applied'),
+        ('psychrometer','psy_calib_applied'))
+        }),
+        ('Statistical parameters', { 
+        'fields': (
+        'uncertainty_budget',
+        'outlier_criterion')
+        }),
+    )
+
+    # inlines = [EDM_ObservationInline, Level_ObservationInline, Certified_DistanceInline,Std_Deviation_MatrixInline]
+    inlines = [Certified_DistanceInline,]
+
+
+@admin.register(PillarSurveyResults, site=admin_site)
+class PillarSurveyResultsAdmin(admin.ModelAdmin):
+    list_display = ['pillar_survey', 'status', 'uploaded_on', 'modified_on']
+    list_filter = ['status']
+    # search_fields = ['pillar_survey__baseline__site_name']
+
+    fieldsets = (
               ('Statistical parameters', { 
               'fields': (
               'uncertainty_budget',
@@ -96,8 +115,6 @@ class Pillar_SurveyAdmin(admin.ModelAdmin):
               )
               }))
 
-    # inlines = [EDM_ObservationInline, Level_ObservationInline, Certified_DistanceInline,Std_Deviation_MatrixInline]
-    inlines = [Certified_DistanceInline,]
 
 @admin.register(EDM_Observation, site=admin_site)
 class EDM_ObservationAdmin(admin.ModelAdmin):
@@ -155,40 +172,54 @@ try:
         
     @admin.register(Pillar_Survey, site=medjil_super_site)
     class Pillar_SurveyAdmin(admin.ModelAdmin):
-        list_display = ('baseline','survey_date','job_number')
+        list_display = ('baseline','survey_date','job_number','comment')
         list_filter = ('baseline','job_number',)
+        search_fields = ['pillar_survey__baseline__site_name']
         fieldsets = (
-                  ('Documentation', {
-                  'fields': 
-                  ('baseline',
-                  ('survey_date','computation_date'),
-                  ('accreditation','apply_lum'),
-                  ('weather','observer'),
-                  'job_number',
-                  'comment',
-                  'fieldnotes_upload')
-                  }),
-                  ('Survey Instrumentation', {
-                  'fields': (
-                  ('edm','prism','edmi_calib_applied','mets_applied'),
-                  'co2_content',
-                  ('level','staff','staff_calib_applied'))
-                  }),
-                  ('Meterological Instrumentation', { 
-                  'fields':
-                  (('thermometer','thermo_calib_applied'),
-                  ('barometer','baro_calib_applied'),
-                  ('hygrometer','hygro_calib_applied'),
-                  ('thermometer2','thermo2_calib_applied'),
-                  ('barometer2','baro2_calib_applied'),
-                  ('hygrometer2','hygro2_calib_applied'),
-                  ('psychrometer','psy_calib_applied'))
-                  }),
-                  ('Statistical parameters', { 
-                  'fields': (
-                  'uncertainty_budget',
-                  'outlier_criterion')
-                  }),
+            ('Documentation', {
+            'fields': 
+            ('baseline',
+            ('survey_date','computation_date'),
+            ('accreditation','apply_lum'),
+            ('weather','observer'),
+            'job_number',
+            'comment',
+            'fieldnotes_upload')
+            }),
+            ('Survey Instrumentation', {
+            'fields': (
+            ('edm','prism','edmi_calib_applied','mets_applied'),
+            'co2_content',
+            ('level','staff','staff_calib_applied'))
+            }),
+            ('Meterological Instrumentation', { 
+            'fields':
+            (('thermometer','thermo_calib_applied'),
+            ('barometer','baro_calib_applied'),
+            ('hygrometer','hygro_calib_applied'),
+            ('thermometer2','thermo2_calib_applied'),
+            ('barometer2','baro2_calib_applied'),
+            ('hygrometer2','hygro2_calib_applied'),
+            ('psychrometer','psy_calib_applied'))
+            }),
+            ('Statistical parameters', { 
+            'fields': (
+            'uncertainty_budget',
+            'outlier_criterion')
+            }),
+      )
+
+        # inlines = [EDM_ObservationInline, Level_ObservationInline, Certified_DistanceInline,Std_Deviation_MatrixInline]
+        inlines = [Certified_DistanceInline,]
+
+    
+    @admin.register(PillarSurveyResults, site=medjil_super_site)
+    class PillarSurveyResultsAdmin(admin.ModelAdmin):
+        list_display = ['pillar_survey', 'status', 'uploaded_on', 'modified_on']
+        list_filter = ['status']
+        search_fields = ['pillar_survey__baseline__site_name']
+    
+        fieldsets = (
                   ('Calibrated Baseline', { 
                   'fields': (
                   ('zero_point_correction','zpc_uncertainty'),
@@ -202,10 +233,22 @@ try:
                   ('data_entered_date','data_checked_date')
                   )
                   }))
-
-        # inlines = [EDM_ObservationInline, Level_ObservationInline, Certified_DistanceInline,Std_Deviation_MatrixInline]
-        inlines = [Certified_DistanceInline,]
-
+              
+              
+    @admin.register(Pillar_Survey, site=medjil_super_site)
+    class EDM_ObservationAdmin(admin.ModelAdmin):
+        list_display = ('pillar_survey','from_pillar','to_pillar')
+        list_filter = ('pillar_survey',)
+        fields = ['pillar_survey',
+                  ('from_pillar','to_pillar'),
+                  ('inst_ht','tgt_ht'),
+                  ('hz_direction','raw_slope_dist'),
+                  ('raw_temperature','raw_temperature2'),
+                  ('raw_pressure','raw_pressure2'),
+                  ('raw_humidity','raw_humidity2'),
+                  ('use_for_alignment','use_for_distance'),]    
+    
+    
     @admin.register(EDM_Observation, site=medjil_super_site)
     class EDM_ObservationAdmin(admin.ModelAdmin):
         list_display = ('pillar_survey','from_pillar','to_pillar')
