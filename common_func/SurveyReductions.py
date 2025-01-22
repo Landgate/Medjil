@@ -696,9 +696,9 @@ def validate_survey(pillar_survey, baseline=None, calibrations=None,
         if pillar_survey['auto_base_calibration']:
             qry_obj = (
                 Pillar_Survey.objects.filter(
-                    baseline = site_pk ,
+                    baseline = site_pk,
+                    status = 'publish',
                     survey_date__lte = pillar_survey['survey_date'])
-                .exclude(experimental_std_dev__isnull = True)
                 .order_by('-survey_date'))
             if len(qry_obj) == 0:
                 Errs.append(

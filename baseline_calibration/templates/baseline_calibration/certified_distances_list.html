@@ -52,35 +52,35 @@ limitations under the License.
             <div>
                 <div id="certified-distances-list">
                     {% if pillar_surveys %}
-                        <table style="width:100%">
+                        <table Style="table-layout: fixed; width: 100%">
                             <tr>
-                                <th class="text-center font-semibold text-base text-gray-900"></th>
+                                <th></th>
                                 <th colspan="{{ pillar_surveys.0.certified_distances|length|add:-1 }}" class="text-center font-semibold text-base text-gray-900">Pillar Distances (m)</th>
-                                <th class="text-center font-semibold text-base text-gray-900"></th>
+                                <th rowspan="2" style= "vertical-align: middle" class="text-center font-semibold text-base text-gray-900">Status</th>
+                                <th rowspan="2"></th>
                             </tr>
                       
                             {% for ps in pillar_surveys %}
+                                {% if forloop.first %}
+                                    <!-- Create the header row-->
+                                    <tr>
+                                        <th class="text-left font-semibold text-base text-gray-900">Pillar Survey</th>
+                                        {% for cd in ps.certified_distances %}
+                                            {% if not forloop.first %}
+                                                <th class="text-center font-semibold text-base text-gray-900">{{ cd.from_pillar.name }} - {{ cd.to_pillar.name }}</th>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </tr>
+                                {% endif %}
                                 <tr>
-                                    {% if forloop.first %}
-                                        <!-- Create the header row-->
-                                        <tr>
-                                            <th class="text-left font-semibold text-base text-gray-900">Pillar Survey</th>
-                                            {% for cd in ps.certified_distances %}
-                                                {% if not forloop.first %}
-                                                    <th class="text-center font-semibold text-base text-gray-900">{{ cd.from_pillar.name }} - {{ cd.to_pillar.name }}</th>
-                                                {% endif %}
-                                            {% endfor %}
-                                            <th class="text-center font-semibold text-base text-gray-900"></th>
-                                        </tr>
-                                    {% endif %}
-                              
                                     <td>{{ ps.survey_date }}</td>
                                         {% for cd in ps.certified_distances %}
                                             {% if not forloop.first %}
                                                 <td class="text-right">{{ cd.distance|floatformat:5 }}</td>
                                             {% endif %}
                                         {% endfor %}
-                                    <td>{% if request.user.is_staff %}
+                                    <td class="text-center">{{ ps.results.status }}</td>
+                                    <td class="text-center">{% if request.user.is_staff %}
                                         <span class="flex justify-around items-center text-center">
                                             <a href="{% url 'baseline_calibration:certified_distances_edit' id=ps.id %}?next={{request.path}}" class="px-2" id="add_spec">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000" class="bi bi-pencil-fill" id = "edit-view" viewBox="0 0 16 16">
@@ -102,30 +102,30 @@ limitations under the License.
                             </div>
                         </div>
                         <!-- Create a table for the offsets -->
-                        <table style="width:100%">
+                        <table Style="table-layout: fixed; width: 100%">
                             <tr>
-                                <th class="text-center font-semibold text-base text-gray-900"></th>
+                                <th></th>
                                 <th colspan="{{ pillar_surveys.0.certified_distances|length }}" class="text-center font-semibold text-base text-gray-900">Pillar Offsets (m)</th>
-                                <th class="text-center font-semibold text-base text-gray-900"></th>
+                                <th rowspan="2" style= "vertical-align: middle" class="text-center font-semibold text-base text-gray-900">Status</th>
+                                <th rowspan="2"></th>
                             </tr>
                       
                             {% for ps in pillar_surveys %}
+                                {% if forloop.first %}
+                                      <!-- Create the header row-->
+                                      <tr>
+                                          <th class="text-left font-semibold text-base text-gray-900">Pillar Survey</th>
+                                          {% for cd in ps.certified_distances %}
+                                              <th class="text-center font-semibold text-base text-gray-900">{{ cd.to_pillar.name }}</th>
+                                          {% endfor %}
+                                      </tr>
+                                {% endif %}
                                 <tr>
-                                    {% if forloop.first %}
-                                          <!-- Create the header row-->
-                                          <tr>
-                                              <th class="text-left font-semibold text-base text-gray-900">Pillar Survey</th>
-                                              {% for cd in ps.certified_distances %}
-                                                  <th class="text-center font-semibold text-base text-gray-900">{{ cd.to_pillar.name }}</th>
-                                              {% endfor %}
-                                              <th class="text-center font-semibold text-base text-gray-900"></th>
-                                          </tr>
-                                    {% endif %}
-                                
                                     <td>{{ ps.survey_date }}</td>
                                         {% for cd in ps.certified_distances %}
                                             <td class="text-right">{{ cd.offset|floatformat:3 }}</td>
                                         {% endfor %}
+                                    <td class="text-center">{{ ps.results.status }}</td>
                                     <td>{% if request.user.is_staff %}
                                         <span class="flex justify-around items-center text-center">
                                             <a href="{% url 'baseline_calibration:certified_distances_edit' id=ps.id %}?next={{request.path}}" class="px-2" id="add_spec">
@@ -148,30 +148,30 @@ limitations under the License.
                             </div>
                         </div>
                         <!-- Create a table for the heights -->
-                        <table style="width:100%">
+                        <table Style="table-layout: fixed; width: 100%">
                             <tr>
-                                <th class="text-center font-semibold text-base text-gray-900"></th>
+                                <th></th>
                                 <th colspan="{{ pillar_surveys.0.certified_distances|length }}" class="text-center font-semibold text-base text-gray-900">Pillar Heights (m)</th>
-                                <th class="text-center font-semibold text-base text-gray-900"></th>
+                                <th rowspan="2" style= "vertical-align: middle" class="text-center font-semibold text-base text-gray-900">Status</th>
+                                <th rowspan="2"></th>
                             </tr>
                       
                             {% for ps in pillar_surveys %}
+                                {% if forloop.first %}
+                                      <!-- Create the header row-->
+                                      <tr>
+                                          <th class="text-left font-semibold text-base text-gray-900">Pillar Survey</th>
+                                          {% for cd in ps.certified_distances %}
+                                              <th class="text-center font-semibold text-base text-gray-900">{{ cd.to_pillar.name }}</th>
+                                          {% endfor %}
+                                      </tr>
+                                {% endif %}
                                 <tr>
-                                    {% if forloop.first %}
-                                          <!-- Create the header row-->
-                                          <tr>
-                                              <th class="text-left font-semibold text-base text-gray-900">Pillar Survey</th>
-                                              {% for cd in ps.certified_distances %}
-                                                  <th class="text-center font-semibold text-base text-gray-900">{{ cd.to_pillar.name }}</th>
-                                              {% endfor %}
-                                              <th class="text-center font-semibold text-base text-gray-900"></th>
-                                          </tr>
-                                    {% endif %}
-                                
                                     <td>{{ ps.survey_date }}</td>
                                         {% for cd in ps.certified_distances %}
                                                 <td class="text-right">{{ cd.reduced_level|floatformat:3 }}</td>
                                         {% endfor %}
+                                    <td class="text-center">{{ ps.results.status }}</td>
                                     <td>{% if request.user.is_staff %}
                                         <span class="flex justify-around items-center text-center">
                                             <a href="{% url 'baseline_calibration:certified_distances_edit' id=ps.id %}?next={{request.path}}" class="px-2" id="add_spec">
