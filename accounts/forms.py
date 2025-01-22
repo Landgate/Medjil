@@ -207,7 +207,6 @@ class calibration_report_notesForm(forms.ModelForm):
         if not user.is_staff:
             self.fields.pop('verifying_authority', None)
             self.fields.pop('accreditation', None)
-            self.fields.pop('site', None)
             self.fields.pop('pillar', None)
             self.fields['company'].disabled = True
             self.fields['company'].queryset = Company.objects.filter(

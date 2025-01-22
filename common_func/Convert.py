@@ -385,9 +385,9 @@ def get_endnotes(pillar_survey, calibration_type, company):
     
         filters = (
             Q(calibration_type='B')
-            & (Q(verifying_authority=pillar_survey.accreditation.accredited_company) | Q(site__isnull=True))
-            & (Q(accreditation=pillar_survey.accreditation) | Q(site__isnull=True))
-            & (Q(company=company) | Q(site__isnull=True))
+            & (Q(verifying_authority=pillar_survey.accreditation.accredited_company) | Q(verifying_authority__isnull=True))
+            & (Q(accreditation=pillar_survey.accreditation) | Q(accreditation__isnull=True))
+            & (Q(company=company) | Q(company__isnull=True))
             & (Q(site=pillar_survey.baseline) | Q(site__isnull=True))
             & (Q(pillar__id__in=from_pillars) | Q(pillar__id__in=to_pillars) | Q(pillar__isnull=True))
         )
@@ -398,10 +398,10 @@ def get_endnotes(pillar_survey, calibration_type, company):
             pillar_survey=pillar_survey.id).values_list('to_pillar', flat=True)
     
         filters = (
-            Q(calibration_type='I')
-            & (Q(verifying_authority=pillar_survey.calibrated_baseline.accreditation.accredited_company) | Q(site__isnull=True))
-            & (Q(accreditation=pillar_survey.calibrated_baseline.accreditation) | Q(site__isnull=True))
-            & (Q(company=company) | Q(site__isnull=True))
+            Q(calibration_type='E')
+            & (Q(verifying_authority=pillar_survey.calibrated_baseline.accreditation.accredited_company) | Q(verifying_authority__isnull=True))
+            & (Q(accreditation=pillar_survey.calibrated_baseline.accreditation) | Q(accreditation__isnull=True))
+            & (Q(company=company) | Q(company__isnull=True))
             & (Q(site=pillar_survey.calibrated_baseline.baseline) | Q(site__isnull=True))
             & (Q(pillar__id__in=from_pillars) | Q(pillar__id__in=to_pillars) | Q(pillar__isnull=True))
         )

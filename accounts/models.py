@@ -236,7 +236,7 @@ class Calibration_Report_Notes(models.Model):
         ordering = ['verifying_authority','company','site', 'pillar']
 
     def __str__(self):
-        return f'{self.pk}. {self.company} - {self.get_report_type_display()} ({self.get_note_type_display()})'
+        return f'{self.pk}. {self.who_created_note} - {self.calibration_type} ({self.site})'
     
     
     

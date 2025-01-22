@@ -2053,9 +2053,27 @@
             </div>
             <div id="EDMI-Chapter7_2">
                <h3>7.2 Endnotes</h3>
-               <p>The calibration reports displays a set of predefined endnotes. These notes can be specified for both
-                  EDMI and Baseline calibration reports and may be either mandatory or company's specific:</p>
-               <img src="{% static 'images/CalibrationGuides/edmi/Picture_6_2.png' %}" alt="End notes">
+               <p>The EDMI and Baseline calibration reports display endnotes. These endnotes explain assumptions
+                  and decisions made during the compuutation of the calibration. Custom endnotes can also be predefined
+                  and applied to reports that meet the specified criteria.</p>
+                  <h4>7.2.1 General Users</h4>
+                   <p>General users are only able to apply additional endnotes to reports associated with their company.
+                   Leaving the <i>Site:</i> field blank will apply the endnote to all company reports. Selecting a 
+                   specific <i>Site:</i> from the options will only apply the endnote to Company reports associated with
+                   that site.</p>
+                   <img src="{% static 'images/CalibrationGuides/edmi/Picture_7_2_1.png' %}" alt="End notes">
+                   <h4>7.2.1 Verifying Authority Users</h4>
+                    <p>Verifying Authority users are able to apply additional endnotes with a greater range of filters.
+                    Leaving all of these fields blank will apply the endnote to either all of the EDMI or Baseline calibration
+                    reports.</p>
+                    <p><b><i>Verifying authority:</i></b> The note will be applied to all reports associated with baselines
+                    calibrated by the specified verifying authority.</p>
+                    <p><b><i>Accreditation:</i></b> The note will be applied to all reports associated with a specific
+                     accreditation issued to the verifying authority.</p>
+                    <p><b><i>Company:</i></b> The note will only be applied to reports for the specified company.</p>
+                    <p><b><i>Site:</i></b> The note will only be applied to reports associated with the specified calibration site.</p>
+                    <p><b><i>Pillar:</i></b> The note will only be applied to reports that use specified calibration pillar.</p>                    
+                    <img src="{% static 'images/CalibrationGuides/edmi/Picture_7_2_2.png' %}" alt="End notes">
             </div>
             <div id="EDMI-Chapter7_3">
                <h3>7.3 Interlaboratory comparison - Baselines</h3>

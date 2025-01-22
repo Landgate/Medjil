@@ -13,7 +13,25 @@ Press [Start Testing](http://medjil.lb.landgate.wa.gov.au) to begin.
 * Cancelling the “Edit Barcoded Staff Certificate” interface (in the levelling registry) jumps to barcoded staff register in the dashboard. 
     - Url reverse corrected (?)
 
-
+## Additions | Fixes | Changes
+### [1.0.20] - 2025-01-16 - [Kent Wheeler]
+Changes
+* Changes made to have status of calibrated baseline and Reg13
+  - *baseline_calibration\admin.py*
+  - *baseline_calibration\formms.py*  
+  - *baseline_calibration\models.py*
+  - *baseline_calibration\views.py*
+  - *custom_migrations folder (deleted)*
+  - *baseline_calibration\migrations\0001_initial.py*
+  - *baseline_calibration\migrations\0002_changes_from_beta_testing.py (deleted)*
+  - *baseline_calibration\templates\baseline_calibration\baseline_calibration_home.html*
+  - *baseline_calibration\templates\baseline_calibration\certified_distances_form.html*
+  - *baseline_calibration\templates\baseline_calibration\certified_distances_list.html*
+  - *common_func\Convert.py*
+  - *common_func\SurveyReductions.py*
+  - *edm_calibration\templates\edm_calibration\edm_calibration_home.html*
+  
+  
 ## Additions | Fixes | Changes
 ### [1.0.20] - 2025-01-16 - [Kent Wheeler]
 Changes
