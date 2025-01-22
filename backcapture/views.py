@@ -31,6 +31,7 @@ from instruments.models import (
 from baseline_calibration.models import (
     Accreditation, Certified_Distance,
     Pillar_Survey, Std_Deviation_Matrix,
+    PillarSurveyResults,
     Uncertainty_Budget, Uncertainty_Budget_Source,
     EDM_Observation, Level_Observation
 )
@@ -603,13 +604,19 @@ def import_dli(request):
                         uncertainty_budget = rx_UC_budget,
                         outlier_criterion = 3,
                         fieldnotes_upload = None,
-                        zero_point_correction = 0,
-                        zpc_uncertainty = float(rx['BaselineAccuracy'][job['baseline_fk']]['UncertaintyConstant'])/1000,
-                        experimental_std_dev = 0.001,
-                        degrees_of_freedom = int(len(uniq_bays) - len(pillars)),
                         )
+                    zpc_uncertainty = float(rx['BaselineAccuracy'][job['baseline_fk']]['UncertaintyConstant'])/1000
+                    dof = int(len(uniq_bays) - len(pillars))
                     if created: 
                         commit_successes.append(job["name"])
+                        PillarSurveyResults.objects.get_or_create(
+                            pillar_survey = medjil_baseline_calibration,
+                            zero_point_correction = 0,
+                            zpc_uncertainty = zpc_uncertainty,
+                            experimental_std_dev = 0.001,
+                            degrees_of_freedom = dof,
+                            )
+                        
                     else:commit_error.append(
                         f'Database commit error while creating {job["name"]}')
 

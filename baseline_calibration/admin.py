@@ -96,24 +96,24 @@ class PillarSurveyResultsAdmin(admin.ModelAdmin):
     # search_fields = ['pillar_survey__baseline__site_name']
 
     fieldsets = (
-              ('Statistical parameters', { 
-              'fields': (
-              'uncertainty_budget',
-              'outlier_criterion')
-              }),
-              ('Calibrated Baseline', { 
-              'fields': (
-              ('zero_point_correction','zpc_uncertainty'),
-              ('degrees_of_freedom', 'experimental_std_dev'),
-              'html_report')
-              }),
-              ('Approavals', { 
-              'fields': (
-              ('data_entered_person','data_checked_person'),
-              ('data_entered_position','data_checked_position'),
-              ('data_entered_date','data_checked_date')
-              )
-              }))
+        ('Calibrated Baseline', {
+            'fields': (
+                ('zero_point_correction', 'zpc_uncertainty'),
+                ('degrees_of_freedom', 'experimental_std_dev'),
+                'html_report'
+            )
+        }),
+        ('Approvals', {
+            'fields': (
+                ('data_entered_person', 'data_checked_person'),
+                ('data_entered_position', 'data_checked_position'),
+                ('data_entered_date', 'data_checked_date')
+            ),
+        }),
+        ('Documentation', {
+            'fields': ('reg13_upload',)
+        }),
+    )
 
 
 @admin.register(EDM_Observation, site=admin_site)
@@ -220,19 +220,24 @@ try:
         search_fields = ['pillar_survey__baseline__site_name']
     
         fieldsets = (
-                  ('Calibrated Baseline', { 
-                  'fields': (
-                  ('zero_point_correction','zpc_uncertainty'),
-                  ('degrees_of_freedom', 'experimental_std_dev'),
-                  'html_report')
-                  }),
-                  ('Approavals', { 
-                  'fields': (
-                  ('data_entered_person','data_checked_person'),
-                  ('data_entered_position','data_checked_position'),
-                  ('data_entered_date','data_checked_date')
-                  )
-                  }))
+            ('Calibrated Baseline', {
+                'fields': (
+                    ('zero_point_correction', 'zpc_uncertainty'),
+                    ('degrees_of_freedom', 'experimental_std_dev'),
+                    'html_report'
+                )
+            }),
+            ('Approvals', {
+                'fields': (
+                    ('data_entered_person', 'data_checked_person'),
+                    ('data_entered_position', 'data_checked_position'),
+                    ('data_entered_date', 'data_checked_date')
+                ),
+            }),
+            ('Documentation', {
+                'fields': ('reg13_upload',)
+            }),
+        )
               
               
     @admin.register(Pillar_Survey, site=medjil_super_site)

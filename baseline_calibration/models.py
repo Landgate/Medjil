@@ -36,6 +36,13 @@ from common_func.validators import validate_profanity, validate_file_size
 from accounts.models import Company
 
 class Accreditation(models.Model):
+    def get_upload_to_location(instance, filename):
+        creation_date = date.today().strftime('%Y-%m-%d')
+        return '%s/%s/%s' % (
+            'accreditation_certificates',
+            instance.accredited_company.company_abbrev, 
+            creation_date+'-'+ filename)
+    
     accredited_company = models.ForeignKey(
         Company, on_delete = models.PROTECT)
     valid_from_date = models.DateField(
@@ -54,7 +61,7 @@ class Accreditation(models.Model):
         verbose_name= 'Statement of accreditation',
         help_text="eg. Accredited as a verifying authority for units of lenght according to ISO 17025:2012")
     certificate_upload = models.FileField(
-        upload_to='accreditation_certificates/',
+        upload_to = get_upload_to_location,
         null=True,
         blank=True, 
         max_length=1000,
@@ -271,18 +278,19 @@ class Uncertainty_Budget_Source(models.Model):
 
 ################
 ##   SURVEY   ##
-################
-def get_upload_to_location(instance, filename):
-    creation_date = date.today().strftime('%Y-%m-%d')
-    return '%s/%s/%s/%s/%s' % (
-        'pillar_survey', 
-        instance.baseline.state.statecode.capitalize(),
-        instance.baseline.site_name, 
-        instance.accreditation.accredited_company.company_abbrev, 
-        creation_date+'-'+ filename)
- 
+################ 
 
 class Pillar_Survey(models.Model):
+    def get_upload_to_location(instance, filename):
+        creation_date = date.today().strftime('%Y-%m-%d')
+        return '%s/%s/%s/%s/%s' % (
+            'pillar_survey', 
+            instance.baseline.state.statecode.capitalize(),
+            instance.baseline.site_name, 
+            instance.accreditation.accredited_company.company_abbrev, 
+            'fieldnotes - '+creation_date+'-'+ filename)
+    
+    
     baseline = models.ForeignKey(
         CalibrationSite, on_delete = models.CASCADE,
         verbose_name= 'Site',
@@ -555,6 +563,15 @@ SURVEY_STATUS_CHOICES = [
 ]
 
 class PillarSurveyResults(models.Model):
+    def get_upload_to_location(instance, filename):
+        creation_date = date.today().strftime('%Y-%m-%d')
+        return '%s/%s/%s/%s/%s' % (
+            'pillar_survey', 
+            instance.pillar_survey.baseline.state.statecode.capitalize(),
+            instance.pillar_survey.baseline.site_name, 
+            instance.pillar_survey.accreditation.accredited_company.company_abbrev, 
+            'Reg13 - '+creation_date+'-'+ filename)
+    
     pillar_survey = models.OneToOneField(
         'Pillar_Survey',
         on_delete=models.CASCADE,
@@ -603,7 +620,7 @@ class PillarSurveyResults(models.Model):
         blank=True,
         max_length=1000,
         validators=[validate_file_size],
-        verbose_name='Certificate Upload'
+        verbose_name='Reg13 Certificate'
     )
     status = models.CharField(
         max_length=10,

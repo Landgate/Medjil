@@ -205,9 +205,15 @@ class PillarSurveyResultsForm(forms.ModelForm):
         model = PillarSurveyResults
         fields = ['zero_point_correction','zpc_uncertainty',
                   'experimental_std_dev','degrees_of_freedom',
-                  'status', 're13_upload']      
+                  'status', 'reg13_upload']      
                
-
+        widgets = {
+            'reg13_upload': CustomClearableFileInput(
+                attrs={'accept' : '.pdf, .jpg, .jpeg, .png, .tif',
+                       'required': False})
+           }
+        
+        
 class PillarSurveyApprovalsForm(forms.ModelForm):                
     class Meta:
         model = PillarSurveyResults

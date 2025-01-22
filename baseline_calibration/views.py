@@ -1051,24 +1051,25 @@ def certified_distances_home(request, id):
         data2 =[]
         data3 =[]
         for pillar_survey in pillar_surveys:
-            data1.append(
-                pillar_survey.certified_distances().get(
-                to_pillar = pillar).distance
-                - first_pillar_survey.certified_distances().get(
+            if pillar_survey.results.status == 'publish':
+                data1.append(
+                    pillar_survey.certified_distances().get(
                     to_pillar = pillar).distance
-                )
-            data2.append(
-                pillar_survey.certified_distances().get(
-                to_pillar = pillar).offset
-                - first_pillar_survey.certified_distances().get(
+                    - first_pillar_survey.certified_distances().get(
+                        to_pillar = pillar).distance
+                    )
+                data2.append(
+                    pillar_survey.certified_distances().get(
                     to_pillar = pillar).offset
-                )
-            data3.append(
-                pillar_survey.certified_distances().get(
-                to_pillar = pillar).reduced_level
-                - first_pillar_survey.certified_distances().get(
+                    - first_pillar_survey.certified_distances().get(
+                        to_pillar = pillar).offset
+                    )
+                data3.append(
+                    pillar_survey.certified_distances().get(
                     to_pillar = pillar).reduced_level
-                )
+                    - first_pillar_survey.certified_distances().get(
+                        to_pillar = pillar).reduced_level
+                    )
 
         dataset1.append(
              {'borderColor':back_colours[i],
@@ -1132,19 +1133,20 @@ def certified_distances_edit(request, id):
     # only available to staff
     if request.user.is_staff:
         pillar_survey_results_obj = PillarSurveyResults.objects.filter(
-            pillar_survey = id).first()
+            pillar_survey=id).first()
         
         pillar_survey_results_form = PillarSurveyResultsForm(
             request.POST or None,
+            request.FILES or None,
             instance=pillar_survey_results_obj)
         
         certified_distances = modelformset_factory(
             Certified_Distance,
-            form = Certified_DistanceForm, 
-            extra = 0)
+            form=Certified_DistanceForm, 
+            extra=0)
         
         certified_distances_obj = Certified_Distance.objects.filter(
-            pillar_survey = id)
+            pillar_survey=id)
                 
         certified_distances_formset = certified_distances(
             request.POST or None,
@@ -1153,18 +1155,21 @@ def certified_distances_edit(request, id):
 
         std_deviation_matrix = modelformset_factory(
             Std_Deviation_Matrix,
-            form = Std_Deviation_MatrixForm, 
-            extra = 0)
+            form=Std_Deviation_MatrixForm, 
+            extra=0)
         
         std_deviation_matrix_obj = Std_Deviation_Matrix.objects.filter(
-            pillar_survey = id)
+            pillar_survey=id)
                        
         std_deviation_matrix_formset = std_deviation_matrix(
             request.POST or None,
             prefix='formset2',
             queryset=std_deviation_matrix_obj)
           
-        if certified_distances_formset.is_valid() and std_deviation_matrix_formset.is_valid():
+        if (pillar_survey_results_form.is_valid() 
+            and certified_distances_formset.is_valid() 
+            and std_deviation_matrix_formset.is_valid()):
+            pillar_survey_results_form.save()
             certified_distances_formset.save()
             std_deviation_matrix_formset.save()
             
@@ -1172,8 +1177,8 @@ def certified_distances_edit(request, id):
             return redirect(next_url)
             
         context = {
-            'pillar_survey_results_form':pillar_survey_results_form,
-            'certified_distances_obj':certified_distances_obj,
+            'pillar_survey_results_form': pillar_survey_results_form,
+            'certified_distances_obj': certified_distances_obj,
             'combined': zip(certified_distances_obj, certified_distances_formset),
             'certified_distances_formset': certified_distances_formset,
             'std_deviation_matrix_formset': std_deviation_matrix_formset,

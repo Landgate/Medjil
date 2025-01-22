@@ -24,16 +24,16 @@
 <article class="post">
   <div class="flexbox-container_IB">
     <div class="flexbox-item_1600_IB">
-      <form id='id_html_form' style="width:4500px;" action="" class="site-form" method="post" autocomplete="off">
+      <form id='id_html_form' style="width:4500px;" action="" class="site-form" method="post" enctype="multipart/form-data" autocomplete="off">
       {% csrf_token %}
         <div class="flexbox-item_1600_IB">
           <h1 style="text-align:center">Statistical Parameters</h1>
           <p class="text-center">
-              <i>Statistical Parameters computed from {{ pillar_survey_results_form.pillar_survey }} pillar survey</i>
+              <i>Statistical Parameters computed from {{ certified_distances_obj.0.pillar_survey }} pillar survey</i>
           </p>
         </div>
         <div class="flexbox-item_1600_IB">
-          <table id="id_form_container" Style="table-layout: fixed; width: 100%">
+          <table id="id_form_container" Style="table-layout: auto; width: 100%">
             <tr>
             	{% for field in pillar_survey_results_form %}
               	  <th Title="{{ field.help_text }}">{{ field.label|title }}</th>
@@ -54,7 +54,7 @@
         </div>
         <div class="flexbox-item_1600_IB">
           {{ certified_distances_formset.management_form }}
-          <table id="id_formset_container1" style="font-size:10pt;width:100%">
+          <table id="id_formset_container1" style="table-layout: auto;font-size:10pt;width:100%">
             <colgroup>
               <col span="1" style="width: 0%;">
               <col span="1" style="width: 0%;">
@@ -119,7 +119,7 @@
         </div>
         <div class="flexbox-item_1600_IB">
           {{ std_deviation_matrix_formset.management_form }}
-          <table id="id_formset_container2" style="font-size:10pt;width:100%">
+          <table id="id_formset_container2" style="table-layout: auto;font-size:10pt;width:100%">
             <tr>
                 <th style="text-align:right; white-space:nowrap;">From pillars</th>
             	{% for cd in certified_distances_obj %}
