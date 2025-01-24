@@ -21,6 +21,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Security-Policy" content="frame-src *;">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Medjil The Survey Instrumentation Calibration Portal</title>
     <link rel="icon" type="ico" href="{% static 'favicon.ico' %}">
@@ -205,7 +206,7 @@
                     <ul class="sub-links">
                         <li class="sub-items">
                             <a href="{% url 'calibrationguide:guide_view' %}">
-                                <div class="sub-item-header">User Guides</div>
+                                <div class="sub-item-header">Calibration Instructions</div>
                                 <div class="sub-item-description">Please read the instructions to perform the instrument calibrations </div>
                             </a>
                         </li>

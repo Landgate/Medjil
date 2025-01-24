@@ -17,110 +17,142 @@
 -->
 {% extends 'base_generic.html' %}
 {% load static %}
-
+{% load group_filters %}
 
 {% block content %}
 
 <article class="post mb-4">
   <div class="mt-10">
-    <h1 class="text-center">Medjil User Guides for Survey Instrument Calibration</h1>
+    <h1 class="text-center">User Guides for Survey Instrument Calibration</h1>
   </div>
   {% if messages %}
-  <ul class="alert messages">
-    {% for message in messages %}
-    <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
-    {% endfor %}
-  </ul>
-  <br>
+    <ul class="alert messages">
+        {% for message in messages %}
+        <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    <br>
   {% endif %}
   <br>
   <hr>
-  <div class="flex-with-sidebar">
 
-    <div class="left-sidebar">
-      {% if user.is_authenticated and user.is_staff %}
-      <button class="tablinks" onclick="openTab(event, 'baseline-calibration')" id="defaultOpen">Baseline
-        Calibration</button>
-      {% endif %}  
-      
-      <button class="tablinks" onclick="openTab(event, 'edmi-calibration')">EDMI Calibration</button>
-
-      {% if user.is_authenticated and user.is_staff %}
-        <button class="tablinks" onclick="openTab(event, 'range-calibration')">Range Calibration</button>
-      {% endif %}
-
-      <button class="tablinks" onclick="openTab(event, 'staff-calibration')">Staff Calibration</button>
+    <div class="flex-with-sidebar">
+      <div style="margin-bottom: 24px; border-radius: 10px;">
+        <div class="py-1"></div>
+        <hr><hr>
+        <b class="py-1">Calibration Field Instructions</b>
+        <hr><hr>
+        <table style="border: inherit; border: 1px solid transparent; border-collapse: separate; border-spacing: 0 10px">
+            <tr  style="border:none">
+                <td width="40%" style="vertical-align:top">Location:</td>
+                <td width="60%" style="vertical-align:top">
+                  <select name="" id="calibration-location-select" style="width:100%; padding: 5px; margin: 0 5px">
+                    <option value="">--- Select a location ---</option>
+                    {% if calib_locations %}
+                        {% for loc in calib_locations %}
+                            <option value="{{ loc.name }}">{{ loc.name }}</option>
+                        {% endfor %}
+                    {% endif %}
+                  </select>
+                </td>
+            </tr>
+            <tr style="border:none;">
+                <td width="40%" style="vertical-align:top">Calibration Type:</td>
+                <!-- <label for="calibration-type-select">Calibration Type:</label> -->
+                <td width="60%" style="vertical-align:top">
+                <select name="" id="calibration-type-select" style="width:100%; padding: 5px; margin: 0 5px">
+                    {% for choice in calibration_types %}
+                    <!-- <option value="{{ choice.0 }}">{{ choice.1 }}</option> -->
+                    {% if choice.1 == "--- Select Type ---" %}
+                        <option value="" selected="selected">{{ choice.1 }} </option>
+                    {% else %}
+                        <optgroup label="{{ choice.0 }}">
+                        {% for sub_choice in choice.1 %}
+                            <option value="{{ sub_choice.0 }}">{{ sub_choice.1 }}</option>
+                        {% endfor %}
+                        </optgroup>
+                    {% endif %}
+                    {% endfor %}
+                </select>
+                </td>
+            </tr>
+        </table>
+        
+        {% if request.user|has_group:"Verifying_Authority" %}
+            <br>
+            <div class="single-item-container"> 
+                <button class="px-3 py-1 border border-transparent text-sm font-semi-bold text-white bg-blue-500 hover:bg-blue-400 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out" onclick="location.href='/calibrationguide/create-guide/'">Upload a new Calibration Field Guide</button>
+            </div>
+        {% endif %}
+        <br><br>
+        
+        <div>
+            <hr><hr>
+            <b>Medjil User Guides</b>
+            <hr><hr>
+            <div class="py-1"></div>
+            <a href="{% url 'calibrationguide:medjil-guide' %}" target="_blank" class="text-sm ">General User Guide</a>
+            <br>
+            {% if user.is_staff %}
+                <a href="{% url 'calibrationguide:medjil-staff' %}" target="_blank" class="text-sm">Barcoded Staff Calibration</a>
+                <br>
+                <a href="{% url 'calibrationguide:medjil-baseline' %}" target="_blank" class="text-sm">EDM Baseline Calibration</a>
+            {% endif %}
+        </div>
+        <hr>
+      </div>
+      <div class="post-content pxl-2">
+        <div style="margin-top: 14px; padding: 8px" id="id-content-display">
+      </div>
     </div>
-
-    <div class="post-content pxl-2">
-      {% if user.is_authenticated and user.is_staff %}
-      <div id="baseline-calibration" class="tab-content">
-        {% include 'calibrationguide/baseline_calibration_guide.html' %}
-      </div>
-      {% endif %}
-
-      <div id="edmi-calibration" class="tab-content">
-        {% include 'calibrationguide/edmi_calibration_guide.html' %}
-      </div>
-
-      {% if user.is_authenticated and user.is_staff %}
-      <div id="range-calibration" class="tab-content">
-        {% include 'calibrationguide/range_calibration_guide.html' %}
-      </div>
-      {% endif %}
-
-      <div id="staff-calibration" class="tab-content">
-        {% include 'calibrationguide/staff_calibration_guide.html' %}
-      </div>
-    </div>
-  </div>
 </article>
 
 <script>
-  function openTab(evt, tabName) {
-    // Declare all variables
-    var i, tabcontent, tablinks;
+    const calibLocDropDown = document.getElementById('calibration-location-select');
+    const calibTypeDropDown = document.getElementById('calibration-type-select');
+    const contentFrame = document.getElementById('id-conent-url');
+    const contentDisplay = document.getElementById('id-content-display')
 
-    // Get all elements with class="tabcontent" and hide them
-    tabcontent = document.getElementsByClassName("tab-content");
-    for (i = 0; i < tabcontent.length; i++) {
-      tabcontent[i].style.display = "none";
-    }
+    calibLocDropDown.addEventListener('change', (e) => {
+        var selectedLocation = e.target.value;
+        calibTypeDropDown.value = '';
+        contentFrame.src = '';
+    });
 
-    // Get all elements with class="tablinks" and remove the class "active"
-    tablinks = document.getElementsByClassName("tablinks");
-    for (i = 0; i < tablinks.length; i++) {
-      tablinks[i].className = tablinks[i].className.replace(" active", "");
-    }
+    calibTypeDropDown.addEventListener('change', (e) => {
+        const calibrationType = e.target.value;
+        var selectedLocation = calibLocDropDown.value;
 
-    // Show the current tab, and add an "active" class to the button that opened the tab
-    document.getElementById(tabName).style.display = "block";
-    evt.currentTarget.className += " active";
+        if (calibrationType ==='') {
+            contentFrame.src = '';
+        }
 
-    // Store the current tab
-    const tabIndex = Array.from(tablinks).indexOf(evt.currentTarget);
-    window.localStorage.setItem("activeTabIndex", tabIndex);
-  }
+        if (selectedLocation === '') {
+            alert('Please select a location first!');
+            e.target.value = "";
+        } else {
+            fetch(`/calibrationguide/get-content-url/${selectedLocation}/${calibrationType}`)
+            .then(response => response.json())
+            .then(data => {
+                const contentUrl = data.content_url;
+                console.log(contentUrl)
+                if (contentUrl) {
+                    // contentFrame.src = contentUrl + '#page=1';
+                    contentDisplay.style.backgroundColor = '#cddbd8'
+                    contentDisplay.innerHTML = `<iframe id="id-conent-url" src="${contentUrl}#page=1" type="application/pdf" width="100%" height="600"></iframe>`
+                } else {
+                    contentDisplay.innerHTML = "<p> There is no calibration guide yet. </p>"
+                }
+                
+            })
+            .catch(error => console.error(error));
+        }
+    })
 
-  // Get the element with id="defaultOpen" and click on it
-  // document.getElementById("defaultOpen").click();
-
-  // Restore the active tab on page load
-  window.onload = function() {
-      const activeTabIndex = parseInt(window.localStorage.getItem("activeTabIndex"),10);
-      if (!isNaN(activeTabIndex)) {
-          // console.log(activeTabIndex)
-          const tablinks = document.getElementsByClassName("tablinks");
-          if (tablinks[activeTabIndex]) {
-              tablinks[activeTabIndex].click();
-          }
-      }
-  };
-
-  // Scroll to the top of page
-  window.onbeforeunload = function() {
-    window.scrollTo(0, 0);
-  };
+    // Scroll to the top of page
+    window.onbeforeunload = function() {
+        window.scrollTo(0, 0);
+    };
 </script>
 
 {% endblock content %}
