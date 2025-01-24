@@ -16,3 +16,56 @@
 
 '''
 from django import forms
+from .models import (CalibrationGuide,
+                     MedjilGuide,
+                     MedjilGuideToSiteCalibration,
+                    )
+
+# Prepare forms
+class CalibrationGuideForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user')
+        super(CalibrationGuideForm, self).__init__(*args, **kwargs)   
+        self.fields['author'].initial = user
+        self.fields['author'].disabled = True
+
+    content_book = forms.FileField(required=True,
+                                   error_messages={'required': 'Please select a pdf file to upload'})
+    class Meta:
+        model = CalibrationGuide
+        fields = '__all__' 
+        widgets = {
+                'content_book' : forms.FileInput(attrs={'accept' : '.pdf'})
+            }
+        
+class MedjilGuideForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user')
+        super(MedjilGuideForm, self).__init__(*args, **kwargs)   
+        self.fields['author'].initial = user
+        self.fields['author'].disabled = True
+
+    medjil_book = forms.FileField(required=True,
+                                   error_messages={'required': 'Please select a pdf file to upload'})
+    class Meta:
+        model = MedjilGuide
+        fields = '__all__' 
+        widgets = {
+                'medjil_book' : forms.FileInput(attrs={'accept' : '.pdf'})
+            }
+
+class MedjilGuideToSiteCalibrationForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user')
+        super(MedjilGuideToSiteCalibrationForm, self).__init__(*args, **kwargs)   
+        self.fields['author'].initial = user
+        self.fields['author'].disabled = True
+
+    content_book = forms.FileField(required=True,
+                                   error_messages={'required': 'Please select a pdf file to upload'})
+    class Meta:
+        model = MedjilGuideToSiteCalibration
+        fields = '__all__' 
+        widgets = {
+                'content_book' : forms.FileInput(attrs={'accept' : '.pdf'})
+            }

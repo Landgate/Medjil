@@ -94,6 +94,9 @@ INSTALLED_APPS = [
     'calibrationguide',
 ]
 
+X_FRAME_OPTIONS = 'SAMEORIGIN'
+XS_SHARING_ALLOWED_METHODS = ['POST','GET','OPTIONS', 'PUT', 'DELETE']
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

@@ -21,7 +21,18 @@ from . import views
 app_name = 'calibrationguide'
 
 urlpatterns = [
-    path('', views.guide_view, name='guide_view'), 
+    # path('', views.guide_view1, name='guide_view1'), 
+    path('', views.guide_view, name='guide_view'),
+    path('get-content-url/<str:location>/<str:calibration_type>/', views.get_content_url, name='get-content-url'),
+    path('create-guide/', views.guide_create, name='create-guide'),
+    path('create-medjil-guide/', views.medjil_guide_create, name='create-medjil-guide'),
+    path('create-medjil-calib-guide/', views.medjil_guide_to_calib_create, name='create-medjil-calib-guide'),
+    
+    path('medjil-guide/', views.display_medjil_guide, name='medjil-guide'),
+    path('medjil-baseline/', views.display_medjil_calib_baseline, name='medjil-baseline'),
+    path('medjil-staff/', views.display_medjil_calib_staff, name='medjil-staff'),
+
     path('manuals/', views.manual_view, name='manual_view'), 
     path('read_manual/<str:manual_name>', views.read_manual, name='read_manual'), 
 ]
+
