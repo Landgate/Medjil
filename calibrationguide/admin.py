@@ -33,8 +33,8 @@
 
 '''
 from django.contrib import admin
-from .models import (CalibrationGuide,
-                     MedjilGuide,
+from .models import (CalibrationFieldInstruction,
+                     MedjilUserGuide,
                      MedjilGuideToSiteCalibration,
                      )
 
@@ -42,13 +42,13 @@ from accounts.admin import admin_site
 # Register your models here.
 
 
-@admin.register(CalibrationGuide, site=admin_site)
-class CalibrationGuideAdmin(admin.ModelAdmin):
+@admin.register(CalibrationFieldInstruction, site=admin_site)
+class CalibrationFieldInstructionAdmin(admin.ModelAdmin):
     list_display = ['location', 'calibration_type', 'title', 'content_book', 'author']
     list_filter = ['location', 'calibration_type', 'title']
 
-@admin.register(MedjilGuide, site=admin_site)
-class MedjilGuideAdmin(admin.ModelAdmin):
+@admin.register(MedjilUserGuide, site=admin_site)
+class MedjilUserGuideAdmin(admin.ModelAdmin):
     list_display = ['title', 'author', 'medjil_book']
     list_filter = ['title','medjil_book']
 
@@ -59,13 +59,13 @@ class MedjilGuideToSiteCalibrationnAdmin(admin.ModelAdmin):
 try:
     from accounts.sites import medjil_super_site
 
-    @admin.register(CalibrationGuide, site=medjil_super_site)
-    class CalibrationGuideAdmin(admin.ModelAdmin):
+    @admin.register(CalibrationFieldInstruction, site=medjil_super_site)
+    class CalibrationFieldInstructionAdmin(admin.ModelAdmin):
         list_display = ['location', 'calibration_type', 'title', 'content_book', 'author']
         list_filter = ['location', 'calibration_type', 'title']
 
-    @admin.register(MedjilGuide, site=medjil_super_site)
-    class MedjilGuideAdmin(admin.ModelAdmin):
+    @admin.register(MedjilUserGuide, site=medjil_super_site)
+    class MedjilUserGuideAdmin(admin.ModelAdmin):
         list_display = ['title', 'author', 'medjil_book']
         list_filter = ['title','medjil_book']
 

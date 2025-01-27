@@ -47,7 +47,7 @@ def get_upload_to_content(instance, filename):
                                 instance.calibration_type, 
                                 filename)
 
-class CalibrationGuide(models.Model):
+class CalibrationFieldInstruction(models.Model):
     calibration_type = models.CharField(max_length=24,
                                 choices=CALIB_CHOICES,
                                 null=True,
@@ -100,7 +100,7 @@ class CalibrationGuide(models.Model):
 def get_upload_to_medjil(instance, filename):
     return '%s/%s' % ('CalibrationInstruction',  
                                 filename)   
-class MedjilGuide(models.Model):
+class MedjilUserGuide(models.Model):
     title = models.CharField(max_length=200, 
                              help_text = 'e.g., Medjil User Guide')
     medjil_book = models.FileField(

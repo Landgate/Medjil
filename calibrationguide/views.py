@@ -22,23 +22,23 @@ from django.views.decorators.clickjacking import xframe_options_exempt
 from django.contrib.auth.decorators import login_required
 # Create your views here.
 from .models import (
-    CalibrationGuide, 
-    MedjilGuide, 
+    CalibrationFieldInstruction, 
+    MedjilUserGuide, 
     MedjilGuideToSiteCalibration
 )
 from calibrationsites.models import CalibrationSite
 from accounts.models import Location
-from .forms import (CalibrationGuideForm,
-                    MedjilGuideForm,
+from .forms import (CalibrationFieldInstructionForm,
+                    MedjilUserGuideForm,
                     MedjilGuideToSiteCalibrationForm,
 )
 
 @xframe_options_exempt
 def guide_view(request):
     # Get calibration types from the database
-    calibration_types = CalibrationGuide._meta.get_field('calibration_type').choices
+    calibration_types = CalibrationFieldInstruction._meta.get_field('calibration_type').choices
     # Get the guide objects
-    guides_obj = CalibrationGuide.objects.all()
+    guides_obj = CalibrationFieldInstruction.objects.all()
     # Get distinct site locations from the database
     location_list = guides_obj.values_list('location', flat=True).distinct()  
     calib_locations = Location.objects.filter(id__in=location_list)
@@ -51,7 +51,7 @@ def guide_view(request):
 
 def get_content_url(request, location, calibration_type):
     location = Location.objects.get(name=location)
-    guide_obj = CalibrationGuide.objects.filter(location = location.id, calibration_type=calibration_type).first()
+    guide_obj = CalibrationFieldInstruction.objects.filter(location = location.id, calibration_type=calibration_type).first()
     if guide_obj:
         content_url = guide_obj.content_url
     else:
@@ -61,7 +61,7 @@ def get_content_url(request, location, calibration_type):
 @login_required(login_url="/accounts/login") 
 def guide_create(request):
     if request.method=="POST":
-        form = CalibrationGuideForm(request.POST, request.FILES, user=request.user)
+        form = CalibrationFieldInstructionForm(request.POST, request.FILES, user=request.user)
         if form.is_valid():
             new_obj = form.save(commit=False)
 
@@ -71,13 +71,13 @@ def guide_create(request):
             else:
                 return redirect('calibrationguide:guide_view')
     else:
-        form = CalibrationGuideForm(user=request.user)
+        form = CalibrationFieldInstructionForm(user=request.user)
     return render(request, 'calibrationguide/guide_create_form.html', {'form':form})
 
 @login_required(login_url="/accounts/login") 
 def medjil_guide_create(request):
     if request.method=="POST":
-        form = MedjilGuideForm(request.POST, request.FILES, user=request.user)
+        form = MedjilUserGuideForm(request.POST, request.FILES, user=request.user)
         if form.is_valid():
             new_obj = form.save(commit=False)
 
@@ -89,7 +89,7 @@ def medjil_guide_create(request):
         else:
             print(form.errors)
     else:
-        form = MedjilGuideForm(user=request.user)
+        form = MedjilUserGuideForm(user=request.user)
     return render(request, 'calibrationguide/guide_create_form.html', {'form':form})
 
 @login_required(login_url="/accounts/login") 
@@ -112,7 +112,7 @@ def medjil_guide_to_calib_create(request):
 
 def display_medjil_guide(request):
     try:
-        obj = MedjilGuide.objects.first()
+        obj = MedjilUserGuide.objects.first()
         if not obj:
             raise Http404("<p>Medjil User Guide currently does not exist.. Please contact <a href='mailto:geodesy@landgate.wa.gov.au'>geodesy@landgate.wa.gov.au</a>.</p>")
         filepath = obj.medjil_book.path        
