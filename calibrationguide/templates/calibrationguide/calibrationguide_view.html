@@ -127,7 +127,10 @@
             contentFrame.src = '';
         }
 
-        if (selectedLocation === '') {
+        if (calibLocDropDown.options.length <= 1) {
+            contentDisplay.innerHTML = "<p> There is no calibration guide yet. Please contact <a href='mailto:geodesy@landgate.wa.gov.au'>geodesy@landgate.wa.gov.au</a> for information.</p>"
+        }
+        else if (selectedLocation === '') {
             alert('Please select a location first!');
             e.target.value = "";
         } else {
