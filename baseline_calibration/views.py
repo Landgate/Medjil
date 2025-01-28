@@ -270,11 +270,11 @@ def calibrate1(request, id):
             'qs':qs,
             'survey_files':upload_survey_files})
 
-
+    
 @login_required(login_url="/accounts/login") 
 @user_passes_test(is_staff)
 def calibrate2(request,id):
-  try:
+  # try:
     # If this is a get request:
     #     select or deselect the edm observations for the calibration and offset
     # If this is a post request: and edm_obs_formset.is_valid
@@ -285,7 +285,7 @@ def calibrate2(request,id):
     #----------------- Query site, surveys, instruments and calibrations -----------------#
     # Get the pillar_survey in dict like cleaned form data    
     ps_qs = get_object_or_404(Pillar_Survey, id=id)
-    psr_qs = get_object_or_404(PillarSurveyResults, pillar_survey=id)
+    psr_qs, _ = PillarSurveyResults.objects.get_or_create(pillar_survey=ps_qs)
     query_dict = QueryDict('', mutable=True)
     query_dict.update(model_to_dict(ps_qs))
     pillar_survey_form = PillarSurveyForm(query_dict, user=request.user)
@@ -536,15 +536,20 @@ def calibrate2(request,id):
                 o['std_residual'] = residuals[o['id']]['std_residual']
     
             ISO_test=[]
-            if baseline['history'].count() > 0:
-                prev=baseline['history'].first()
+            if baseline['history'].exists():
+                prev = baseline['history'].first()
                 ISO_test.append(
                     ISO_test_b(
-                        {'dof':prev.results.degrees_of_freedom,
+                        {'dof': prev.results.degrees_of_freedom,
                          'So': prev.results.experimental_std_dev},
-                        chi_test))
+                        chi_test
+                    )
+                )
             else:
-                report_notes.append('The ISO 17123:4 Test B statistical test has not been performed due to insufficient historical records.')
+                report_notes.append(
+                    'The ISO 17123:4 Test B statistical test has not been performed due to insufficient historical records.'
+                )
+
                 
             ISO_test.append(
                 ISO_test_c(
@@ -820,11 +825,12 @@ def calibrate2(request,id):
                 )
                                 
             return redirect('baseline_calibration:calibration_home')
-  except Exception as e:
-       messages.error(request, f"An error occurred: {str(e)}")
-       messages.error(request, f"{o}")
-       return render(request, 'edm_calibration/errors_report.html', 
-                     {})
+
+  # except Exception as e:
+  #      messages.error(request, f"An error occurred: {str(e)}")
+  #      messages.error(request, f"{o}")
+  #      return render(request, 'edm_calibration/errors_report.html', 
+  #                    {})
 
 @login_required(login_url="/accounts/login") 
 @user_passes_test(is_staff)

@@ -491,7 +491,7 @@ class EDM_Observation(models.Model):
         verbose_name= 'Target height')
     
     hz_direction = models.DecimalField(
-        validators=[MinValueValidator(0), MaxValueValidator(361)],
+        validators=[MinValueValidator(0), MaxValueValidator(360)],
         max_digits=32, decimal_places=26)
     
     raw_slope_dist = models.DecimalField(

@@ -36,7 +36,6 @@ import re
 from geodepy.survey import (
     first_vel_corrn, first_vel_params)
 
-
 User = settings.AUTH_USER_MODEL
 
 inst_types = (
@@ -247,6 +246,12 @@ class Staff(models.Model):
 
     def get_absolute_url(self):
         return reverse('instruments:inst_staff_update', args=[str(self.id)])
+    
+    def get_certificate(self, survey_date):
+        # Fetch the latest valid certificate for the instrument based on the survey date.
+        return self.staffcalibrationrecord_set.objects.filter(
+            calibration_date__lte = survey_date
+            ).order_by('-calibration_date').first()
 
 #####################################################################
 ############################ EDM INSTRUMENTS ########################
@@ -394,9 +399,9 @@ class EDM_Specification(models.Model):
         if self.atmos_corr_formula:
             variables = {
                 'd': float(o['raw_slope_dist']),
-                't': o['Temp'],  
-                'p': o['Pres'],
-                'h': o['Humid']
+                't': o['Temp'] or 20,
+                'p': o['Pres'] or 1013,
+                'h': o['Humid'] or 60
             }
             results = eval_string_formulas(self.atmos_corr_formula, **variables)
             return results['result']
@@ -479,6 +484,13 @@ class EDM_Inst(models.Model):
 
     def get_absolute_url(self):
         return reverse('instruments:inst_edm_update', args=[str(self.id)])
+    
+    def get_certificates(self, pillar_survey):
+        # Fetch the latest valid certificate for the instrument based on the survey date.
+        return self.edmi_certificate_set.filter(
+            calibration_date__lte = pillar_survey.survey_date,
+            prism__pk = pillar_survey.prism.pk
+            ).order_by('-calibration_date')
 
     def __str__(self):
         return f'{self.edm_specs.edm_make_name} {self.edm_specs.edm_model_name} - {self.edm_number}'
@@ -713,6 +725,12 @@ class Mets_Inst(models.Model):
 
     def __str__(self):
         return f'{self.mets_specs.mets_make_name} {self.mets_specs.mets_model_name} - {self.mets_number}'
+    
+    def get_certificate(self, survey_date):
+        # Fetch the latest valid certificate for the instrument based on the survey date.
+        return self.mets_certificate_set.filter(
+            calibration_date__lte=survey_date
+            ).order_by('-calibration_date').first()
 
     def delete(self, *args, **kwargs):
         super(Mets_Inst, self).delete(*args, **kwargs)
@@ -952,7 +970,7 @@ class EDMI_certificate (models.Model):
             + self.cyclic_four * cos(4*pi*dist/unit_length)
         )
         return (corrected_obs, uc)
-
+    
     def __str__(self):
         return f'{self.edm} ({self.calibration_date.strftime("%Y-%m-%d")})'
 

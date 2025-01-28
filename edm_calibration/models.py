@@ -46,7 +46,7 @@ def get_upload_to_location(instance, filename):
         instance.edm.edm_specs.edm_owner.company_abbrev, 
         creation_date+'-'+ filename)
 
-class uPillar_Survey(models.Model):
+class uPillarSurvey(models.Model):
     site = models.ForeignKey(
         CalibrationSite, on_delete = models.PROTECT, null = True, blank = True,
         help_text="Select the baseline used for the calibration")
@@ -170,9 +170,9 @@ class uPillar_Survey(models.Model):
         super().delete(*args, **kwargs)
     
 
-class uEDM_Observation(models.Model):
+class uEdmObservation(models.Model):
     pillar_survey = models.ForeignKey(
-        uPillar_Survey, on_delete = models.CASCADE)
+        uPillarSurvey, on_delete = models.CASCADE)
     
     from_pillar = models.ForeignKey(
         Pillar, on_delete = models.CASCADE)
@@ -212,7 +212,7 @@ class uEDM_Observation(models.Model):
        return f'({self.pillar_survey}): {self.from_pillar} → {self.to_pillar})'
    
     
-class Inter_Comparison(models.Model):
+class Intercomparison(models.Model):
     edm = models.ForeignKey(
         EDM_Inst, on_delete = models.CASCADE,
         help_text="EDM used for interlaboratory comparison",

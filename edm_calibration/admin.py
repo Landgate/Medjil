@@ -21,36 +21,36 @@ from django.contrib import admin
 from accounts.admin import admin_site
 from .models import * 
 
-@admin.register(uPillar_Survey, site=admin_site)
+@admin.register(uPillarSurvey, site=admin_site)
 class UPillarSurveyAdmin(admin.ModelAdmin):
     list_display = ['calibrated_baseline', 'survey_date', 'observer', 'job_number', 'edm']
     list_filter = ['site']
     ordering = ['site', 'survey_date']
 
-@admin.register(uEDM_Observation, site=admin_site)
+@admin.register(uEdmObservation, site=admin_site)
 class UEDMObservationAdmin(admin.ModelAdmin):
     list_display = ['pillar_survey', 'from_pillar', 'to_pillar']
 
-@admin.register(Inter_Comparison, site=admin_site)
-class InterComparisonAdmin(admin.ModelAdmin):
+@admin.register(Intercomparison, site=admin_site)
+class IntercomparisonAdmin(admin.ModelAdmin):
     list_display = ['edm', 'prism', 'from_date', 'to_date', 'job_number']
 
 
 try:
     from accounts.sites import medjil_super_site
 
-    @admin.register(uPillar_Survey, site=medjil_super_site)
+    @admin.register(uPillarSurvey, site=medjil_super_site)
     class UPillarSurveyAdmin(admin.ModelAdmin):
         list_display = ['calibrated_baseline', 'survey_date', 'observer', 'job_number', 'edm']
         list_filter = ['site']
         ordering = ['site', 'survey_date']
 
-    @admin.register(uEDM_Observation, site=medjil_super_site)
+    @admin.register(uEdmObservation, site=medjil_super_site)
     class UEDMObservationAdmin(admin.ModelAdmin):
         list_display = ['pillar_survey', 'from_pillar', 'to_pillar']
 
-    @admin.register(Inter_Comparison, site=medjil_super_site)
-    class InterComparisonAdmin(admin.ModelAdmin):
+    @admin.register(Intercomparison, site=medjil_super_site)
+    class IntercomparisonAdmin(admin.ModelAdmin):
         list_display = ['edm', 'prism', 'from_date', 'to_date', 'job_number']
 
 except:

@@ -22,15 +22,18 @@ app_name = 'edm_calibration'
 
 urlpatterns = [
     path('', views.edm_calibration_home, name = 'edm_calibration_home'),
-    path('calibrate1/<slug:id>', views.calibrate1, name = 'calibrate1'),
-    path('calibrate2/<int:id>', views.calibrate2, name = 'calibrate2'),
     path('certificate/<int:id>', views.certificate, name = 'certificate'),
     path('report/<int:id>', views.report, name = 'report'),
     path('bulk_report_download/', views.bulk_report_download, name = 'bulk_report_download'),
-    path('pillar_survey_del/<int:id>', views.pillar_survey_del, name = 'pillar_survey_del'),
     path('intercomparison_home', views.intercomparison_home, name = 'intercomparison_home'),
     path('intercomparison/<slug:id>', views.intercomparison, name = 'intercomparison'),
     path('intercomparison_report/<int:id>', views.intercomparison_report, name = 'intercomparison_report'),
     path('intercomparison/delete/<int:id>', views.intercomparison_del, name = 'intercomparison_del'),
     
+    #paths for computing a calibration
+    path('survey/create', views.survey_create, name = 'upillar_survey_create'),
+    path('survey/<int:id>/update', views.survey_create, name = 'upillar_survey_update'),
+    path('survey/<int:id>/delete', views.survey_delete, name = 'upillar_survey_delete'),
+    path('edm_observations/<int:id>/update', views.edm_observations_update, name = 'edm_observations_update'),
+    path('survey/<int:id>/compute_calibration', views.compute_calibration, name = 'compute_calibration'),
 ]

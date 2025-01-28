@@ -308,7 +308,7 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('inst_ht', models.DecimalField(decimal_places=3, max_digits=4, verbose_name='Instrument height')),
                 ('tgt_ht', models.DecimalField(decimal_places=3, max_digits=4, verbose_name='Target height')),
-                ('hz_direction', models.DecimalField(decimal_places=26,max_digits=32,validators=[django.core.validators.MinValueValidator(0),django.core.validators.MaxValueValidator(361),],)),
+                ('hz_direction', models.DecimalField(decimal_places=26,max_digits=32,validators=[django.core.validators.MinValueValidator(0),django.core.validators.MaxValueValidator(360),],)),
                 ('raw_slope_dist', models.DecimalField(decimal_places=25,max_digits=29,validators=[django.core.validators.MinValueValidator(1),django.core.validators.MaxValueValidator(1500),],verbose_name="slope distance",)),
                 ('raw_temperature', models.FloatField(blank=True, null=True, validators=[django.core.validators.MinValueValidator(0), django.core.validators.MaxValueValidator(50.0)])),
                 ('raw_pressure', models.FloatField(blank=True, null=True, validators=[django.core.validators.MinValueValidator(0), django.core.validators.MaxValueValidator(1500.0)])),

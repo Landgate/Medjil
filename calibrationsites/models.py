@@ -212,7 +212,8 @@ class Pillar(models.Model):
     site_id = models.ForeignKey(
         CalibrationSite,
         on_delete=models.CASCADE, null=False,
-        verbose_name='Site Name'
+        verbose_name='Site Name',
+        related_name='pillars'
     )
     name = models.CharField(
         max_length=25,

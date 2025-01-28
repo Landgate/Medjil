@@ -14,11 +14,11 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RemoveConstraint(
-            model_name="upillar_survey",
+            model_name="upillarsurvey",
             name="Both site and calibrated basline fields can not be null",
         ),
         migrations.AlterField(
-            model_name="upillar_survey",
+            model_name="upillarsurvey",
             name="auto_base_calibration",
             field=models.BooleanField(
                 default=True,
@@ -27,7 +27,7 @@ class Migration(migrations.Migration):
             ),
         ),
         migrations.AlterField(
-            model_name="upillar_survey",
+            model_name="upillarsurvey",
             name="outlier_criterion",
             field=models.DecimalField(
                 decimal_places=1,
@@ -42,7 +42,7 @@ class Migration(migrations.Migration):
             ),
         ),
         migrations.AlterField(
-            model_name="upillar_survey",
+            model_name="upillarsurvey",
             name="site",
             field=models.ForeignKey(
                 blank=True,
@@ -53,7 +53,7 @@ class Migration(migrations.Migration):
             ),
         ),
         migrations.AddConstraint(
-            model_name="upillar_survey",
+            model_name="upillarsurvey",
             constraint=models.CheckConstraint(
                 check=models.Q(
                     ("site__isnull", False),

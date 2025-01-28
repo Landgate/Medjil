@@ -697,14 +697,14 @@ def validate_survey(pillar_survey, baseline=None, calibrations=None,
             qry_obj = (
                 Pillar_Survey.objects.filter(
                     baseline = site_pk,
-                    status = 'publish',
+                    results__status = 'publish',
                     survey_date__lte = pillar_survey['survey_date'])
                 .order_by('-survey_date'))
             if len(qry_obj) == 0:
                 Errs.append(
                     'There is no calibration of the ' + site
                     + ' baseline for the ' + pillar_survey['survey_date'].strftime("%d %b, %Y")
-                    + ' when your EDMI calibration survey was observed.')
+                    + ' when your EDM Instrumentation calibration survey was observed.')
 
         # Errors for testing cyclic errors
         if  pillar_survey['test_cyclic']:
@@ -721,10 +721,10 @@ def validate_survey(pillar_survey, baseline=None, calibrations=None,
         if calibration_type =='B':
             if ucb.auto_EDMI_scf or ucb.auto_EDMI_scf_drift:
                 if len(calibrations['edmi']) == 0:    
-                       Errs.append('Uncertainty budget sources that are dependant on EDMI calibration certificates have been selected in the uncertainty budget.')
+                       Errs.append('Uncertainty budget sources that are dependant on EDM Instrumentation calibration certificates have been selected in the uncertainty budget.')
                        Errs.append('There are no calibration records for ' +
                                    str(pillar_survey['edm']) + ' with prism ' + str(pillar_survey['prism']))
-                       Errs.append('EDMI calibration certificates need to be current for the date of survey: '
+                       Errs.append('EDM Instrumentation calibration certificates need to be current for the date of survey: '
                                    + pillar_survey['survey_date'].strftime("%d %b, %Y"))
             if calibrations['staff'] is None: 
                 Wrns.append('There is no calibration record for ' + str(pillar_survey['staff']))
@@ -742,7 +742,7 @@ def validate_survey(pillar_survey, baseline=None, calibrations=None,
             
         if not pillar_survey['hygrometer'] and not pillar_survey['hygro_calib_applied']:
             Errs.append('Hygrometer calibration corrections have not been applied prior to input. A calibration certificate is required to apply calibrations to raw observations, but no hygrometer has been selected.')
-
+        
         if calibrations['baro'] is None and ucb.auto_pressure_zpc:
                Errs.append('Uncertainty budget sources that are dependant on barometer calibration certificates have been selected in the uncertainty budget.')
                Errs.append('There is no calibration record for ' + str(pillar_survey['barometer']))
@@ -948,7 +948,7 @@ def validate_survey(pillar_survey, baseline=None, calibrations=None,
                         + ' other pillar setup that include the first and last'
                         + 'pillar. This is required for determining the offset.')
                         
-            #Each baseline calibration pillar survey must have from first to last pillar
+            # Each baseline calibration pillar survey must have from first to last pillar
             if not [0, len(pillars) - 1] in bays:
                 Errs.append('The pillar survey used for the calibration of the baseline'
                             +' must include an observation from the first to the last'
@@ -1036,3 +1036,566 @@ def validate_survey(pillar_survey, baseline=None, calibrations=None,
                         'date of the survey used to calibrate the EDM baseline')
     
     return {'Errors':Errs,'Warnings':Wrns}
+
+def validate_survey2(pillar_survey, baseline=None, calibrations=None,
+                     raw_edm_obs=None, raw_lvl_obs=None):
+    Errs = []
+    Wrns = []
+    lvl_file_checked = False
+    edm_file_checked = False
+
+    # Determine calibration type
+    calibration_type = 'I' if hasattr(pillar_survey, 'auto_base_calibration') else 'B'
+
+    # Baseline Calibration errors in instrument calibration
+    if calibration_type == 'I':
+        if pillar_survey.auto_base_calibration:
+            site_pk = pillar_survey.site.pk
+            site = str(pillar_survey.site)
+        else:
+            site_pk = pillar_survey.calibrated_baseline.baseline.pk
+            site = str(pillar_survey.calibrated_baseline.baseline)
+
+        if pillar_survey.auto_base_calibration:
+            qry_obj = (
+                Pillar_Survey.objects.filter(
+                    baseline=site_pk,
+                    results__status='publish',
+                    survey_date__lte=pillar_survey.survey_date
+                ).order_by('-survey_date')
+            )
+            if not qry_obj.exists():
+                Errs.append(
+                    f'There is no calibration of the {site} baseline for the '
+                    f'{pillar_survey.survey_date.strftime("%d %b, %Y")} '
+                    f'when your EDM Instrumentation calibration survey was observed.'
+                )
+
+        # Errors for testing cyclic errors
+        if pillar_survey.test_cyclic:
+            if not pillar_survey.edm.edm_specs.unit_length:
+                Errs.append(
+                    'In order for Medjil to test for cyclic errors, the instrument '
+                    'unit length must be specified. Insufficient data has been supplied '
+                    'for the EDM Instrument Model used for this calibration.'
+                )
+
+    # Instrumentation Selection Errors
+    ucb = pillar_survey.uncertainty_budget
+    if calibrations:
+        if calibration_type == 'B':
+            if ucb.auto_EDMI_scf or ucb.auto_EDMI_scf_drift:
+                if not calibrations.get('edmi', []):    
+                    Errs.append(
+                        'Uncertainty budget sources that are dependent on EDM Instrumentation calibration certificates '
+                        'have been selected in the uncertainty budget.'
+                    )
+                    Errs.append(
+                        f'There are no calibration records for {pillar_survey.edm} '
+                        f'with prism {pillar_survey.prism}.'
+                    )
+                    Errs.append(
+                        'EDM Instrumentation calibration certificates need to be current for the date of survey: '
+                        f'{pillar_survey.survey_date.strftime("%d %b, %Y")}'
+                    )
+            if not calibrations.get('staff'):
+                Wrns.append(f'There is no calibration record for {pillar_survey.staff}')
+        
+        if pillar_survey.hygrometer:
+            if not calibrations.get('hygro') and ucb.auto_humi_zpc:
+                Errs.append(
+                    'Uncertainty budget sources that are dependent on hygrometer calibration certificates '
+                    'have been selected in the uncertainty budget.'
+                )
+            if not calibrations.get('hygro') and not pillar_survey.hygro_calib_applied:
+                Errs.append(
+                    f'There is no calibration record for {pillar_survey.hygrometer}. '
+                    'Hygrometer calibration certificates need to be current for the date of survey: '
+                    f'{pillar_survey.survey_date.strftime("%d %b, %Y")}'
+                )
+        
+        if not pillar_survey.hygrometer and ucb.auto_humi_zpc:
+            Errs.append(
+                'Uncertainty budget sources that are dependent on hygrometer calibration certificates '
+                'have been selected in the uncertainty budget, but no hygrometer has been selected.'
+            )
+            
+        if not pillar_survey.hygrometer and not pillar_survey.hygro_calib_applied:
+            Errs.append(
+                'Hygrometer calibration corrections have not been applied prior to input. '
+                'A calibration certificate is required to apply calibrations to raw observations, but no hygrometer has been selected.'
+            )
+
+        if not calibrations.get('baro') and ucb.auto_pressure_zpc:
+            Errs.append(
+                'Uncertainty budget sources that are dependent on barometer calibration certificates '
+                'have been selected in the uncertainty budget.'
+            )
+            Errs.append(
+                f'There is no calibration record for {pillar_survey.barometer}. '
+                'Barometer calibration certificates need to be current for the date of survey: '
+                f'{pillar_survey.survey_date.strftime("%d %b, %Y")}'
+            )
+
+        if not calibrations.get('them') and ucb.auto_temp_zpc:
+            Errs.append(
+                'Uncertainty budget sources that are dependent on thermometer calibration certificates '
+                'have been selected in the uncertainty budget.'
+            )
+            Errs.append(
+                f'There is no calibration record for {pillar_survey.thermometer}. '
+                'Thermometer calibration certificates need to be current for the date of survey: '
+                f'{pillar_survey.survey_date.strftime("%d %b, %Y")}'
+            )
+        
+        if not calibrations.get('them') and pillar_survey.thermo_calib_applied:
+            Wrns.append(f'There is no calibration record for the thermometer {pillar_survey.thermometer}')
+        elif not calibrations.get('them'):
+            Errs.append(f'There is no calibration record for {pillar_survey.thermometer}')
+            Errs.append(
+                'Thermometer calibration certificates need to be current for the date of survey: '
+                f'{pillar_survey.survey_date.strftime("%d %b, %Y")}'
+            )
+            
+        if not calibrations.get('baro') and pillar_survey.baro_calib_applied:
+            Wrns.append(f'There is no calibration record for the barometer {pillar_survey.barometer}')
+        elif not calibrations.get('baro'):
+            Errs.append(f'There is no calibration record for {pillar_survey.barometer}')
+            Errs.append('Barometer calibration certificates need to be current for the date of survey: '
+                        + pillar_survey.survey_date.strftime("%d %b, %Y")
+            )
+                
+        if pillar_survey.hygrometer:
+            if not calibrations.get('hygro') and pillar_survey.hygro_calib_applied:
+                Errs.append(f'There is no calibration record for the hygrometer {pillar_survey.hygrometer}')
+            else:
+                Errs.append(f'There is no calibration record for {pillar_survey.hygrometer}')
+                Errs.append('Hygrometer calibration certificates need to be current for the date of survey: '
+                            + pillar_survey.survey_date.strftime("%d %b, %Y"))
+
+        if calibration_type == 'B':
+            # Check for thermometer2 and its calibration
+            if pillar_survey.thermometer2 and calibrations.get('them2') is None:
+                if pillar_survey.thermo2_calib_applied:
+                    Wrns.append(f'There is no calibration record for the themometer {pillar_survey.thermometer2}')
+                else:
+                    Errs.append(f'There is no calibration record for {pillar_survey.thermometer2}')
+                    Errs.append(
+                        'Thermometer calibration certificates need to be current for the date of survey: '
+                        + pillar_survey.survey_date.strftime("%d %b, %Y")
+                    )
+        
+            # Check for barometer2 and its calibration
+            if pillar_survey.barometer2 and calibrations.get('baro2') is None:
+                if pillar_survey.baro2_calib_applied:
+                    Wrns.append(f'There is no calibration record for the barometer {pillar_survey.barometer2}')
+                else:
+                    Errs.append(f'There is no calibration record for {pillar_survey.barometer2}')
+                    Errs.append(
+                        'Barometer calibration certificates need to be current for the date of survey: '
+                        + pillar_survey.survey_date.strftime("%d %b, %Y")
+                    )
+        
+            # Check for hygrometer2 and its calibration
+            if pillar_survey.hygrometer2 and calibrations.get('hygro2') is None:
+                if pillar_survey.hygro2_calib_applied:
+                    Wrns.append(f'There is no calibration record for the hygrometer {pillar_survey.hygrometer2}')
+                else:
+                    Errs.append(f'There is no calibration record for {pillar_survey.hygrometer2}')
+                    Errs.append(
+                        'Hygrometer calibration certificates need to be current for the date of survey: '
+                        + pillar_survey.survey_date.strftime("%d %b, %Y")
+                    )
+                    
+    # Raw EDM Observations
+    if raw_edm_obs and baseline:
+        for o in raw_edm_obs.values():
+            # create a note for all excluded observations
+            if not o['use_for_distance']:
+                Wrns.append(
+                    f'The observation "{o["from_pillar"]}--{o["to_pillar"]}" '
+                    f' with a raw slope distance of "{o["raw_slope_dist"]:.4f}"'
+                    ' has been excluded by the user during processing.')
+            if 'use_for_alignment' in o:
+                if not o['use_for_alignment']:
+                    Wrns.append(
+                        f'The observation "{o["from_pillar"]}--{o["to_pillar"]}" '
+                        f' with a raw slope distance of "{o["raw_slope_dist"]}"'
+                        ' has been excluded from the calculation of pillar offsets by the user during processing.')
+        
+        # Checks for alignment survey
+        if calibration_type =='B':
+            #'use_for_distance' checks
+            # Each pillar must be observed from at least 2 other pillars
+            bays=[]
+            pillars = [p.name for p in baseline['pillars']]
+            pillar_cnt = dict(zip(pillars,[0]*len(pillars)))
+            for o in raw_edm_obs.values():
+                if o['use_for_distance']:
+                    bay=[min([pillars.index(o['from_pillar']), pillars.index(o['to_pillar'])]),
+                         max([pillars.index(o['from_pillar']), pillars.index(o['to_pillar'])])]
+                    if not bay in bays: 
+                        bays.append(bay)
+                        pillar_cnt[o['from_pillar']]+=1
+                        pillar_cnt[o['to_pillar']]+=1
+            
+            for p, cnt in pillar_cnt.items():
+                if cnt < 2:
+                    Errs.append('Pillar "' + str(p) + '" has been observed from ' 
+                                + str(cnt) + ' other pillars for determining the certified distance.')
+            
+            #'use_for_alignment' checks
+            # setups used for alignment survey must have first and last pillar
+            setups = group_list(raw_edm_obs.values(),
+                                group_by='from_pillar',
+                                mask_by='use_for_alignment')
+            for p in setups.values():
+                pillars_in_setup = set([s['to_pillar']  for s in p['grp_from_pillar']])
+                pillars_in_setup.add(p['from_pillar'])
+                # Look for first to last pillar observation
+                if (pillars[0] not in pillars_in_setup 
+                    or pillars[-1] not in pillars_in_setup):
+                    for single_obs in p['grp_from_pillar']:
+                        single_obs['use_for_alignment'] = False
+            
+            # Each pillar must be observed from a pillar setup the includes the first and last pillar
+            bays=[]
+            pillar_cnt = dict(zip(pillars,[0]*len(pillars)))
+            for o in raw_edm_obs.values():
+                if o['use_for_alignment']:
+                    bay=[min([pillars.index(o['from_pillar']), pillars.index(o['to_pillar'])]),
+                         max([pillars.index(o['from_pillar']), pillars.index(o['to_pillar'])])]
+                    if not bay in bays: 
+                        bays.append(bay)
+                        pillar_cnt[o['from_pillar']]+=1
+                        pillar_cnt[o['to_pillar']]+=1
+            
+            for p, cnt in pillar_cnt.items():
+                if cnt < 1:
+                    Errs.append(
+                        'Pillar "' + str(p) + '" has been observed from ' + str(cnt)
+                        + ' other pillar setup that include the first and last'
+                        + 'pillar. This is required for determining the offset.')
+                        
+            # Each baseline calibration pillar survey must have from first to last pillar
+            if not [0, len(pillars) - 1] in bays:
+                Errs.append('The pillar survey used for the calibration of the baseline'
+                            +' must include an observation from the first to the last'
+                            +' pillar. The current pillar survey is missing observation'
+                            +' Pillar '+ str(pillars[0]) +' to '+ 'Pillar ' 
+                            + str(pillars[-1]) +'.')
+
+    # Atmospheric Corrections
+    try:
+        pillar_survey.edm.edm_specs.atmospheric_correction(
+            o={'raw_slope_dist':100, 'Temp':20, 'Pres':1013.25, 'Humid':60},
+            null_correction=pillar_survey.mets_applied)
+            
+    except Exception as e:
+        Errs.append(f'Insufficient data has been supplied to apply atmospheric corrections. \
+                    The following error occured when trying to use specifications provided for \
+                    {pillar_survey.edm.edm_specs}: {e}')
+
+    # Date Warnings
+    if pillar_survey.survey_date > pillar_survey.computation_date:
+        Wrns.append('The computation date is earlier than the survey date.')
+
+    if hasattr(pillar_survey, 'accreditation'):
+        if not (pillar_survey.accreditation.valid_from_date <= pillar_survey.survey_date <= pillar_survey.accreditation.valid_to_date):
+            Wrns.append(
+                'The company does not have a valid accreditation for the date of the survey used to calibrate the EDM baseline.'
+            )
+
+    return {'Errors': Errs, 'Warnings': Wrns}
+
+
+def add_calib_uc2(uc_sources, calib, pillar_survey):
+    """
+    Add calibration uncertainty contributions based on the pillar survey model instance.
+    """
+    # Check for EDMI calibration and no calibrated baseline
+    if len(calib['edmi']) > 0 and not hasattr(pillar_survey, 'calibrated_baseline'):
+        d2 = pillar_survey.survey_date
+        calib_edmi = calib['edmi'][0]
+
+        if pillar_survey.uncertainty_budget.auto_EDMI_scf:
+            uc_sources.append(
+                {
+                    'group': '01',
+                    'ab_type': 'B',
+                    'distribution': 'N',
+                    'units': 'x:1',
+                    'std_dev': calib_edmi.scf_std_dev,
+                    'degrees_of_freedom': calib_edmi.degrees_of_freedom,
+                    'k': calib_edmi.scf_coverage_factor,
+                    'description': 'EDMI Reg13 Scale correction factor'
+                }
+            )
+
+        # Calculate the linear trend for EDMI calibration history
+        calib_dates = []
+        calib_scf = []
+        d0 = date(1900, 1, 1)
+        for c in calib['edmi']:
+            d1 = c.calibration_date
+            calib_dates.append((d1 - d0).days)
+            calib_scf.append(c.scale_correction_factor)
+
+        calib_dates = np.array(calib_dates, dtype=object).reshape((-1, 1))
+        calib_scf = np.array(calib_scf, dtype=object)
+        model = LinearRegression().fit(calib_dates, calib_scf)
+
+        # Calculate drift over time
+        A = model.coef_[0]
+        B = model.intercept_
+        scf_d1 = A * ((d1 - d0).days) + B
+        scf_d2 = A * ((d2 - d0).days) + B
+        xyTrend = [
+            {'x': d1.isoformat()[:10], 'y': scf_d1},
+            {'x': d2.isoformat()[:10], 'y': scf_d2}
+        ]
+        calib['edmi_drift'] = {'A': A, 'B': B, 'xyTrend': xyTrend}
+
+        if pillar_survey.uncertainty_budget.auto_EDMI_scf_drift:
+            uc_sources.append(
+                {
+                    'group': '01',
+                    'ab_type': 'B',
+                    'distribution': 'N',
+                    'units': 'x:1',
+                    'std_dev': abs(scf_d2 - calib_edmi.scale_correction_factor),
+                    'degrees_of_freedom': 30,
+                    'k': sqrt(3),
+                    'description': 'EDM scale factor (drift over time)'
+                }
+            )
+
+    # Distance Instrument Rounding
+    if pillar_survey.uncertainty_budget.auto_EDMI_round:
+        uc_sources.append(
+            {
+                'group': '02',
+                'ab_type': 'B',
+                'distribution': 'R',
+                'units': 'm',
+                'std_dev': (float(pillar_survey.edm.edm_specs.measurement_increments) / 2) / sqrt(3),
+                'degrees_of_freedom': 100,
+                'k': sqrt(3),
+                'description': 'Distance Instrument Rounding'
+            }
+        )
+
+    # Thermometer Correction Factor
+    if pillar_survey.thermometer and pillar_survey.uncertainty_budget.auto_temp_zpc:
+        uc_sources.append(
+            {
+                'group': '04',
+                'ab_type': 'B',
+                'distribution': 'N',
+                'units': '°C',
+                'std_dev': calib['them'].zpc_std_dev,
+                'degrees_of_freedom': calib['them'].degrees_of_freedom,
+                'k': calib['them'].zpc_coverage_factor,
+                'description': 'Thermometer calibrated correction factor'
+            }
+        )
+
+    # Thermometer Rounding
+    if pillar_survey.uncertainty_budget.auto_temp_rounding:
+        uc_sources.append(
+            {
+                'group': '04',
+                'ab_type': 'B',
+                'distribution': 'R',
+                'units': '°C',
+                'std_dev': (float(pillar_survey.thermometer.mets_specs.measurement_increments) / 2) / sqrt(3),
+                'degrees_of_freedom': 100,
+                'k': sqrt(3),
+                'description': 'Thermometer Rounding'
+            }
+        )
+
+    # Barometer Correction Factor
+    if pillar_survey.barometer and pillar_survey.uncertainty_budget.auto_pressure_zpc:
+        uc_sources.append(
+            {
+                'group': '05',
+                'ab_type': 'B',
+                'distribution': 'N',
+                'units': 'hPa',
+                'std_dev': calib['baro'].zpc_std_dev,
+                'degrees_of_freedom': calib['baro'].degrees_of_freedom,
+                'k': calib['baro'].zpc_coverage_factor,
+                'description': 'Barometer calibrated correction factor'
+            }
+        )
+
+    # Barometer Rounding
+    if pillar_survey.uncertainty_budget.auto_pressure_rounding:
+        uc_sources.append(
+            {
+                'group': '05',
+                'ab_type': 'B',
+                'distribution': 'R',
+                'units': 'hPa',
+                'std_dev': (float(pillar_survey.barometer.mets_specs.measurement_increments) / 2) / sqrt(3),
+                'degrees_of_freedom': 100,
+                'k': sqrt(3),
+                'description': 'Barometer Rounding'
+            }
+        )
+
+    # Hygrometer Correction Factor
+    if pillar_survey.hygrometer and pillar_survey.uncertainty_budget.auto_humi_zpc:
+        uc_sources.append(
+            {
+                'group': '06',
+                'ab_type': 'B',
+                'distribution': 'N',
+                'units': '%',
+                'std_dev': calib['hygro'].zpc_std_dev,
+                'degrees_of_freedom': calib['hygro'].degrees_of_freedom,
+                'k': calib['hygro'].zpc_coverage_factor,
+                'description': 'Hygrometer calibrated correction factor'
+            }
+        )
+
+    # Hygrometer Rounding
+    if pillar_survey.hygrometer and pillar_survey.uncertainty_budget.auto_humi_rounding:
+        uc_sources.append(
+            {
+                'group': '06',
+                'ab_type': 'B',
+                'distribution': 'R',
+                'units': '%',
+                'std_dev': (float(pillar_survey.hygrometer.mets_specs.measurement_increments) / 2) / sqrt(3),
+                'degrees_of_freedom': 100,
+                'k': sqrt(3),
+                'description': 'Hygrometer Rounding'
+            }
+        )
+
+    return uc_sources
+
+
+def add_certified_dist_uc2(o, pillar_survey, uc_sources, std_dev_matrix, dof):
+    """
+    Adds certified distance uncertainty to the uncertainty budget for the pillar survey.
+    """
+    # Deep copy of existing uncertainty contributions
+    cd_uc = deepcopy(uc_sources)
+
+    # Add certified distance uncertainty if enabled
+    if pillar_survey.uncertainty_budget.auto_cd:
+        # switch the from and to pillar if obs is reverse direction
+        if o['bay'] in std_dev_matrix.keys():
+            bay = o['bay']
+        else:
+            bay = o['to_pillar'] + ' - ' + o['from_pillar']
+        cd_uc.append(
+            {
+                'group': '07',
+                'ab_type': 'A',
+                'distribution': 'N',
+                'units': 'm',
+                'std_dev': std_dev_matrix[bay]['std_uncertainty'],
+                'degrees_of_freedom': dof,
+                'k': t.ppf(1 - 0.025, df=dof),  # 95% confidence interval
+                'description': 'Uncertainty of Certified Distance'
+            }
+        )
+
+    return cd_uc
+
+def add_surveyed_uc2(o, edm_trend, pillar_survey, uc_sources, alignment_survey):
+    """
+    Adds surveyed uncertainties to the uncertainty budget based on the pillar survey model instance.
+    :param o: Observation data dictionary.
+    :param edm_trend: Linear regression coefficients for EDM uncertainties.
+    :param pillar_survey: uPillarSurvey model instance.
+    :param uc_sources: List of existing uncertainty contributions.
+    :param alignment_survey: Dictionary containing alignment survey data.
+    :return: Updated uncertainty contributions.
+    """
+    # Deep copy of the existing uncertainty contributions
+    surveyed_uc = deepcopy(uc_sources)
+
+    # '02' - Linear Regression on EDM Distance Standard Deviations
+    if pillar_survey.uncertainty_budget.auto_EDMI_lr:
+        surveyed_uc.append(
+            {
+                'group': '02',
+                'ab_type': 'B',
+                'distribution': 'N',
+                'units': 'm',
+                'std_dev': o['slope_dist'] * edm_trend['A'] + edm_trend['B'],
+                'k': t.ppf(1 - 0.025, df=30),
+                'degrees_of_freedom': 30,
+                'description': (
+                    'Linear regression on EDM distance standard deviations '
+                    f'UC = k x ({edm_trend["A"] * 1000:.6f} x L + {edm_trend["B"] * 1000:.2f}) mm'
+                )
+            }
+        )
+
+    # '10' - Pillar Certified Height Differences
+    if pillar_survey.uncertainty_budget.auto_hgts:
+        frm_rl = alignment_survey[o['from_pillar']]
+        to_rl = alignment_survey[o['to_pillar']]
+
+        frm_rl['std_dev'] = (
+            float(frm_rl['rl_uncertainty']) / float(frm_rl['k_rl_uncertainty'])
+        )
+        to_rl['std_dev'] = (
+            float(to_rl['rl_uncertainty']) / float(to_rl['k_rl_uncertainty'])
+        )
+
+        comb_std = sqrt(
+            float(frm_rl['std_dev'])**2 + float(to_rl['std_dev'])**2
+        )
+
+        surveyed_uc.append(
+            {
+                'group': '10',
+                'ab_type': 'B',
+                'distribution': 'N',
+                'units': 'm',
+                'std_dev': comb_std,
+                'degrees_of_freedom': 30,
+                'k': t.ppf(1 - 0.025, df=30),
+                'description': 'Pillar certified height differences'
+            }
+        )
+
+    # '11' - Pillar Alignment Survey Offset Uncertainty
+    if pillar_survey.uncertainty_budget.auto_os:
+        frm_os = alignment_survey[o['from_pillar']]
+        to_os = alignment_survey[o['to_pillar']]
+
+        if 'OS_std_dev' not in frm_os:
+            frm_os['OS_std_dev'] = (
+                float(frm_os['os_uncertainty']) / float(frm_os['k_os_uncertainty'])
+            )
+        if 'OS_std_dev' not in to_os:
+            to_os['OS_std_dev'] = (
+                float(to_os['os_uncertainty']) / float(to_os['k_os_uncertainty'])
+            )
+
+        comb_std = sqrt(
+            frm_os['OS_std_dev']**2 + to_os['OS_std_dev']**2
+        )
+
+        surveyed_uc.append(
+            {
+                'group': '11',
+                'ab_type': 'B',
+                'distribution': 'N',
+                'units': 'm',
+                'std_dev': comb_std,
+                'degrees_of_freedom': 30,
+                'k': t.ppf(1 - 0.025, df=30),
+                'description': 'Pillar alignment survey offset uncertainty'
+            }
+        )
+
+    return surveyed_uc

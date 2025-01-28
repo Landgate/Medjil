@@ -34,7 +34,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name="uPillar_Survey",
+            name="uPillarSurvey",
             fields=[
                 (
                     "id",
@@ -275,7 +275,7 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name="uEDM_Observation",
+            name="uEdmObservation",
             fields=[
                 (
                     "id",
@@ -362,7 +362,7 @@ class Migration(migrations.Migration):
                     "pillar_survey",
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
-                        to="edm_calibration.upillar_survey",
+                        to="edm_calibration.upillarsurvey",
                     ),
                 ),
                 (
@@ -379,7 +379,7 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.AddConstraint(
-            model_name="upillar_survey",
+            model_name="upillarsurvey",
             constraint=models.CheckConstraint(
                 check=models.Q(
                     ("site__isnull", False),
@@ -390,7 +390,7 @@ class Migration(migrations.Migration):
             ),
         ),
         migrations.CreateModel(
-            name="Inter_Comparison",
+            name="Intercomparison",
             fields=[
                 (
                     "id",
@@ -454,7 +454,7 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.AddConstraint(
-            model_name="inter_comparison",
+            model_name="intercomparison",
             constraint=models.CheckConstraint(
                 check=models.Q(("to_date__gt", models.F("from_date"))),
                 name="The from date must be before the to date",

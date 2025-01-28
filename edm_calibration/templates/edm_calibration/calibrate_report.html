@@ -354,11 +354,11 @@
                 <B>IC = zpc + (scf - 1) * D</B>
             </p>
             <p>The corrected distance in metres is calculated using the following formula:<p>
-            {% if pillar_survey.parameters|length > 4 %}
+            {% if parameters|length > 4 %}
                 <p class="text-center">
                     <B>D' = zpc + scf * D + 1C * Sin(2 * &#8508 * D/U) + 2C * Cos(2 * &#8508 * D/U) + 3C * Sin(4 * &#8508 * D/U) + 4C * Cos(4 * &#8508 * D/U)</B>
                 </p>
-            {% elif pillar_survey.parameters|length > 2 %}
+            {% elif parameters|length > 2 %}
                 <p class="text-center">
                     <B>D' = zpc + scf * D + 1C * Sin(2 * &#8508 * D/U) + 2C * Cos(2 * &#8508 * D/U)</B>
                 </p>
@@ -374,11 +374,11 @@
                 <br>D = Distance (m)
                 <br>zpc = Zero Point Correction (m)
                 <br>scf = Scale Correction Factor (A.x)
-                {% if pillar_survey.parameters|length > 2 %}
+                {% if parameters|length > 2 %}
                     <br>U = Instrument Unit Length (m)
                     <br>1C = Cyclic error parameter 1 (m)
                     <br>2C = Cyclic error parameter 2 (m)
-                    {% if pillar_survey.parameters|length > 4 %}
+                    {% if parameters|length > 4 %}
                         <br>3C = Cyclic error parameter 3 (m)
                         <br>4C = Cyclic error parameter 4 (m)
                     {% endif %}
@@ -393,13 +393,13 @@
                 <th>Term&nbsp;</th>
                 <th class="text-center">Value</th>
                 <th class="text-center">Uncertainty</th>
-                {% if pillar_survey.parameters|length > 2 %}
+                {% if parameters|length > 2 %}
                     <th class="text-center">Null Hypothesis</th>
                     <th class="text-center">Insignificant</th>
                 {% endif %}
             </tr>
 
-            {% for parameter in pillar_survey.parameters %}
+            {% for parameter in parameters %}
                 <tr>
                     {% if not chi_test.k is null %}
                         <td class="text-left">
@@ -415,7 +415,7 @@
                         <td class="text-center">
                             <B>{{ parameter.std_dev|multiply:chi_test.k|sigfigs:2 }}</B>
                         </td>
-                        {% if pillar_survey.parameters|length > 2 %}
+                        {% if parameters|length > 2 %}
                             <td class="text-center">{{ parameter.hypothesis }}</td>
                             <td class="text-center">{{ parameter.t_test }}</td>
                         {% endif %}
@@ -495,7 +495,7 @@
                 <th class="text-center">Pressure (hPa)</th>
                 <th class="text-center">Humidity (%)</th>
             </tr>
-            {% for i in o.grp_Bay %}
+            {% for i in o.grp_bay %}
                 {% if not i.slope_dist is null %}
                     <tr style="border:0;">
                         <td>{{forloop.counter}}</td>
@@ -624,7 +624,7 @@
             <thead>
                 <tr>
                     <th class="text-center" colspan = '2'>Pillars</th>
-                    <th class="text-center" colspan = {{ edm_observations.0.grp_Bay|length }}>Raw Distances (m)</th>
+                    <th class="text-center" colspan = {{ edm_observations.0.grp_bay|length }}>Raw Distances (m)</th>
                     <th class="text-center" colspan = '3'>Average Distance</th>
                     <th class="text-center" colspan = '2'></th>
                     <th class="text-center" colspan = '3'>Corrections (mm)</th>
@@ -635,7 +635,7 @@
                 <tr>
                     <th onclick="sortTable(this)" class="text-center">From</th>
                     <th onclick="sortTable(this)" class="text-center">To</th>
-                    {% for s in edm_observations.0.grp_Bay %}
+                    {% for s in edm_observations.0.grp_bay %}
                         <th onclick="sortTable(this)" class="text-center">Slope Dist. {{ forloop.counter }}</th>
                     {% endfor %}
                     {% with edm_observations|first as o %}
@@ -672,7 +672,7 @@
                         <td>{{o.from_pillar}}</td>
                         <td>{{o.to_pillar}}</td>
                         <!--Raw-->
-                        {% for s in o.grp_Bay %}
+                        {% for s in o.grp_bay %}
                             <td>{{s.raw_slope_dist|floatformat:4}}</td>
                         {% endfor %}
                         <!--Avg, Std-->

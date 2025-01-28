@@ -42,7 +42,7 @@ from baseline_calibration.models import (
     Pillar_Survey,
     Std_Deviation_Matrix,
     EDM_Observation)
-from edm_calibration.models import uEDM_Observation
+from edm_calibration.models import uEdmObservation
 from geodepy.geodesy import grid2geo, rho, nu
 
 
@@ -236,9 +236,11 @@ def Instruments_qry(cache_data):
 
 def Calibrations_qry(frm_data):
     calib = {}
-        
     #test if it is a baseline or EDMI calibration
-    if 'staff' in frm_data:
+    if 'staff' in frm_data: calibration_type = 'B'
+    else: calibration_type = 'I'
+    
+    if calibration_type == 'B':
         calib['edmi'] = EDMI_certificate.objects.filter(
             calibration_date__lte = frm_data['survey_date'],
             edm__pk = frm_data['edm'].pk, prism__pk = frm_data['prism'].pk
@@ -270,7 +272,7 @@ def Calibrations_qry(frm_data):
                         ).order_by('-calibration_date').first()
         else:
             calib['hygro2'] = None 
-    else:
+    elif calibration_type == 'I':
         calib['edmi'] = EDMI_certificate.objects.filter(
             calibration_date__lte = frm_data['survey_date'],
             edm__pk = frm_data['edm'].pk, 
@@ -315,28 +317,33 @@ def Calibrations_qry(frm_data):
 
 def baseline_qry(frm_data,id=None):
     baseline={}
-    if 'baseline' in frm_data:
+    #test if it is a baseline or EDMI calibration
+    if 'staff' in frm_data: calibration_type = 'B'
+    else: calibration_type = 'I'
+    
+    if calibration_type == 'B':
         baseline['site'] = frm_data['baseline']
         baseline['history'] = (
             Pillar_Survey.objects.filter(
-                baseline__pk=frm_data['baseline'].pk,)
-            .exclude(id=id,
-                     results__status='check',
-                     results__experimental_std_dev__isnull = True)
+                baseline__pk=frm_data['baseline'].pk,
+                results__status='publish',
+                results__experimental_std_dev__isnull = False)
+            .exclude(id=id)
             .select_related('results')
             .order_by('survey_date')
         )
 
     
-    if 'auto_base_calibration' in frm_data:
+    elif calibration_type == 'I':
         if frm_data['auto_base_calibration']:
             baseline['site'] = frm_data['site']
             baseline['calibrated_baseline'] = (
                 Pillar_Survey.objects.filter(
                     baseline = frm_data['site'].pk,
-                    survey_date__lte = frm_data['survey_date'])
-                .exclude(experimental_std_dev__isnull = True)
-                .order_by('-survey_date'))[0]
+                    survey_date__lte = frm_data['survey_date'],
+                    results__status='publish',
+                    results__experimental_std_dev__isnull = False)
+                .order_by('-survey_date')).first()
         else:
             baseline['calibrated_baseline'] = frm_data['calibrated_baseline']
             baseline['site'] = baseline['calibrated_baseline'].baseline
@@ -404,11 +411,11 @@ def get_endnotes(pillar_survey, calibration_type, company):
             & (Q(pillar__id__in=from_pillars) | Q(pillar__id__in=to_pillars) | Q(pillar__isnull=True))
         )
     else:
-        from_pillars = uEDM_Observation.objects.filter(
+        from_pillars = uEdmObservation.objects.filter(
             pillar_survey=pillar_survey.id).values_list('from_pillar', flat=True)
-        to_pillars = uEDM_Observation.objects.filter(
+        to_pillars = uEdmObservation.objects.filter(
             pillar_survey=pillar_survey.id).values_list('to_pillar', flat=True)
-    
+        
         filters = (
             Q(calibration_type='E')
             & (Q(verifying_authority=pillar_survey.calibrated_baseline.accreditation.accredited_company) | Q(verifying_authority__isnull=True))
@@ -441,3 +448,114 @@ def decrypt_file(file):
         decrypted_rows.append(decrypted_str.split('|'))
     
     return decrypted_rows
+
+
+def baseline_qry2(pillar_survey, id=None):
+    baseline={}
+    # Determine calibration type
+    calibration_type = 'B' if hasattr(pillar_survey, 'staff') else 'I'
+    
+    if calibration_type == 'B':
+        baseline['site'] = pillar_survey.baseline
+        baseline['history'] = (
+            Pillar_Survey.objects.filter(
+                baseline__pk=pillar_survey.baseline.pk,
+                results__status='publish',
+                results__experimental_std_dev__isnull = False)
+            .exclude(id=id)
+            .select_related('results')
+            .order_by('survey_date')
+        )
+    
+    elif calibration_type == 'I':
+        if pillar_survey.auto_base_calibration:
+            baseline['site'] = pillar_survey.site
+            baseline['calibrated_baseline'] = (
+                Pillar_Survey.objects.filter(
+                    baseline = pillar_survey.site,
+                    survey_date__lte = pillar_survey.survey_date,
+                    results__status='publish',
+                    results__experimental_std_dev__isnull = False)
+                .order_by('-survey_date')).first()
+            pillar_survey.calibrated_baseline = baseline['calibrated_baseline']
+        else:
+            baseline['calibrated_baseline'] = pillar_survey.calibrated_baseline
+            baseline['site'] = baseline['calibrated_baseline'].baseline
+            pillar_survey.site = baseline['site']
+        
+        if baseline['calibrated_baseline']:
+            sd_m = (Std_Deviation_Matrix.objects
+                    .select_related('from_pillar', 'to_pillar')
+                    .filter(pillar_survey__pk = baseline['calibrated_baseline'].pk)
+                    .exclude(
+                        pillar_survey__results__status='check',
+                        pillar_survey__results__experimental_std_dev__isnull = True))
+            baseline['std_dev_matrix'] = ({s.from_pillar.name + ' - ' + s.to_pillar.name:
+                                            model_to_dict(s) for s in sd_m})
+    
+            cd = (Certified_Distance.objects
+                    .select_related('from_pillar', 'to_pillar')
+                    .filter(pillar_survey__pk = baseline['calibrated_baseline'].pk)
+                    .exclude(
+                        pillar_survey__results__status='check',
+                        pillar_survey__results__experimental_std_dev__isnull = True))
+                
+            baseline['certified_dist'] ={d.to_pillar.name:model_to_dict(d) for d in cd}
+        
+    baseline['pillars'] = Pillar.objects.filter(
+                            site_id__pk = baseline['site'].pk
+                            ).order_by('order')
+    
+    baseline_enz = Pillar.objects.filter(
+                            site_id__pk = baseline['site'].pk).aggregate(
+                                Avg('easting'), Avg('northing'), Avg('zone'))
+    baseline_llh = grid2geo(float(baseline_enz['zone__avg']),
+                            float(baseline_enz['easting__avg']),
+                            float(baseline_enz['northing__avg']))
+    baseline['d_radius'] = (rho(baseline_llh[0])*nu(baseline_llh[0]))**0.5
+    
+    return baseline
+    
+    
+def calibrations_qry2(pillar_survey):
+    calib = {}
+    # Determine calibration type
+    calibration_type = 'B' if hasattr(pillar_survey, 'staff') else 'I'
+    
+    calib['edmi'] = pillar_survey.edm.get_certificates(
+        pillar_survey = pillar_survey)
+    
+    if calibration_type == 'B':
+        calib['staff'] = pillar_survey.staff.get_certificate(pillar_survey.survey_date)
+        if pillar_survey.thermometer2: 
+            calib['them2'] = pillar_survey.thermometer2.get_certificate(pillar_survey.survey_date)
+        else:
+            calib['them2'] = None        
+        
+        if pillar_survey.barometer2: 
+            calib['baro2'] = pillar_survey.barometer2.get_certificate(pillar_survey.survey_date)
+        else:
+            calib['baro2'] = None
+        
+        if pillar_survey.hygrometer2: 
+            calib['hygro2'] = pillar_survey.hygrometer2.get_certificate(pillar_survey.survey_date)
+        else:
+            calib['hygro2'] = None
+    
+    calib['them'] = pillar_survey.thermometer.get_certificate(pillar_survey.survey_date)
+    calib['baro'] = pillar_survey.barometer.get_certificate(pillar_survey.survey_date)
+    if pillar_survey.hygrometer:
+        calib['hygro'] = pillar_survey.hygrometer.get_certificate(pillar_survey.survey_date)
+    else:
+        calib['hygro'] = None
+        
+    return calib
+    
+def uncertainty_qry2(pillar_survey):
+    uc_budget={}
+    uc_sources = pillar_survey.uncertainty_budget.uncertainty_budget_source_set.all()
+    uc_budget['sources'] = list(uc_sources.values())
+    uc_budget['stddev_0_adj'] = float(
+        pillar_survey.uncertainty_budget.std_dev_of_zero_adjustment)
+        
+    return uc_budget

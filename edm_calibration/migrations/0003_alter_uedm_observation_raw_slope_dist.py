@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterField(
-            model_name="uedm_observation",
+            model_name="uedmobservation",
             name="raw_slope_dist",
             field=models.DecimalField(
                 decimal_places=25,

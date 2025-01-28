@@ -112,6 +112,38 @@ def ISO_test_a(Insts, chi_test, Rnge=[{'distance': 100}]):
     return test_a
 
 
+def ISO_test_a2(Insts, chi_test, Rnge=[{'distance': 100}]):
+    try:
+        # Please note the database units for specifications are in mm
+        k0 = float(Insts.edm.edm_specs.manu_unc_k)
+        ppm = float(Insts.edm.edm_specs.manu_unc_ppm) / k0
+        c0 = (float(Insts.edm.edm_specs.manu_unc_const)/1000) / k0
+        k1 = float(Insts.prism.prism_specs.manu_unc_k)
+        c1 = (float(Insts.prism.prism_specs.manu_unc_const)/1000) / k1
+        dof = chi_test['dof']
+        
+        for d in Rnge:
+            edm_spec = c0 + d['distance'] * ppm /1000000
+            d['Manu_Spec'] = sqrt( c1**2 + edm_spec**2)
+            d['test_value'] = (chi2.ppf(0.95, dof) / dof) * d['Manu_Spec']
+            d['accept'] = chi_test['So'] < d['test_value']
+        test_a = {
+            'test': 'A',
+            'hypothesis': 'The experimental standard deviation, s, is smaller than or equal to the manufacturers specifications for the Instrument and prism combination.',
+            'test_ranges': Rnge,
+            'accept': False not in [a['accept'] for a in Rnge]
+        }
+    except Exception as e:
+        test_a = {
+            'test': 'A',
+            'hypothesis': f'Insufficient instrumentation parameters suppllied to complete Test A: {e}',
+            'test_ranges': '',
+            'accept': False
+        }
+    
+    return test_a
+
+
 def ISO_test_b(prev_chi_test, chi_test):
     if (chi_test['dof'] == prev_chi_test['dof']
         and chi_test['So'] and prev_chi_test['So']):
