@@ -439,7 +439,7 @@ def import_dli(request):
         if 'Distance' in rx.keys() and 'Pillar' in rx.keys():
             rxPillar =  mod_pillars(rx)
 
-        if all(key in rx.keys() for key in ['Job', 'EDMObs', 'Distance', 'Pillar']):
+        if all(key in rx.keys() for key in ['Job', 'EDMObs', 'Distance', 'Pillar', 'UncertaintyBaseline']):
             for job in rx['Job'].values():
                 commit_error = []
                 # Create the Mets gear in Medjil
@@ -470,7 +470,7 @@ def import_dli(request):
                         auto_pressure_rounding = False,
                         auto_temp_zpc = False,
                         auto_temp_rounding = False,
-                        auto_cd = False,
+                        auto_cd = True,
                         auto_EDMI_lr = True,
                         auto_hgts = False,
                         auto_os = False,
@@ -479,76 +479,74 @@ def import_dli(request):
                     rx_UC_budget = Uncertainty_Budget.objects.get(
                         name = 'Default',
                         company__company_name = 'Landgate')
-                if float(job['StdDevTemp']) > 0:
-                    UC_source1,_ = Uncertainty_Budget_Source.objects.get_or_create(
-                        uncertainty_budget = rx_UC_budget,
-                        group = '04',
-                        description = 'StdDevTemp From BaselineWA software',
-                        units = '°C',
-                        uc95 = float(job['StdDevTemp'])
-                        )
-                if float(job['StdDevPressure']) > 0:
-                    UC_source2,_ = Uncertainty_Budget_Source.objects.get_or_create(
-                        uncertainty_budget = rx_UC_budget,
-                        group = '05',
-                        description = 'StdDevPressure From BaselineWA software',
-                        units = 'hPa',
-                        uc95 = float(job['StdDevPressure'])
-                        )
-                if float(job['InstCentringStdDev']) > 0:
-                    if float(job['InstCentringStdDev']) < 0.01:
-                        # Note - some data is in m some in mm Grrr#!!!
-                        job['InstCentringStdDev'] = float(job['InstCentringStdDev']) * 1000
-                    UC_source3,_ = Uncertainty_Budget_Source.objects.get_or_create(
-                        uncertainty_budget = rx_UC_budget,
-                        group = '09',
-                        description = 'InstCentringStdDev From BaselineWA software',
-                        units = 'm',
-                        uc95 = float(job['InstCentringStdDev'])/1000
-                        )
-                    UC_source4,_ = Uncertainty_Budget_Source.objects.get_or_create(
-                        uncertainty_budget = rx_UC_budget,
-                        group = '09',
-                        description = 'ReflCentringStdDev From BaselineWA software',
-                        units = 'm',
-                        uc95 = float(job['InstCentringStdDev'])/1000
-                        )
-                if float(job['InstLevellingStdDev']) > 0:
-                    UC_source5,_ = Uncertainty_Budget_Source.objects.get_or_create(
-                        uncertainty_budget = rx_UC_budget,
-                        group = '10',
-                        description = 'InstLevellingStdDev From BaselineWA software',
-                        units = 'm',
-                        uc95 = float(job['InstLevellingStdDev'])
-                        )
-                UC_source5,_ = Uncertainty_Budget_Source.objects.get_or_create(
-                    uncertainty_budget = rx_UC_budget,
-                    group = '07',
-                    description = 'Default Baseline Interval From BaselineWA software',
-                    units = 'm',
-                    uc95 = 0.16
-                    )
-                UC_source5,_ = Uncertainty_Budget_Source.objects.get_or_create(
-                    uncertainty_budget = rx_UC_budget,
-                    group = '10',
-                    description = 'Default EDM height above pillar From BaselineWA software',
-                    units = 'm',
-                    uc95 = 1
-                    )
-                UC_source5,_ = Uncertainty_Budget_Source.objects.get_or_create(
-                    uncertainty_budget = rx_UC_budget,
-                    group = '10',
-                    description = 'Default Reflector height above pillar From BaselineWA software',
-                    units = 'm',
-                    uc95 = 1
-                    )
-                UC_source5,_ = Uncertainty_Budget_Source.objects.get_or_create(
-                    uncertainty_budget = rx_UC_budget,
-                    group = '11',
-                    description = 'Default Offset From BaselineWA software',
-                    units = 'm',
-                    uc95 = 1
-                    )
+                if created:
+                    if float(job['StdDevTemp']) > 0:
+                        Uncertainty_Budget_Source.objects.create(
+                            uncertainty_budget = rx_UC_budget,
+                            group = '04',
+                            description = 'StdDevTemp From BaselineWA software',
+                            units = '°C',
+                            uc95 = float(job['StdDevTemp'])
+                            )
+                    if float(job['StdDevPressure']) > 0:
+                        Uncertainty_Budget_Source.objects.create(
+                            uncertainty_budget = rx_UC_budget,
+                            group = '05',
+                            description = 'StdDevPressure From BaselineWA software',
+                            units = 'hPa',
+                            uc95 = float(job['StdDevPressure'])
+                            )
+                    if float(job['InstCentringStdDev']) > 0:
+                        if float(job['InstCentringStdDev']) < 0.01:
+                            # Note - some data is in m some in mm Grrr#!!!
+                            job['InstCentringStdDev'] = float(job['InstCentringStdDev']) * 1000
+                        Uncertainty_Budget_Source.objects.create(
+                            uncertainty_budget = rx_UC_budget,
+                            group = '09',
+                            description = 'InstCentringStdDev From BaselineWA software',
+                            units = 'mm',
+                            uc95 = float(job['InstCentringStdDev'])
+                            )
+                    if float(rx['UncertaintyBaseline']['Reflector centring']['Default']) > 0:
+                        Uncertainty_Budget_Source.objects.create(
+                            uncertainty_budget = rx_UC_budget,
+                            group = '09',
+                            description = rx['UncertaintyBaseline']['Reflector centring']['Description'],
+                            units = rx['UncertaintyBaseline']['Reflector centring']['Unit'],
+                            uc95 = float(rx['UncertaintyBaseline']['Reflector centring']['Default'])
+                            )
+                    if float(rx['UncertaintyBaseline']['Instrument height above pillar']['Default']) > 0:
+                        Uncertainty_Budget_Source.objects.create(
+                            uncertainty_budget = rx_UC_budget,
+                            group = '10',
+                            description = rx['UncertaintyBaseline']['Instrument height above pillar']['Description'],
+                            units = rx['UncertaintyBaseline']['Instrument height above pillar']['Unit'],
+                            uc95 = float(rx['UncertaintyBaseline']['Instrument height above pillar']['Default'])
+                            )
+                    if float(rx['UncertaintyBaseline']['Reflector height above pillar']['Default']) > 0:
+                        Uncertainty_Budget_Source.objects.create(
+                            uncertainty_budget = rx_UC_budget,
+                            group = '10',
+                            description = rx['UncertaintyBaseline']['Reflector height above pillar']['Description'],
+                            units = rx['UncertaintyBaseline']['Reflector height above pillar']['Unit'],
+                            uc95 = float(rx['UncertaintyBaseline']['Reflector height above pillar']['Default'])
+                            )
+                    if float(rx['UncertaintyBaseline']['Pillar Height Difference']['Default']) > 0:
+                        Uncertainty_Budget_Source.objects.create(
+                            uncertainty_budget = rx_UC_budget,
+                            group = '10',
+                            description = rx['UncertaintyBaseline']['Pillar Height Difference']['Description'],
+                            units = rx['UncertaintyBaseline']['Pillar Height Difference']['Unit'],
+                            uc95 = float(rx['UncertaintyBaseline']['Pillar Height Difference']['Default'])
+                            )
+                    if float(rx['UncertaintyBaseline']['Pillar offset']['Default']) > 0:
+                        Uncertainty_Budget_Source.objects.create(
+                            uncertainty_budget = rx_UC_budget,
+                            group = '11',
+                            description = rx['UncertaintyBaseline']['Pillar offset']['Description'],
+                            units = rx['UncertaintyBaseline']['Pillar offset']['Unit'],
+                            uc95 = float(rx['UncertaintyBaseline']['Pillar offset']['Default'])
+                            )
                 try:
                     job_measurements = jobs_measurements[job['pk']]['grp_job_fk']
                     uniq_bays = set(
@@ -609,7 +607,7 @@ def import_dli(request):
                         f'Prism specified for {job["name"]} not in BASELINE database files: {e}')
 
                 if job['calibration_type'] == 'B' and len(commit_error) == 0:
-                    medjil_baseline_calibration, created = Pillar_Survey.objects.get_or_create(
+                    medjil_baseline_calibration, created = Pillar_Survey.objects.create(
                         baseline = medjil_baseline,
                         survey_date = dt.strptime(
                             job['survey_date'],'%d/%m/%Y').isoformat()[:10],
@@ -644,7 +642,7 @@ def import_dli(request):
                     dof = int(len(uniq_bays) - len(pillars))
                     if created: 
                         commit_successes.append(job["name"])
-                        PillarSurveyResults.objects.get_or_create(
+                        PillarSurveyResults.objects.create(
                             pillar_survey = medjil_baseline_calibration,
                             zero_point_correction = 0,
                             zpc_uncertainty = zpc_uncertainty,
@@ -663,7 +661,7 @@ def import_dli(request):
                             + float(UC_formula['UncertaintyConstant']) * 0.001)
                         
                         # Store certified distances
-                        medjil_cert_dist, created = Certified_Distance.objects.get_or_create(
+                        medjil_cert_dist, created = Certified_Distance.objects.create(
                             pillar_survey = medjil_baseline_calibration,
                             from_pillar = first_pillar,
                             to_pillar = medjil_pillar,
@@ -680,7 +678,7 @@ def import_dli(request):
                             f'Database commit error while creating certified distance {first_pillar} to {medjil_pillar} in {job["name"]}')
                         
                         #Store level observations
-                        medjil_lvl_obs, created = Level_Observation.objects.get_or_create(
+                        medjil_lvl_obs, created = Level_Observation.objects.create(
                             pillar_survey = medjil_baseline_calibration,
                             pillar = medjil_pillar,
                             reduced_level = float(pillar['height']),
@@ -701,7 +699,7 @@ def import_dli(request):
                                 from_pillar['certified_distance'],
                                 float(to_pillar['offset']),
                                 to_pillar['certified_distance'])
-                            medjil_obs, created = EDM_Observation.objects.get_or_create(
+                            medjil_obs, created = EDM_Observation.objects.create(
                                 pillar_survey = medjil_baseline_calibration,
                                 from_pillar = from_pillar['medjil_pillar'],
                                 to_pillar = to_pillar['medjil_pillar'],
@@ -721,15 +719,17 @@ def import_dli(request):
                     # BASELINE WA used a linear formula to assign standard deviations
                     # to the certified distances. Medjil stores the full vcv by
                     # recording standard deviations of all from and to pillar combinations
+                    # BASELINE WA stores these values as Uncertainty
+                    # Medjil stores these values as standard deviations
                     pillars = list(pillars.values())
                     for i1, from_pillar in enumerate(pillars[:-1]):
                         for to_pillar in pillars[i1+1:]:
                             p1_p2_dist = abs(from_pillar['certified_distance'] - 
                                           to_pillar['certified_distance'])
                             uc = (float(UC_formula['UncertaintyScale'])*10**-6 * p1_p2_dist
-                                  + float(UC_formula['UncertaintyConstant']) * 0.001)
+                                  + float(UC_formula['UncertaintyConstant']) * 0.001)/2
                             medjil_sdev_mtx, created = (
-                                Std_Deviation_Matrix.objects.get_or_create(
+                                Std_Deviation_Matrix.objects.create(
                                     pillar_survey = medjil_baseline_calibration,
                                     from_pillar = from_pillar['medjil_pillar'],
                                     to_pillar = to_pillar['medjil_pillar'],
@@ -740,8 +740,9 @@ def import_dli(request):
                     test_cyclic = True
                     if float(medjil_edm.edm_specs.unit_length) < 5: test_cyclic = False
                     try:
-                        medjil_edmi_calibration, created = (
-                            uPillarSurvey.objects.get_or_create(
+                        medjil_edmi_calibration=None
+                        medjil_edmi_calibration = (
+                            uPillarSurvey.objects.create(
                                 site = medjil_baseline,
                                 survey_date =  dt.strptime(
                                     job['survey_date'],'%d/%m/%Y').isoformat()[:10],
@@ -756,12 +757,11 @@ def import_dli(request):
                                 mets_applied = mets_applied,
                                 thermometer = job['medjil_thermo1_pk'],
                                 barometer = job['medjil_baro1_pk'],
-                                # hygrometer = medjil_hygro,
                                 thermo_calib_applied = thermo_calib_applied,
                                 baro_calib_applied = baro_calib_applied,
                                 hygro_calib_applied = True,
                                 uncertainty_budget = rx_UC_budget,
-                                outlier_criterion = 3,
+                                outlier_criterion = float(rx['UncertaintyBaseline']['Rejection Criterion']['Default']),
                                 test_cyclic = test_cyclic
                                 )
                             )
@@ -776,18 +776,17 @@ def import_dli(request):
                             meas = job_measurements[obs['MeasID']]
                             from_pillar = pillars[meas['from_pillar_fk']]
                             to_pillar = pillars[meas['to_pillar_fk']]
-                            medjil_edmi_obs, created = (
-                                uEdmObservation.objects.get_or_create(
-                                    pillar_survey = medjil_edmi_calibration,
-                                    from_pillar = from_pillar['medjil_pillar'],
-                                    to_pillar = to_pillar['medjil_pillar'],
-                                    inst_ht = meas['from_ht'],
-                                    tgt_ht = meas['to_ht'],
-                                    raw_slope_dist = obs['EDMObsDistance'],
-                                    raw_temperature = float_or_null(obs['MeasDryTemp']) or 20,
-                                    raw_pressure = float_or_null(obs['MeasPressure']) or 1013.25,
-                                    raw_humidity = float_or_null(obs['MeasHumidity']) or 1013.25
-                                    ))
+                            uEdmObservation.objects.create(
+                                pillar_survey = medjil_edmi_calibration,
+                                from_pillar = from_pillar['medjil_pillar'],
+                                to_pillar = to_pillar['medjil_pillar'],
+                                inst_ht = meas['from_ht'],
+                                tgt_ht = meas['to_ht'],
+                                raw_slope_dist = obs['EDMObsDistance'],
+                                raw_temperature = float_or_null(obs['MeasDryTemp']) or 20,
+                                raw_pressure = float_or_null(obs['MeasPressure']) or 1013.25,
+                                raw_humidity = float_or_null(obs['MeasHumidity']) or 60
+                                )
                     except Exception as e:
                         commit_errors.append(
                             f'Error importing measurement observations for {job["name"]}: {e}')
