@@ -37,7 +37,7 @@
   <hr>
 
     <div class="flex-with-sidebar">
-      <div style="margin-bottom: 24px; border-radius: 10px;">
+      <div style="margin-top: 14px; margin-bottom: 24px; border-radius: 10px;">
         <div class="py-1"></div>
         <hr><hr>
         <b class="py-1">Calibration Field Instructions</b>
@@ -90,15 +90,18 @@
             <hr><hr>
             <b>Medjil User Guides</b>
             <hr><hr>
-            <div class="py-1"></div>
-            <a href="{% url 'calibrationguide:medjil-guide' %}" target="_blank" class="text-sm ">General User Guide</a>
+            <div class="py-2"></div>
+            <a href="{% url 'calibrationguide:medjil-guide' %}" target="_blank" class="text-sm">General User Guide</a>
             <br>
             {% if user.is_staff %}
+                <div class="py-2"></div>
                 <a href="{% url 'calibrationguide:medjil-staff' %}" target="_blank" class="text-sm">Barcoded Staff Calibration</a>
                 <br>
+                <div class="py-2"></div>
                 <a href="{% url 'calibrationguide:medjil-baseline' %}" target="_blank" class="text-sm">EDM Baseline Calibration</a>
             {% endif %}
         </div>
+        <br>
         <hr>
       </div>
       <div class="post-content pxl-2">
@@ -113,6 +116,10 @@
     const contentFrame = document.getElementById('id-conent-url');
     const contentDisplay = document.getElementById('id-content-display')
 
+    // Assign default text in the view
+    if (contentDisplay.textContent.trim() === '') {
+        contentDisplay.innerHTML = '<p>  >> Select <strong>location</strong> and <strong>calibration type</strong> to view the Calibration Field Instructions in your location.</p> <p>  >> <strong>The Medjil User Guide</strong> provides the overview of available tools and some instructions including signup, login, and calibration.</p>'
+    }
     calibLocDropDown.addEventListener('change', (e) => {
         var selectedLocation = e.target.value;
         calibTypeDropDown.value = '';
@@ -128,7 +135,7 @@
         }
 
         if (calibLocDropDown.options.length <= 1) {
-            contentDisplay.innerHTML = "<p> There is no calibration guide yet. Please contact <a href='mailto:geodesy@landgate.wa.gov.au'>geodesy@landgate.wa.gov.au</a> for information.</p>"
+            contentDisplay.innerHTML = "There is no calibration guide yet. Please contact <a href='mailto:geodesy@landgate.wa.gov.au'>geodesy@landgate.wa.gov.au</a> for information."
         }
         else if (selectedLocation === '') {
             alert('Please select a location first!');
@@ -138,17 +145,17 @@
             .then(response => response.json())
             .then(data => {
                 const contentUrl = data.content_url;
-                console.log(contentUrl)
+                // console.log(contentUrl)
                 if (contentUrl) {
                     // contentFrame.src = contentUrl + '#page=1';
                     contentDisplay.style.backgroundColor = '#cddbd8'
                     contentDisplay.innerHTML = `<iframe id="id-conent-url" src="${contentUrl}#page=1" type="application/pdf" width="100%" height="600"></iframe>`
                 } else {
-                    contentDisplay.innerHTML = "<p> There is no calibration guide yet. </p>"
+                    contentDisplay.innerHTML = "<p> There is no calibration guide yet. Please contact <a href='mailto:geodesy@landgate.wa.gov.au'>geodesy@landgate.wa.gov.au</a> for information.</p>"
                 }
                 
             })
-            .catch(error => console.error(error));
+            // .catch(error => console.error(error));
         }
     })
 

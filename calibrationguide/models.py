@@ -80,7 +80,7 @@ class CalibrationFieldInstruction(models.Model):
         unique_together = ('location','calibration_type',)
         constraints = [models.UniqueConstraint(
             fields=['location','calibration_type'], name = 'unique_guide_instance',
-            violation_error_message='The user guide for already exists for this location.'
+            violation_error_message='The user guide already exists for this location.'
             ),
         ]
     
@@ -124,7 +124,7 @@ class MedjilUserGuide(models.Model):
         unique_together = ('title','author',)
         constraints = [models.UniqueConstraint(
             fields=['title','author'], name = 'unique_medjil_instance',
-            violation_error_message='The user guide for already exists for this location.'
+            violation_error_message='The user guide already exists for this location.'
             ),
         ]
     
@@ -178,7 +178,7 @@ class MedjilGuideToSiteCalibration(models.Model):
         unique_together = ('location','site_type',)
         constraints = [models.UniqueConstraint(
             fields=['location','site_type'], name = 'unique_site_instance',
-            violation_error_message='The user guide for already exists for this location.'
+            violation_error_message='The user guide already exists for this location.'
             ),
         ]
     

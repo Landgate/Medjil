@@ -16,6 +16,7 @@
 
 '''
 from django import forms
+from django.core.exceptions import NON_FIELD_ERRORS
 from .models import (CalibrationFieldInstruction,
                      MedjilUserGuide,
                      MedjilGuideToSiteCalibration,
@@ -34,6 +35,12 @@ class CalibrationFieldInstructionForm(forms.ModelForm):
     class Meta:
         model = CalibrationFieldInstruction
         fields = '__all__' 
+        error_messages = {
+            NON_FIELD_ERRORS: {
+                # "unique_together": "%(model_name)s's %(field_labels)s are not unique.",
+                "unique_together": "The user guide already exists for this location."
+            }
+        }
         widgets = {
                 'content_book' : forms.FileInput(attrs={'accept' : '.pdf'})
             }

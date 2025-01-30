@@ -27,11 +27,8 @@
         <p> This form allows to register (or modify) a new (or an existing) calibration site - both Barcode Calibration Range or an EDM Baseline.</p>
     </div>
     <div class="post-content">
-        <div class="alert error">
-            {{ form.non_field_errors }}
-        </div>
-        <form action="" class="site-form" method="post" enctype="multipart/form-data" id="create-form">
 
+        <form action="" class="site-form" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <table>
                     {% for field in form %}
@@ -52,6 +49,15 @@
                     {% endfor %}
                     
                 </table>
+                {% if form.non_field_errors %}
+                    <ul class="message-list" style="padding: 0.5rem 1.5rem">
+                        {% for error in form.non_field_errors %}
+                            {% if forloop.first %}
+                                <li class="error-danger"><strong>{{ error }}</strong></li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                {% endif %}
                 <div class="button-container">
                     <button type="button" onclick="window.location.href='/calibrationguide/'" class="cancelbtn bg-red-500 hover:bg-red-300">Cancel</button>
                     <button type="submit" class="submit-button bg-green-500 hover:bg-green-400">Save</button>
@@ -63,7 +69,10 @@
 
 <script>
     window.onload = function() {
-        document.getElementById('create-form').reset();
+        document.getElementById('id_calibration_type').value = '';
+        document.getElementById('id_location').value = '';
+        document.getElementById('id_title').value = '';
+        document.querySelector('.message-list').innerHTML = '';
     }
 </script>
 

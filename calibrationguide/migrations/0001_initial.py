@@ -241,7 +241,7 @@ class Migration(migrations.Migration):
             constraint=models.UniqueConstraint(
                 fields=("title", "author"),
                 name="unique_medjil_instance",
-                violation_error_message="The user guide for already exists for this location.",
+                violation_error_message="The user guide already exists for this location.",
             ),
         ),
         migrations.AlterUniqueTogether(
@@ -253,7 +253,7 @@ class Migration(migrations.Migration):
             constraint=models.UniqueConstraint(
                 fields=("location", "site_type"),
                 name="unique_site_instance",
-                violation_error_message="The user guide for already exists for this location.",
+                violation_error_message="The user guide already exists for this location.",
             ),
         ),
         migrations.AlterUniqueTogether(
@@ -265,7 +265,7 @@ class Migration(migrations.Migration):
             constraint=models.UniqueConstraint(
                 fields=("location", "calibration_type"),
                 name="unique_guide_instance",
-                violation_error_message="The user guide for already exists for this location.",
+                violation_error_message="The user guide already exists for this location.",
             ),
         ),
         migrations.AlterUniqueTogether(
