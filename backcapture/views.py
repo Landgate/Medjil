@@ -17,6 +17,7 @@
 '''
 from datetime import datetime as dt
 from django.contrib.auth.decorators import login_required
+from django.db import transaction
 from django.shortcuts import render
 from django.utils import timezone
 
@@ -607,7 +608,8 @@ def import_dli(request):
                         f'Prism specified for {job["name"]} not in BASELINE database files: {e}')
 
                 if job['calibration_type'] == 'B' and len(commit_error) == 0:
-                    medjil_baseline_calibration, created = Pillar_Survey.objects.create(
+                    medjil_baseline_calibration = None
+                    medjil_baseline_calibration = Pillar_Survey.objects.create(
                         baseline = medjil_baseline,
                         survey_date = dt.strptime(
                             job['survey_date'],'%d/%m/%Y').isoformat()[:10],
@@ -640,7 +642,7 @@ def import_dli(request):
                         )
                     zpc_uncertainty = float(rx['BaselineAccuracy'][job['baseline_fk']]['UncertaintyConstant'])/1000
                     dof = int(len(uniq_bays) - len(pillars))
-                    if created: 
+                    if medjil_baseline_calibration: 
                         commit_successes.append(job["name"])
                         PillarSurveyResults.objects.create(
                             pillar_survey = medjil_baseline_calibration,
@@ -655,41 +657,58 @@ def import_dli(request):
 
                     first_pillar = medjil_pillars[0]
                     UC_formula = rx['BaselineAccuracy'][job['baseline_fk']]
-                    for pillar, medjil_pillar in zip(pillars.values(), medjil_pillars):                            
-                        combined_uc = (
-                            float(UC_formula['UncertaintyScale'])*10**-6 * pillar['certified_distance']
-                            + float(UC_formula['UncertaintyConstant']) * 0.001)
+                    try:
+                        for pillar, medjil_pillar in zip(pillars.values(), medjil_pillars):                            
+                            combined_uc = (
+                                float(UC_formula['UncertaintyScale'])*10**-6 * pillar['certified_distance']
+                                + float(UC_formula['UncertaintyConstant']) * 0.001)
+                            
+                            # Store certified distances
+                            distances = []
+                            distance = Certified_Distance(
+                                pillar_survey = medjil_baseline_calibration,
+                                from_pillar = first_pillar,
+                                to_pillar = medjil_pillar,
+                                distance =  pillar['certified_distance'],
+                                a_uncertainty = float(pillar['DistSigma']),
+                                combined_uncertainty = combined_uc,
+                                offset = float(pillar['offset']),
+                                os_uncertainty = float(
+                                    rx['UncertaintyBaseline']['Pillar offset']['Default']) / 1000,
+                                reduced_level = float(pillar['height']),
+                                rl_uncertainty = float(pillar['HtStdDev'])
+                                )
+                            distances.append(distance)
                         
-                        # Store certified distances
-                        medjil_cert_dist, created = Certified_Distance.objects.create(
-                            pillar_survey = medjil_baseline_calibration,
-                            from_pillar = first_pillar,
-                            to_pillar = medjil_pillar,
-                            distance =  pillar['certified_distance'],
-                            a_uncertainty = float(pillar['DistSigma']),
-                            combined_uncertainty = combined_uc,
-                            offset = float(pillar['offset']),
-                            os_uncertainty = float(
-                                rx['UncertaintyBaseline']['Pillar offset']['Default']) / 1000,
-                            reduced_level = float(pillar['height']),
-                            rl_uncertainty = float(pillar['HtStdDev'])
-                            )
-                        if not created: commit_error.append(
-                            f'Database commit error while creating certified distance {first_pillar} to {medjil_pillar} in {job["name"]}')
-                        
-                        #Store level observations
-                        medjil_lvl_obs, created = Level_Observation.objects.create(
-                            pillar_survey = medjil_baseline_calibration,
-                            pillar = medjil_pillar,
-                            reduced_level = float(pillar['height']),
-                            rl_standard_deviation =float(pillar['HtStdDev'])
-                            )
-                        if not created: commit_error.append(
-                            f'Database commit error while creating certified height for {medjil_pillar} in {job["name"]}')
+                            #Store level observations
+                            levels = []    
+                            level = Level_Observation(
+                                pillar_survey = medjil_baseline_calibration,
+                                pillar = medjil_pillar,
+                                reduced_level = float(pillar['height']),
+                                rl_standard_deviation =float(pillar['HtStdDev'])
+                                )
+                            levels.append(level)
+                    
+                        with transaction.atomic():
+                            bookmark = True
+                            Certified_Distance.objects.bulk_create(distances)
+                        with transaction.atomic():
+                            bookmark = False
+                            Level_Observation.objects.bulk_create(levels)
+
+                    except Exception as e:
+                        if bookmark == True:
+                            commit_error.append(
+                                f'Database commit error while creating certified distance {first_pillar} to {medjil_pillar} in {job["name"]}: {e}')
+                        else:
+                            commit_error.append(
+                                f'Database commit error while creating certified height for {medjil_pillar} in {job["name"]}: {e}')
                         
 
                     # Store observations used for calibration
                     try:
+                        observations = []
                         for obs in job_edm_obs:
                             meas = job_measurements[obs['MeasID']]
                             from_pillar = pillars[meas['from_pillar_fk']]
@@ -699,7 +718,8 @@ def import_dli(request):
                                 from_pillar['certified_distance'],
                                 float(to_pillar['offset']),
                                 to_pillar['certified_distance'])
-                            medjil_obs, created = EDM_Observation.objects.create(
+
+                            observation = EDM_Observation(
                                 pillar_survey = medjil_baseline_calibration,
                                 from_pillar = from_pillar['medjil_pillar'],
                                 to_pillar = to_pillar['medjil_pillar'],
@@ -711,9 +731,14 @@ def import_dli(request):
                                 raw_pressure = float_or_null(obs['MeasPressure']) or 1013.25,
                                 raw_humidity = float_or_null(obs['MeasHumidity']) or 50
                                 )
+                            observations.append(observation)
+                    
+                        with transaction.atomic():
+                            EDM_Observation.objects.bulk_create(observations)
+                    
                     except Exception as e:
                         commit_errors.append(
-                            f'Error importing measurement observations for {job["name"]}: {e}')
+                            f'Error importing EDM observations for {job["name"]}: {e}')
                         
                     
                     # BASELINE WA used a linear formula to assign standard deviations
@@ -722,19 +747,29 @@ def import_dli(request):
                     # BASELINE WA stores these values as Uncertainty
                     # Medjil stores these values as standard deviations
                     pillars = list(pillars.values())
-                    for i1, from_pillar in enumerate(pillars[:-1]):
-                        for to_pillar in pillars[i1+1:]:
-                            p1_p2_dist = abs(from_pillar['certified_distance'] - 
-                                          to_pillar['certified_distance'])
-                            uc = (float(UC_formula['UncertaintyScale'])*10**-6 * p1_p2_dist
-                                  + float(UC_formula['UncertaintyConstant']) * 0.001)/2
-                            medjil_sdev_mtx, created = (
-                                Std_Deviation_Matrix.objects.create(
-                                    pillar_survey = medjil_baseline_calibration,
-                                    from_pillar = from_pillar['medjil_pillar'],
-                                    to_pillar = to_pillar['medjil_pillar'],
-                                    std_uncertainty = uc
-                                    ))
+                    try:
+                        for i1, from_pillar in enumerate(pillars[:-1]):
+                            sdevs=[]
+                            for to_pillar in pillars[i1+1:]:
+                                p1_p2_dist = abs(from_pillar['certified_distance'] - 
+                                              to_pillar['certified_distance'])
+                                uc = (float(UC_formula['UncertaintyScale'])*10**-6 * p1_p2_dist
+                                      + float(UC_formula['UncertaintyConstant']) * 0.001)/2
+                                sdev = (
+                                    Std_Deviation_Matrix(
+                                        pillar_survey = medjil_baseline_calibration,
+                                        from_pillar = from_pillar['medjil_pillar'],
+                                        to_pillar = to_pillar['medjil_pillar'],
+                                        std_uncertainty = uc
+                                        ))
+                                sdevs.append(sdev)
+                        
+                            with transaction.atomic():
+                                Std_Deviation_Matrix.objects.bulk_create(sdevs)
+                    
+                    except Exception as e:
+                        commit_errors.append(
+                            f'Error importing certified distance standard deviations for {job["name"]}: {e}')
                 
                 if job['calibration_type'] == 'I' and len(commit_error) == 0:
                     test_cyclic = True
@@ -772,21 +807,27 @@ def import_dli(request):
                     
                     # Store observations used for calibration
                     try:
+                        observations = []
                         for obs in job_edm_obs:
                             meas = job_measurements[obs['MeasID']]
                             from_pillar = pillars[meas['from_pillar_fk']]
                             to_pillar = pillars[meas['to_pillar_fk']]
-                            uEdmObservation.objects.create(
+                            observation = uEdmObservation(
                                 pillar_survey = medjil_edmi_calibration,
                                 from_pillar = from_pillar['medjil_pillar'],
                                 to_pillar = to_pillar['medjil_pillar'],
                                 inst_ht = meas['from_ht'],
                                 tgt_ht = meas['to_ht'],
                                 raw_slope_dist = obs['EDMObsDistance'],
-                                raw_temperature = float_or_null(obs['MeasDryTemp']) or 20,
-                                raw_pressure = float_or_null(obs['MeasPressure']) or 1013.25,
-                                raw_humidity = float_or_null(obs['MeasHumidity']) or 60
-                                )
+                                raw_temperature = float_or_null(obs['MeasDryTemp']) or None,
+                                raw_pressure = float_or_null(obs['MeasPressure']) or None,
+                                raw_humidity = float_or_null(obs['MeasHumidity']) or None
+                                )                                
+                            observations.append(observation)
+                        
+                        with transaction.atomic():
+                            uEdmObservation.objects.bulk_create(observations)
+                            
                     except Exception as e:
                         commit_errors.append(
                             f'Error importing measurement observations for {job["name"]}: {e}')
