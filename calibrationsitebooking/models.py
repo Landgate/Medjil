@@ -28,7 +28,6 @@ def validate_future_date(value):
         raise ValidationError('You cannot select a date in the past.')
     
 class CalibrationSiteBooking(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, help_text='Unique ID for this calibration record')
     calibration_type = models.CharField(max_length=24,
                                 choices=CALIB_CHOICES,
                                 null=True,
@@ -64,3 +63,4 @@ class CalibrationSiteBooking(models.Model):
     class Meta:
         ordering = ['-calibration_date', 'calibration_time', 'location','site_id']
         unique_together = ('site_id','calibration_date', 'calibration_time')
+

@@ -29,17 +29,14 @@ class CalibrationSiteBookingForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user')
         groups = list(user.groups.values_list('name', flat=True))
-        # locations = list(user.locations.values_list('statecode', flat=True))  
         super(CalibrationSiteBookingForm, self).__init__(*args, **kwargs)   
+
         self.fields['observer'].initial = user
         self.fields['observer'].disabled = True
-
-        # self.fields['site_id'].choices = []; # CalibrationSite.objects.filter(state__statecode__in = locations)
         if not 'Verifying_Authority' in groups:
             self.fields['calibration_type'].choices = [('', '--- Select Type ---')] + [group for group in self.fields['calibration_type'].choices if group[0] == 'Instrument Calibration']
         
         self.fields['location'].empty_label = '--- Select Location ---'
-        # self.fields['site_id'].queryset = CalibrationSite.objects.none()
         self.fields['site_id'].empty_label = '--- Select Site ---'
 
     class Meta:

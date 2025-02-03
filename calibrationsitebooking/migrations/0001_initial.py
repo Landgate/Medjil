@@ -22,11 +22,11 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "id",
-                    models.UUIDField(
-                        default=uuid.uuid4,
-                        help_text="Unique ID for this calibration record",
-                        primary_key=True,
-                        serialize=False,
+                    models.BigAutoField(
+                        auto_created=True, 
+                        primary_key=True, 
+                        serialize=False, 
+                        verbose_name="ID"
                     ),
                 ),
                 (
