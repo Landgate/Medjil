@@ -52,6 +52,7 @@ urlpatterns = [
     path('backcapture/', include('backcapture.urls')),
     path('edm_calibration/', include('edm_calibration.urls')),
     path('calibrationguide/', include('calibrationguide.urls')),
+    path('calibrationsitebooking/', include('calibrationsitebooking.urls')),
     path('', views.home, name='home'),
     path('terms/', views.terms, name='terms'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

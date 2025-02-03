@@ -24,7 +24,7 @@
 <article class="post">
     <div class="post-header mt-12 text-center mb-3">
         <h1>Welcome to Landgate's Survey Instrument Calibration website.</h1>
-        <p> This form allows to create (or modify) a Calibration Field Guide.</p>
+        <p> This form allows to booking (or modify) a calibration site.</p>
     </div>
     <div class="post-content">
 
@@ -67,13 +67,61 @@
     </div>
 </article>
 
-<!-- <script>
-    window.onload = function() {
-        document.getElementById('id_calibration_type').value = '';
-        document.getElementById('id_location').value = '';
-        document.getElementById('id_title').value = '';
-        // document.querySelector('.message-list').innerHTML = '';
-    }
-</script> -->
+<script>
+
+    document.getElementById('id_calibration_type').addEventListener('change', (e) => {
+        const type = e.target.value;
+        if (type === ''){
+            document.getElementById('id_location').value = '';
+            document.getElementById('id_site_id').value = '';
+        }
+    })
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const calibrationTypeOption = document.getElementById('id_calibration_type');
+        const locationOption = document.getElementById('id_location');
+        const siteIdOption = document.getElementById('id_site_id');
+
+        function fetchSiteIds() {
+            const calibrationType = calibrationTypeOption.value;
+            const location = locationOption.value;
+
+            if (calibrationType.value === '') {
+                siteIdOption.options.length = 1;
+            }
+
+            if (calibrationType && location) {
+                siteIdOption.options.length = 1;
+                fetch(`/calibrationsitebooking/get-calib-sites/${calibrationType}/${location}`)
+                .then(response => response.json())
+                .then(data => {
+                    const site_obj = data.site_obj;
+                    site_obj.forEach(e => {
+                        // console.log(e[0], e[1])
+                        var option = document.createElement('option');
+                        option.value = e[0]
+                        option.text = e[1]
+                        siteIdOption.appendChild(option);
+                    });
+                    })
+                .catch(error => console.error('Error fetching options:', error));
+            };
+        }
+        calibrationTypeOption.addEventListener('change', fetchSiteIds);
+        locationOption.addEventListener('change', fetchSiteIds);
+    }); 
+
+    // window.onload = function() {
+    //     document.getElementById('id_calibration_type').value = '';
+    //     document.getElementById('id_location').value = '';
+    //     document.getElementById('id_site_id').value = '';
+    //     document.getElementById('id_job_number').value = '';
+    //     document.getElementById('id_calibration_date').value = '';
+    //     document.getElementById('id_calibration_time').value = '';
+    //     // document.querySelector('.message-list').innerHTML = '';
+    // }
+    // Refresh the form only after a successful submission
+    
+</script>
 
 {% endblock %}
