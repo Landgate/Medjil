@@ -78,6 +78,11 @@ class CalibrationFieldInstruction(models.Model):
     class Meta:
         ordering = ['location','calibration_type']
         unique_together = ('location','calibration_type',)
+        constraints = [models.UniqueConstraint(
+            fields=['location','calibration_type'], name = 'unique_guide_instance',
+            violation_error_message='The user guide already exists for this location.'
+            ),
+        ]
     
     def __str__(self):
         return self.title
