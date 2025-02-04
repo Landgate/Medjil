@@ -31,7 +31,11 @@ def LSA(A, x, P=None):
         P = np.eye(A.shape[0])
     dof = len(A) - len(A.T)
     # (ISO 17123-4:2012 eq.11 & 12 & 15)
-    Q = np.linalg.inv(A.T @ P @ A)
+    try:
+        Q = np.linalg.inv(A.T @ P @ A)
+    except:
+        # Return None for Singular matrix and not enough observations.
+        return None, None, None, None
     y = (Q @ A.T @ P @ x)
 
     # (ISO 17123-4:2012 eq.9)

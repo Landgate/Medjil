@@ -59,7 +59,8 @@ from common_func.SurveyReductions import (
     add_calib_uc2,
     refline_std_dev,
     sum_uc_budget,
-    add_typeA
+    add_typeA,
+    float_or_null
     )
 from .forms import (
     CalibrateEdmForm,
@@ -571,15 +572,15 @@ def compute_calibration(request, id):
         for o in raw_edm_obs.values():
             #----------------- Instrument Calibration Corrections -----------------#            
             o['Temp'], o['temp_calib_corr'] = apply_calib(
-                float(o['raw_temperature']),
+                float_or_null(o['raw_temperature']),
                 pillar_survey.thermo_calib_applied,
                 calibrations['them'])
             o['Pres'], o['pres_calib_corr'] = apply_calib(
-                float(o['raw_pressure']),
+                float_or_null(o['raw_pressure']),
                 pillar_survey.baro_calib_applied,
                 calibrations['baro'])
             o['Humid'], o['humi_calib_corr'] = apply_calib(
-                float(o['raw_humidity']),
+                float_or_null(o['raw_humidity']),
                 pillar_survey.hygro_calib_applied,
                 calibrations['hygro'])
             
@@ -709,12 +710,16 @@ def compute_calibration(request, id):
         # run the LSA for the iso_17123:4 full test
         iso_y, _, iso_chi_test, iso_residuals = LSA(iso_A, iso_x)
         
-        ini_from_pillar = pillars_used[1].name
-        for pillar, parameter in zip(pillars_used[1:], iso_y[:-1]):                                            
-            parameter['from_pillar'] = ini_from_pillar
-            parameter['to_pillar'] = pillar.name
-            ini_from_pillar =pillar.name
-        iso_y[-1]['term'] = 'zero-point correction'
+        if iso_y:
+            ini_from_pillar = pillars_used[1].name
+            for pillar, parameter in zip(pillars_used[1:], iso_y[:-1]):                                            
+                parameter['from_pillar'] = ini_from_pillar
+                parameter['to_pillar'] = pillar.name
+                ini_from_pillar =pillar.name
+            iso_y[-1]['term'] = 'zero-point correction'
+        else:
+            validation_errors['Warnings'].append(
+                'Insufficient survey observations were provided for performing the ISO 17123:4 "full test procedure". The results table for those results has been omitted from this report.')
         
         iso_full_test = {'matrix_y':iso_y,
                          'chi_test':iso_chi_test}

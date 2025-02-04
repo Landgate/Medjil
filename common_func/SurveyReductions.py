@@ -674,9 +674,9 @@ def is_float(n):
 
 
 def float_or_null (n):
-    try:
+    if is_float(n):
         return float(n)
-    except ValueError:
+    else:
         return None
     
     

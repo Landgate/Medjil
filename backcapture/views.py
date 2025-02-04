@@ -207,6 +207,11 @@ def create_medjil_accreditation(rx, commit_errors, request):
                 f'Error creating generic accreditation in Medjil: {e}')
     return medjil_accreditation, commit_errors
 
+def float_or_zero(val):
+    try:
+        return float(val)
+    except:
+        return 0
 
 def create_medjil_model(rx, request, commit_errors):
     # Create BASELINE Models as Medjil Model Specifications
@@ -481,7 +486,7 @@ def import_dli(request):
                         name = 'Default',
                         company__company_name = 'Landgate')
                 if created:
-                    if float(job['StdDevTemp']) > 0:
+                    if float_or_zero(job['StdDevTemp']) > 0:
                         Uncertainty_Budget_Source.objects.create(
                             uncertainty_budget = rx_UC_budget,
                             group = '04',
@@ -489,7 +494,7 @@ def import_dli(request):
                             units = '°C',
                             uc95 = float(job['StdDevTemp'])
                             )
-                    if float(job['StdDevPressure']) > 0:
+                    if float_or_zero(job['StdDevPressure']) > 0:
                         Uncertainty_Budget_Source.objects.create(
                             uncertainty_budget = rx_UC_budget,
                             group = '05',
@@ -497,7 +502,7 @@ def import_dli(request):
                             units = 'hPa',
                             uc95 = float(job['StdDevPressure'])
                             )
-                    if float(job['InstCentringStdDev']) > 0:
+                    if float_or_zero(job['InstCentringStdDev']) > 0:
                         if float(job['InstCentringStdDev']) < 0.01:
                             # Note - some data is in m some in mm Grrr#!!!
                             job['InstCentringStdDev'] = float(job['InstCentringStdDev']) * 1000
@@ -508,7 +513,7 @@ def import_dli(request):
                             units = 'mm',
                             uc95 = float(job['InstCentringStdDev'])
                             )
-                    if float(rx['UncertaintyBaseline']['Reflector centring']['Default']) > 0:
+                    if float_or_zero(rx['UncertaintyBaseline']['Reflector centring']['Default']) > 0:
                         Uncertainty_Budget_Source.objects.create(
                             uncertainty_budget = rx_UC_budget,
                             group = '09',
@@ -516,7 +521,7 @@ def import_dli(request):
                             units = rx['UncertaintyBaseline']['Reflector centring']['Unit'],
                             uc95 = float(rx['UncertaintyBaseline']['Reflector centring']['Default'])
                             )
-                    if float(rx['UncertaintyBaseline']['Instrument height above pillar']['Default']) > 0:
+                    if float_or_zero(rx['UncertaintyBaseline']['Instrument height above pillar']['Default']) > 0:
                         Uncertainty_Budget_Source.objects.create(
                             uncertainty_budget = rx_UC_budget,
                             group = '10',
@@ -524,7 +529,7 @@ def import_dli(request):
                             units = rx['UncertaintyBaseline']['Instrument height above pillar']['Unit'],
                             uc95 = float(rx['UncertaintyBaseline']['Instrument height above pillar']['Default'])
                             )
-                    if float(rx['UncertaintyBaseline']['Reflector height above pillar']['Default']) > 0:
+                    if float_or_zero(rx['UncertaintyBaseline']['Reflector height above pillar']['Default']) > 0:
                         Uncertainty_Budget_Source.objects.create(
                             uncertainty_budget = rx_UC_budget,
                             group = '10',
@@ -532,7 +537,7 @@ def import_dli(request):
                             units = rx['UncertaintyBaseline']['Reflector height above pillar']['Unit'],
                             uc95 = float(rx['UncertaintyBaseline']['Reflector height above pillar']['Default'])
                             )
-                    if float(rx['UncertaintyBaseline']['Pillar Height Difference']['Default']) > 0:
+                    if float_or_zero(rx['UncertaintyBaseline']['Pillar Height Difference']['Default']) > 0:
                         Uncertainty_Budget_Source.objects.create(
                             uncertainty_budget = rx_UC_budget,
                             group = '10',
@@ -540,7 +545,7 @@ def import_dli(request):
                             units = rx['UncertaintyBaseline']['Pillar Height Difference']['Unit'],
                             uc95 = float(rx['UncertaintyBaseline']['Pillar Height Difference']['Default'])
                             )
-                    if float(rx['UncertaintyBaseline']['Pillar offset']['Default']) > 0:
+                    if float_or_zero(rx['UncertaintyBaseline']['Pillar offset']['Default']) > 0:
                         Uncertainty_Budget_Source.objects.create(
                             uncertainty_budget = rx_UC_budget,
                             group = '11',

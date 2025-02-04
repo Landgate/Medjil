@@ -1137,63 +1137,50 @@ def certified_distances_home(request, id):
 @login_required(login_url="/accounts/login") 
 @user_passes_test(is_staff)
 def certified_distances_edit(request, id):
-    # only available to staff
-    if request.user.is_staff:
-        pillar_survey_results_obj = PillarSurveyResults.objects.filter(
-            pillar_survey=id).first()
-        
-        pillar_survey_results_form = PillarSurveyResultsForm(
-            request.POST or None,
-            request.FILES or None,
-            instance=pillar_survey_results_obj)
-        
-        certified_distances = modelformset_factory(
-            Certified_Distance,
-            form=Certified_DistanceForm, 
-            extra=0)
-        
-        certified_distances_obj = Certified_Distance.objects.filter(
-            pillar_survey=id)
-                
-        certified_distances_formset = certified_distances(
-            request.POST or None,
-            prefix='formset1',
-            queryset=certified_distances_obj)
+    pillar_survey_results_obj = PillarSurveyResults.objects.select_related(
+        'pillar_survey').filter(pillar_survey=id).first()
+    
+    pillar_survey_results_form = PillarSurveyResultsForm(
+        request.POST or None, 
+        request.FILES or None, 
+        instance=pillar_survey_results_obj)
 
-        std_deviation_matrix = modelformset_factory(
-            Std_Deviation_Matrix,
-            form=Std_Deviation_MatrixForm, 
-            extra=0)
-        
-        std_deviation_matrix_obj = Std_Deviation_Matrix.objects.filter(
-            pillar_survey=id)
-                       
-        std_deviation_matrix_formset = std_deviation_matrix(
-            request.POST or None,
-            prefix='formset2',
-            queryset=std_deviation_matrix_obj)
-          
-        if (pillar_survey_results_form.is_valid() 
-            and certified_distances_formset.is_valid() 
-            and std_deviation_matrix_formset.is_valid()):
-            pillar_survey_results_form.save()
-            certified_distances_formset.save()
-            std_deviation_matrix_formset.save()
-            
-            next_url = request.POST.get('next', 'calibrationsites:home')
-            return redirect(next_url)
-            
-        context = {
-            'pillar_survey_results_form': pillar_survey_results_form,
-            'certified_distances_obj': certified_distances_obj,
-            'combined': zip(certified_distances_obj, certified_distances_formset),
-            'certified_distances_formset': certified_distances_formset,
-            'std_deviation_matrix_formset': std_deviation_matrix_formset,
-            'std_combined': list(
-                zip(std_deviation_matrix_obj, std_deviation_matrix_formset))
-            }
-        
-        return render(request, 'baseline_calibration/certified_distances_form.html', context)
+    certified_distances_qs = Certified_Distance.objects.filter(
+        pillar_survey=id).select_related(
+        'from_pillar', 'to_pillar')
+
+    std_deviation_matrix_qs = Std_Deviation_Matrix.objects.filter(
+        pillar_survey=id).select_related(
+        'to_pillar')
+
+    certified_distances_formset = modelformset_factory(
+        Certified_Distance, form=Certified_DistanceForm, extra=0
+    )(request.POST or None, prefix='formset1', queryset=certified_distances_qs)
+
+    std_deviation_matrix_formset = modelformset_factory(
+        Std_Deviation_Matrix, form=Std_Deviation_MatrixForm, extra=0
+    )(request.POST or None, prefix='formset2', queryset=std_deviation_matrix_qs)
+
+    if (
+        pillar_survey_results_form.is_valid()
+        and certified_distances_formset.is_valid()
+        and std_deviation_matrix_formset.is_valid()
+    ):
+        pillar_survey_results_form.save()
+        certified_distances_formset.save()
+        std_deviation_matrix_formset.save()
+        return redirect(request.POST.get('next', 'calibrationsites:home'))
+
+    context = {
+        'pillar_survey_results_form': pillar_survey_results_form,
+        'certified_distances_obj': certified_distances_qs,
+        'combined': zip(certified_distances_qs, certified_distances_formset),
+        'certified_distances_formset': certified_distances_formset,
+        'std_deviation_matrix_formset': std_deviation_matrix_formset,
+        'std_combined': list(zip(std_deviation_matrix_qs, std_deviation_matrix_formset)),
+    }
+
+    return render(request, 'baseline_calibration/certified_distances_form.html', context)
 
 
 @login_required(login_url="/accounts/login") 

@@ -811,6 +811,7 @@
         </table>
     </div>
 </div>
+{% if iso_full_test.matrix_y %}
 <div class="text-center">
     <h2 class="text-center">ISO 17123:4 Full Test Procedure Results</h2>
     <table style="margin-left:auto;margin-right:auto;font-size:10.0pt;width:800px;">
@@ -866,6 +867,7 @@
         </tr>
     </table>
 </div>
+{% endif %}
 <div class="text-center">
     <h2>Residuals From Least Squares Fit of The Baseline Measurements</h2>
     <div id="charts" class="flex flex-col justify-end items-center">
