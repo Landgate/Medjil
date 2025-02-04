@@ -57,7 +57,7 @@ function toggleItem() {
   /* Close Submenu From Anywhere */
   function closeSubmenu(e) {
     let isClickInside = menu.contains(e.target);
-    console.log(isClickInside);
+    
     if (!isClickInside && menu.querySelector(".sub-links-active")) {
       menu.querySelector(".sub-links-active").classList.remove("sub-links-active");
     }

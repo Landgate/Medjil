@@ -518,7 +518,7 @@ def edm_observations_update(request, id):
             return redirect('edm_calibration:compute_calibration', id=id)
 
 
-def compute_calibration(request, id):
+def compute_calibration(request, id):    
     # Retrieve the Pillar Survey instance and related data
     pillar_survey = get_object_or_404(
         uPillarSurvey.objects.select_related(
@@ -531,7 +531,8 @@ def compute_calibration(request, id):
         ),
         id=id
     )
-    try:
+    # try:
+    if 1==1:
         # Prepare data for calculations
         edm_observations = list(pillar_survey.uedmobservation_set.all())
         raw_edm_obs = {
@@ -568,23 +569,20 @@ def compute_calibration(request, id):
                                              pillar_survey)
         
         for o in raw_edm_obs.values():
-            #----------------- Instrument Corrections -----------------#
-            o['Temp'] = o['raw_temperature']
-            o['Pres'] = o['raw_pressure']
-            o['Humid'] = o['raw_humidity']
-            if calibrations['them']:
-                o['Temp'],c = calibrations['them'].apply_calibration(
-                    o['raw_temperature'],
-                    pillar_survey.thermo_calib_applied)
-            if calibrations['baro']:
-                o['Pres'],c = calibrations['baro'].apply_calibration(
-                    o['raw_pressure'],
-                    pillar_survey.baro_calib_applied)
-            if calibrations['hygro']:
-                o['Humid'],c = calibrations['hygro'].apply_calibration(
-                    o['raw_humidity'],
-                    pillar_survey.hygro_calib_applied)
-                
+            #----------------- Instrument Calibration Corrections -----------------#            
+            o['Temp'], o['temp_calib_corr'] = apply_calib(
+                float(o['raw_temperature']),
+                pillar_survey.thermo_calib_applied,
+                calibrations['them'])
+            o['Pres'], o['pres_calib_corr'] = apply_calib(
+                float(o['raw_pressure']),
+                pillar_survey.baro_calib_applied,
+                calibrations['baro'])
+            o['Humid'], o['humi_calib_corr'] = apply_calib(
+                float(o['raw_humidity']),
+                pillar_survey.hygro_calib_applied,
+                calibrations['hygro'])
+            
             o['Mets_Correction'] = (
                 pillar_survey.edm.edm_specs.atmospheric_correction(
                     o=o,
@@ -618,6 +616,9 @@ def compute_calibration(request, id):
         matrix_A = []
         matrix_x = []
         matrix_P = []
+        iso_A = []
+        iso_x = []
+        pillars_used = pillar_survey.get_pillars_used()
         for i, o in enumerate(edm_observations.values()):
             o['id']=str(i+1)
             o = (offset_slope_correction(o,
@@ -648,6 +649,10 @@ def compute_calibration(request, id):
                                                o['uc_sources'],
                                                baseline_data['certified_dist'])
                   
+            o['apriori_uc_budget'] = refline_std_dev(o,
+                                            baseline_data['certified_dist'], 
+                                            pillar_survey.edm)
+               
             o['uc_budget'] = refline_std_dev(o,
                                             baseline_data['certified_dist'], 
                                             pillar_survey.edm)
@@ -656,6 +661,20 @@ def compute_calibration(request, id):
             
             #----------------- Least Squares -----------------#
             #----------------- compile Design matrix, weight Matrix -----------------#
+            # Matrix's for ISO 17123-4:2012 Full test procedure
+            iso_a = []
+            cell_val = 0            
+            for pillar in pillars_used:
+                if o['from_pillar'] == pillar.name or o['to_pillar'] == pillar.name:
+                    if cell_val == 0: cell_val = 1
+                    elif cell_val == 1: cell_val = 0
+                iso_a.append(cell_val)
+            
+            iso_A.append(iso_a[:-1] + [-1])
+            
+            iso_x.append(o['Reduced_distance'])
+            
+            # Matrix's for metrologically traceable measurements
             a_row = [1,
                      o['Reduced_distance']]
             # Do not test for cyclic errors if unit length is not specified
@@ -687,7 +706,20 @@ def compute_calibration(request, id):
         elif not pillar_survey.edm.edm_specs.unit_length:
             report_notes.append('Testing for cyclic errors during this calibration was not possible because the unit lenght of the Instrument has not been specified in the Instrument Model Specifications.')
         
-        # run LSA with 6, 4 then 2 parameters
+        # run the LSA for the iso_17123:4 full test
+        iso_y, _, iso_chi_test, iso_residuals = LSA(iso_A, iso_x)
+        
+        ini_from_pillar = pillars_used[1].name
+        for pillar, parameter in zip(pillars_used[1:], iso_y[:-1]):                                            
+            parameter['from_pillar'] = ini_from_pillar
+            parameter['to_pillar'] = pillar.name
+            ini_from_pillar =pillar.name
+        iso_y[-1]['term'] = 'zero-point correction'
+        
+        iso_full_test = {'matrix_y':iso_y,
+                         'chi_test':iso_chi_test}
+        
+        # run LSA for metrologically traceable measurements with 6, 4 then 2 parameters
         # Check t-student test results after each LSA to determine if the end 2 cyclic errors are significant
         testing_terms = [True, True]
         while False not in testing_terms and len(matrix_A[0])!=0:
@@ -727,7 +759,7 @@ def compute_calibration(request, id):
             # remove 2 parameters to maybe run again
             matrix_A = [a[:-2] for a in matrix_A]
         
-        # populate a hidden formsets to save after commit (form Submit)
+        # populate a dictionary for certificate
         ini_edmi_certificate = {
             'edm':pillar_survey.edm,
             'prism':pillar_survey.prism,
@@ -827,6 +859,11 @@ def compute_calibration(request, id):
                     uc['group_verbose'] = dict(Uncertainty_Budget_Source.group_types)[uc['group']]
             o['uc_sources']=sorted(o['uc_sources'], key=lambda x: x['group_verbose'])
             o['uc_budget'] = OrderedDict(sorted(o['uc_budget'].items()))
+            for uc in o['apriori_uc_budget'].values():
+                if uc['group'] in dict(Uncertainty_Budget_Source.group_types).keys():
+                    uc['group_verbose'] = dict(Uncertainty_Budget_Source.group_types)[uc['group']]
+            
+            o['apriori_uc_budget'] = OrderedDict(sorted(o['apriori_uc_budget'].items()))
             
             residual_chart.append({'from_pillar': o['from_pillar'], 
                                'to_pillar':o['to_pillar'],
@@ -835,13 +872,14 @@ def compute_calibration(request, id):
                                'std_residual': o['std_residual']})
             if o['Reduced_distance'] > first_to_last['Reduced_distance']:
                 first_to_last = o
-             
+        
         context = {'pillar_survey':pillar_survey,
                    'calib':calibrations,
                    'baseline': baseline_data,
                    'parameters': matrix_y,
                    'chi_test': chi_test,
                    'ISO_test': ISO_test,
+                   'iso_full_test':iso_full_test,
                    'edm_observations': edm_observations,
                    'ini_edmi_certificate':ini_edmi_certificate,
                    'residual_chart': residual_chart,
@@ -854,33 +892,31 @@ def compute_calibration(request, id):
         
         ini_edmi_certificate['html_report'] = html_report
         
-        edmi_certificate = EDMI_certificateForm(
-            request.POST or None,
-            instance=pillar_survey.certificate or None,
-            initial=ini_edmi_certificate)
         ps_approvals = PillarSurveyApprovals(
             request.POST or None,
             instance=pillar_survey)
         
-        if (edmi_certificate.is_valid() and ps_approvals.is_valid()):
-                # this is a POST command asking to commit the hidden calibration 
-                # data held on the report page
-                ps_approvals.save()
-                cert_instance = edmi_certificate.save()
+        if ps_approvals.is_valid():
+            # this is a POST command asking to commit the certificate
+            # and signitures
+            ps_approvals.save()
+            cert_instance, _ = EDMI_certificate.objects.update_or_create(
+                pk = pillar_survey.certificate.pk or None,
+                defaults= ini_edmi_certificate)
+            # cert_instance = edmi_certificate.save()
+            
+            pillar_survey.certificate = cert_instance
+            pillar_survey.save()
                 
-                pillar_survey.certificate = cert_instance
-                pillar_survey.save()
-                    
-                return redirect('edm_calibration:edm_calibration_home')
+            return redirect('edm_calibration:edm_calibration_home')
             
         context = {'pillar_survey':pillar_survey,
                     'html_report': html_report,
-                    'ps_approvals':ps_approvals,
-                    'hidden':[edmi_certificate]}
+                    'ps_approvals':ps_approvals}
         return render(request, 'edm_calibration/display_report.html', context)
-    except Exception as e:
-        # any missed errors are caught here
-        messages.error(request, f"An error occurred: {str(e)}")
-        return render(request, 'edm_calibration/errors_report.html', 
-                      {'id':id})
+    # except Exception as e:
+    #     # any missed errors are caught here
+    #     messages.error(request, f"An error occurred: {str(e)}")
+    #     return render(request, 'edm_calibration/errors_report.html', 
+    #                   {'id':id})
 

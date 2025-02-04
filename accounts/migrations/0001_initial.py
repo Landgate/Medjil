@@ -58,6 +58,9 @@ class Migration(migrations.Migration):
                 ('company_abbrev', models.CharField(
                         validators=[common_func.validators.validate_profanity],
                         max_length=20)),
+                ('company_address', models.CharField(
+                        validators=[common_func.validators.validate_profanity],
+                        max_length=256, null=True, blank=True)),
                 ("company_secret_key", models.CharField(
                     default=accounts.models.generate_short_hash,
                     help_text="Users aleady registerd with this company have access to this key",

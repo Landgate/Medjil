@@ -470,6 +470,12 @@ class Pillar_Survey(models.Model):
         queryset = Certified_Distance.objects.filter(
             pillar_survey = self.pk).order_by('to_pillar__order')
         return queryset
+    
+    def get_average_pillar_height(self):
+        certified_distances = self.certified_distances()
+        total_height = sum(cd.reduced_level for cd in certified_distances)
+        count = certified_distances.count()
+        return total_height / count if count > 0 else None
 
 
 class EDM_Observation(models.Model):

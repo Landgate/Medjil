@@ -22,10 +22,13 @@ from scipy.stats import t, f
 from common_func.Convert import list2dict
 
 
-def LSA(A, x, P):
+def LSA(A, x, P=None):
     A = np.array(A)
     x = np.array(x)
-    P = np.array(P)
+    if P:
+        P = np.array(P)
+    else:
+        P = np.eye(A.shape[0])
     dof = len(A) - len(A.T)
     # (ISO 17123-4:2012 eq.11 & 12 & 15)
     Q = np.linalg.inv(A.T @ P @ A)

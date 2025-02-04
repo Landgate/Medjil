@@ -68,6 +68,10 @@ class Company(models.Model):
     company_abbrev = models.CharField(
         validators=[validate_profanity],
         max_length=20)
+    company_address = models.CharField(
+        validators=[validate_profanity],
+        max_length=256,
+        null=True, blank=True)
     company_secret_key = models.CharField(
         max_length=8,
         default=generate_short_hash,

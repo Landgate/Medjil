@@ -658,13 +658,14 @@ def import_dli(request):
                     first_pillar = medjil_pillars[0]
                     UC_formula = rx['BaselineAccuracy'][job['baseline_fk']]
                     try:
+                        distances = []
+                        levels = []
                         for pillar, medjil_pillar in zip(pillars.values(), medjil_pillars):                            
                             combined_uc = (
                                 float(UC_formula['UncertaintyScale'])*10**-6 * pillar['certified_distance']
                                 + float(UC_formula['UncertaintyConstant']) * 0.001)
                             
                             # Store certified distances
-                            distances = []
                             distance = Certified_Distance(
                                 pillar_survey = medjil_baseline_calibration,
                                 from_pillar = first_pillar,
@@ -680,8 +681,7 @@ def import_dli(request):
                                 )
                             distances.append(distance)
                         
-                            #Store level observations
-                            levels = []    
+                            #Store level observations    
                             level = Level_Observation(
                                 pillar_survey = medjil_baseline_calibration,
                                 pillar = medjil_pillar,

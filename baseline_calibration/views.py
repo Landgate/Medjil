@@ -385,11 +385,12 @@ def calibrate2(request,id):
                     pillar_survey['hygro_calib_applied'])
         
         #  Calculate correction values
-        c, o['Calibration_Correction'] = apply_calib(
+        _, o['Calibration_Correction'] = apply_calib(
             float(o['raw_slope_dist']),
             pillar_survey['edmi_calib_applied'],
             calib['edmi'].first(),
             unit_length = pillar_survey['edm'].edm_specs.unit_length)
+        if not o['Calibration_Correction']:o['Calibration_Correction']=0
 
         o['Mets_Correction'] = (
             pillar_survey['edm'].edm_specs.atmospheric_correction(

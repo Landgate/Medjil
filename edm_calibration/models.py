@@ -160,7 +160,19 @@ class uPillarSurvey(models.Model):
        verbose_name = "EDMI Calibration Surveys"
     
     def __str__(self):
-       return f'{self.job_number} - {self.edm} ({self.survey_date})'
+       return f'{self.job_number} - {self.edm} ({self.survey_date})'   
+    
+    def get_pillars_used(self):
+        # returns a unique list of the pillar id's for pillars used in survey
+        edm_observations_obj = self.uedmobservation_set.distinct('from_pillar','to_pillar')
+        distinct_from = edm_observations_obj.values_list('from_pillar', flat=True).distinct()
+        distinct_to = edm_observations_obj.values_list('to_pillar', flat=True).distinct()
+        
+        # Combine the two lists and remove duplicates
+        combined_distinct = list(set(distinct_from) | set(distinct_to))
+        pillars_used = self.site.pillars.filter(
+            Q(id__in=combined_distinct)).order_by('order')
+        return pillars_used
    
     def delete(self, *args, **kwargs):
         try:

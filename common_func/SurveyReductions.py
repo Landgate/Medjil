@@ -134,7 +134,7 @@ def apply_calib(obs, applied, calib=[],scf=1,zpc=0,
                 c1=0, c2=0, c3=0, c4=0, unit_length=1):
 
     if applied  == True:
-        return obs, 0
+        return obs, None
     else:
         if hasattr(calib,'scale_correction_factor'): scf=calib.scale_correction_factor
         if hasattr(calib,'zero_point_correction'): zpc=calib.zero_point_correction
@@ -326,6 +326,10 @@ def refline_std_dev(o, alignment_survey, edm):
 
 def subtotal_uc_budget(uc_sources):
     for s in uc_sources:
+        #  add an apriori tags to section them out for report.
+        if not 'apriori' in s.keys():
+            s['apriori'] = True
+        
         std_dev = float(s['std_dev'])
         s['ui2'] = std_dev**2
         s['ui4v'] = (((std_dev)**4)
@@ -498,6 +502,7 @@ def add_typeA(d, matrix_y, dof):
     return type_a
 
 def add_typeB(uc_sources, d, matrix_y, dof):
+    # Only used for calibration of the baseline
     # '03 LSA The EDM zero offset uncertainty 
     type_b=deepcopy(uc_sources)
     type_b.append({'group': '03',
@@ -1041,8 +1046,6 @@ def validate_survey2(pillar_survey, baseline=None, calibrations=None,
                      raw_edm_obs=None, raw_lvl_obs=None):
     Errs = []
     Wrns = []
-    lvl_file_checked = False
-    edm_file_checked = False
 
     # Determine calibration type
     calibration_type = 'I' if hasattr(pillar_survey, 'auto_base_calibration') else 'B'
@@ -1168,7 +1171,7 @@ def validate_survey2(pillar_survey, baseline=None, calibrations=None,
         if pillar_survey.hygrometer:
             if not calibrations.get('hygro') and pillar_survey.hygro_calib_applied:
                 Errs.append(f'There is no calibration record for the hygrometer {pillar_survey.hygrometer}')
-            else:
+            elif not calibrations.get('hygro'):
                 Errs.append(f'There is no calibration record for {pillar_survey.hygrometer}')
                 Errs.append('Hygrometer calibration certificates need to be current for the date of survey: '
                             + pillar_survey.survey_date.strftime("%d %b, %Y"))
@@ -1178,7 +1181,7 @@ def validate_survey2(pillar_survey, baseline=None, calibrations=None,
             if pillar_survey.thermometer2 and calibrations.get('them2') is None:
                 if pillar_survey.thermo2_calib_applied:
                     Wrns.append(f'There is no calibration record for the themometer {pillar_survey.thermometer2}')
-                else:
+                elif not calibrations.get('them2'):
                     Errs.append(f'There is no calibration record for {pillar_survey.thermometer2}')
                     Errs.append(
                         'Thermometer calibration certificates need to be current for the date of survey: '
@@ -1189,7 +1192,7 @@ def validate_survey2(pillar_survey, baseline=None, calibrations=None,
             if pillar_survey.barometer2 and calibrations.get('baro2') is None:
                 if pillar_survey.baro2_calib_applied:
                     Wrns.append(f'There is no calibration record for the barometer {pillar_survey.barometer2}')
-                else:
+                elif not calibrations.get('baro2'):
                     Errs.append(f'There is no calibration record for {pillar_survey.barometer2}')
                     Errs.append(
                         'Barometer calibration certificates need to be current for the date of survey: '
@@ -1200,7 +1203,7 @@ def validate_survey2(pillar_survey, baseline=None, calibrations=None,
             if pillar_survey.hygrometer2 and calibrations.get('hygro2') is None:
                 if pillar_survey.hygro2_calib_applied:
                     Wrns.append(f'There is no calibration record for the hygrometer {pillar_survey.hygrometer2}')
-                else:
+                elif not calibrations.get('hygro2'):
                     Errs.append(f'There is no calibration record for {pillar_survey.hygrometer2}')
                     Errs.append(
                         'Hygrometer calibration certificates need to be current for the date of survey: '
@@ -1313,7 +1316,7 @@ def add_calib_uc2(uc_sources, calib, pillar_survey):
     """
     Add calibration uncertainty contributions based on the pillar survey model instance.
     """
-    # Check for EDMI calibration and no calibrated baseline
+    # Check for EDMI calibration and that this is calibrate the baseline
     if len(calib['edmi']) > 0 and not hasattr(pillar_survey, 'calibrated_baseline'):
         d2 = pillar_survey.survey_date
         calib_edmi = calib['edmi'][0]
@@ -1549,10 +1552,8 @@ def add_surveyed_uc2(o, edm_trend, pillar_survey, uc_sources, alignment_survey):
         to_rl['std_dev'] = (
             float(to_rl['rl_uncertainty']) / float(to_rl['k_rl_uncertainty'])
         )
-
-        comb_std = sqrt(
-            float(frm_rl['std_dev'])**2 + float(to_rl['std_dev'])**2
-        )
+        km = abs((to_rl/12)**2 - (frm_rl/12)**2) #Even if it is not 12rootK this should still work,
+        comb_std = sqrt(km * 12)
 
         surveyed_uc.append(
             {

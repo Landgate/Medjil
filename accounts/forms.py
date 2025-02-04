@@ -174,7 +174,7 @@ class CustomSetPasswordForm(SetPasswordForm):
 class CompanyForm(forms.ModelForm):
     class Meta:
         model = Company
-        fields = ['company_name','company_abbrev']
+        fields = ['company_name','company_abbrev','company_address']
         
         widgets = {
             'company_name' : forms.TextInput(attrs={'placeholder':'Enter a company, e.g., Landgate'}),
