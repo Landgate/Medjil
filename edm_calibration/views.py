@@ -17,11 +17,10 @@
 '''
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
-from django.core.exceptions import ValidationError
 from django.core.serializers.json import DjangoJSONEncoder
 from django.forms import modelformset_factory
 from django.forms.models import model_to_dict
-from django.http import QueryDict, HttpResponse
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
 from django.urls import reverse
@@ -33,29 +32,23 @@ from datetime import date, timedelta
 import json
 import pandas as pd
 
+
 from common_func.Convert import (
-    baseline_qry,
+    import_csv_to_observations,
     baseline_qry2,
-    Calibrations_qry,
     calibrations_qry2,
-    csv2dict,
     dict_2_html_table,
     get_endnotes,
-    uncertainty_qry,
     uncertainty_qry2,
     group_list)
 from common_func.SurveyReductions import (
-    validate_survey,
     validate_survey2,
     apply_calib,
     edm_std_function,
     offset_slope_correction,
     slope_certified_dist,
-    add_certified_dist_uc,
     add_certified_dist_uc2,
-    add_surveyed_uc,
     add_surveyed_uc2,
-    add_calib_uc,
     add_calib_uc2,
     refline_std_dev,
     sum_uc_budget,
@@ -63,12 +56,11 @@ from common_func.SurveyReductions import (
     float_or_null
     )
 from .forms import (
-    CalibrateEdmForm,
-    UploadSurveyFiles,
-    ChangeSurveyFiles,
+    uPillarSurveyForm,
+    UploadSurveyFilesForm,
+    ChangeSurveyFilesForm,
     EDM_ObservationForm,
     PillarSurveyApprovals,
-    EDMI_certificateForm,
     IntercomparisonForm,
     BulkEDMIReportForm
     )
@@ -80,14 +72,12 @@ from .models import (
     )
 from common_func.LeastSquares import (
     LSA,
-    ISO_test_a,
     ISO_test_a2,
     ISO_test_b,
     ISO_test_c)
 from common_func.validators import try_delete_protected
 from baseline_calibration.models import (
     Uncertainty_Budget_Source)
-from calibrationsites.models import Pillar
 
 
 def is_staff(user):
@@ -332,99 +322,6 @@ def bulk_report_download(request):
     return render(request, 'edm_calibration/bulk_report_download.html', {'form': form})
 
 
-###### TRY AGAIN ON STUFF ######
-
-from .forms import (
-    UploadSurveyFilesForm,
-    ChangeSurveyFilesForm
-    )
-import csv
-from io import TextIOWrapper
-from django.db import transaction
-
-
-def import_csv_to_observations(csv_file, pillar_survey):
-    # Decode the file for reading
-    file_name = getattr(csv_file, 'name', 'the uploaded file')
-    csv_file = TextIOWrapper(csv_file, encoding='utf-8-sig')
-    reader = csv.DictReader(csv_file)
-
-    # Normalize CSV column headings
-    def convert_headings(column_name):
-        """Standardizes column names to match model field names."""
-        mapping = {
-            'from_pillar': 'from_pillar',
-            'to_pillar': 'to_pillar',
-            'height_of_instrument': 'inst_ht',
-            'height_of_target': 'tgt_ht',
-            'slope_distance': 'raw_slope_dist',
-            'temperature': 'raw_temperature',
-            'pressure': 'raw_pressure',
-            'humidity': 'raw_humidity',
-        }
-        return mapping.get(column_name.strip().lower().replace(" ", "_"), column_name)
-
-    # Convert headings
-    reader.fieldnames = [convert_headings(field) for field in reader.fieldnames]
-
-    # Define required headings
-    required_headings = {
-        'from_pillar':'from_pillar',
-        'to_pillar':'to_pillar',
-        'inst_ht':'height_of_instrument',
-        'tgt_ht':'height_of_target',
-        'raw_slope_dist':'slope_distance',
-    }
-    
-    # Check for missing headings
-    missing_headings = [heading for key, heading in required_headings.items() if key not in reader.fieldnames]
-    if missing_headings:
-        return [f"The following required headings are missing in the '{file_name}': {', '.join(missing_headings)}"]
-
-    observations = []
-    errors = []
-
-    # Process each row in the CSV
-    for line_num, row in enumerate(reader, start=1):
-        try:
-            # Resolve pillars for from_pillar and to_pillar
-            from_pillar = pillar_survey.site.pillars.filter(name=row['from_pillar'].strip()).first()
-            to_pillar = pillar_survey.site.pillars.filter(name=row['to_pillar'].strip()).first()
-
-            if not from_pillar:
-                raise ValueError(f"Invalid from_pillar '{row['from_pillar']}' on line {line_num}.")
-            if not to_pillar:
-                raise ValueError(f"Invalid to_pillar '{row['to_pillar']}' on line {line_num}.")
-
-            # Map row data to observation
-            observation = uEdmObservation(
-                pillar_survey=pillar_survey,
-                from_pillar=from_pillar,
-                to_pillar=to_pillar,
-                inst_ht=row.get('inst_ht', '').strip() or None,
-                tgt_ht=row.get('tgt_ht', '').strip() or None,
-                raw_slope_dist=row.get('raw_slope_dist', '').strip() or None,
-                raw_temperature=row.get('raw_temperature', '').strip() or None,
-                raw_pressure=row.get('raw_pressure', '').strip() or None,
-                raw_humidity=row.get('raw_humidity', '').strip() or None,
-            )
-
-            # Validate observation before saving
-            observation.full_clean()
-            observations.append(observation)
-
-        except Exception as e:
-            # Capture detailed error for this line
-            errors.append(f"Error on line {line_num}: {e}")
-
-    # Save all valid observations only if there are no errors
-    if len(errors) == 0:
-        with transaction.atomic():
-            uEdmObservation.objects.bulk_create(observations)
-
-    return errors
-
-
 @login_required(login_url="/accounts/login")   
 def survey_delete(request, id):
     survey = get_object_or_404(
@@ -444,7 +341,7 @@ def survey_create(request, id=None):
         edm__edm_specs__edm_owner = request.user.company.id).first() if id else None
 
     # Use the appropriate form based on whether there's an instance
-    pillar_survey_form = CalibrateEdmForm(
+    pillar_survey_form = uPillarSurveyForm(
         request.POST or None, 
         request.FILES or None, 
         instance=instance, 
@@ -517,8 +414,9 @@ def edm_observations_update(request, id):
         if edm_obs_formset.is_valid():
             edm_obs_formset.save()
             return redirect('edm_calibration:compute_calibration', id=id)
+    
 
-
+@user_passes_test(is_staff)
 def compute_calibration(request, id):    
     # Retrieve the Pillar Survey instance and related data
     pillar_survey = get_object_or_404(
@@ -532,8 +430,8 @@ def compute_calibration(request, id):
         ),
         id=id
     )
-    # try:
-    if 1==1:
+    try:
+    # if 1==1:
         # Prepare data for calculations
         edm_observations = list(pillar_survey.uedmobservation_set.all())
         raw_edm_obs = {
@@ -906,9 +804,8 @@ def compute_calibration(request, id):
             # and signitures
             ps_approvals.save()
             cert_instance, _ = EDMI_certificate.objects.update_or_create(
-                pk = pillar_survey.certificate.pk or None,
+                pk = pillar_survey.certificate.pk if pillar_survey.certificate else None,
                 defaults= ini_edmi_certificate)
-            # cert_instance = edmi_certificate.save()
             
             pillar_survey.certificate = cert_instance
             pillar_survey.save()
@@ -919,9 +816,9 @@ def compute_calibration(request, id):
                     'html_report': html_report,
                     'ps_approvals':ps_approvals}
         return render(request, 'edm_calibration/display_report.html', context)
-    # except Exception as e:
-    #     # any missed errors are caught here
-    #     messages.error(request, f"An error occurred: {str(e)}")
-    #     return render(request, 'edm_calibration/errors_report.html', 
-    #                   {'id':id})
+    except Exception as e:
+        # any missed errors are caught here
+        messages.error(request, f"An error occurred: {str(e)}")
+        return render(request, 'edm_calibration/errors_report.html', 
+                      {'id':id})
 

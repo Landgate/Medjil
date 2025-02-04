@@ -249,7 +249,7 @@ class Staff(models.Model):
     
     def get_certificate(self, survey_date):
         # Fetch the latest valid certificate for the instrument based on the survey date.
-        return self.staffcalibrationrecord_set.objects.filter(
+        return self.staffcalibrationrecord_set.filter(
             calibration_date__lte = survey_date
             ).order_by('-calibration_date').first()
 

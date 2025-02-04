@@ -17,6 +17,7 @@
 '''
 import numpy as np
 from common_func.Convert import (
+    calibrations_qry2,
     group_list,
     db_std_units)
 from math import sqrt, sin, cos, radians, pi
@@ -25,10 +26,13 @@ from statistics import mean
 from scipy.stats import t
 from sklearn.linear_model import LinearRegression
 from geodepy.survey import (
-    joins, first_vel_corrn, first_vel_params,
+    radiations,
+    joins,
     part_h2o_vap_press, mets_partial_differentials)
 from baseline_calibration.models import Pillar_Survey
 from copy import deepcopy
+from django.forms.models import model_to_dict
+
 
     #-------------------------------------------------------------------------------#
     #----------------- Functions for SURVEY OBSERVATION REDUCTIONS -----------------#
@@ -1600,3 +1604,88 @@ def add_surveyed_uc2(o, edm_trend, pillar_survey, uc_sources, alignment_survey):
         )
 
     return surveyed_uc
+    
+def raw_edm_obs_reductions(pillar_survey):
+    edm_observations_qs = pillar_survey.edm_observation_set.all()
+    calib = calibrations_qry2(pillar_survey)
+    
+    # Get the raw_edm_obs and the raw_lvl_obs in dict like cleaned form data
+    edm_observations = list(edm_observations_qs)
+    raw_edm_obs = {
+        str(obs.id): {
+            **model_to_dict(obs),
+            'from_pillar': obs.from_pillar.name if obs.from_pillar else None,
+            'to_pillar': obs.to_pillar.name if obs.to_pillar else None,
+        }
+        for obs in edm_observations
+    }    
+    lvl_obs = list(pillar_survey.level_observation_set.all())
+    raw_lvl_obs = {
+        str(obs.pillar.name): {
+            **model_to_dict(obs),
+            'pillar': obs.pillar.name if obs.pillar else None,
+            'std_dev': obs.rl_standard_deviation if obs.rl_standard_deviation else None,
+        }
+        for obs in lvl_obs
+    }
+    
+    def calibrate_value(cal_cert, raw_value, calibration_applied):
+        """Applies calibration if the cal_cert is present, else returns raw value."""
+        if cal_cert:
+            return cal_cert.apply_calibration(raw_value, calibration_applied)[0] 
+        return raw_value, 0
+
+    def compute_average(cal_cert1, cal_cert2, raw_value1, raw_value2, calibration_applied1, calibration_applied2):
+        """Computes the calibrated value, averaging if both cal_certs exist."""
+        calibrated1, _ = calibrate_value(cal_cert1, raw_value1, calibration_applied1)
+        if not cal_cert2:
+            return calibrated1
+        calibrated2, _ = calibrate_value(cal_cert2, raw_value2, calibration_applied2)
+        return (calibrated1 + calibrated2) / 2
+    
+    for o in raw_edm_obs.values():
+        o['Temp'] = compute_average(
+            calib['them'], calib.get('them2'), o['raw_temperature'], o['raw_temperature2'], 
+            pillar_survey.thermo_calib_applied, pillar_survey.thermo2_calib_applied)
+    
+        o['Pres'] = compute_average(
+            calib['baro'], calib.get('baro2'), o['raw_pressure'], o['raw_pressure2'],
+            pillar_survey.baro_calib_applied, pillar_survey.baro2_calib_applied)
+        
+        o['Humid'] = compute_average(
+            calib['hygro'], calib.get('hygro2'), o['raw_humidity'], o['raw_humidity2'],
+            pillar_survey.hygro_calib_applied, pillar_survey.hygro2_calib_applied)
+            
+        #  Calculate calibration correction for EDM Instrumentation
+        _, o['Calibration_Correction'] = apply_calib(
+            float(o['raw_slope_dist']),
+            pillar_survey.edmi_calib_applied,
+            calib['edmi'].first(),
+            unit_length = pillar_survey.edm.edm_specs.unit_length)
+        if not o['Calibration_Correction']:o['Calibration_Correction']=0
+
+        o['Mets_Correction'] = (
+            pillar_survey.edm.edm_specs.atmospheric_correction(
+                o = o,
+                null_correction=pillar_survey.mets_applied,
+                co2_content=pillar_survey.co2_content)
+        )
+        
+        o['slope_dist'] = (float(o['raw_slope_dist'] )
+                           + o['Calibration_Correction']
+                           + o['Mets_Correction'])
+        
+        # Calculate the Est and Nth for all in raw'
+        o['Bay']= o['from_pillar'] + ' - ' + o['to_pillar']
+        ht_diff = (
+            float(raw_lvl_obs[o['to_pillar']]['reduced_level'])
+            - float(raw_lvl_obs[o['from_pillar']]['reduced_level']))
+        hz_dist = sqrt(
+            (float(o['slope_dist']))**2
+            - ht_diff**2)
+        o['Est'], o['Nth'] = radiations(
+            0, 0,
+            float(o['hz_direction']),
+            hz_dist)
+    
+    return raw_edm_obs, raw_lvl_obs, calib

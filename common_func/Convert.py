@@ -21,9 +21,10 @@ import csv
 from io import TextIOWrapper
 import numpy as np
 from statistics import mean, pstdev
-from django.db.models import Avg, Count
+from django.db.models import Avg
 from django.forms.models import model_to_dict
 from django.db.models import Q
+from django.db import transaction
 
 from instruments.models import (
     EDM_Inst,
@@ -41,7 +42,8 @@ from baseline_calibration.models import (
     Certified_Distance,
     Pillar_Survey,
     Std_Deviation_Matrix,
-    EDM_Observation)
+    EDM_Observation,
+    Level_Observation)
 from edm_calibration.models import uEdmObservation
 from geodepy.geodesy import grid2geo, rho, nu
 
@@ -502,13 +504,11 @@ def baseline_qry2(pillar_survey, id=None):
                 
             baseline['certified_dist'] ={d.to_pillar.name:model_to_dict(d) for d in cd}
         
-    baseline['pillars'] = Pillar.objects.filter(
-                            site_id__pk = baseline['site'].pk
-                            ).order_by('order')
+    baseline['pillars'] = baseline['site'].pillars.all().order_by('order')
     
-    baseline_enz = Pillar.objects.filter(
-                            site_id__pk = baseline['site'].pk).aggregate(
-                                Avg('easting'), Avg('northing'), Avg('zone'))
+    baseline_enz = baseline['pillars'].aggregate(
+        Avg('easting'), Avg('northing'), Avg('zone'))
+    
     baseline_llh = grid2geo(float(baseline_enz['zone__avg']),
                             float(baseline_enz['easting__avg']),
                             float(baseline_enz['northing__avg']))
@@ -522,10 +522,14 @@ def calibrations_qry2(pillar_survey):
     # Determine calibration type
     calibration_type = 'B' if hasattr(pillar_survey, 'staff') else 'I'
     
-    calib['edmi'] = pillar_survey.edm.get_certificates(
-        pillar_survey = pillar_survey)
-    
-    if calibration_type == 'B':
+    calib['edmi'] = EDMI_certificate.objects.filter(
+        calibration_date__lte = pillar_survey.survey_date,
+        edm__pk = pillar_survey.edm.pk, prism__pk = pillar_survey.prism.pk
+        ).order_by('-calibration_date')
+    if calibration_type == 'I':
+        calib['edmi'] = calib['edmi'].exclude(id = pillar_survey.certificate.id)
+        
+    elif calibration_type == 'B':
         calib['staff'] = pillar_survey.staff.get_certificate(pillar_survey.survey_date)
         if pillar_survey.thermometer2: 
             calib['them2'] = pillar_survey.thermometer2.get_certificate(pillar_survey.survey_date)
@@ -550,6 +554,7 @@ def calibrations_qry2(pillar_survey):
         calib['hygro'] = None
         
     return calib
+
     
 def uncertainty_qry2(pillar_survey):
     uc_budget={}
@@ -559,3 +564,192 @@ def uncertainty_qry2(pillar_survey):
         pillar_survey.uncertainty_budget.std_dev_of_zero_adjustment)
         
     return uc_budget
+
+
+def import_csv_to_observations(csv_file, pillar_survey):
+    calibration_type = 'B' if hasattr(pillar_survey, 'staff') else 'I'
+    # Decode the file for reading
+    file_name = getattr(csv_file, 'name', 'the uploaded file')
+    csv_file = TextIOWrapper(csv_file, encoding='utf-8-sig')
+    reader = csv.DictReader(csv_file)        
+
+    # Normalize CSV column headings
+    def convert_headings(column_name):
+        """Standardizes column names to match model field names."""
+        mapping = {
+            'from_pillar': 'from_pillar',
+            'to_pillar': 'to_pillar',
+            'height_of_instrument': 'inst_ht',
+            'height_of_target': 'tgt_ht',
+            'slope_distance': 'raw_slope_dist',
+            'temperature': 'raw_temperature',
+            'pressure': 'raw_pressure',
+            'humidity': 'raw_humidity',
+            'horizontal_direction(dd)': 'hz_direction',
+            'temperature2': 'raw_temperature2',
+            'pressure2': 'raw_pressure2',
+            'humidity2': 'raw_humidity2',
+        }
+
+        return mapping.get(column_name.strip().lower().replace(" ", "_"), column_name)
+
+    # Convert headings
+    reader.fieldnames = [convert_headings(field) for field in reader.fieldnames]
+
+    # Define required headings
+    required_headings = {
+        'from_pillar':'from_pillar',
+        'to_pillar':'to_pillar',
+        'inst_ht':'height_of_instrument',
+        'tgt_ht':'height_of_target',
+        'raw_slope_dist':'slope_distance',
+    }
+    if calibration_type == 'B':
+        required_headings.update({
+            'horizontal_direction(dd)': 'hz_direction',
+            })
+    
+    # Check for missing headings
+    missing_headings = [
+        heading for key, heading in required_headings.items() if key not in reader.fieldnames]
+    if missing_headings:
+        return [f"The following required headings are missing in the '{file_name}': {', '.join(missing_headings)}"]
+
+    observations = []
+    errors = []
+
+    # Process each row in the CSV
+    for line_num, row in enumerate(reader, start=1):
+        try:
+            # Resolve pillars for from_pillar and to_pillar
+            from_pillar = pillar_survey.site.pillars.filter(name=row['from_pillar'].strip()).first()
+            to_pillar = pillar_survey.site.pillars.filter(name=row['to_pillar'].strip()).first()
+
+            if not from_pillar:
+                raise ValueError(f"Invalid from_pillar '{row['from_pillar']}' on line {line_num}.")
+            if not to_pillar:
+                raise ValueError(f"Invalid to_pillar '{row['to_pillar']}' on line {line_num}.")
+
+            # Map row data to EDMI observation
+            if calibration_type == 'I':
+                observation = uEdmObservation(
+                    pillar_survey=pillar_survey,
+                    from_pillar=from_pillar,
+                    to_pillar=to_pillar,
+                    inst_ht=row.get('inst_ht', '').strip() or None,
+                    tgt_ht=row.get('tgt_ht', '').strip() or None,
+                    raw_slope_dist=row.get('raw_slope_dist', '').strip() or None,
+                    raw_temperature=row.get('raw_temperature', '').strip() or None,
+                    raw_pressure=row.get('raw_pressure', '').strip() or None,
+                    raw_humidity=row.get('raw_humidity', '').strip() or None,
+                )
+            # Map row data to EDMI observation
+            if calibration_type == 'B':
+                observation = EDM_Observation(
+                    pillar_survey=pillar_survey,
+                    from_pillar=from_pillar,
+                    to_pillar=to_pillar,
+                    inst_ht=row.get('inst_ht', '').strip() or None,
+                    tgt_ht=row.get('tgt_ht', '').strip() or None,
+                    raw_slope_dist=row.get('raw_slope_dist', '').strip() or None,
+                    hz_direction=row.get('hz_direction', '').strip() or None,
+                    raw_temperature=row.get('raw_temperature', '').strip() or None,
+                    raw_pressure=row.get('raw_pressure', '').strip() or None,
+                    raw_humidity=row.get('raw_humidity', '').strip() or None,
+                    raw_temperature2=row.get('raw_temperature2', '').strip() or None,
+                    raw_pressure2=row.get('raw_pressure2', '').strip() or None,
+                    raw_humidity2=row.get('raw_humidity2', '').strip() or None,
+                )
+
+            # Validate observation before saving
+            observation.full_clean()
+            observations.append(observation)
+
+        except Exception as e:
+            # Capture detailed error for this line
+            errors.append(f"Error on line {line_num}: {e}")
+
+    # Save all valid observations only if there are no errors
+    if len(errors) == 0:
+        # Delete old observations if they exist
+        if calibration_type == 'I':
+            delete_edm_obs = uEdmObservation.objects.filter(pillar_survey=pillar_survey)
+        else:
+            delete_edm_obs = EDM_Observation.objects.filter(pillar_survey=pillar_survey)
+        delete_edm_obs.delete()
+        with transaction.atomic():
+            if calibration_type == 'I':
+                uEdmObservation.objects.bulk_create(observations)
+            else:
+                EDM_Observation.objects.bulk_create(observations)
+
+    return errors
+
+
+def import_csv_to_levels(csv_file, pillar_survey):
+    # Decode the file for reading
+    file_name = getattr(csv_file, 'name', 'the uploaded file')
+    csv_file = TextIOWrapper(csv_file, encoding='utf-8-sig')
+    reader = csv.DictReader(csv_file)        
+
+    # Normalize CSV column headings
+    def convert_headings(column_name):
+        """Standardizes column names to match model field names."""
+        mapping = {
+            'pillar_rl': 'reduced_level',
+            'pillar_name': 'pillar',
+            'rl_standard_deviation': 'rl_standard_deviation'
+        }
+
+        return mapping.get(column_name.strip().lower().replace(" ", "_"), column_name)
+
+    # Convert headings
+    reader.fieldnames = [convert_headings(field) for field in reader.fieldnames]
+    
+    # Define required headings
+    required_headings = {
+        'pillar':'pillar_name',
+        'reduced_level':'pillar_rl',
+        'rl_standard_deviation':'rl_standard_deviation',
+    }
+    
+    # Check for missing headings
+    missing_headings = [
+        heading for key, heading in required_headings.items() if key not in reader.fieldnames]
+    if missing_headings:
+        return [f"The following required headings are missing in the '{file_name}': {', '.join(missing_headings)}"]
+
+    pillar_levels =[]
+    errors = []
+
+    # Process each row in the CSV
+    for line_num, row in enumerate(reader, start=1):
+        try:
+            # Resolve pillars for from_pillar and to_pillar
+            pillar = pillar_survey.site.pillars.filter(name=row['pillar'].strip()).first()
+
+            if not pillar:
+                raise ValueError(f"Invalid from_pillar '{row['pillar']}' on line {line_num}.")
+
+            pillar = pillar_survey.site.pillars.filter(name=row['pillar'].strip()).first()
+            pillar_level = Level_Observation(
+                pillar_survey=pillar_survey,
+                pillar=pillar,
+                reduced_level=row.get('reduced_level', '').strip() or None,
+                rl_standard_deviation=row.get('rl_standard_deviation', '').strip() or None,
+            )
+            pillar_level.full_clean()
+            pillar_levels.append(pillar_level)
+
+        except Exception as e:
+            # Capture detailed error for this line
+            errors.append(f"Error on line {line_num}: {e}")
+
+    # Save all valid observations only if there are no errors
+    if len(errors) == 0:        
+        delete_lvl_obs = Level_Observation.objects.filter(pillar_survey=pillar_survey)
+        delete_lvl_obs.delete()
+        with transaction.atomic():
+            Level_Observation.objects.bulk_create(pillar_levels)
+
+    return errors

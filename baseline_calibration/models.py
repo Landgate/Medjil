@@ -538,7 +538,7 @@ class EDM_Observation(models.Model):
         ordering = ['pillar_survey','from_pillar','to_pillar']
 
     def __str__(self):
-        return f'({self.pillar_survey}): {self.from_pillar} → {self.to_pillar})'
+        return f'({self.pillar_survey}): {self.from_pillar} → {self.to_pillar})'        
     
 
 class Level_Observation(models.Model):

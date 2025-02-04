@@ -41,118 +41,6 @@ class CustomClearableFileInput(forms.ClearableFileInput):
     template_name = 'custom_widgets/customclearablefileinput.html'
 
 # make your forms
-class CalibrateEdmForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user', None)
-        locations = list(user.locations.values_list('statecode', flat=True))
-        super(CalibrateEdmForm, self).__init__(*args, **kwargs)
-        
-        self.fields['computation_date'].initial = date.today().isoformat()
-        self.fields['site'].queryset = CalibrationSite.objects.filter(
-            Q(site_type = 'baseline') &
-            Q(state__statecode__in = locations))
-        self.fields['calibrated_baseline'].queryset = Pillar_Survey.objects.filter(
-            baseline__state__statecode__in = locations)
-        self.fields['uncertainty_budget'].queryset = Uncertainty_Budget.objects.filter(
-            Q(company = user.company) | 
-            Q(name = 'Default', company__company_name = 'Landgate'))
-        self.fields['auto_base_calibration'].required = False
-        self.fields['calibrated_baseline'].required = False
-
-        self.fields['edm'].queryset = EDM_Inst.objects.filter(
-            edm_specs__edm_owner = user.company)
-        self.fields['prism'].queryset = Prism_Inst.objects.filter(
-            prism_specs__prism_owner = user.company)
-        self.fields['thermometer'].queryset = Mets_Inst.objects.filter(
-            mets_specs__inst_type = 'thermo',
-            mets_specs__mets_owner = user.company)
-        self.fields['barometer'].queryset = Mets_Inst.objects.filter(
-            mets_specs__inst_type = 'baro',
-            mets_specs__mets_owner = user.company)
-        self.fields['hygrometer'].queryset = Mets_Inst.objects.filter(
-            mets_specs__inst_type = 'hygro',
-            mets_specs__mets_owner = user.company)
-            
-    class Meta:
-        model = uPillarSurvey
-        fields = '__all__'
-        exclude = (
-            'certificate',
-            'uploaded_on', 'modified_on',
-            'data_entered_person','data_entered_position','data_entered_date',
-            'data_checked_person','data_checked_position', 'data_checked_date')
-        widgets = {
-           'site': forms.Select(attrs={'class': 'page0'}),
-           'auto_base_calibration':forms.CheckboxInput(
-               attrs={'onclick':'tglCalibBase()'}),
-           'calibrated_baseline': forms.Select(attrs={'class':'page0'}),
-           'computation_date': forms.DateInput(
-               attrs={'type':'date', 'input_formats': ['%d-%m-%Y']}),
-           'survey_date': forms.DateInput(
-               attrs={'type':'date', 'input_formats': ['%d-%m-%Y'], 'class': 'page0'}),
-           'observer': forms.TextInput (attrs={'class': 'page0'}),    
-           'weather': forms.Select(attrs={'class': 'page0'}),
-           'job_number': forms.TextInput (
-               attrs={'class': 'page0'}),
-           'comment': forms.TextInput (
-               attrs={'class': 'page0'}),
-           
-           'edm': forms.Select(attrs={'class': 'page1'}),
-           'prism': forms.Select(attrs={'class': 'page1'}),
-           'thermometer': forms.Select(attrs={'class': 'page1'}),
-           'barometer': forms.Select(attrs={'class': 'page1'}),
-           'hygrometer': forms.Select(attrs={'class': 'page1'}),
-           
-           'mets_applied': forms.CheckboxInput(attrs={'class': 'page1'}),
-           'thermo_calib_applied': forms.CheckboxInput(attrs={'class': 'page1'}), 
-           'baro_calib_applied': forms.CheckboxInput(attrs={'class': 'page1'}), 
-           'hygro_calib_applied': forms.CheckboxInput(attrs={'class': 'page1'}),
-            
-           'uncertainty_budget': forms.Select(attrs={'class': 'page2'}),
-           'scalar': forms.NumberInput(
-               attrs={'placeholder':'observation standard uncertianties are multiplied by the a-priori scalar',
-                      'class': 'page2'}),
-           'outlier_criterion': forms.NumberInput(
-               attrs={'placeholder':'Enter number of standard deviations for outlier detection',
-                      'class': 'page2'}),
-           'test_cyclic': forms.CheckboxInput(attrs={'class': 'page2'}),
-           'fieldnotes_upload': CustomClearableFileInput(
-               attrs={'accept' : '.jpg, .pdf',
-                      'class': 'page2'})
-            }
-        
-    def clean_survey_date(self):
-        survey_date = self.cleaned_data['survey_date']
-        if survey_date > date.today():
-            raise forms.ValidationError("The survey date cannot be in the future!")
-        return survey_date
-    
-    def computation_date_date(self):
-        computation_date = self.cleaned_data['computation_date']
-        if computation_date > date.today():
-            raise forms.ValidationError("The computation date cannot be in the future!")
-        return computation_date
-
-
-class UploadSurveyFiles(forms.Form):
-    edm_file = forms.FileField(
-        widget = forms.FileInput(attrs={'accept' : '.csv, .asc',
-                                        'class': 'page2'}), 
-        label = 'EDM File (*.csv)')
-
-
-class ChangeSurveyFiles(forms.Form):
-    change_edm = forms.BooleanField(
-        widget = forms.CheckboxInput(attrs={'class': 'page2', 
-                                            'onclick':'tglFile("edm")'}),
-        required = False, 
-        label = 'Change EDM File')
-    edm_file = forms.FileField(
-        widget = forms.FileInput(attrs={'accept' : '.csv, .asc',
-                                        'class': 'page2'}),
-        required = False, 
-        label = 'EDM File (*.csv)')
-    
                 
 class EDM_ObservationForm(forms.ModelForm):   
     # def __init__(self, *args, **kwargs):
@@ -227,8 +115,6 @@ class BulkEDMIReportForm(forms.Form):
         required=False)
     
     
-
-###### TRY AGAIN ON STUFF ######
 class uPillarSurveyForm(forms.ModelForm):
     # was CalibrateEdmForm
     def __init__(self, *args, **kwargs):
@@ -236,7 +122,8 @@ class uPillarSurveyForm(forms.ModelForm):
         locations = list(user.locations.values_list('statecode', flat=True))
         super(uPillarSurveyForm, self).__init__(*args, **kwargs)
         
-        self.fields['computation_date'].initial = date.today().isoformat()
+        self.fields['survey_date'].initial = date.today().isoformat()
+        self.fields['computation_date'].value = date.today().isoformat()
         
         self.fields['site'].queryset = CalibrationSite.objects.filter(
             Q(site_type = 'baseline') &
@@ -329,6 +216,7 @@ class UploadSurveyFilesForm(forms.Form):
         widget = forms.FileInput(attrs={'accept' : '.csv, .asc',
                                         'class': 'page2'}),
         label = 'EDM File (*.csv)')
+
     
 class ChangeSurveyFilesForm(forms.Form):
     change_edm = forms.BooleanField(

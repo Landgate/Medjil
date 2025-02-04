@@ -21,7 +21,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.core.serializers.json import DjangoJSONEncoder
-from django.db.models import Q, Count
+from django.db.models import Q, Count, Prefetch
 from django.forms import formset_factory, modelformset_factory
 from django.forms.models import model_to_dict
 from django.http import QueryDict, HttpResponse
@@ -36,8 +36,8 @@ import pandas as pd
 from calibrationsites.models import Pillar
 from .forms import (
     PillarSurveyForm,
-    UploadSurveyFiles,
-    ChangeSurveyFiles,
+    UploadSurveyFilesForm,
+    ChangeSurveyFilesForm,
     EDM_ObservationForm,
     Certified_DistanceForm,
     Std_Deviation_MatrixForm,
@@ -59,13 +59,19 @@ from .models import (
     Std_Deviation_Matrix)
 from geodepy.survey import radiations
 from common_func.Convert import (
+    import_csv_to_observations,
+    calibrations_qry2,
+    baseline_qry2,
+    calibrations_qry2,
     baseline_qry,
     csv2dict,
     Calibrations_qry,
     get_endnotes,
     uncertainty_qry)
 from common_func.SurveyReductions import (
+    raw_edm_obs_reductions,
     validate_survey,
+    validate_survey2,
     apply_calib,
     adjust_alignment_survey,
     add_calib_uc,
@@ -137,7 +143,7 @@ def calibrate1(request, id):
                                          request.FILES or None,
                                          user=request.user,
                                          initial=ini_data)
-        upload_survey_files = UploadSurveyFiles(request.POST or None,
+        upload_survey_files = UploadSurveyFilesForm(request.POST or None,
                                                 request.FILES or None)
     else:
         qs = get_object_or_404(Pillar_Survey, id=id)
@@ -147,7 +153,7 @@ def calibrate1(request, id):
                                          request.FILES or None,
                                          instance = qs,
                                          user = request.user)
-        upload_survey_files = ChangeSurveyFiles(request.POST or None,
+        upload_survey_files = ChangeSurveyFilesForm(request.POST or None,
                                          request.FILES or None)
     
     if pillar_survey.is_valid() and upload_survey_files.is_valid():
@@ -409,8 +415,8 @@ def calibrate2(request,id):
             float(raw_lvl_obs[o['to_pillar']]['reduced_level'])
             - float(raw_lvl_obs[o['from_pillar']]['reduced_level']))
         hz_dist = sqrt(
-            ht_diff**2 +
-            (float(o['slope_dist']))**2)
+            (float(o['slope_dist']))**2 -
+            ht_diff**2 )
         o['Est'], o['Nth'] = radiations(
             0, 0,
             float(o['hz_direction']),
@@ -766,7 +772,7 @@ def calibrate2(request,id):
 
         if ps_approvals.is_valid():
             # Save signiture block
-            psr_obj = ps_approvals.save()
+            ps_approvals.save()
             
             # pillar survey update
             psu = request.session['pillar_survey_result_' + str(id)]
@@ -1184,6 +1190,7 @@ def certified_distances_edit(request, id):
 
 
 @login_required(login_url="/accounts/login") 
+@user_passes_test(is_staff)
 def bulk_report_download(request):
     if request.method == 'POST':
         form = BulkBaselineReportForm(request.POST)
@@ -1223,3 +1230,147 @@ def bulk_report_download(request):
         form = BulkBaselineReportForm()
 
     return render(request, 'baseline_calibration/bulk_report_download.html', {'form': form})
+
+
+@login_required(login_url="/accounts/login")   
+@user_passes_test(is_staff)
+def survey_delete(request, id):
+    survey = get_object_or_404(
+        Pillar_Survey, 
+        id=id,
+        accreditation__accredited_company = request.user.company.id)
+    try_delete_protected(request, survey)
+    
+    return redirect('edm_calibration:edm_calibration_home')
+
+
+@login_required(login_url="/accounts/login")
+@user_passes_test(is_staff)
+def survey_create(request, id=None):
+    # Retrieve the existing instance or create a new one
+    instance = Pillar_Survey.objects.filter(
+        id=id,
+        accreditation__accredited_company = request.user.company.id).first() if id else None
+
+    # Use the appropriate form based on whether there's an instance
+    pillar_survey_form = PillarSurveyForm(
+        request.POST or None, 
+        request.FILES or None, 
+        instance=instance, 
+        user=request.user
+    )
+
+    if instance:
+        survey_files = ChangeSurveyFilesForm(
+            request.POST or None,
+            request.FILES or None
+        )
+    else:
+        survey_files = UploadSurveyFilesForm(
+            request.POST or None,
+            request.FILES or None
+        )
+
+    # If the main form is valid, save the pillar survey instance
+    import_errors = []
+    if pillar_survey_form.is_valid():
+        pillar_survey = pillar_survey_form.save()
+
+        # Check if the file upload form is valid
+        if survey_files.is_valid():
+            # Process the CSV file if it exists and import observations
+            if survey_files.cleaned_data.get('edm_file'):
+                edm_file = survey_files.cleaned_data.get('edm_file')
+                import_errors = import_csv_to_observations(
+                    edm_file, pillar_survey)
+            if survey_files.cleaned_data.get('lvl_file') and len(import_errors) > 0:
+                lvl_file = survey_files.cleaned_data.get('lvl_file')
+                import_errors.append(
+                    import_csv_to_observations(lvl_file, pillar_survey))
+    
+            # Render errors if there are any
+            if len(import_errors) > 0:
+                return render(request, 'baseline_calibration/errors_report.html', {
+                    'Check_Errors': {'Errors': import_errors, 'Warnings': []},
+                    'id': pillar_survey.pk
+                })
+
+            return redirect('baseline_calibration:edm_observations_update',
+                            id=pillar_survey.pk)
+
+    # Render the form if it is invalid
+    headers = {
+        'page0':'Calibrate the Baseline',
+        'page1': 'Instrumentation',
+        'page2': 'Corrections / Calibrations Applied to Instruments',
+        'page3': 'Error Budget and File Uploads',
+    }
+    return render(request, 'baseline_calibration/PillarSurvey_form.html', {
+        'headers': headers,
+        'form': pillar_survey_form,
+        'survey_files': survey_files,
+    })
+
+
+@user_passes_test(is_staff)
+@login_required(login_url="/accounts/login")
+def edm_observations_update(request, id):
+    pillar_survey = get_object_or_404(
+        Pillar_Survey.objects.select_related('baseline'),id=id)
+    edm_observations_qs = pillar_survey.edm_observation_set.all()
+    
+    # Create the formset
+    formset = modelformset_factory(EDM_Observation, form=EDM_ObservationForm, extra=0)
+
+    if request.method == 'GET':
+        # Prepare Page 5 of 5
+        raw_edm_obs, _, _ = raw_edm_obs_reductions(pillar_survey)
+        
+        pillars = pillar_survey.baseline.pillars.all().order_by('order')
+        adjust_alignment_survey(raw_edm_obs, pillars)
+        
+        edm_obs_formset = formset(None, queryset=edm_observations_qs)
+        formset = zip(edm_obs_formset,raw_edm_obs.values())
+        
+        return render(request, 'baseline_calibration/edm_observations_update.html', {
+            'Page': 'Page 5 of 5',
+            'id': id,
+            'edm_obs_formset':edm_obs_formset,
+            'pillar_survey': pillar_survey,
+            'formset': formset})
+
+    elif request.method == 'POST':
+        edm_obs_formset = formset(request.POST, queryset=edm_observations_qs)
+        # Validate and save the formset
+        if edm_obs_formset.is_valid():
+            edm_obs_formset.save()
+            return redirect('baseline_calibration:compute_calibration', id=id)
+    
+
+@user_passes_test(is_staff)
+@login_required(login_url="/accounts/login")
+def compute_calibration(request, id):    
+    # Retrieve the Pillar Survey instance and related data    
+    pillar_survey = get_object_or_404(
+        Pillar_Survey.objects.select_related(
+            'edm', 'prism', 'uncertainty_budget', 'baseline'
+        ).prefetch_related(
+            Prefetch(
+                'edm_observation_set',
+                queryset=EDM_Observation.objects.select_related('from_pillar', 'to_pillar')
+            )
+        ),
+        id=id
+    )    
+    raw_edm_obs, raw_lvl_obs, calib = raw_edm_obs_reductions(pillar_survey)
+    baseline = baseline_qry2(pillar_survey,id)
+
+    Check_Errors = validate_survey2(pillar_survey=pillar_survey,
+                            baseline=baseline,
+                            calibrations=calib,
+                            raw_edm_obs=raw_edm_obs,
+                            raw_lvl_obs=raw_lvl_obs)
+    if len(Check_Errors['Errors']) > 0:
+       return render(request, 'baseline_calibration/errors_report.html', 
+                     {'Check_Errors':Check_Errors})
+    

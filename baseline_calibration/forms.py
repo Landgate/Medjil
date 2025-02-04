@@ -54,6 +54,14 @@ class PillarSurveyForm(forms.ModelForm):
         locations = list(user.locations.values_list('statecode', flat=True))
         
         super(PillarSurveyForm, self).__init__(*args, **kwargs)
+        self.fields['survey_date'].initial = date.today().isoformat()
+        self.fields['computation_date'].value = date.today().isoformat()
+        self.fields['accreditation'].initial = Accreditation.objects.filter(
+            valid_from_date__lte = date.today().isoformat(),
+            valid_to_date__gte = date.today().isoformat(),
+            accredited_company = user.company).order_by(
+                '-valid_from_date').first()
+        
         self.fields['baseline'].queryset = CalibrationSite.objects.filter(
             Q(site_type = 'baseline') 
             & Q(state__statecode__in = locations))
@@ -93,10 +101,10 @@ class PillarSurveyForm(forms.ModelForm):
             'data_checked_person','data_checked_position', 'data_checked_date')
         widgets = {
            'baseline': forms.Select(attrs={'class': 'page0'}),
-           'computation_date': forms.DateInput(format=('%d-%m-%Y'),
-               attrs={'type':'date'}),
-           'survey_date': forms.DateInput(format=('%d-%m-%Y'), 
-               attrs={'type':'date', 'class': 'page0'}),
+           'computation_date': forms.DateInput(
+               attrs={'type':'date', 'input_formats': ['%d-%m-%Y']}),
+           'survey_date': forms.DateInput(
+               attrs={'type':'date', 'input_formats': ['%d-%m-%Y'], 'class': 'page0'}),
            'observer': forms.TextInput (attrs={'class': 'page0'}),    
            'weather': forms.Select(attrs={'class': 'page0'}),
            'job_number': forms.TextInput (
@@ -156,8 +164,9 @@ class PillarSurveyForm(forms.ModelForm):
         if not mets_applied and self.cleaned_data['edm'].edm_specs.edm_type =='pu':
             raise forms.ValidationError("Pulse instruments must have mets applied!")
         return mets_applied
+    
 
-class UploadSurveyFiles(forms.Form):
+class UploadSurveyFilesForm(forms.Form):
         
     edm_file = forms.FileField(
         widget = forms.FileInput(attrs={'accept' : '.csv, .asc',
@@ -169,7 +178,7 @@ class UploadSurveyFiles(forms.Form):
         label = 'Reduced Levels File (*.csv)')
     
 
-class ChangeSurveyFiles(forms.Form):
+class ChangeSurveyFilesForm(forms.Form):
         
     change_edm = forms.BooleanField(
         widget = forms.CheckboxInput(attrs={'class': 'page3', 

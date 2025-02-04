@@ -40,5 +40,12 @@ urlpatterns = [
 
     path('certified_distances/<int:id>', views.certified_distances_home, name = 'certified_distances_home'),
     path('certified_distances/<int:id>/edit/', views.certified_distances_edit, name = 'certified_distances_edit'),
+    
+    #paths for computing a calibration
+    path('survey/create', views.survey_create, name = 'pillar_survey_create'),
+    path('survey/<int:id>/update', views.survey_create, name = 'pillar_survey_update'),
+    path('survey/<int:id>/delete', views.survey_delete, name = 'pillar_survey_delete'),
+    path('edm_observations/<int:id>/update', views.edm_observations_update, name = 'edm_observations_update'),
+    path('survey/<int:id>/compute_calibration', views.compute_calibration, name = 'compute_calibration'),
 
 ]
