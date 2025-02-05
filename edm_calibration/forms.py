@@ -123,7 +123,7 @@ class uPillarSurveyForm(forms.ModelForm):
         super(uPillarSurveyForm, self).__init__(*args, **kwargs)
         
         self.fields['survey_date'].initial = date.today().isoformat()
-        self.fields['computation_date'].value = date.today().isoformat()
+        self.fields['computation_date'].initial = date.today().isoformat()
         
         self.fields['site'].queryset = CalibrationSite.objects.filter(
             Q(site_type = 'baseline') &

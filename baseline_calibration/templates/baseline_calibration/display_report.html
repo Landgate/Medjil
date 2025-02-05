@@ -141,7 +141,7 @@
                 <div id="buttons" class="button-container">
                     <div class="flexbox-item_800_IB flexbox-item-button_IB">
                     {% if pillar_survey %}
-                        <button type="button" onclick="window.location.href='{% url 'baseline_calibration:calibrate2' id=pillar_survey.pk %}'" class="submit-button bg-green-500 hover:bg-green-400">Back</button>
+                        <button type="button" onclick="window.location.href='{% url 'baseline_calibration:edm_observations_update' id=pillar_survey.pk %}'" class="submit-button bg-green-500 hover:bg-green-400">Back</button>
                     {% endif %}
                     <button type="button" onclick="window.location.href='{% url 'baseline_calibration:calibration_home' %}'" class="cancelbtn bg-red-500 hover:bg-red-300">Cancel</button>
                     <button type="submit" class="submit-button bg-green-500 hover:bg-green-400">Save</button>

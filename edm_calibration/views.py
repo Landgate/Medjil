@@ -562,7 +562,7 @@ def compute_calibration(request, id):
             #----------------- compile Design matrix, weight Matrix -----------------#
             # Matrix's for ISO 17123-4:2012 Full test procedure
             iso_a = []
-            cell_val = 0            
+            cell_val = 0
             for pillar in pillars_used:
                 if o['from_pillar'] == pillar.name or o['to_pillar'] == pillar.name:
                     if cell_val == 0: cell_val = 1
@@ -610,7 +610,7 @@ def compute_calibration(request, id):
         
         if iso_y:
             ini_from_pillar = pillars_used[1].name
-            for pillar, parameter in zip(pillars_used[1:], iso_y[:-1]):                                            
+            for pillar, parameter in zip(pillars_used[1:], iso_y[:-1]):
                 parameter['from_pillar'] = ini_from_pillar
                 parameter['to_pillar'] = pillar.name
                 ini_from_pillar =pillar.name

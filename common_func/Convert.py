@@ -527,7 +527,8 @@ def calibrations_qry2(pillar_survey):
         edm__pk = pillar_survey.edm.pk, prism__pk = pillar_survey.prism.pk
         ).order_by('-calibration_date')
     if calibration_type == 'I':
-        calib['edmi'] = calib['edmi'].exclude(id = pillar_survey.certificate.id)
+        if pillar_survey.certificate:
+            calib['edmi'] = calib['edmi'].exclude(id = pillar_survey.certificate.id)
         
     elif calibration_type == 'B':
         calib['staff'] = pillar_survey.staff.get_certificate(pillar_survey.survey_date)
@@ -606,7 +607,7 @@ def import_csv_to_observations(csv_file, pillar_survey):
     }
     if calibration_type == 'B':
         required_headings.update({
-            'horizontal_direction(dd)': 'hz_direction',
+            'hz_direction': 'horizontal_direction(dd)' ,
             })
     
     # Check for missing headings
@@ -622,8 +623,12 @@ def import_csv_to_observations(csv_file, pillar_survey):
     for line_num, row in enumerate(reader, start=1):
         try:
             # Resolve pillars for from_pillar and to_pillar
-            from_pillar = pillar_survey.site.pillars.filter(name=row['from_pillar'].strip()).first()
-            to_pillar = pillar_survey.site.pillars.filter(name=row['to_pillar'].strip()).first()
+            if calibration_type == 'I':
+                from_pillar = pillar_survey.site.pillars.filter(name=row['from_pillar'].strip()).first()
+                to_pillar = pillar_survey.site.pillars.filter(name=row['to_pillar'].strip()).first()
+            if calibration_type == 'B':
+                from_pillar = pillar_survey.baseline.pillars.filter(name=row['from_pillar'].strip()).first()
+                to_pillar = pillar_survey.baseline.pillars.filter(name=row['to_pillar'].strip()).first()
 
             if not from_pillar:
                 raise ValueError(f"Invalid from_pillar '{row['from_pillar']}' on line {line_num}.")
@@ -636,9 +641,9 @@ def import_csv_to_observations(csv_file, pillar_survey):
                     pillar_survey=pillar_survey,
                     from_pillar=from_pillar,
                     to_pillar=to_pillar,
-                    inst_ht=row.get('inst_ht', '').strip() or None,
-                    tgt_ht=row.get('tgt_ht', '').strip() or None,
-                    raw_slope_dist=row.get('raw_slope_dist', '').strip() or None,
+                    inst_ht=row.get('inst_ht', '').strip(),
+                    tgt_ht=row.get('tgt_ht', '').strip(),
+                    raw_slope_dist=row.get('raw_slope_dist', '').strip(),
                     raw_temperature=row.get('raw_temperature', '').strip() or None,
                     raw_pressure=row.get('raw_pressure', '').strip() or None,
                     raw_humidity=row.get('raw_humidity', '').strip() or None,
@@ -649,10 +654,10 @@ def import_csv_to_observations(csv_file, pillar_survey):
                     pillar_survey=pillar_survey,
                     from_pillar=from_pillar,
                     to_pillar=to_pillar,
-                    inst_ht=row.get('inst_ht', '').strip() or None,
-                    tgt_ht=row.get('tgt_ht', '').strip() or None,
-                    raw_slope_dist=row.get('raw_slope_dist', '').strip() or None,
-                    hz_direction=row.get('hz_direction', '').strip() or None,
+                    inst_ht=row.get('inst_ht', '').strip(),
+                    tgt_ht=row.get('tgt_ht', '').strip(),
+                    raw_slope_dist=row.get('raw_slope_dist', '').strip(),
+                    hz_direction=row.get('hz_direction', '').strip(),
                     raw_temperature=row.get('raw_temperature', '').strip() or None,
                     raw_pressure=row.get('raw_pressure', '').strip() or None,
                     raw_humidity=row.get('raw_humidity', '').strip() or None,
@@ -726,30 +731,30 @@ def import_csv_to_levels(csv_file, pillar_survey):
     for line_num, row in enumerate(reader, start=1):
         try:
             # Resolve pillars for from_pillar and to_pillar
-            pillar = pillar_survey.site.pillars.filter(name=row['pillar'].strip()).first()
-
+            pillar = pillar_survey.baseline.pillars.filter(name=row['pillar'].strip()).first()
+    
             if not pillar:
                 raise ValueError(f"Invalid from_pillar '{row['pillar']}' on line {line_num}.")
-
-            pillar = pillar_survey.site.pillars.filter(name=row['pillar'].strip()).first()
-            pillar_level = Level_Observation(
-                pillar_survey=pillar_survey,
-                pillar=pillar,
-                reduced_level=row.get('reduced_level', '').strip() or None,
-                rl_standard_deviation=row.get('rl_standard_deviation', '').strip() or None,
-            )
-            pillar_level.full_clean()
-            pillar_levels.append(pillar_level)
-
+            
+            pillar_level_data = {
+                'reduced_level': row.get('reduced_level', '').strip(),
+                'rl_standard_deviation': row.get('rl_standard_deviation', '').strip()
+            }
+            
+            pillar_levels.append((pillar, pillar_level_data))
+    
         except Exception as e:
             # Capture detailed error for this line
             errors.append(f"Error on line {line_num}: {e}")
-
+    
     # Save all valid observations only if there are no errors
-    if len(errors) == 0:        
-        delete_lvl_obs = Level_Observation.objects.filter(pillar_survey=pillar_survey)
-        delete_lvl_obs.delete()
+    if len(errors) == 0:
         with transaction.atomic():
-            Level_Observation.objects.bulk_create(pillar_levels)
-
+            for pillar, pillar_level_data in pillar_levels:
+                Level_Observation.objects.update_or_create(
+                    pillar_survey=pillar_survey,
+                    pillar=pillar,
+                    defaults=pillar_level_data
+                )
+    
     return errors

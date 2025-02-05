@@ -54,8 +54,8 @@ class PillarSurveyForm(forms.ModelForm):
         locations = list(user.locations.values_list('statecode', flat=True))
         
         super(PillarSurveyForm, self).__init__(*args, **kwargs)
+        self.fields['computation_date'].initial = date.today().isoformat()
         self.fields['survey_date'].initial = date.today().isoformat()
-        self.fields['computation_date'].value = date.today().isoformat()
         self.fields['accreditation'].initial = Accreditation.objects.filter(
             valid_from_date__lte = date.today().isoformat(),
             valid_to_date__gte = date.today().isoformat(),

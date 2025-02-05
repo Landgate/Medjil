@@ -129,7 +129,7 @@
         currentTab = parseFloat(cachedVal);
         sessionStorage.removeItem("currentTab");
     }
-    {% for field in form %}{% if field.errors %}
+    {% for field in form %}{% if field.errors %} //{{ field.name }}
         currentTab = parseInt('{{ field.field.widget.attrs.class }}'.replace('page',''));{% endif %}{% if forloop.last %}
         lastTab = parseInt('{{ field.field.widget.attrs.class }}'.replace('page',''));{% endif %}
     {% endfor %}
@@ -254,7 +254,7 @@
     }
 
     function tglMets2(inst,abb) {
-        // This function will hide/unhide the CO2 content row
+        // This function will hide/unhide the Mets2 content row
         var Mets2_box = document.getElementById("id_"+inst+"2");
         var Mets_Tr = document.getElementById("id_"+inst+"_tr");
         var Mets2_Tr = document.getElementById("id_"+inst+"2_tr");
@@ -288,6 +288,58 @@
     }
     {% endif %}
 </script>
+{% if user.is_staff %}
+<input type="file" id="fileInput" style="display:none;">
+<button onclick="document.getElementById('fileInput').click();">Upload Data</button>
+<button onclick="downloadFormData()">Download Data</button>
+<script>
+    document.getElementById('fileInput').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+            const data = e.target.result;
+            const lines = data.split('\n');
+            const formData = {};
+            
+            lines.forEach((line) => {
+                const [name, value] = line.split('=');
+                if (name && value) {
+                    formData[name.trim()] = value.trim();
+                }
+            });
+            
+            for (const key in formData) {
+                if (formData.hasOwnProperty(key)) {
+                    const input = document.querySelector(`[name="${key}"]`);
+                    if (input) {
+                        input.value = formData[key];
+                    }
+                }
+            }
+        };
+        
+        reader.readAsText(file);
+    });
 
+    function downloadFormData() {
+        const inputs = document.querySelectorAll('input[name]');
+        let data = '';
 
+        inputs.forEach(input => {
+            data += `${input.name}=${input.value}\n`;
+        });
+
+        const blob = new Blob([data], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'form_data.txt';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+</script>
+{% endif %}
 {% endblock %}
