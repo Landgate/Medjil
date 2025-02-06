@@ -353,22 +353,22 @@
         </tr>
         <tr>
             <td class="text-left">Estimated Variance Factor</td>
-            <td class="text-left"> {{ chi_test.Variance|floatformat:2 }} </td>
+            <td class="text-left"> {{ chi_test.Variance|floatformat:2 }}</td>
         </tr>
         <tr>
             <td class="text-left">Experimental Standard Deviation (m)</td>
-            <td class="text-left"> {{ chi_test.So|floatformat:5 }} </td>
+            <td class="text-left"> {{ chi_test.So|floatformat:5 }}</td>
         </tr>
         <tr>
             <td class="text-left">Number of Degrees of Freedom</td>
-            <td class="text-left"> {{ chi_test.dof }}  </td>
+            <td class="text-left"> {{ chi_test.dof }}</td>
         </tr>
         <tr>
             <td class="text-left">Coverage Factor</td>
-            <td class="text-left"> {{ chi_test.k|floatformat:2 }} </td>
+            <td class="text-left"> {{ chi_test.k|floatformat:2 }}</td>
         </tr>
         <tr>
-            <td class="text-left">Chi-Square Test of the Variance Factor &nbsp;&nbsp;&nbsp;&nbsp;({{ chi_test.chi_lower|floatformat:3 }} &#60 {{ chi_test.Variance|floatformat:3 }} &#60 {{ chi_test.chi_upper|floatformat:3 }}) </td>
+            <td class="text-left">Chi-Square Test of the Variance Factor &nbsp;&nbsp;&nbsp;&nbsp;({{ chi_test.chi_lower|floatformat:3 }} &#60 {{ chi_test.Variance|floatformat:3 }} &#60 {{ chi_test.chi_upper|floatformat:3 }})</td>
             <td class="text-left">
                 <B>{{ chi_test.test }}</B>
             </td>
@@ -401,6 +401,11 @@
 </div>
 <div class="text-center">
     <h2>Baseline Distance Observations</h2>
+    <div class="flexbox-container_IB">
+        <div class="flexbox-item_800_IB flexbox-item-left_IB">
+            <p>All slope distances in this section of the report are corrected the first velocity correction. All atmospheric observations are corrected for instrument calibration parameters.</p>
+        </div>
+    </div>
     {% for o in edm_observations %}
         <table style="margin-left:auto;margin-right:auto;font-size:10.0pt;width:800px;">
             <tr style="border:0;font-weight:bold;">
@@ -509,14 +514,14 @@
                         {{s.from_pillar}} <br>
                     {% endfor %}
                 </td>
-                <td style="vertical-align: top;"> {{p.pillar}} </td>
+                <td style="vertical-align: top;"> {{p.pillar}}</td>
                 <td>
                     {% for s in p.sets %}
                         {{s.observed_offset|floatformat:3}} <br>
                     {% endfor %}
                 </td>
-                <td style="vertical-align: bottom;">{{p.offset|floatformat:3}} </td>
-                <td style="vertical-align: bottom;">{{p.OS_std_dev|floatformat:3}} </td>
+                <td style="vertical-align: bottom;">{{p.offset|floatformat:3}}</td>
+                <td style="vertical-align: bottom;">{{p.OS_std_dev|floatformat:3}}</td>
             </tr>
         {% endfor %}
     </table>

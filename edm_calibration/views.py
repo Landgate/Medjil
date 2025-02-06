@@ -674,7 +674,9 @@ def compute_calibration(request, id):
             'degrees_of_freedom': chi_test['dof'],
             'scale_correction_factor': matrix_y[1]['value'] + 1,
             'scf_uncertainty': matrix_y[1]['uncertainty'],
-            'scf_coverage_factor': chi_test['k']
+            'scf_coverage_factor': chi_test['k'],
+            'index': matrix_y[0]['value']*1000,
+            'scale': (matrix_y[1]['value'])*1000000
             }
         if len(matrix_y)>2:
             ini_edmi_certificate.update({
