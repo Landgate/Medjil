@@ -45,6 +45,7 @@ urlpatterns = [
     path('medjil-admin/', medjil_admin_site.urls),
     path('accounts/', include('accounts.urls')),
     path('calibrationsites/', include('calibrationsites.urls')),
+    path('calibrationsitebooking/', include('calibrationsitebooking.urls')),
     path('instruments/', include('instruments.urls')),
     path('rangecalibration/', include('rangecalibration.urls')),   
     path('staffcalibration/', include('staffcalibration.urls')),

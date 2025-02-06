@@ -1,0 +1,127 @@
+<!--
+
+   © 2023 Western Australian Land Information Authority
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+-->
+{% extends 'base_generic.html' %}
+{% load static %}
+
+
+{% block content %} 
+
+<article class="post">
+    <div class="post-header mt-12 text-center mb-3">
+        <h1>Welcome to Landgate's Survey Instrument Calibration website.</h1>
+        <p> This form allows to booking (or modify) a calibration site booking form.</p>
+    </div>
+    <div class="post-content">
+
+        <form action="" class="site-form" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <table>
+                    {% for field in form %}
+                        <tr>
+                            <td width="30%">{{ field.label_tag }}</td>
+                            <td width="70%"> {{ field }} 
+                                <!-- Errors -->
+                                {% for error in field.errors %}
+                                    <p class="error error-danger">{{ error }}</p>
+                                {% endfor %}
+                                <!-- Help text -->
+                                {% if not field.field.widget.attrs.placeholder and field.help_text %}
+                                    <p class="helptext">{{ field.help_text }}</p>
+                                {% endif %}
+
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    
+                </table>
+                {% if form.non_field_errors %}
+                    <ul class="message-list" style="padding: 0.5rem 1.5rem">
+                        {% for error in form.non_field_errors %}
+                            {% if forloop.first %}
+                                <li class="error-danger"><strong>{{ error }}</strong></li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                <div class="button-container">
+                    <button type="button" onclick="window.location.href='/calibrationguide/'" class="cancelbtn bg-red-500 hover:bg-red-300">Cancel</button>
+                    <button type="submit" class="submit-button bg-green-500 hover:bg-green-400">Save</button>
+                </div>
+        </form>
+        
+    </div>
+</article>
+
+<script>
+
+    document.getElementById('id_calibration_type').addEventListener('change', (e) => {
+        const type = e.target.value;
+        if (type === ''){
+            document.getElementById('id_location').value = '';
+            document.getElementById('id_site_id').value = '';
+        }
+    })
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const calibrationTypeOption = document.getElementById('id_calibration_type');
+        const locationOption = document.getElementById('id_location');
+        const siteIdOption = document.getElementById('id_site_id');
+
+        function fetchSiteIds() {
+            const calibrationType = calibrationTypeOption.value;
+            const location = locationOption.value;
+
+            if (calibrationType.value === '') {
+                siteIdOption.options.length = 1;
+            }
+
+            if (calibrationType && location) {
+                siteIdOption.options.length = 1;
+                fetch(`/calibrationsitebooking/get-calib-sites/${calibrationType}/${location}`)
+                .then(response => response.json())
+                .then(data => {
+                    const site_obj = data.site_obj;
+                    site_obj.forEach(e => {
+                        // console.log(e[0], e[1])
+                        var option = document.createElement('option');
+                        option.value = e[0]
+                        option.text = e[1]
+                        siteIdOption.appendChild(option);
+                    });
+                    })
+                .catch(error => console.error('Error fetching options:', error));
+            };
+        }
+        calibrationTypeOption.addEventListener('change', fetchSiteIds);
+        locationOption.addEventListener('change', fetchSiteIds);
+    }); 
+
+    // window.onload = function() {
+    //     document.getElementById('id_calibration_type').value = '';
+    //     document.getElementById('id_location').value = '';
+    //     document.getElementById('id_site_id').value = '';
+    //     document.getElementById('id_job_number').value = '';
+    //     document.getElementById('id_calibration_date').value = '';
+    //     document.getElementById('id_calibration_time').value = '';
+    //     // document.querySelector('.message-list').innerHTML = '';
+    // }
+    // Refresh the form only after a successful submission
+    
+</script>
+
+{% endblock %}
