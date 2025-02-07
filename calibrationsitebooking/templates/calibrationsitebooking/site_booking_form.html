@@ -68,60 +68,62 @@
 </article>
 
 <script>
-
-    document.getElementById('id_calibration_type').addEventListener('change', (e) => {
-        const type = e.target.value;
-        if (type === ''){
-            document.getElementById('id_location').value = '';
-            document.getElementById('id_site_id').value = '';
-        }
-    })
-
+    // 
     document.addEventListener('DOMContentLoaded', function() {
         const calibrationTypeOption = document.getElementById('id_calibration_type');
         const locationOption = document.getElementById('id_location');
         const siteIdOption = document.getElementById('id_site_id');
+        // Initialise Values
+        locationOption.innerHTML = '<option value="">--- Select Location ---</option>';
+        siteIdOption.innerHTML = '<option value="">--- Select Site ---</option>';
 
-        function fetchSiteIds() {
-            const calibrationType = calibrationTypeOption.value;
-            const location = locationOption.value;
-
-            if (calibrationType.value === '') {
-                siteIdOption.options.length = 1;
+        function fetchLocations() {
+            // Clear existing options, except the empty one
+            while (locationOption.options.length > 1) {
+                    locationOption.remove(1);
             }
-
-            if (calibrationType && location) {
-                siteIdOption.options.length = 1;
-                fetch(`/calibrationsitebooking/get-calib-sites/${calibrationType}/${location}`)
+            const calibrationtype = calibrationTypeOption.value;
+            if (calibrationtype) {
+                fetch(`/calibrationsitebooking/get-locations/${calibrationtype}`)
                 .then(response => response.json())
                 .then(data => {
-                    const site_obj = data.site_obj;
-                    site_obj.forEach(e => {
-                        // console.log(e[0], e[1])
+                    const site_locs = data.site_locs;
+                    site_locs.forEach(e => {
+                        var option = document.createElement('option');
+                        option.value = e[0]
+                        option.text = e[1]
+                        locationOption.appendChild(option);
+                    });
+                })
+            }
+        }
+
+        function fetchSiteIds() {
+            // Clear existing options, except the empty one
+            while (siteIdOption.options.length > 1) {
+                    siteIdOption.remove(1);
+            }
+            const calibrationtype = calibrationTypeOption.value;
+            const location = locationOption.value;
+            if (calibrationtype && location) {
+                fetch(`/calibrationsitebooking/get-calib-sites/${calibrationtype}/${location}`)
+                .then(response => response.json())
+                .then(data => {
+                    const site_ids = data.site_ids;
+                    site_ids.forEach(e => {
                         var option = document.createElement('option');
                         option.value = e[0]
                         option.text = e[1]
                         siteIdOption.appendChild(option);
                     });
-                    })
-                .catch(error => console.error('Error fetching options:', error));
-            };
+                })
+            }
         }
-        calibrationTypeOption.addEventListener('change', fetchSiteIds);
+
+        calibrationTypeOption.addEventListener('change', fetchLocations);
         locationOption.addEventListener('change', fetchSiteIds);
     }); 
 
-    // window.onload = function() {
-    //     document.getElementById('id_calibration_type').value = '';
-    //     document.getElementById('id_location').value = '';
-    //     document.getElementById('id_site_id').value = '';
-    //     document.getElementById('id_job_number').value = '';
-    //     document.getElementById('id_calibration_date').value = '';
-    //     document.getElementById('id_calibration_time').value = '';
-    //     // document.querySelector('.message-list').innerHTML = '';
-    // }
-    // Refresh the form only after a successful submission
-    
 </script>
 
 {% endblock %}

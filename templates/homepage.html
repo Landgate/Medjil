@@ -49,7 +49,9 @@
             <p>
                 You can now start booking for your next calibration.
             </p>
-            <button type="button" onclick="window.location.href='/calibrationsitebooking/site_booking/'" class="px-8 py-2 border border-transparent text-base leading-2 rounded text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">BOOK CALIBRATION</button>
+            <a href="{% url 'calibrationsitebooking:site-booking' None %}" class="px-8 py-2 border border-transparent text-base leading-2 rounded text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out" style="text-decoration: none;">
+                BOOK CALIBRATION
+            </a>
         {% endif %}
     </div>
 </article>

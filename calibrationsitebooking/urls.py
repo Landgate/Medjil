@@ -22,8 +22,11 @@ app_name = 'calibrationsitebooking'
 
 urlpatterns = [
     path('', views.booking_view, name='booking-view'), 
-    # path('site_booking/', views.site_booking, name = 'site-booking'),
     path('site_booking/<slug:id>/', views.site_booking, name = 'site-booking'),
     path('site_booking/<slug:id>/delete/', views.site_booking_delete, name = 'site-booking-delete'),
+    path('get-locations/<str:calibrationtype>', views.get_locations, name='get-locations'),
     path('get-calib-sites/<str:calibration_type>/<str:location>', views.get_calib_sites, name='get-calib-sites'),
+    # path('site_booking/', views.site_booking, name = 'site-booking'),
+
+
 ]

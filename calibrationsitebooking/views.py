@@ -52,6 +52,23 @@ def site_booking(request, id=None):
     
     return render(request, 'calibrationsitebooking/site_booking_form.html', context)
 
+def get_locations(request, calibrationtype):
+    site_locs = list(request.user.locations.values_list('id','name'))
+
+    return JsonResponse({'site_locs': site_locs})
+
+def get_calib_sites(request, calibration_type, location):
+    location = Location.objects.get(id = location)
+    print(location)
+    site_type  = None
+    if calibration_type in ['baseline', 'edmi']:
+         site_type = 'baseline'
+    elif calibration_type in ['staff', 'range']:
+         site_type = 'staff_range'
+    site_ids = list(CalibrationSite.objects.filter(site_type=site_type, state__statecode = location.statecode).values_list('id', 'site_name'))
+
+    return JsonResponse({'site_ids': site_ids})
+
 @login_required(login_url="/accounts/login") 
 def site_booking_delete(request, id):
     # Only allow delete if record belongs to company
@@ -62,33 +79,3 @@ def site_booking_delete(request, id):
     try_delete_protected(request, delete_obj)
     
     return redirect('calibrationsitebooking:booking-view')
-
-
-
-# def site_booking(request):
-#     if request.method=="POST":
-#             form = CalibrationSiteBookingForm(request.POST, user=request.user)
-#             print(form)
-#             if form.is_valid():
-#                 new_obj = form.save(commit=False)
-#                 new_obj.save()
-#                 if 'next' in request.POST:
-#                     return redirect(request.POST.get('next'))
-#                 else:
-#                     messages.success(request, 'Your booking is confirmed!.')
-#                     return redirect('calibrationguide:guide_view')
-#     else:
-#         form = CalibrationSiteBookingForm(user=request.user)
-#     return render(request, 'calibrationsitebooking/site_booking_form.html', {'form':form})
-
-def get_calib_sites(request, calibration_type, location):
-    location = Location.objects.get(id = location)
-
-    site_type  = None
-    if calibration_type in ['baseline', 'edmi']:
-         site_type = 'baseline'
-    elif calibration_type in ['staff', 'range']:
-         site_type = 'staff_range'
-    site_obj = list(CalibrationSite.objects.filter(site_type=site_type, state__statecode = location.statecode).values_list('id', 'site_name'))
-
-    return JsonResponse({'site_obj': site_obj})
