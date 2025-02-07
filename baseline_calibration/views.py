@@ -512,70 +512,60 @@ def survey_delete(request, id):
 @login_required(login_url="/accounts/login")
 @user_passes_test(is_staff)
 def survey_create(request, id=None):
-    # Retrieve the existing instance or create a new one
-    instance = Pillar_Survey.objects.filter(
-        id=id,
-        accreditation__accredited_company = request.user.company.id).first() if id else None
-
-    # Use the appropriate form based on whether there's an instance
+    instance = None
+    if id:
+        instance = Pillar_Survey.objects.filter(
+            id=id,
+            accreditation__accredited_company=request.user.company.id
+        ).first()
+    
     pillar_survey_form = PillarSurveyForm(
-        request.POST or None, 
+        request.POST or None,
         request.FILES or None, 
         instance=instance, 
-        user=request.user
-    )
-
-    if instance:
-        survey_files = ChangeSurveyFilesForm(
-            request.POST or None,
-            request.FILES or None
-        )
-    else:
-        survey_files = UploadSurveyFilesForm(
-            request.POST or None,
-            request.FILES or None
-        )
-
-    # If the main form is valid, save the pillar survey instance
-    import_errors = []
-    if pillar_survey_form.is_valid():
-        pillar_survey = pillar_survey_form.save()
-
-        # Check if the file upload form is valid
-        if survey_files.is_valid():
-            # Process the CSV files if exist and import observations
-            if survey_files.cleaned_data.get('edm_file'):
-                edm_file = survey_files.cleaned_data.get('edm_file')
-                import_errors = import_csv_to_observations(
-                    edm_file, pillar_survey)
-            if survey_files.cleaned_data.get('lvl_file'):
-                lvl_file = survey_files.cleaned_data.get('lvl_file')
-                import_errors.extend(
-                    import_csv_to_levels(lvl_file, pillar_survey))
+        user=request.user)
     
-            # Render errors if there are any
-            if len(import_errors) > 0:
-                return render(request, 'baseline_calibration/errors_report.html', {
-                    'Check_Errors': {'Errors': import_errors, 'Warnings': []},
-                    'id': pillar_survey.pk
-                })
+    survey_files = (
+        ChangeSurveyFilesForm(request.POST or None, request.FILES or None) 
+        if instance else 
+        UploadSurveyFilesForm(request.POST or None, request.FILES or None)
+    )
+    
+    import_errors = []
+    if pillar_survey_form.is_valid() and survey_files.is_valid():
+        # Do not save immediately
+        pillar_survey = pillar_survey_form.save()
+        
+        # Check for file validation errors before saving
+        if survey_files.cleaned_data.get('edm_file'):
+            edm_file = survey_files.cleaned_data.get('edm_file')
+            import_errors.extend(import_csv_to_observations(edm_file, pillar_survey))
 
-            return redirect('baseline_calibration:edm_observations_update',
-                            id=pillar_survey.pk)
+        if survey_files.cleaned_data.get('lvl_file'):
+            lvl_file = survey_files.cleaned_data.get('lvl_file')
+            import_errors.extend(import_csv_to_levels(lvl_file, pillar_survey))
+        
+        if import_errors:
+            if not instance: pillar_survey.delete()
+            return render(request, 'baseline_calibration/errors_report.html', {
+                'Check_Errors': {'Errors': import_errors, 'Warnings': []}
+            })
 
-    # Render the form if it is invalid
+        return redirect('baseline_calibration:edm_observations_update', id=pillar_survey.pk)
+    
     headers = {
-        'page0':'Calibrate the Baseline',
+        'page0': 'Calibrate the Baseline',
         'page1': 'Instrumentation',
         'page2': 'Corrections / Calibrations Applied to Instruments',
         'page3': 'Error Budget and File Uploads',
     }
-    
+
     return render(request, 'baseline_calibration/PillarSurvey_form.html', {
         'headers': headers,
         'form': pillar_survey_form,
         'survey_files': survey_files,
     })
+
 
 
 @user_passes_test(is_staff)

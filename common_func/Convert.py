@@ -722,7 +722,7 @@ def import_csv_to_levels(csv_file, pillar_survey):
     missing_headings = [
         heading for key, heading in required_headings.items() if key not in reader.fieldnames]
     if missing_headings:
-        return [f"The following required headings are missing in the '{file_name}': {', '.join(missing_headings)}"]
+        return [f"The following required headings are missing in the level file:'{file_name}': {', '.join(missing_headings)}"]
 
     pillar_levels =[]
     errors = []

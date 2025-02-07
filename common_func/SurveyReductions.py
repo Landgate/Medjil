@@ -1054,7 +1054,7 @@ def raw_edm_obs_reductions(pillar_survey):
     def compute_average(cal_cert1, cal_cert2, raw_value1, raw_value2, calibration_applied1, calibration_applied2):
         """Computes the calibrated value, averaging if both cal_certs exist."""
         calibrated1, _ = calibrate_value(cal_cert1, raw_value1, calibration_applied1)
-        if not cal_cert2:
+        if not cal_cert2 or not raw_value2:
             return calibrated1
         calibrated2, _ = calibrate_value(cal_cert2, raw_value2, calibration_applied2)
         return (calibrated1 + calibrated2) / 2
