@@ -86,7 +86,7 @@ INSTALLED_APPS = [
     'accounts',
     'backcapture',
     'calibrationsites',
-    'calibrationsitebooking',
+    # 'calibrationsitebooking',
     'instruments',
     'rangecalibration',
     'staffcalibration',

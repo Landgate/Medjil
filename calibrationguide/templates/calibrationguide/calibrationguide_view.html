@@ -133,14 +133,12 @@
         if (calibrationType ==='') {
             contentFrame.src = '';
         }
-
-        if (calibLocDropDown.options.length <= 1) {
-            contentDisplay.innerHTML = "There is no calibration guide yet. Please contact <a href='mailto:geodesy@landgate.wa.gov.au'>geodesy@landgate.wa.gov.au</a> for information."
-        }
-        else if (selectedLocation === '') {
-            alert('Please select a location first!');
+        if (calibLocDropDown.value === ''){
+            alert('Please select a location first! Or contact geodesy@landgate.wa.gov.au for information.');
             e.target.value = "";
-        } else {
+        }
+
+        if (calibrationType && selectedLocation) {
             fetch(`/calibrationguide/get-content-url/${selectedLocation}/${calibrationType}`)
             .then(response => response.json())
             .then(data => {
@@ -153,9 +151,7 @@
                 } else {
                     contentDisplay.innerHTML = "<p> There is no calibration guide yet. Please contact <a href='mailto:geodesy@landgate.wa.gov.au'>geodesy@landgate.wa.gov.au</a> for information.</p>"
                 }
-                
             })
-            // .catch(error => console.error(error));
         }
     })
 

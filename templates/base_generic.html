@@ -215,16 +215,7 @@
                                 <div class="sub-item-header">Technical Manuals</div>
                                 <div class="sub-item-description">All you need to know about how it works</div>
                             </a>
-                            </li>
-                            {% if 'Western Australia' in user.get_locations %}   
-                            <li class="sub-items">
-                                <a href="{% url 'calibrationsitebooking:booking-view' %}">
-                                    <div class="sub-item-header">Calibration Site Boooking</div>
-                                    <div class="sub-item-description">Manage your calibration bookings</div>
-                                </a>
-                            </li>
-                            {% endif %}
-                        </li>                    
+                        </li>                   
                     </ul>
                 </li>
                 <li class="nav-item nav-option"><a href="#" id="printButton"><i class="fas fa-print"></i></a></li>
