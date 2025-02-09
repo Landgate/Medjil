@@ -14,15 +14,17 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 
+File: models.py
+App: rangecalibration
+Directory: Medjil/rangecalibration/models.py
+
 '''
 from django.db import models
 from django.db.models import Q
-from datetime import date
-import uuid
 from django.core.validators import RegexValidator
 from common_func.validators import validate_file_size
+
 # Import models
-from accounts.models import CustomUser
 from calibrationsites.models import CalibrationSite
 from instruments.models import (
     Staff,

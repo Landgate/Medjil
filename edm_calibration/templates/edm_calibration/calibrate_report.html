@@ -35,7 +35,9 @@
         <br>
         <B>Address: </B>{{ baseline.site.locality }}, {{ baseline.site.state }}, {{ baseline.site.country }}
         <br>
-        <B>Job Reference: </B>{{ pillar_survey.job_number }}
+        <B>Site Operator: </B>{{ pillar_survey.baseline.operator.company_name }}
+        <br>
+        <B>Operator Address: </B>{{ pillar_survey.baseline.operator.company_address }}
     </div>
     <div class="flexbox-item_400_IB flexbox-item-right_IB">
         <br>
@@ -46,6 +48,8 @@
         <B>Computation date: </B>{{ pillar_survey.computation_date }}
         <br>
         <B>Weather Conditions: </B>{{ pillar_survey.weather }}
+        <br>
+        <B>Job Reference: </B>{{ pillar_survey.job_number }}
     </div>
 </div>
 <div class="flexbox-container_IB">
@@ -154,7 +158,7 @@
     </div>
     
     <div class="flexbox-container_IB">
-        {% if not pillar_survey.thermo_calib_applied %}
+        {% if pillar_survey.thermo_calib_applied is False %}
             <div class="flexbox-item_800_IB flexbox-item-left_IB">
                 A calibration correction has been applied to the raw temperature measurements imported to Medjil using the most recent calibration at the time of the pillar survey and the following parameters:
                 <ul style="padding-left: 40px;">
@@ -190,7 +194,7 @@
         </div>
     </div>
     <div class="flexbox-container_IB">
-        {% if not pillar_survey.baro_calib_applied %}
+        {% if pillar_survey.baro_calib_applied is False %}
             <div class="flexbox-item_800_IB flexbox-item-left_IB">
                 A calibration correction has been applied to the raw pressure measurements imported to Medjil using the most recent calibration at the time of the pillar survey and the following parameters:
                 <ul style="padding-left: 40px;">
@@ -226,7 +230,7 @@
         </div>
     </div>
     <div class="flexbox-container_IB">
-        {% if not pillar_survey.hygro_calib_applied %}
+        {% if pillar_survey.hygro_calib_applied is False %}
             <div class="flexbox-item_800_IB flexbox-item-left_IB">
                 A calibration correction has been applied to the raw humidity measurements imported to Medjil using the most recent calibration at the time of the pillar survey and the following parameters:
                 <ul style="padding-left: 40px;">
@@ -251,9 +255,15 @@
             <B>Accreditation Valid Until: </B>{{ baseline.calibrated_baseline.accreditation.valid_to_date }}
             <br>
             <B>Accredited Agency: </B>{{ baseline.calibrated_baseline.accreditation.accredited_company }}
+            <br>
+            <B>Accredited Agency Address: </B>{{ baseline.calibrated_baseline.accreditation.accredited_company.company_address }}
         </div>
         <div class="flexbox-item_400_IB  flexbox-item-right_IB">
             <B>Date of Baseline Calibration Survey: </B>{{ baseline.calibrated_baseline.survey_date }}
+            {% if baseline.calibrated_baseline.results.reg13_upload %}
+                <br>
+                <a href="{{ baseline.calibrated_baseline.results.reg13_upload.url }}" target="_blank" rel="noopener noreferrer">Download Reg 13 Certificate &#10515</a>
+            {% endif %}
             <br>
             <B>Date of Calibration Certification: </B>{{ baseline.calibrated_baseline.computation_date }}
             {% if baseline.calibrated_baseline.accreditation.certificate_upload %}
@@ -307,7 +317,7 @@
     </table>
     <div class="flexbox-container_IB">
         <div class="flexbox-item_800_IB flexbox-item-left_IB">
-            <p>All certified distances are on the same horizontal plane at a reference height of {{ baseline.calibrated_baseline.get_average_pillar_height|floatformat:3 }} metres and on the same vertical plane running through the first and last stations.</p>
+            <p>All certified distances are from pillar {{ baseline.pillars.0.name }} and on the same horizontal and vertical plane at a reference height of {{ baseline.calibrated_baseline.get_average_pillar_height|floatformat:3 }} metres.</p>
         </div>
     </div>
     <div class="flexbox-container_IB">

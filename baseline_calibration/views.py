@@ -16,6 +16,7 @@
 
 '''
 from collections import OrderedDict
+from copy import deepcopy
 from datetime import date, timedelta
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
@@ -606,7 +607,8 @@ def edm_observations_update(request, id):
 @user_passes_test(is_staff)
 @login_required(login_url="/accounts/login")
 def compute_calibration(request, id):
-    try:
+    # try:
+    if 1==1:
         # Retrieve the Pillar Survey instance and baseline dictionary of records
         pillar_survey = get_object_or_404(
             Pillar_Survey.objects.select_related(
@@ -763,6 +765,7 @@ def compute_calibration(request, id):
             o['uc_budget'] = refline_std_dev(o, 
                                              alignment_survey,
                                              pillar_survey.edm)
+            o['apriori_uc_budget'] = deepcopy(o['uc_budget'])
               
             o['uc_combined'] = sum_uc_budget(o['uc_budget'])
     
@@ -856,7 +859,8 @@ def compute_calibration(request, id):
             cd['Humid'] = avg_h
             cd['to_pillar'] = p
             cd['from_pillar'] = pillars[0]
-            cd['delta_os'] = get_delta_os(alignment_survey, cd)
+            cd['delta_os'] = get_delta_os(alignment_survey,cd)
+            cd['reduced_level'] = float(raw_lvl_obs[p]['reduced_level'])
         
             #--------------------- Add Type B --------------------------------------#
             cd['uc_sources'] = add_surveyed_uc2(cd, edm_trend,
@@ -943,6 +947,21 @@ def compute_calibration(request, id):
             num_to_append = n_rpt_shots - len(o['grp_Bay'])
             if num_to_append > 0:
                 o['grp_Bay'].extend([''] * num_to_append)
+            
+            for uc in o['uc_budget'].values():
+                if uc['group'] in dict(Uncertainty_Budget_Source.group_types).keys():
+                    uc['group_verbose'] = dict(Uncertainty_Budget_Source.group_types)[uc['group']]
+            
+            for uc in o['uc_sources']:
+                if uc['group'] in dict(Uncertainty_Budget_Source.group_types).keys():
+                    uc['group_verbose'] = dict(Uncertainty_Budget_Source.group_types)[uc['group']]
+            
+            o['uc_budget'] = OrderedDict(sorted(o['uc_budget'].items()))
+            
+            for uc in o['apriori_uc_budget'].values():
+                if uc['group'] in dict(Uncertainty_Budget_Source.group_types).keys():
+                    uc['group_verbose'] = dict(Uncertainty_Budget_Source.group_types)[uc['group']]
+            o['apriori_uc_budget'] = OrderedDict(sorted(o['apriori_uc_budget'].items()))
     
         if 'edmi_drift' in calib.keys():
             calib['edmi_drift']['xyValues'] = [
@@ -1020,7 +1039,7 @@ def compute_calibration(request, id):
         
         return render(request, 'baseline_calibration/display_report.html', context)
     
-    except Exception as e:
-        messages.error(request, f"An error occurred: {str(e)}")
-        return render(request, 'baseline_calibration/errors_report.html', 
-                      {})
+    # except Exception as e:
+    #     messages.error(request, f"An error occurred: {str(e)}")
+    #     return render(request, 'baseline_calibration/errors_report.html', 
+    #                   {})

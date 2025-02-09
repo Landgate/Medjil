@@ -27,6 +27,7 @@ from django.urls import reverse
 from django.db.models import Prefetch
 
 from collections import OrderedDict
+from copy import deepcopy
 from math import pi, sin, cos, sqrt
 from datetime import date, timedelta
 import json
@@ -538,15 +539,12 @@ def compute_calibration(request, id):
                                                pillar_survey,
                                                o['uc_sources'],
                                                baseline_data['certified_dist'])
-                  
-            o['apriori_uc_budget'] = refline_std_dev(o,
-                                            baseline_data['certified_dist'], 
-                                            pillar_survey.edm)
                
             o['uc_budget'] = refline_std_dev(o,
                                             baseline_data['certified_dist'], 
                                             pillar_survey.edm)
-              
+            o['apriori_uc_budget'] = deepcopy(o['uc_budget'])
+            
             o['uc_combined'] = sum_uc_budget(o['uc_budget'])
             
             #----------------- Least Squares -----------------#

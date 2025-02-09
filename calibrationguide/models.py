@@ -14,6 +14,10 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 
+File: models.py
+App: calibrationguide
+Directory: Medjil/calibrationguide/models.py
+
 '''
 from django.db import models
 from django.urls import reverse

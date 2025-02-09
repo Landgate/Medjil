@@ -14,7 +14,12 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 
+File: models.py
+App: backcapture
+Directory: Medjil/backcapture/models.py
+
 '''
+
 from django.db import models
 from accounts.models import CustomUser
 
