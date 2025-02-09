@@ -39,17 +39,21 @@ def load_initial_data(apps, schema_editor):
     Company = apps.get_model("accounts", "Company")
     Location = apps.get_model("accounts", "Location")
 
-    company = Company.objects.create(
+    Company.objects.create(
         company_abbrev = 'OTH', company_name = 'Others', company_secret_key='')
-    company = Company.objects.create(
-        company_abbrev = 'LG', company_name = 'Landgate')
-    company = Company.objects.create(
-        company_abbrev = 'OSG SA', company_name = 'Office of the Surveyor-General - SA')
-    company = Company.objects.create(
-        company_abbrev = 'DNRMMRRD', company_name = 'Department of Natural Resources & Mines, Manufacturing & Regional & Rural Development')
+    Company.objects.create(
+        company_abbrev = 'LG', company_name = 'Landgate', 
+        company_address = '1 Midland Square Midland, Western Australia 6056')
+    Company.objects.create(
+        company_abbrev = 'OSG SA', company_name = 'Office of the Surveyor-General - SA', 
+        company_address = '600 Lilian Ngoyi St Pretoria Central Pretoria 0002')
+    Company.objects.create(
+        company_abbrev = 'DNRMMRRD', 
+        company_name = 'Department of Natural Resources & Mines, Manufacturing & Regional & Rural Development', 
+        company_address = '1 William Street, Brisbane, QLD 4000')
 
     for locate in locations:
-        obj = Location.objects.get_or_create(
+        Location.objects.get_or_create(
             name = locate['name'],
             statecode = locate['statecode']
         )

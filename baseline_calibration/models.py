@@ -14,6 +14,10 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 
+File: models.py
+App: baseline_calibration
+Directory: Medjil/baseline_calibration/models.py
+
 '''
 #baseline_calibration
 from django.db import models

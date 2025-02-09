@@ -27,6 +27,7 @@ from django.urls import reverse
 from django.db.models import Prefetch
 
 from collections import OrderedDict
+from copy import deepcopy
 from math import pi, sin, cos, sqrt
 from datetime import date, timedelta
 import json
@@ -338,7 +339,8 @@ def survey_create(request, id=None):
     # Retrieve the existing instance or create a new one
     instance = uPillarSurvey.objects.filter(
         id=id,
-        edm__edm_specs__edm_owner = request.user.company.id).first() if id else None
+        edm__edm_specs__edm_owner = request.user.company.id
+        ).first() if id else None
 
     # Use the appropriate form based on whether there's an instance
     pillar_survey_form = uPillarSurveyForm(
@@ -348,44 +350,34 @@ def survey_create(request, id=None):
         user=request.user
     )
 
-    if instance:
-        survey_files = ChangeSurveyFilesForm(
-            request.POST or None,
-            request.FILES or None
-        )
-    else:
-        survey_files = UploadSurveyFilesForm(
-            request.POST or None,
-            request.FILES or None
-        )
+    survey_files = (
+        ChangeSurveyFilesForm(request.POST or None, request.FILES or None) 
+        if instance else 
+        UploadSurveyFilesForm(request.POST or None, request.FILES or None)
+    )
+    import_errors = []
 
-    # If the main form is valid, save the pillar survey instance
-    if pillar_survey_form.is_valid():
+    if pillar_survey_form.is_valid() and survey_files.is_valid():
         pillar_survey = pillar_survey_form.save()
 
-        # Check if the file upload form is valid
-        if survey_files.is_valid():
-            # Process the CSV file if it exists and import observations
-            if survey_files.cleaned_data.get('edm_file'):
-                csv_file = survey_files.cleaned_data.get('edm_file')
-                import_errors = import_csv_to_observations(
-                    csv_file, pillar_survey)
-    
-                # Render errors if there are any
-                if len(import_errors) > 0:
-                    return render(request, 'edm_calibration/errors_report.html', {
-                        'Check_Errors': {'Errors': import_errors, 'Warnings': []},
-                        'id': pillar_survey.pk
-                    })
+        if survey_files.cleaned_data.get('edm_file'):
+            edm_file = survey_files.cleaned_data.get('edm_file')
+            import_errors.extend(import_csv_to_observations(edm_file, pillar_survey))
 
-            return redirect('edm_calibration:edm_observations_update', id=pillar_survey.pk)
+        if import_errors:
+            if not instance: pillar_survey.delete()
+            return render(request, 'edm_calibration/errors_report.html', {
+                'Check_Errors': {'Errors': import_errors, 'Warnings': []}
+            })
 
-    # Render the form if it is invalid
+        return redirect('edm_calibration:edm_observations_update', id=pillar_survey.pk)
+
     headers = {
         'page0': 'EDMI Calibration Details',
         'page1': 'Instrumentation Details',
         'page2': 'Error Budget and File Uploads',
     }
+
     return render(request, 'edm_calibration/uPillarSurvey_form.html', {
         'headers': headers,
         'form': pillar_survey_form,
@@ -547,15 +539,12 @@ def compute_calibration(request, id):
                                                pillar_survey,
                                                o['uc_sources'],
                                                baseline_data['certified_dist'])
-                  
-            o['apriori_uc_budget'] = refline_std_dev(o,
-                                            baseline_data['certified_dist'], 
-                                            pillar_survey.edm)
                
             o['uc_budget'] = refline_std_dev(o,
                                             baseline_data['certified_dist'], 
                                             pillar_survey.edm)
-              
+            o['apriori_uc_budget'] = deepcopy(o['uc_budget'])
+            
             o['uc_combined'] = sum_uc_budget(o['uc_budget'])
             
             #----------------- Least Squares -----------------#
@@ -804,6 +793,8 @@ def compute_calibration(request, id):
         if ps_approvals.is_valid():
             # this is a POST command asking to commit the certificate
             # and signitures
+            ini_edmi_certificate.pop('index',None)
+            ini_edmi_certificate.pop('scale',None)
             ps_approvals.save()
             cert_instance, _ = EDMI_certificate.objects.update_or_create(
                 pk = pillar_survey.certificate.pk if pillar_survey.certificate else None,

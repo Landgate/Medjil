@@ -14,6 +14,10 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 
+File: models.py
+App: accounts
+Directory: Medjil/accounts/models.py
+
 '''
 from django.db import models
 from django.contrib.auth.base_user import BaseUserManager

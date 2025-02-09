@@ -112,10 +112,15 @@
                 <button type="button" id="nextBtn" onclick="nextPrev(1)" class="submit-button bg-green-500 hover:bg-green-400" >Next</button>
             </div>
         </form>
-        <div class="loader" id="loading-icon" style="display:none;"></div>
+		{% if user.is_staff %}
+			<div class="loader" id="loading-icon" style="display:none;"></div>    <input type="file" id="fileInput" style="display:none;">
+			<button id="uploadBtn">Upload Data</button>
+			<button id="downloadBtn">Download Data</button>
+		{% endif %}
     </div>
 </article>
 
+<script src="{% static 'js/form_data.js' %}"></script>
 <script src="{% static 'js/instrument/popups.js' %}"></script>
 
 <script>
@@ -264,59 +269,4 @@
     }
     {% endif %}
 </script>
-{% if user.is_staff %}
-<input type="file" id="fileInput" style="display:none;">
-<button onclick="document.getElementById('fileInput').click();">Upload Data</button>
-<button onclick="downloadFormData()">Download Data</button>
-<script>
-    document.getElementById('fileInput').addEventListener('change', function(event) {
-        const file = event.target.files[0];
-        const reader = new FileReader();
-        
-        reader.onload = function(e) {
-            const data = e.target.result;
-            const lines = data.split('\n');
-            const formData = {};
-            
-            lines.forEach((line) => {
-                const [name, value] = line.split('=');
-                if (name && value) {
-                    formData[name.trim()] = value.trim();
-                }
-            });
-            
-            for (const key in formData) {
-                if (formData.hasOwnProperty(key)) {
-                    const input = document.querySelector(`[name="${key}"]`);
-                    if (input) {
-                        input.value = formData[key];
-                    }
-                }
-            }
-        };
-        
-        reader.readAsText(file);
-    });
-
-    function downloadFormData() {
-        const inputs = document.querySelectorAll('input[name]');
-        let data = '';
-
-        inputs.forEach(input => {
-            data += `${input.name}=${input.value}\n`;
-        });
-
-        const blob = new Blob([data], { type: 'text/plain' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'form_data.txt';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-    }
-</script>
-{% endif %}
-
 {% endblock %}

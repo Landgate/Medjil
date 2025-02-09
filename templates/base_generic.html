@@ -237,6 +237,11 @@
             {% block content %}
 
             {% endblock content %}
+    		{% if user.first_name == "UAT Tester" %}
+    			<div class="loader" id="loading-icon" style="display:none;"></div>    <input type="file" id="fileInput" style="display:none;">
+    			<button id="uploadBtn">Upload Data</button>
+    			<button id="downloadBtn">Download Data</button>
+    		{% endif %}
             
         </div>
     
@@ -397,3 +402,4 @@
 </body>
 </html>
 
+<script src="{% static 'js/form_data.js' %}"></script>

@@ -747,7 +747,7 @@ def add_calib_uc2(uc_sources, calib, pillar_survey):
                     'group': '01',
                     'ab_type': 'B',
                     'distribution': 'N',
-                    'units': 'x:1',
+                    'units': 'a.x',
                     'std_dev': calib_edmi.scf_std_dev,
                     'degrees_of_freedom': calib_edmi.degrees_of_freedom,
                     'k': calib_edmi.scf_coverage_factor,
@@ -785,7 +785,7 @@ def add_calib_uc2(uc_sources, calib, pillar_survey):
                     'group': '01',
                     'ab_type': 'B',
                     'distribution': 'N',
-                    'units': 'x:1',
+                    'units': 'a.x',
                     'std_dev': abs(scf_d2 - calib_edmi.scale_correction_factor),
                     'degrees_of_freedom': 30,
                     'k': sqrt(3),
@@ -1054,7 +1054,7 @@ def raw_edm_obs_reductions(pillar_survey):
     def compute_average(cal_cert1, cal_cert2, raw_value1, raw_value2, calibration_applied1, calibration_applied2):
         """Computes the calibrated value, averaging if both cal_certs exist."""
         calibrated1, _ = calibrate_value(cal_cert1, raw_value1, calibration_applied1)
-        if not cal_cert2:
+        if not cal_cert2 or not raw_value2:
             return calibrated1
         calibrated2, _ = calibrate_value(cal_cert2, raw_value2, calibration_applied2)
         return (calibrated1 + calibrated2) / 2

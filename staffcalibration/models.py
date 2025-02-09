@@ -14,6 +14,10 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 
+File: models.py
+App: staffcalibration
+Directory: Medjil/staffcalibration/models.py
+
 '''
 import uuid
 from django.db import models
