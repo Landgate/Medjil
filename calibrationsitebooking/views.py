@@ -59,7 +59,6 @@ def get_locations(request, calibrationtype):
 
 def get_calib_sites(request, calibration_type, location):
     location = Location.objects.get(id = location)
-    print(location)
     site_type  = None
     if calibration_type in ['baseline', 'edmi']:
          site_type = 'baseline'
