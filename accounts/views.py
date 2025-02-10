@@ -502,7 +502,7 @@ def calibration_report_notes_edit(request, report_disp, id):
     
     else:
         obj = form.save(False)
-        obj.report_type = report_disp
+        obj.calibration_type = report_disp
         obj.who_created_note = request.user.company
         obj.save()
         
