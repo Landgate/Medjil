@@ -429,7 +429,7 @@
             <tr>
                 <td>{{c.to_pillar}}</td>
                 <td>{{c.Reduced_distance|floatformat:5}}</td>
-                <td>{{c.uc_combined.uc95|floatformat:5}}
+                <td>{{c.uc_combined.uc95|sigfigs:2}}
                     {% if c.lum_adopted %} * {% endif %}</td>
                 <td>{{c.uc_combined.k|floatformat:2}}</td>
                 <td>{{c.delta_os|floatformat:3}}</td>
