@@ -29,7 +29,8 @@ Baseline measurements were performed in accordance with the ISO17123-4:2012 Opti
 Term ‘uncertainty’ refers to the GUM’s ‘expanded uncertainty' with a covering factor (k) of 2.0, being approximately at 95% confidence level and the ‘standard deviation’ relates the GUM’s ‘standard uncertainty’ (68% confidence level).
 When estimating the uncertainty budget of baseline length, both Type A and Type B uncertainties were identified and applied in accordance with GUM and ISO17123-4:2012.
 The uncertainty value applies at the time of measurement only and takes no account of any effects that may apply afterwards.
-Baseline measurements were performed in accordance with the ISO17123-4:2012 Optics and optical instruments – Field procedures for testing geodetic and surveying instruments – Part 4: Electro-optical distance meters (EDM measurements to reflectors)"""}
+Baseline measurements were performed in accordance with the ISO17123-4:2012 Optics and optical instruments – Field procedures for testing geodetic and surveying instruments – Part 4: Electro-optical distance meters (EDM measurements to reflectors
+The certified baseline distances for the Baseline shown in this report is the standards. These standards have been taken from the current certificate of verification of a reference standard of measurement in accordance with Regulation 13 of the National Measurement Regulations 1999 in accordance with the National Measurement Act 1960."""}
     ]
 
 def load_report_notes(apps, schema_editor):
