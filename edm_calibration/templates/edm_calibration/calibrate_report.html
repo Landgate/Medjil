@@ -727,9 +727,9 @@
                         <!--Uncertainties-->
                         {% for s in o.apriori_uc_budget.values %}
                             {% if not s.units == 'm' %}
-                                <td>{{ s.std_dev|sigfigs:2 }}</td>
+                                <td>{{ s.ui|sigfigs:2 }}</td>
                             {% else %}
-                                <td>{{ s.std_dev|multiply:1000|sigfigs:2 }}</td>
+                                <td>{{ s.ui|multiply:1000|sigfigs:2 }}</td>
                             {% endif %}
                         {% endfor %}
                     </tr>

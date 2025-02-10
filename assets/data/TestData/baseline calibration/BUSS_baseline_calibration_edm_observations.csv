@@ -1,4 +1,4 @@
-From_pillar,to_pillar,Height_of_instrument,Height_of_target,Horizontal_direction(dd),slope_distance,temperature,pressure,humidity
+from_pillar,to_pillar,height_of_instrument,height_of_target,horizontal_direction(dd),slope_distance,temperature,pressure,humidity
 1,2,0.237,0.237,3.14E-01,20.4005,14.4,1018.9,89.7
 1,2,0.237,0.237,3.14E-01,20.4005,14.4,1018.9,89.7
 1,2,0.237,0.237,0.3136239,20.4006,14.4,1018.9,89.7

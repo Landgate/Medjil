@@ -115,15 +115,14 @@
             </div>
         </form>
         <div class="loader" id="loading-icon" style="display:none;"></div>
-		{% if user.is_staff %}
-			<div class="loader" id="loading-icon" style="display:none;"></div>    <input type="file" id="fileInput" style="display:none;">
+		{% if user.is_staff and not user.first_name == "UAT Tester" %}
+			<input type="file" id="fileInput" style="display:none;">
 			<button id="uploadBtn">Upload Data</button>
 			<button id="downloadBtn">Download Data</button>
 		{% endif %}
     </div>
 </article>
 
-<script src="{% static 'js/form_data.js' %}"></script>
 <script src="{% static 'js/instrument/popups.js' %}"></script>
 
 <script>

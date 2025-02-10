@@ -492,7 +492,7 @@ def import_dli(request):
                             group = '04',
                             description = 'StdDevTemp From BaselineWA software',
                             units = '°C',
-                            uc95 = float(job['StdDevTemp'])
+                            uc95 = float(job['StdDevTemp']) # NB. the variable name indicates standard deviation but sample jobs prove StdDevTemp to be standard deviation * 2
                             )
                     if float_or_zero(job['StdDevPressure']) > 0:
                         Uncertainty_Budget_Source.objects.create(
@@ -500,7 +500,7 @@ def import_dli(request):
                             group = '05',
                             description = 'StdDevPressure From BaselineWA software',
                             units = 'hPa',
-                            uc95 = float(job['StdDevPressure'])
+                            uc95 = float(job['StdDevPressure']) # NB. the variable name indicates standard deviation but sample jobs prove StdDevPressure to be standard deviation * 2
                             )
                     if float_or_zero(job['InstCentringStdDev']) > 0:
                         if float(job['InstCentringStdDev']) < 0.01:
@@ -511,7 +511,7 @@ def import_dli(request):
                             group = '09',
                             description = 'InstCentringStdDev From BaselineWA software',
                             units = 'mm',
-                            uc95 = float(job['InstCentringStdDev'])
+                            uc95 = float(job['InstCentringStdDev'])*2
                             )
                     if float_or_zero(rx['UncertaintyBaseline']['Reflector centring']['Default']) > 0:
                         Uncertainty_Budget_Source.objects.create(

@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
                 for (const key in formData) {
                     const input = document.querySelector(`[name="${key}"]`);
-                    if (input) {
+                    if (input && input.name !== 'csrfmiddlewaretoken') {
                         input.value = formData[key];
                     }
                 }
@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     if (downloadBtn) {
         downloadBtn.addEventListener("click", function() {
-            const inputs = document.querySelectorAll("input:not([type='file'])[name], select[name]");
+            const inputs = document.querySelectorAll("input:not([type='file']):not([name='csrfmiddlewaretoken'])[name], select[name]");
             let data = "";
 
             inputs.forEach(input => {

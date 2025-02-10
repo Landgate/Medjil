@@ -411,7 +411,7 @@ def add_typeA(d, matrix_y, dof):
                     'ab_type':'A',
                     'distribution':'N',
                     'units': 'm',
-                    'std_dev': s_dev,
+                    'std_dev': abs(s_dev),
                     'degrees_of_freedom':dof,
                     'k':t.ppf(1-0.025,df=dof),
                     'apriori': False,

@@ -990,7 +990,7 @@ def compute_calibration(request, id):
                              'chart_colour':colour})
             
             # add the survey currently being processed to the dataset
-            surveys[id] = {'date':pillar_survey['survey_date'].isoformat(),
+            surveys[id] = {'date':pillar_survey.survey_date.isoformat(),
                             'bays':[]}
             for cd_0, cd in zip(first_cds, certified_dists):
                 diff = 0
