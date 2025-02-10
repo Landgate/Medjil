@@ -1003,6 +1003,7 @@ def compute_calibration(request, id):
                     )
             baseline['history'] = surveys
             baseline['pillar_meta'] = []
+            baseline['ref_hgt'] = mean([p['reduced_level'] for p in raw_lvl_obs.values()])
             for p in baseline['pillars']:
                 baseline['pillar_meta'].append(model_to_dict(p))
                 baseline['pillar_meta'][-1]['reduced_level'] = (
