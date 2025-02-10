@@ -607,8 +607,8 @@ def edm_observations_update(request, id):
 @user_passes_test(is_staff)
 @login_required(login_url="/accounts/login")
 def compute_calibration(request, id):
-    # try:
-    if 1==1:
+    try:
+    # if 1==1:
         # Retrieve the Pillar Survey instance and baseline dictionary of records
         pillar_survey = get_object_or_404(
             Pillar_Survey.objects.select_related(
@@ -1039,7 +1039,7 @@ def compute_calibration(request, id):
         
         return render(request, 'baseline_calibration/display_report.html', context)
     
-    # except Exception as e:
-    #     messages.error(request, f"An error occurred: {str(e)}")
-    #     return render(request, 'baseline_calibration/errors_report.html', 
-    #                   {})
+    except Exception as e:
+        messages.error(request, f"An error occurred: {str(e)}")
+        return render(request, 'baseline_calibration/errors_report.html', 
+                      {})
