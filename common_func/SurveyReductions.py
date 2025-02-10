@@ -637,13 +637,13 @@ def validate_survey2(pillar_survey, baseline=None, calibrations=None,
             if not o['use_for_distance']:
                 Wrns.append(
                     f'The observation "{o["from_pillar"]}--{o["to_pillar"]}" '
-                    f' with a raw slope distance of "{o["raw_slope_dist"]:.4f}"'
+                    f' with a raw slope distance of "{float(o["raw_slope_dist"]):.4f}"'
                     ' has been excluded by the user during processing.')
             if 'use_for_alignment' in o:
                 if not o['use_for_alignment']:
                     Wrns.append(
                         f'The observation "{o["from_pillar"]}--{o["to_pillar"]}" '
-                        f' with a raw slope distance of "{o["raw_slope_dist"]}"'
+                        f' with a raw slope distance of "{float(o["raw_slope_dist"]):.4f}"'
                         ' has been excluded from the calculation of pillar offsets by the user during processing.')
         
         # Checks for alignment survey
