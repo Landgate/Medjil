@@ -212,7 +212,8 @@ class EDM_ObservationForm(forms.ModelForm):
 class PillarSurveyResultsForm(forms.ModelForm):                
     class Meta:
         model = PillarSurveyResults
-        fields = ['zero_point_correction','zpc_uncertainty',
+        fields = ['reference_height',
+                  'zero_point_correction','zpc_uncertainty',
                   'experimental_std_dev','degrees_of_freedom',
                   'status', 'reg13_upload']      
                

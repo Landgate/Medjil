@@ -474,12 +474,6 @@ class Pillar_Survey(models.Model):
         queryset = Certified_Distance.objects.filter(
             pillar_survey = self.pk).order_by('to_pillar__order')
         return queryset
-    
-    def get_average_pillar_height(self):
-        certified_distances = self.certified_distances()
-        total_height = sum(cd.reduced_level for cd in certified_distances)
-        count = certified_distances.count()
-        return total_height / count if count > 0 else None
 
 
 class EDM_Observation(models.Model):
@@ -608,6 +602,11 @@ class PillarSurveyResults(models.Model):
         blank=True, null=True,
         validators=[MinValueValidator(1), MaxValueValidator(500)],
         help_text="Degrees of freedom of calibration"
+    )
+    reference_height = models.FloatField(
+        default=0.000,
+        help_text="Certified distances were determined at this reference height (mAHD)",
+        verbose_name="Reference Height (mAHD)"
     )
     data_entered_person = models.CharField(
         validators=[validate_profanity], max_length=25, null=True, blank=True

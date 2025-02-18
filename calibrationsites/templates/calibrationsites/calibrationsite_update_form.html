@@ -24,7 +24,7 @@
 <article class="post">
     <div class="flexbox-container_IB">
         {% if messages %}
-            <ul class="alert messages">
+            <ul class="message-list">
                 {% for message in messages %}
                 <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
                 {% endfor %}
@@ -49,8 +49,8 @@
             <div class="flexbox-item_1600_IB">
                 <table>
                   <colgroup>
-                      <col span="1" width="20%">
-                      <col span="1" width="70%">
+                      <col span="1" width="27%">
+                      <col span="1" width="63%">
                       <!-- <col span="1" width="10%"> -->
                   </colgroup>
                   </tr>

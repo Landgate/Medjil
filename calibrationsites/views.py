@@ -17,37 +17,33 @@
 '''
 import os
 import numpy as np
-from django.db.models import Q
-from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
-from django.forms import modelformset_factory, formset_factory, inlineformset_factory
-from django.views import generic
+from django.http import HttpResponse, JsonResponse
+from django.forms import modelformset_factory, formset_factory
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from formtools.wizard.views import SessionWizardView, CookieWizardView, NamedUrlSessionWizardView
+from formtools.wizard.views import NamedUrlSessionWizardView
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
-from django.db import IntegrityError
 
 # Forms
 from .forms import (CountryForm, 
                     StateForm, 
                     LocalityForm,
-                    CalibrationSiteForm, 
                     CalibrationSiteUpdateForm,
                     PillarForm, 
                     AddPillarForm, 
                     CustomBaseModelFormSet)
 # Models
-from .models import (Country, 
-                    State, 
+from .models import (State, 
                     Locality,
                     CalibrationSite, 
                     Pillar)
 
-from accounts.models import Company
+from baseline_calibration.models import Certified_Distance
+
 ###########################################################################
 # Create your views here.
 @login_required(login_url="/accounts/login") 
@@ -88,17 +84,30 @@ EditPillarFormSet = modelformset_factory(
     extra=0,
     can_delete=False
 )
-
 @login_required(login_url="/accounts/login") 
 def site_update(request, id):
     site = get_object_or_404(CalibrationSite, id = id)
+    original_reference_height = round(float(site.reference_height), 3) if site.reference_height else 0.000
+    
     form = CalibrationSiteUpdateForm(
-        request.POST or None, request.FILES or None, instance = site)
+        request.POST or None, request.FILES or None,
+        instance = site, request=request)
     formset = EditPillarFormSet(
         request.POST or None, 
         queryset=Pillar.objects.filter(site_id=site))
     
     if form.is_valid() and formset.is_valid():
+        # Check if reference height changed and there are Certified Distance records
+        if 'reference_height' in  form.cleaned_data:
+            new_reference_height = round(float(form.cleaned_data["reference_height"]), 3) if form.cleaned_data["reference_height"] else 0.000
+            if new_reference_height != original_reference_height:
+                has_certified_distances = Certified_Distance.objects.filter(pillar_survey__baseline=site).exists()
+                if has_certified_distances:
+                    messages.warning(request, 
+                        "Warning: The Reference Height has changed for a site with existing Certified Distance records. "
+                        "Future certified distances will be detemined at this height and are not directly comparable to historical distances. "
+                        "Historical distances will need to be recalculated for historical comparisons.")
+
         form.save()
         formset.save()
         return redirect('calibrationsites:home')
@@ -253,41 +262,21 @@ class CreateCalibrationSiteWizard(LoginRequiredMixin, NamedUrlSessionWizardView)
             data = self.get_cleaned_data_for_step('site_form')
             kwargs['sitetype'] = data['site_type']
             kwargs['sitename'] = data['site_name']
-            # sitetype = data['site_type']
-            # sitename = data['site_name']
-            # kwargs['sitetype'] = sitetype
-            # kwargs['sitename'] = sitename
+
         return kwargs
 
     def get_form(self, step=None, data=None, files=None):
         form = super(CreateCalibrationSiteWizard, self).get_form(step, data, files)
-        kwargs = self.get_form_kwargs(step)
-        # print(kwargs)
+
         if step is None:
             step = self.steps.current
         if step == 'pillar_form':
             data = self.get_cleaned_data_for_step('site_form')
-            sitetype = data['site_type']
-            sitename = data['site_name']
             no_pillars = int(data['no_of_pillars'])
             form.extra = no_pillars
             form.max_num = no_pillars
             form.user = self.request.user
         return form
-        # if step == 'pillar_form':
-        #     data = self.get_cleaned_data_for_step('site_form')
-        #     no_pillars = int(data['no_of_pillars'])
-        #     form.extra = no_pillars
-        #     form.max_num = no_pillars
-        #     form.user = self.request.user
-        #     formset = PillarFormSet(data, queryset=Pillar.objects.none())
-        #     if formset.is_valid():
-        #         return formset
-        #     else:
-        #         self.storage.set_step_data(step, self.process_step(formset))
-        #         self.storage.set_step_files(step, self.process_step_files(formset))
-        #         return formset
-        # return form
 
     def get_context_data(self, form, **kwargs):
         context = super(CreateCalibrationSiteWizard, self).get_context_data(form=form, **kwargs)
@@ -299,16 +288,7 @@ class CreateCalibrationSiteWizard(LoginRequiredMixin, NamedUrlSessionWizardView)
                 'sitestate': data['state'],
                 'no_pillars': data['no_of_pillars']
             })
-            # sitetype = data['site_type']
-            # sitename = data['site_name']
-            # sitestate = data['state']
-            # no_pillars = data['no_of_pillars']
-            # context.update({
-            #             'sitetype': sitetype,
-            #             'sitename': sitename,
-            #             'sitestate': sitestate,
-            #             'no_pillars': no_pillars
-            #             })
+
         return context
 
     def done(self, form_list, **kwargs):
@@ -329,6 +309,7 @@ class CreateCalibrationSiteWizard(LoginRequiredMixin, NamedUrlSessionWizardView)
                 state = site_form_data['state'],
                 country = site_form_data['country'],
                 no_of_pillars = site_form_data['no_of_pillars'],
+                reference_height = site_form_data['reference_height'],
                 operator = site_form_data['operator'],
                 site_access_plan = site_form_data['site_access_plan'],
                 site_booking_sheet = site_form_data['site_booking_sheet']

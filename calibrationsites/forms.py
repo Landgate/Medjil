@@ -48,11 +48,11 @@ class CalibrationSiteForm(forms.ModelForm):
         model = CalibrationSite
         fields = '__all__' 
         widgets = {
-                'description': forms.TextInput(attrs={'class': 'text-area'}),
-                'site_access_plan' : forms.FileInput(attrs={'accept' : '.pdf'}),
-                'site_booking_sheet' : forms.FileInput(attrs={'accept' : '.pdf'})
+            'reference_height': forms.NumberInput(attrs={"step": "0.001"}),
+            'description': forms.TextInput(attrs={'class': 'text-area'}),
+            'site_access_plan' : forms.FileInput(attrs={'accept' : '.pdf'}),
+            'site_booking_sheet' : forms.FileInput(attrs={'accept' : '.pdf'})
             }
-
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
@@ -87,8 +87,9 @@ class CalibrationSiteForm(forms.ModelForm):
 class CalibrationSiteUpdateForm(forms.ModelForm):
     class Meta:
         model = CalibrationSite
-        fields = ['site_type', 'site_name', 'site_status', 'site_address', 'no_of_pillars', 'description', 'site_access_plan', 'site_booking_sheet']
+        fields = ['site_type', 'site_name', 'site_status', 'site_address', 'no_of_pillars', 'reference_height', 'description', 'site_access_plan', 'site_booking_sheet']
         widgets = {
+            'reference_height': forms.NumberInput(attrs={"step": "0.001"}),
             'description': forms.TextInput(attrs={'class': 'text-area'}),
             'site_access_plan' :  CustomClearableFileInput(
                 attrs={'accept' : '.pdf, .jpg, .jpeg, .png, .tif',
@@ -99,10 +100,14 @@ class CalibrationSiteUpdateForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)  # Capture request for messages
         super().__init__(*args, **kwargs)
         # disable fields
         self.fields['site_type'].disabled = True
         self.fields['no_of_pillars'].disabled = True
+
+        if self.instance and self.instance.site_type != 'baseline':
+            self.fields.pop('reference_height', None)
 
 
 #########################################################################

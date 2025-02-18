@@ -74,6 +74,7 @@ class Migration(migrations.Migration):
                 ('site_status', models.CharField(blank=True, choices=[(None, '--- Select Status ---'), ('open', 'Open'), ('closed', 'Closed')], max_length=20, null=True, verbose_name='Site Status')),
                 ('site_address', models.CharField(help_text='Address for the Calibration Site, e.g., Kent Street, Curtin University', max_length=100, null=True, verbose_name='Site Address')),
                 ('no_of_pillars', models.IntegerField(blank=True, help_text='Enter the number of pins or baseline pillars, if applicable', null=True, verbose_name='Number of Pillars/Pins')),
+                ('reference_height', models.FloatField(blank=True, default=0.0, help_text='Certified distances for this baseline will be published at this reference height (mAHD)', null=True, verbose_name='Reference Height (mAHD)')),
                 ('description', models.TextField(blank=True, null=True)),
                 ('site_access_plan', models.FileField(help_text='Upload a pdf file showing an access to the location', null=True, max_length=1000, upload_to=calibrationsites.models.get_upload_to_location, validators=[common_func.validators.validate_file_size], verbose_name='Access Plan')),
                 ('site_booking_sheet', models.FileField(help_text='Upload a pdf file containing the booking sheet', null=True, max_length=1000, upload_to=calibrationsites.models.get_upload_to_location, validators=[common_func.validators.validate_file_size], verbose_name='Booking Sheet')),

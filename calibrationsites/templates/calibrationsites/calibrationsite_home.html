@@ -27,7 +27,7 @@
   <p class="text-center"><i>Select location on the left menu to display available calibration sites</i></p>
   <hr>
     {% if messages %}
-        <ul class="alert messages">
+        <ul class="message-list">
             {% for message in messages %}
             <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
             {% endfor %}

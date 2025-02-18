@@ -36,7 +36,7 @@
           <table id="id_form_container" Style="table-layout: auto; width: 100%">
             <tr>
             	{% for field in pillar_survey_results_form %}
-              	  <th Title="{{ field.help_text }}">{{ field.label|title }}</th>
+              	  <th Title="{{ field.help_text }}">{{ field.label }}</th>
                 {% endfor %}
             </tr>
             <tr>
@@ -74,7 +74,7 @@
             <tr>
             	{% for field in certified_distances_formset|first %}
 	              {% if not field.label == "Id" and not field.label == "Pillar survey" %}
-	              	  <th Title="{{ field.help_text }}">{{ field.label|title }}</th>
+	              	  <th Title="{{ field.help_text }}">{{ field.label }}</th>
               	  {% else %}
                   	  <th></th>
 	              {% endif %}

@@ -176,8 +176,7 @@ def get_delta_rl(level_observations,o):
     return rl1, rl2, rl2 - rl1
 
 
-def offset_slope_correction(o, level_observations, alignment_survey, d_radius):
-    h_ref = mean([float(o['reduced_level']) for o in level_observations.values()])
+def offset_slope_correction(o, level_observations, alignment_survey, d_radius, h_ref):
     dis = float(o['slope_dist'])
 
     delta_os = get_delta_os(alignment_survey,o)

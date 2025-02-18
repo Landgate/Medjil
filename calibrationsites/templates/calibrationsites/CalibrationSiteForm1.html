@@ -47,13 +47,13 @@
                         {% endfor %}
                     {% else %}
                         {% for field in form %}
-                            <tr>
+                            <tr id="{{ field.name }}-row">
                                 {% if 'description' in field.name %}
-                                    <td width="25%" style="vertical-align:top">{{ field.label_tag }}</td>
+                                    <td width="27%" style="vertical-align:top">{{ field.label_tag }}</td>
                                 {% else %}
-                                    <td width="25%">{{ field.label_tag }}</td>
+                                    <td width="27%">{{ field.label_tag }}</td>
                                 {% endif %}
-                                <td width="65%"> 
+                                <td width="63%"> 
                                     {{ field }} 
                                     {% for error in field.errors %}
                                         <p class="error error-danger">{{ error }}</p>
@@ -110,7 +110,7 @@
     </div>
 </article>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-<script>
+<script defer>
     // Open Pop up
     function showAddPopup(triggeringLink) {
         var name = triggeringLink.id.replace(/^add_/, '');
@@ -219,7 +219,7 @@
 
 
     // Store Cookies
-    const siteTypeInput = document.querySelector('#id_site_form-site_type');
+    let siteTypeInput = document.querySelector('#id_site_form-site_type');
     siteTypeInput.addEventListener("change",function() { 
         window.sessionStorage.setItem("siteType",this.value); 
     }); 
@@ -338,7 +338,29 @@
                 // console.log("Page loaded without reload");
             }
         };
+                
+
+    document.addEventListener("DOMContentLoaded", function() {
+        let referenceHeightInput = document.getElementById("id_site_form-reference_height");
+        let referenceHeightRow = document.getElementById("reference_height-row");
     
+        function toggleReferenceHeight() {
+            let selectedType = siteTypeInput.value.trim(); // Ensures an empty value doesn't cause issues
+    
+            if (selectedType === "baseline") {
+                referenceHeightRow.style.display = "table-row";
+                referenceHeightInput.required = true;
+            } else {
+                referenceHeightRow.style.display = "none";
+                referenceHeightInput.value = "";  // Reset value when hiding
+                referenceHeightInput.required = false;
+            }
+        }
+    
+        // Run the function immediately on page load
+        toggleReferenceHeight();
+        siteTypeInput.addEventListener("change", toggleReferenceHeight);
+    });
 </script>
     
 

@@ -641,6 +641,7 @@ def compute_calibration(request, id):
                     'zpc_uncertainty': psu['zpc_uncertainty'],
                     'degrees_of_freedom': psu['degrees_of_freedom'],
                     'experimental_std_dev': psu['experimental_std_dev'],
+                    'reference_height': baseline['site'].reference_height,
                     'html_report': psu['html_report'],
                 }
             )
@@ -750,7 +751,8 @@ def compute_calibration(request, id):
             o = offset_slope_correction(o,
                                       raw_lvl_obs,
                                       alignment_survey,
-                                      baseline['d_radius'])
+                                      baseline['d_radius'],
+                                      baseline['site'].reference_height)
               
             o['Reduced_distance'] = (o['slope_dist'] 
                                     + o['Offset_Correction']
@@ -1003,7 +1005,6 @@ def compute_calibration(request, id):
                     )
             baseline['history'] = surveys
             baseline['pillar_meta'] = []
-            baseline['ref_hgt'] = mean([p['reduced_level'] for p in raw_lvl_obs.values()])
             for p in baseline['pillars']:
                 baseline['pillar_meta'].append(model_to_dict(p))
                 baseline['pillar_meta'][-1]['reduced_level'] = (

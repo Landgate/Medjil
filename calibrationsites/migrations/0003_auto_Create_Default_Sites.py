@@ -19,15 +19,13 @@
 
 from __future__ import unicode_literals
 
-from django.db import migrations, models
+from django.db import migrations
 import os
-from shutil import copyfile
-from datetime import datetime, date
+from datetime import date
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.core.files import File
-from django.conf import settings
-import os
+
 #########################################################################
 ################################ STAFF ##################################
 boya = {
@@ -68,6 +66,7 @@ edm_sites = [{
     'state' : 'WA',
     'locality': 'Bentley',
     'no_of_pillars': 11,
+    'reference_height': 10.642,
     'operator' : 'Landgate',
     'site_access_plan' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/WA/Curtin/Curtin EDM Baseline Access Sketch.pdf'),
     'site_booking_sheet' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/WA/Curtin/Curtin_EDM_Booking_Sheet_2021.pdf')
@@ -80,6 +79,7 @@ edm_sites = [{
     'state' : 'WA',
     'locality': 'Bentley',
     'no_of_pillars': 12,
+    'reference_height': 10.642,
     'operator' : 'Landgate',
     'site_access_plan' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/WA/Curtin/Curtin EDM Baseline Access Sketch.pdf'),
     'site_booking_sheet' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/WA/Curtin/Curtin_EDM_Booking_Sheet_2021.pdf')
@@ -92,6 +92,7 @@ edm_sites = [{
     'state' : 'WA',
     'locality': 'Busselton-Vasse',
     'no_of_pillars': 6,
+    'reference_height': 4.151,
     'operator' : 'Landgate',
     'site_access_plan' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/WA/Busselton/Busselton EDM Baseline Access Sketch.pdf'),
     'site_booking_sheet' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/WA/Busselton/Busselton_EDM_Booking_Sheet_2021.pdf'),
@@ -104,6 +105,7 @@ edm_sites = [{
     'state' : 'WA',
     'locality': 'Kalgoorlie-Boulder',
     'no_of_pillars': 8,
+    'reference_height': 376.135,
     'operator' : 'Landgate',
     'site_access_plan' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/WA/Kalgoorlie/Kalgoorlie EDM Baseline Access Sketch.pdf'),
     'site_booking_sheet' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/WA/Kalgoorlie/Kalgoorlie_EDM_Booking_Sheet_2021.pdf')
@@ -116,6 +118,7 @@ edm_sites = [{
     'state' : 'SA',
     'locality': 'Mawson Lakes',
     'no_of_pillars': 7,
+    'reference_height': 8.88,
     'operator' : 'Office of the Surveyor-General - SA',
     'site_access_plan' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/SA/Mawson Lakes/2024-09-03-Mawson_baseline_access_diagram.pdf'),
     #'site_booking_sheet' : os.path.join(settings.STATIC_ROOT, 'data/InitialData/EDM Baseline/Australia/SA/Mawson Lakes/2024-09-03-Mawson_baseline_access_diagram.pdf')

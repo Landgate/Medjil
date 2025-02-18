@@ -161,6 +161,12 @@ class CalibrationSite(models.Model):
         help_text="Enter the number of pins or baseline pillars, if applicable",
         verbose_name='Number of Pillars/Pins'
     )
+    reference_height = models.FloatField(
+        default=0.000,
+        null=True, blank=True,
+        help_text="Certified distances for this baseline will be published at this reference height (mAHD)",
+        verbose_name="Reference Height (mAHD)"
+    )
     operator = models.ForeignKey(
         Company, on_delete=models.PROTECT, null=True, blank=True,
         help_text="Select the site operator",
@@ -183,7 +189,15 @@ class CalibrationSite(models.Model):
     )
     uploaded_on = models.DateTimeField(auto_now_add=True, null=True)
     modified_on = models.DateTimeField(auto_now=True, null=True)
-
+    
+    def save(self, *args, **kwargs):
+        """
+        Automatically set `reference_height` to None if `site_type` is not 'baseline'.
+        """
+        if self.site_type != 'baseline':
+            self.reference_height = None
+        super().save(*args, **kwargs)
+        
     def __str__(self):
         return f'{self.site_name} ({self.state.statecode})'
 

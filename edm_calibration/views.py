@@ -515,7 +515,8 @@ def compute_calibration(request, id):
             o = (offset_slope_correction(o,
                                          baseline_data['certified_dist'],
                                          baseline_data['certified_dist'],
-                                         baseline_data['d_radius']))
+                                         baseline_data['d_radius'],
+                                         baseline_data['calibrated_baseline'].results.reference_height))
             
             o['certified_slope_dist'] = (slope_certified_dist(o,
                                          baseline_data['certified_dist'],

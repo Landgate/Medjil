@@ -44,7 +44,7 @@ class CalibrationSiteAdmin(admin.ModelAdmin):
     list_filter = ['site_type']
     fields = ['site_type', 
               'site_status', 
-            ('site_name', 'no_of_pillars'),
+            ('site_name', 'no_of_pillars','reference_height'),
             'site_address', 
             ('country', 'state', 'locality'),
             'operator',

@@ -154,6 +154,16 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 (
+                    "reference_height",
+                    models.FloatField(
+                        default=0.000,
+                        blank=False,
+                        help_text="Certified distances were determined at this reference height (mAHD)",
+                        null=False,
+                        verbose_name="Reference Height (mAHD)"
+                    ),
+                ),
+                (
                     "data_entered_person",
                     models.CharField(
                         blank=True,
@@ -259,7 +269,20 @@ class Migration(migrations.Migration):
             name='Uncertainty_Budget_Source',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('group', models.CharField(choices=[('01', 'EDM scale factor'), ('02', 'EDMI measurement'),  ('04', 'Temperature'), ('05', 'Pressure'), ('06', 'Humidity'), ('07', 'Certified distances'), ('08', 'EDMI calibration'), ('09', 'Centring'), ('10', 'Heights'), ('11', 'Offsets')], help_text='Grouping of uncertainty source', max_length=3)),
+                ('group', models.CharField(
+                    choices=[
+                        ('01', 'EDM scale factor'), 
+                        ('02', 'EDMI measurement'),
+                        ("03", "EDM LS zero offset"),
+                        ('04', 'Temperature'), 
+                        ('05', 'Pressure'), 
+                        ('06', 'Humidity'), 
+                        ('07', 'Certified distances'), 
+                        ('08', 'EDMI calibration'), 
+                        ('09', 'Centring'), 
+                        ('10', 'Heights'), 
+                        ('11', 'Offsets')], 
+                    help_text='Grouping of uncertainty source', max_length=3)),
                 ('description', models.CharField(max_length=256)),
                 ('units', models.CharField(blank=True, choices=[('a.x', 'Scalar (a.x)'), ('ppm', 'ppm'), ('%', '%'), ('mm', 'mm'), ('m', 'm'), ('°C', '°C'), ('°F', '°F'), ('mBar', 'mBar'), ('hPa', 'hPa'), ('mmHg', 'mmHg')], help_text='Units of input quantity component', max_length=4, null=True)),
                 ('ab_type', models.CharField(choices=[('A', 'A'), ('B', 'B')], default='B', help_text='Type A for a statistically derived component or Type B for any other derivation e.g. calibration report, manufacturers specification or an estimate based on experience.', max_length=1, verbose_name='type')),

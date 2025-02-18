@@ -649,12 +649,14 @@ def import_dli(request):
                     dof = int(len(uniq_bays) - len(pillars))
                     if medjil_baseline_calibration: 
                         commit_successes.append(job["name"])
+                        h_ref = float(rx['Baseline'][job['baseline_fk']]['reference_height'],)
                         PillarSurveyResults.objects.create(
                             pillar_survey = medjil_baseline_calibration,
                             zero_point_correction = 0,
                             zpc_uncertainty = zpc_uncertainty,
                             experimental_std_dev = 0.001,
                             degrees_of_freedom = dof,
+                            reference_height = h_ref,
                             )
                         
                     else:commit_error.append(
