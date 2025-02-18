@@ -108,7 +108,7 @@ Groups can contain list of permissions
 
 
 ### License
-Copyright © 2020-2024 Western Australian Land Information Authority.
+Copyright © 2020-2025 Western Australian Land Information Authority.
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
 
