@@ -154,7 +154,6 @@ class StaffCreateForm(forms.ModelForm):
             self.fields['staff_owner'].queryset = Company.objects.filter(company_name=user.company.company_name)
             self.fields['staff_custodian'].queryset = CustomUser.objects.filter(company=user.company)
             self.fields['isreference'].disabled = True
-            self.fields.pop('isreference')
         self.fields['staff_owner'].empty_label = '--- Select one ---'
         self.fields['staff_custodian'].empty_label = '--- Select one ---'
 
