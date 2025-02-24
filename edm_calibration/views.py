@@ -73,7 +73,7 @@ from .models import (
     )
 from common_func.LeastSquares import (
     LSA,
-    ISO_test_a2,
+    ISO_test_a,
     ISO_test_b,
     ISO_test_c)
 from common_func.validators import try_delete_protected
@@ -702,7 +702,7 @@ def compute_calibration(request, id):
         # Perform ISO statistical tests
         ISO_test=[]
         ISO_test.append(
-            ISO_test_a2(
+            ISO_test_a(
                 pillar_survey,
                 chi_test,
                 [{'distance':50},
