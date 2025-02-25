@@ -107,6 +107,7 @@
     const companySelect = document.querySelector(`[id="id_company"]`);
     const newCompanyName = document.getElementById("id_company_name_row");
     const newCompanyAbbr = document.getElementById("id_company_abbrev_row");
+    const newCompanyAdr = document.getElementById("id_company_address_row");
     const old_csk = document.getElementById("id_csk_row");
     const companyNameField = document.getElementById("id_company_name");
     const companyAbbrevField = document.getElementById("id_company_abbrev");
@@ -121,6 +122,7 @@
       if (desc=="Others") {
         newCompanyName.style.display = "table-row";
         newCompanyAbbr.style.display = "table-row";
+        newCompanyAdr.style.display = "table-row";
         old_csk.style.display = "none";
         companyNameField.setAttribute("required","");
         companyAbbrevField.setAttribute("required","");
@@ -128,6 +130,7 @@
       } else {
         newCompanyName.style.display = "none";
         newCompanyAbbr.style.display = "none";
+        newCompanyAdr.style.display = "none";
         old_csk.style.display = "table-row";
         companyNameField.removeAttribute("required");
         companyAbbrevField.removeAttribute("required");
