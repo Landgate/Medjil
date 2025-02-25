@@ -49,3 +49,29 @@
         }
     }
     
+    const edmTypeInput = document.getElementById('id_edm_type');
+    const unitLengthInput = document.getElementById('id_unit_length');
+    const frequencyInput = document.getElementById('id_frequency');
+    
+    function updateInputStates() {
+      if (edmTypeInput && unitLengthInput && frequencyInput) {
+        if (edmTypeInput.value === 'pu') {
+          unitLengthInput.disabled = true;
+          frequencyInput.disabled = true;
+        } else {
+          unitLengthInput.disabled = false;
+          frequencyInput.disabled = false;
+        }
+      }
+    }
+    
+    if (edmTypeInput) {
+      edmTypeInput.addEventListener('change', updateInputStates);
+      // Initial check in case the value is already 'pu' on page load
+      updateInputStates();
+    }
+    
+    const data = {
+      unitLengthDisabled: unitLengthInput ? unitLengthInput.disabled : null,
+      frequencyDisabled: frequencyInput ? frequencyInput.disabled : null,
+    };

@@ -351,7 +351,7 @@
             <td class="text-left"> {{ chi_test.Variance|floatformat:2 }}</td>
         </tr>
         <tr>
-            <td class="text-left">Experimental Standard Deviation</td>
+            <td class="text-left">Experimental Standard Deviation of a single measured distance, s.</td>
             <td class="text-left"> {{ chi_test.So|floatformat:5 }} (m)</td>
         </tr>
         <tr>
@@ -910,14 +910,36 @@
 </div>
 {% if iso_full_test.matrix_y %}
 <div class="text-center">
-    <h2 class="text-center">ISO 17123:4 Full Test Procedure Results</h2>
+    <h2 class="text-center">ISO 17123:4 Full Test Procedure Measurements and Residuals</h2>
     <p class="text-center"><i>For more information about ISO full test procedure refer to the technical manual <a href= "{% url 'calibrationguide:read_manual' manual_name='edmi_calibration_manual.html' %}#EDMI-Chapter3_4" target="_blank" onclick="return PopupTechnicalManual(this);"> &#x1F6C8</a></i></p>
     <table style="margin-left:auto;margin-right:auto;font-size:10.0pt;width:800px;">
         <tr>
             <th colspan="2" class="text-center">Pillars</th>
+            <th rowspan="2" class="text-center" style="vertical-align: middle;">Avg. Raw Slope Distance (m)</th>
+            <th rowspan="2" class="text-center" style="vertical-align: middle;">Residual (m)</th>
+            <th rowspan="2" class="text-center" style="vertical-align: middle;">Standard Residual</th>
+        </tr>
+        <tr>
+            <th>From</th>
+            <th>To</th>
+        </tr>
+        {% for o in edm_observations %}
+            <tr>
+                <td width="15%">{{ o.from_pillar }}</td>
+                <td width="15%">{{ o.to_pillar }}</td>
+                <td>{{ o.raw_slope_dist|floatformat:4 }}</td>
+                <td>{{ o.iso_residual|floatformat:4 }}</td>
+                <td>{{ o.iso_std_residual|floatformat:4 }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+<div class="text-center">
+    <h2 class="text-center">ISO 17123:4 Full Test Procedure Results</h2>
+    <table style="margin-left:auto;margin-right:auto;font-size:10.0pt;width:500px;">
+        <tr>
+            <th colspan="2" class="text-center">Pillars</th>
             <th rowspan="2" class="text-center" style="vertical-align: middle;">Value (m)</th>
-            <th rowspan="2" class="text-center" style="vertical-align: middle;">Standard Deviation (mm)</th>
-            <th rowspan="2" class="text-center" style="vertical-align: middle;">Uncertainty (mm)</th>
         </tr>
         <tr>
             <th>From</th>
@@ -933,9 +955,7 @@
                     <td>{{ parameter.from_pillar }}</td>
                     <td>{{ parameter.to_pillar }}</td>
                 {% endif %}
-                <td>{{ parameter.value|floatformat:4 }}</td>
-                <td>{{ parameter.std_dev|floatformat:2 }}</td>
-                <td>{{ parameter.uncertainty|floatformat:2 }}</td>
+                <td width="60%">{{ parameter.value|floatformat:4 }}</td>
             </tr>
         {% endfor %}
     </table>
@@ -952,7 +972,7 @@
             <td class="text-left">95%</td>
         </tr>
         <tr>
-            <td class="text-left">Experimental Standard Deviation (m)</td>
+            <td class="text-left">Experimental Standard Deviation of a single measured distance (m)</td>
             <td class="text-left"> {{ iso_full_test.chi_test.So|floatformat:5 }}</td>
         </tr>
         <tr>
@@ -1332,6 +1352,7 @@ function certificate(){
         "Uncertainty Budget - Uncertainty Sources",
         "Summary Table of Distance Reductions",
         "Summary Table of Apriori Standard Deviation Contributions",
+        "ISO 17123:4 Full Test Procedure Measurements and Residuals",
         "ISO 17123:4 Full Test Procedure Results",
         "ISO 17123:4 Full Test Procedure Least Squares Adjustment Summary",
         "Combined Uncertainty Budget - Total Distance Uncertainty",
