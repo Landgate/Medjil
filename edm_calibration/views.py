@@ -284,7 +284,7 @@ def intercomparison(request, id=None):
 @user_passes_test(is_staff)
 def bulk_report_download(request):
     if request.method == 'POST':
-        form = BulkEDMIReportForm(request.POST)
+        form = BulkEDMIReportForm(request.POST, user=request.user)
         if form.is_valid():
             baseline = form.cleaned_data['baseline']
             from_date = form.cleaned_data['from_date']
@@ -318,7 +318,7 @@ def bulk_report_download(request):
             df.to_csv(path_or_buf=response, index=False, header=False)
             return response
     else:
-        form = BulkEDMIReportForm()
+        form = BulkEDMIReportForm(user=request.user)
 
     return render(request, 'edm_calibration/bulk_report_download.html', {'form': form})
 
