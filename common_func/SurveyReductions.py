@@ -589,7 +589,7 @@ def validate_survey2(pillar_survey, baseline=None, calibrations=None,
                 
         if pillar_survey.hygrometer:
             if not calibrations.get('hygro') and pillar_survey.hygro_calib_applied:
-                Errs.append(f'There is no calibration record for the hygrometer {pillar_survey.hygrometer}')
+                Wrns.append(f'There is no calibration record for the hygrometer {pillar_survey.hygrometer}')
             elif not calibrations.get('hygro'):
                 Errs.append(f'There is no calibration record for {pillar_survey.hygrometer}')
                 Errs.append('Hygrometer calibration certificates need to be current for the date of survey: '
