@@ -242,7 +242,7 @@ def create_medjil_model(rx, request, commit_errors):
                     rx_model['medjil_specs_pk'], created = (
                         Prism_Specification.objects.get_or_create(
                             prism_make_name = make,
-                            prism_model_name = model + ' (Baseline.exe)',
+                            prism_model_name = model + '.bak',
                             prism_owner = request.user.company,
                             manu_unc_const = float(zpc) * 2,
                             manu_unc_k = 2))
@@ -282,7 +282,7 @@ def create_medjil_model(rx, request, commit_errors):
                     rx_model['medjil_specs_pk'], created = (
                         EDM_Specification.objects.get_or_create(
                             edm_make_name = make,
-                            edm_model_name = model + ' (Baseline.exe)',
+                            edm_model_name = model + ' .exe)',
                             edm_owner = request.user.company,
                             edm_type = rx_model['type'],
                             manu_unc_const = float(zpc) * 2,
@@ -315,7 +315,7 @@ def create_medjil_insts(rx, request, commit_errors):
                 specs = rx_specs['medjil_specs_pk']
                 if rx_inst['inst_type'] == 'E':
                     rx_inst['medjil_pk'], _ = EDM_Inst.objects.get_or_create(
-                        edm_number = rx_inst['serial_number'] + ' (Baseline.exe)',
+                        edm_number = rx_inst['serial_number'] + '.bak',
                         edm_custodian = request.user,
                         comment = rx_inst['comments'],
                         edm_specs = specs)
@@ -333,7 +333,7 @@ def create_medjil_insts(rx, request, commit_errors):
             try:
                 if rx_inst['inst_type'] == 'P':
                     rx_inst['medjil_pk'], _ = Prism_Inst.objects.get_or_create(
-                        prism_number = rx_inst['serial_number'] + ' (Baseline.exe)',
+                        prism_number = rx_inst['serial_number'] + '.bak',
                         prism_custodian = request.user,
                         comment = rx_inst['comments'],
                         prism_specs = specs)
