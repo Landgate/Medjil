@@ -91,10 +91,11 @@ class Uncertainty_Budget(models.Model):
     name = models.CharField(max_length=30, unique= False)
     company = models.ForeignKey(Company, on_delete = models.PROTECT, null=False)
     std_dev_of_zero_adjustment = models.DecimalField(
-        max_digits=5, decimal_places=4,
+        max_digits=6, decimal_places=5,
+        default=0.00029, # Default set according to BASELINE review JM Rueger item [A47]
         validators = [MinValueValidator(0.00005)],
         help_text = "Standard deviation applied to set of observations when all"
-                    " measured distances in set of observations are the same. (m)")
+                    " measured distances in set of observations are ezactly the same. (m)")
     
     # boolean fields to opt for populating uncertainty sources from register.
     auto_EDMI_scf = models.BooleanField(

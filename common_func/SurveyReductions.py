@@ -235,6 +235,7 @@ def edm_std_function(edm_observations, stddev_0_adj):
     #y = Ax + B
     A = model.coef_[0]
     B = model.intercept_
+    # The below has been changed based on Ruegers advice in Baseline Review item [A48]
     # if B < 0 :
     #     B=0
     #     A=np.average(std_dev)
