@@ -913,9 +913,8 @@ def compute_calibration(request, id):
                                         cd['uc_budget']['11']['k'])
             ini_cd['k_os_uncertainty'] = cd['uc_budget']['11']['k']
             ini_cd['reduced_level'] = float(raw_lvl_obs[p]['reduced_level'])
-            ini_cd['rl_uncertainty'] = (cd['uc_budget']['10']['std_dev'] *
-                                        cd['uc_budget']['10']['k'])
-            ini_cd['k_rl_uncertainty'] = cd['uc_budget']['10']['k']
+            ini_cd['rl_uncertainty'] = float(raw_lvl_obs[p]['rl_standard_deviation']) * 2
+            ini_cd['k_rl_uncertainty'] = 2
             sess_data.append(ini_cd)
             
             # add an extra for the first pillar
@@ -926,6 +925,7 @@ def compute_calibration(request, id):
                 ini_cd0['offset'] = 0
                 ini_cd0['reduced_level'] = float(raw_lvl_obs[pillars[0]]['reduced_level'])
                 ini_cd0['rl_uncertainty'] = float(raw_lvl_obs[pillars[0]]['std_dev'])
+                ini_cd0['k_rl_uncertainty'] = 2
                 sess_data.insert(0, ini_cd0)
         
         request.session['cd_formset_' + str(pillar_survey.id)] = sess_data
