@@ -987,7 +987,7 @@
                   (u<sub>i</sub>) is computed using the following formula:</p>
                <div>$$ C_{SU}=√(∑_{(i=1)}^n u_{i}^2)\ \ \ (Eq. 5.1) $$</div>
                <p>The combined expanded uncertainty C<sub>EU</sub> is defined as follows:</p>
-               <div>$$ C_{EU}=C_{SU}k\ \ \ (Eq. 5.2) $$</div>
+               <div>$$ C_{EU}=k*C_{SU}\ \ \ (Eq. 5.2) $$</div>
                <p>Where:</p>
                <p>&emsp;&emsp;k = coverage factor</p>
                <div>$$ k=t_{(95\%, v_{eff})}\ \ \ (Eq. 5.3) $$</div>
@@ -1093,7 +1093,7 @@
                      will be combined before the contribution to the total uncertainty of the calibration according to the
                      following formula:
                   </p>
-                  <div>$$ su_d = D*csu_g\ \ \ (Eq. 5.12)$$ </div>
+                  <div>$$ su_d = D*csu_g\ \ \ (Eq. 5.6)$$ </div>
                   <p>Where:</p>
                   <p>&emsp;&emsp;su<sub>d</sub> = Standard uncertainty of the distance</p>
                   <p>&emsp;&emsp;D = Distance</p>
@@ -1107,7 +1107,7 @@
                      sources belonging to this group will be combined before the contribution to the total uncertainty of the
                      calibration according to the following formula:
                   </p>
-                  <div>$$ su_d = csu_g\ \ \ (Eq. 5.13)$$ </div>
+                  <div>$$ su_d = csu_g\ \ \ (Eq. 5.7)$$ </div>
                   <p>Where:</p>
                   <p>&emsp;&emsp;su<sub>d</sub> = Standard uncertainty of the distance</p>
                   <p>&emsp;&emsp;csu<sub>g</sub> = Combined standard uncertainty of the group</p>
@@ -1116,14 +1116,14 @@
                      specified
                      in metres (m) or millimetres (mm). All error sources belonging to this group will be combined
                      before the
-                     contribution to the total uncertainty of the calibration according to the following formula 4.13
+                     contribution to the total uncertainty of the calibration according to the following formula 4.7
                   </p>
                   <p>
                      <b>Temperature</b> = Uncertainty related to the temperature can be specified in degrees Celsius
                      (°C) or degrees Fahrenheit (°F). All error sources belonging to this group will be combined before the
                      contribution to the total uncertainty of the calibration according to the following formula:
                   </p>
-                  <div>$$ su_d = D*K*csu_g*10^{-6}\ \ \ (Eq. 5.14)$$ </div>
+                  <div>$$ su_d = D*K*csu_g*10^{-6}\ \ \ (Eq. 5.8)$$ </div>
                   <p>Where:</p>
                   <p>&emsp;&emsp;su<sub>d</sub> = Standard uncertainty of the distance</p>
                   <p>&emsp;&emsp;D = Distance</p>
@@ -1132,14 +1132,14 @@
                   <div>
                      $$
                      K=\left[\frac{\frac{\left(n_G-1\right)\left(273.15p\right)}{1013.25}-11.27e*{10}^{-6}}{273.15+t^2}\right]*{10}^6\
-                     \ \ (Eq. 5.15)$$
+                     \ \ (Eq. 5.9)$$
                   </div>
                   <p>Where:</p>
                   <p>&emsp;&emsp;p = Pressure [hPa]</p>
                   <p>&emsp;&emsp;t = Temperature [C]</p>
                   <p>&emsp;&emsp;n<sub>G</sub> = Manufacturers reference refractive index </p>
                   <p>&emsp;&emsp;e = Partial water vapour Pressure [hPa] defined as:</p>
-                  <div>$$ e=\frac{Eh}{100}\ \ \ (Eq. 5.16)$$ </div>
+                  <div>$$ e=\frac{Eh}{100}\ \ \ (Eq. 5.10)$$ </div>
                   <p>Where:</p>
                   <p>&emsp;&emsp;E = Saturation water vapour [hPa] at the dry bulb temperature</p>
                   <p>&emsp;&emsp;h = Relative humidity [%]</p>
@@ -1149,14 +1149,14 @@
                      before the contribution to the total uncertainty of the calibration according to the following
                      formula:
                   </p>
-                  <div>$$ su_d = D*L*csu_g*10^{-6}\ \ \ (Eq. 5.17)$$ </div>
+                  <div>$$ su_d = D*L*csu_g*10^{-6}\ \ \ (Eq. 5.11)$$ </div>
                   <p>Where:</p>
                   <p>&emsp;&emsp;su<sub>d</sub> = Standard uncertainty of the distance</p>
                   <p>&emsp;&emsp;D = Distance</p>
                   <p>&emsp;&emsp;csu<sub>g</sub> = Combined standard uncertainty of the group</p>
                   <p>&emsp;&emsp;L = Partial differential for Pressure defined as:</p>
                   <div>
-                     $$ L=\left[0.26957809\frac{\left(n_G-1\right)}{273.15+t^2}\right]\ast{10}^6\ \ \ (Eq. 5.18)$$
+                     $$ L=\left[0.26957809\frac{\left(n_G-1\right)}{273.15+t^2}\right]\ast{10}^6\ \ \ (Eq. 5.12)$$
                   </div>
                   <p>
                      <b>Humidity</b> = Uncertainty relating to the humidity must be specified as a percent (%). All
@@ -1165,13 +1165,13 @@
                      of the
                      calibration according to the following formula:
                   </p>
-                  <div>$$ su_d = D*M*csu_g*10^{-6}\ \ \ (Eq. 5.19)$$ </div>
+                  <div>$$ su_d = D*M*csu_g*10^{-6}\ \ \ (Eq. 5.13)$$ </div>
                   <p>Where:</p>
                   <p>&emsp;&emsp;su<sub>d</sub> = Standard uncertainty of the distance</p>
                   <p>&emsp;&emsp;D = Distance</p>
                   <p>&emsp;&emsp;csu<sub>g</sub> = Combined standard uncertainty of the group</p>
                   <p>&emsp;&emsp;M = Partial differential for humidity defined as:</p>
-                  <div>$$ M=\left[\frac{11.27*10^{-6}}{273.15+t^2}\right]*{10}^6\ \ \ (Eq. 5.20)$$ </div>
+                  <div>$$ M=\left[\frac{11.27*10^{-6}}{273.15+t^2}\right]*{10}^6\ \ \ (Eq. 5.14)$$ </div>
                   <p>
                      <b>Certified distances</b> = Uncertainty relating to the certified distances can be specified in
                      metres
@@ -1181,7 +1181,7 @@
                      of the
                      calibration according to the following formula:
                   </p>
-                  <div>$$ su_d = csu_g\ \ \ (Eq. 5.21)$$ </div>
+                  <div>$$ su_d = csu_g\ \ \ (Eq. 5.15)$$ </div>
                   <p>Where:</p>
                   <p>&emsp;&emsp;su<sub>d</sub> = Standard uncertainty of the distance</p>
                   <p>&emsp;&emsp;csu<sub>g</sub> = Combined standard uncertainty of the group</p>
@@ -1190,14 +1190,14 @@
                      (m) or
                      millimetres (mm). All error sources belonging to this group will be combined before the
                      contribution to
-                     the total uncertainty of the calibration according to the Eg. 5.21.
+                     the total uncertainty of the calibration according to the Eg. 5.15.
                   </p>
                   <p>
                      <b>Centring</b> = Uncertainty relating to the centring can be specified in metres (m) or
                      millimetres
                      (mm). All error sources belonging to this group will be combined before the contribution to the
                      total
-                     uncertainty of the calibration according to the Eg. 5.21.
+                     uncertainty of the calibration according to the Eg. 5.15.
                   </p>
                   <p>
                      <b>Heights</b> = Uncertainty relating to the heights can be specified in metres (m) or millimetres
@@ -1205,7 +1205,7 @@
                      All error sources belonging to this group will be combined before the contribution to the total
                      uncertainty of the calibration according to the following formula:
                   </p>
-                  <div>$$ su_d = csu_g*\frac{∆H}{D}\ \ \ (Eq. 5.22)$$ </div>
+                  <div>$$ su_d = csu_g*\frac{∆H}{D}\ \ \ (Eq. 5.16)$$ </div>
                   <p>Where:</p>
                   <p>&emsp;&emsp;su<sub>d</sub> = Standard uncertainty of the distance</p>
                   <p>&emsp;&emsp;D = Distance</p>
@@ -1217,7 +1217,7 @@
                      All error sources belonging to this group will be combined before the contribution to the total
                      uncertainty of the calibration according to the following formula:
                   </p>
-                  <div>$$ su_d = csu_g*\frac{∆O}{D}\ \ \ (Eq. 5.23)$$ </div>
+                  <div>$$ su_d = csu_g*\frac{∆O}{D}\ \ \ (Eq. 5.17)$$ </div>
                   <p>Where:</p>
                   <p>&emsp;&emsp;su<sub>d</sub> = Standard uncertainty of the distance</p>
                   <p>&emsp;&emsp;D = Distance</p>
@@ -1289,21 +1289,19 @@
                         linear regression equation. This uncertainty source is assigned 30 degrees of freedom and the
                         coverage factor is the t-student at 95% and 30 degrees of freedom t<sub>(95%,30)</sub>
                      </li>
-                     <li>Heights - Height differences - During the Calibrate an EDM Baseline process, a *.csv file is
-                        required to upload the standard uncertainty (standard deviation) of the heights of each pillar.
-                        These uncertainties are used to derive the uncertainty of the height differences according to
-                        the equation 5.6.
-                        <div>$$ {uc}_{\Delta H}=k\sqrt{\left(H_i^2+H_j^2\right)}\ \ \ (Eq. 5.6) $$</div>
+                     <li> During the EDM Baseline calibration process, a *.csv file is required to upload each pillar height
+                     	 and its standard deviation (standard uncertainty). These standard deviations are used to model the
+                     	  standard uncertainty of each pillar height difference by linear regression as a function of the square root
+                     	   of the distance. The derived line-of-best-fit equation is then used to estimate the expanded uncertainties
+                     	    of height differences between pillars as a function of the square root of the distance between them (Equation 5.18).                         
+                        <div>$$ {uc}_{\Delta H_{ij}}=k*({A*D^2+B})\ \ \ (Eq. 5.18) $$</div>
                         <p>Where:</p>
-                        <p>&emsp;&emsp;uc<sub>&#916;H</sub> = Expanded uncertainty of the height difference between
+                        <p>&emsp;&emsp;uc<sub>&#916;H<sub>ij</sub></sub> = Expanded uncertainty of the height difference between
                          pillar i and pillar j</p>
-                        <p>&emsp;&emsp;uc<sub>o</sub> = Expanded uncertainty of the offset between pillar i and pillar j
+                        <p>&emsp;&emsp;D<sub>ij</sub> = Distance between pillar i and pillar j
                         </p>
-                        <p>&emsp;&emsp;H<sub>i</sub> = Tabulated experimental standard deviation of the ‘From Pillar’
-                        </p>
-                        <p>&emsp;&emsp;H<sub>j</sub> = Tabulated experimental standard deviation of the ‘To Pillar’</p>
-                        <p>&emsp;&emsp;k = t<sub>(95%,30)</sub>
-                        </p>
+                        <p>&emsp;&emsp;A and B = parameters of the linear equation</p>
+                        <p>&emsp;&emsp;k = t<sub>(95%,100)</sub>
                      </li>
                      <li>Humidity - Hygrometer calibrated correction factor - Hygrometers used for baseline calibration
                         surveys must have a calibration certificate that indicates the uncertainty of the readings. Medjil will
@@ -1318,7 +1316,7 @@
                         grouped into sets, then the average and experimental standard deviations of these sets are tabulated.
                         The uncertainty of each offset is derived from the standard deviation of the offset measurements at
                         both the ‘From Pillar’ and the ‘To Pillar’.
-                        <div>$$ {\rm uc}_o=k\sqrt{\left(o_i^2+o_j^2\right)}\ \ \ (Eq. 5.7) $$ </div>
+                        <div>$$ {\rm uc}_o=k\sqrt{\left(o_i^2+o_j^2\right)}\ \ \ (Eq. 5.19) $$ </div>
                         <p>Where:</p>
                         <p>&emsp;&emsp;uc<sub>o</sub> = Expanded uncertainty of the offset between pillar i and pillar j
                         </p>
@@ -1351,7 +1349,7 @@
                         inter-pillar distances are calculated from the CoFactorMatrix of baseline calibrations. This is
                         done by creating a design matrix for every combination of pillars and calculating another
                         CoFactorMatrix according to the formula:
-                        <div>$$ Q_2=A_2QA_2^T\ \ \ (Eq. 5.8)$$ </div>
+                        <div>$$ Q_2=A_2QA_2^T\ \ \ (Eq. 5.20)$$ </div>
                         <p>Where:</p>
                         <p>&emsp;&emsp;Q<sub>2</sub> = The secondary CoFactorMatrix</p>
                         <p>&emsp;&emsp;Q = The CoFactorMatrix from the LSA of calibrating a baseline</p>
@@ -1383,7 +1381,7 @@
                         <div>
                            $$
                            S_{IC}=S_{zpc}+S_{scf}D+S_1\sin{\left(2\pi\frac{D}{U}\right)+S_2\cos{\left(2\pi\frac{D}{U}\right)+S_3\sin{\left(4\pi\frac{D}{U}\right)+S_4\cos{\left(4\pi\frac{D}{U}\right)}}}}\
-                           \ \ (Eq. 5.9)$$
+                           \ \ (Eq. 5.21)$$
                         </div>
                         <p>Where:</p>
                         <p>&emsp;&emsp;S<sub>IC</sub> = Standard uncertainty of the Instrument Correction</p>
@@ -1396,9 +1394,9 @@
                         <p>&emsp;&emsp;S<sub>3</sub> = Standard uncertainty of the term 3 - Cyclic (a.x)</p>
                         <p>&emsp;&emsp;S<sub>4</sub> = Standard uncertainty of the term 4 - Cyclic (a.x)</p>
                         <p> (b) if the calibration of the EDMI has not tested for cyclic errors, has found them to be insignificant:</p>
-                        <div>$$ S_{IC}=S_{zpc}+S_{scf}D\ \ \ (Eq. 5.10)$$ </div>
+                        <div>$$ S_{IC}=S_{zpc}+S_{scf}D\ \ \ (Eq. 5.22)$$ </div>
                         <p>The uncertainty is calculated according to the following formula:</p>
-                        <div>$$ {uc}_{IC}=k * S_{IC}\ \ \ (Eq. 5.11) $$</div>
+                        <div>$$ {uc}_{IC}=k * S_{IC}\ \ \ (Eq. 5.23) $$</div>
                         <p>Where:</p>
                         <p>&emsp;&emsp;u<sub>IC</sub> = Expanded uncertainty of the Instrument Correction</p>
                         <p>&emsp;&emsp;k = Coverage factor determined by the t-student at 95% and LSA derived degree of
