@@ -16,8 +16,7 @@
 
 '''
 from django.shortcuts import render, redirect
-from django.core.exceptions import ObjectDoesNotExist
-from django.http import JsonResponse, FileResponse, Http404, HttpResponse
+from django.http import JsonResponse
 from django.views.decorators.clickjacking import xframe_options_exempt
 from django.contrib.auth.decorators import login_required
 # Create your views here.
@@ -26,12 +25,12 @@ from .models import (
     MedjilUserGuide, 
     MedjilGuideToSiteCalibration
 )
-from calibrationsites.models import CalibrationSite
 from accounts.models import Location
 from .forms import (CalibrationFieldInstructionForm,
                     MedjilUserGuideForm,
                     MedjilGuideToSiteCalibrationForm,
 )
+
 
 @xframe_options_exempt
 def guide_view(request):
@@ -42,9 +41,18 @@ def guide_view(request):
     # Get distinct site locations from the database
     location_list = guides_obj.values_list('location', flat=True).distinct()  
     calib_locations = Location.objects.filter(id__in=location_list)
+    
+    medjil_guide = MedjilUserGuide.objects.first()
+    print(medjil_guide)
+    medjil_baseline = MedjilGuideToSiteCalibration.objects.filter(site_type='baseline').first()
+    medjil_staff = MedjilGuideToSiteCalibration.objects.filter(site_type='range').first()
+    
     context = {
         'calibration_types': calibration_types, 
         'guides_obj': guides_obj,
+        'medjil_guide': medjil_guide,
+        'medjil_baseline': medjil_baseline,
+        'medjil_staff': medjil_staff,
         'calib_locations': calib_locations,
     }
     return render(request, 'calibrationguide/calibrationguide_view.html', context=context)
@@ -57,6 +65,7 @@ def get_content_url(request, location, calibration_type):
     else:
         content_url = None
     return JsonResponse({'content_url': content_url})
+
 
 @login_required(login_url="/accounts/login") 
 def guide_create(request):
@@ -73,6 +82,7 @@ def guide_create(request):
     else:
         form = CalibrationFieldInstructionForm(user=request.user)
     return render(request, 'calibrationguide/guide_create_form.html', {'form':form})
+
 
 @login_required(login_url="/accounts/login") 
 def medjil_guide_create(request):
@@ -92,6 +102,7 @@ def medjil_guide_create(request):
         form = MedjilUserGuideForm(user=request.user)
     return render(request, 'calibrationguide/guide_create_form.html', {'form':form})
 
+
 @login_required(login_url="/accounts/login") 
 def medjil_guide_to_calib_create(request):
     if request.method=="POST":
@@ -109,44 +120,6 @@ def medjil_guide_to_calib_create(request):
     else:
         form = MedjilGuideToSiteCalibrationForm(user=request.user)
     return render(request, 'calibrationguide/guide_create_form.html', {'form':form})
-
-def display_medjil_guide(request):
-    try:
-        obj = MedjilUserGuide.objects.first()
-        if not obj:
-            raise Http404("<p>Medjil User Guide currently does not exist.. Please contact <a href='mailto:geodesy@landgate.wa.gov.au'>geodesy@landgate.wa.gov.au</a>.</p>")
-        filepath = obj.medjil_book.path        
-        return FileResponse(open(filepath, 'rb'), content_type='application/pdf')
-    except Http404 as e:
-        return HttpResponse(str(e), status=404)
-    except Exception as e:
-        return HttpResponse("<p>An unexpected error occurred. Please contact <a href='mailto:geodesy@landgate.wa.gov.au'>geodesy@landgate.wa.gov.au</a>.</p>", status=500)
-
-def display_medjil_calib_baseline(request):
-    try:
-        obj = MedjilGuideToSiteCalibration.objects.filter(site_type='baseline').first()
-        print(obj)
-        if not obj:
-            raise Http404("<p>Medjil Guide to EDM Baseline Calibration currently does not exist. Please contact <a href='mailto:geodesy@landgate.wa.gov.au'>geodesy@landgate.wa.gov.au</a>.</p>")
-        filepath = obj.content_book.path        
-        return FileResponse(open(filepath, 'rb'), content_type='application/pdf')
-    except Http404 as e:
-        return HttpResponse(str(e), status=404)
-    except Exception as e:
-        return HttpResponse("<p>An unexpected error occurred. Please contact <a href='mailto:geodesy@landgate.wa.gov.au'>geodesy@landgate.wa.gov.au</a>.</p>", status=500)
-        
-def display_medjil_calib_staff(request):
-    try:
-        obj = MedjilGuideToSiteCalibration.objects.filter(site_type='range').first()
-        print(obj)
-        if not obj:
-            raise Http404("<p>Medjil Guide to Staff Range Calibration currently does not exist. Please contact <a href='mailto:geodesy@landgate.wa.gov.au'>geodesy@landgate.wa.gov.au</a>.</p>")
-        filepath = obj.content_book.path        
-        return FileResponse(open(filepath, 'rb'), content_type='application/pdf')
-    except Http404 as e:
-        return HttpResponse(str(e), status=404)
-    except Exception as e:
-        return HttpResponse("<p>An unexpected error occurred. Please contact <a href='mailto:geodesy@landgate.wa.gov.au'>geodesy@landgate.wa.gov.au</a>.</p>", status=500)
 
 def guide_view1(request):
     # Display the manual as html page

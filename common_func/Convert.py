@@ -566,11 +566,47 @@ def uncertainty_qry2(pillar_survey):
         
     return uc_budget
 
+class NullFilter:
+    # Leica files have been found to create files with unrecognised binary characters, 
+    # this class removes these characters from a binary file
+    def __init__(self, file):
+        self.file = file
+        self.closed = False
 
+    def read(self, size=-1):
+        return self.file.read(size).replace(b'\x00', b'')
+
+    def readline(self, size=-1):
+        return self.file.readline(size).replace(b'\x00', b'')
+
+    def readable(self):
+        return True
+
+    def writable(self):
+        return False
+
+    def seekable(self):
+        return False
+
+    def close(self):
+        self.closed = True
+        self.file.close()
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        line = self.file.__next__().replace(b'\x00', b'')
+        if not line:
+            raise StopIteration
+        return line
+    
+    
 def import_csv_to_observations(csv_file, pillar_survey):
     calibration_type = 'B' if hasattr(pillar_survey, 'staff') else 'I'
     # Decode the file for reading
     file_name = getattr(csv_file, 'name', 'the uploaded file')
+    csv_file = NullFilter(csv_file)
     csv_file = TextIOWrapper(csv_file, encoding='utf-8-sig')
     reader = csv.DictReader(csv_file)        
 
@@ -694,6 +730,7 @@ def import_csv_to_observations(csv_file, pillar_survey):
 def import_csv_to_levels(csv_file, pillar_survey):
     # Decode the file for reading
     file_name = getattr(csv_file, 'name', 'the uploaded file')
+    csv_file = NullFilter(csv_file)
     csv_file = TextIOWrapper(csv_file, encoding='utf-8-sig')
     reader = csv.DictReader(csv_file)        
 

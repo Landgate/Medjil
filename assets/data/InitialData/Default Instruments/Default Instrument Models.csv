@@ -1,17 +1,19 @@
-TYPE,MAKE,MODEL
-edm,Leica,TS 15
-edm,Leica,TS 16
-edm,Leica,TS 30
-edm,Leica,TS 50
-edm,Leica,TS 60
-edm,Leica,TCR 703
-edm,Leica,TCR 803
-edm,Leica,TS 03
-edm,Leica,TS 06
-edm,Leica,TS 07
-edm,Leica,TS 10
+ï»¿TYPE,MAKE,MODEL
+baro,DRUCK,DPI740
+baro,Kestrel,1000
+baro,Kestrel,2000
+baro,Kestrel,2500
+baro,Kestrel,3000
+baro,Kestrel,3500
+baro,Kestrel,4000
+baro,Kestrel,4200
+baro,Kestrel,4250
+baro,Kestrel,4300
+baro,Kestrel,4400
+baro,Kestrel,4500
+baro,Kestrel,3500 DT
+baro,Kestrel,4500 HDR
 edm,Leica,MS 60
-edm,Leica,TS 13
 edm,Leica,Nova TM 60
 edm,Leica,TC 1000
 edm,Leica,TC 1010
@@ -47,12 +49,14 @@ edm,Leica,TCM 1105
 edm,Leica,TCM 1800
 edm,Leica,TCM 1800 L
 edm,Leica,TCR 110
+edm,Leica,TCR 1101
+edm,Leica,TCR 703
 edm,Leica,TCR 802 U
+edm,Leica,TCR 803
 edm,Leica,TCR 803 P
 edm,Leica,TCR 803 U
 edm,Leica,TCR 805 P
 edm,Leica,TCR 805 U
-edm,Leica,TCR 1101
 edm,Leica,TCRM 1101
 edm,Leica,TCRM 1102
 edm,Leica,TCRM 1103
@@ -68,61 +72,83 @@ edm,Leica,TCRP 1205+
 edm,Leica,TPS 1000
 edm,Leica,TPS 1100
 edm,Leica,TPS 1200
-edm,Nikon,XS
-edm,Nikon,N 2
-edm,Nikon,N5
+edm,Leica,TS 03
+edm,Leica,TS 06
+edm,Leica,TS 07
+edm,Leica,TS 10
+edm,Leica,TS 13
+edm,Leica,TS 15
+edm,Leica,TS 16
+edm,Leica,TS 30
+edm,Leica,TS 50
+edm,Leica,TS 60
 edm,Nikon,K 2
 edm,Nikon,K 5
+edm,Nikon,N 2
+edm,Nikon,N5
 edm,Nikon,NPL 322+
 edm,Nikon,XF
 edm,Nikon,XF HP
+edm,Nikon,XS
 edm,Pentax,R 2500NS
-edm,Pentax,W 2800N
 edm,Pentax,R 2505
+edm,Pentax,W 2800N
+edm,Sokkia,DX-100AC
+edm,Sokkia,DX-200AC
+edm,Sokkia,FX-200
+edm,Sokkia,iM-100
+edm,Sokkia,iM-50
+edm,Sokkia,iX-1200
+edm,Sokkia,iX-600
+edm,Sokkia,NET05AX2A
+edm,Sokkia,NET1AX2A
 edm,Sokkia,SET 1
 edm,Sokkia,SET 2
 edm,Sokkia,SET 3
 edm,Sokkia,SET 4
 edm,Sokkia,SET 5
-edm,Sokkia,iM-50
-edm,Sokkia,iM-100
-edm,Sokkia,FX-200
-edm,Sokkia,iX-600
-edm,Sokkia,iX-1200
-edm,Sokkia,NET05AX2A
-edm,Sokkia,NET1AX2A
 edm,Sokkia,SX-100
-edm,Sokkia,DX-100AC
-edm,Sokkia,DX-200AC
-edm,Topcon,GM-50
 edm,Topcon,DS-100AC
 edm,Topcon,DS-200AC
 edm,Topcon,DS-200i
 edm,Topcon,GM-100
+edm,Topcon,GM-50
+edm,Topcon,GPT 3500
+edm,Topcon,GT 500V
 edm,Topcon,GT-1200
 edm,Topcon,GT-600
+edm,Topcon,GTL 1000
+edm,Topcon,IS-3 Series
+edm,Topcon,MS AXII
 edm,Topcon,MS05AX2A
 edm,Topcon,MS1AX2A
 edm,Topcon,OS-200
 edm,Topcon,PS-100
 edm,Topcon,PS-101A
 edm,Topcon,PS-200
-edm,Topcon,GPT 3500
-edm,Topcon,GTL 1000
-edm,Topcon,GT 500V
-edm,Topcon,IS-3 Series
-edm,Topcon,MS AXII
-edm,Trimble,"3300 DR, 3600 DR (Elta panel, CU 600, ACU)"
+edm,Trimble,3300 DR
+edm,Trimble,3600 DR
 edm,Trimble,5500 / 5600 DR STD
+edm,Trimble,C 3
+edm,Trimble,C 5
+edm,Trimble,C 5 HP
 edm,Trimble,C5 HP
-edm,Trimble,"M1 DR-2”/5”, M3-3”/-5” NPL, M3 DR-3”/-5” (NPL model 2010/13)"
-edm,Trimble,"M3 DR-2”, M3 DR-1”/2” (NPR model 2010/12/13)"
+edm,Trimble,HP/RTS773 DR HP
+edm,Trimble,M1 DR-2
+edm,Trimble,M3 DR-3
+edm,Trimble,M3-3 NPL
 edm,Trimble,RPT600 Layout Station
 edm,Trimble,RTS555 DR/RTS655 DR
 edm,Trimble,RTS633 DR 300+
 edm,Trimble,RTS633 DR Plus
-edm,Trimble,RTS771 DR HP/RTS773 DR HP
+edm,Trimble,RTS771 DR HP
+edm,Trimble,RTS773 DR HP
 edm,Trimble,RTS873 DR HP
+edm,Trimble,S 5
+edm,Trimble,S 6
+edm,Trimble,S 7
+edm,Trimble,S 8
+edm,Trimble,S 9
 edm,Trimble,S3 DR
 edm,Trimble,S5 DR Plus
 edm,Trimble,S6 DR 300+
@@ -141,67 +167,66 @@ edm,Trimble,SPS630 DR Plus
 edm,Trimble,SPS730 DR 300+
 edm,Trimble,SPS730 DR Plus
 edm,Trimble,SPS930 DR Plus
-edm,Trimble,Trimble 3600 with IR EDM
+edm,Trimble,SX 10
+edm,Trimble,SX 12
 edm,Trimble,Trimble 5600
 edm,Trimble,Trimble 5600 DR200+
 edm,Trimble,Trimble 5600 DR300+
 edm,Trimble,TS525
 edm,Trimble,TS635
 edm,Trimble,TS835
-edm,Trimble,VX DR Plus Spatial Station
+edm,Trimble,VX DR Plus Spatial Stn
 edm,Trimble,VX Spatial Station
-edm,Trimble,SX 12
-edm,Trimble,SX 10
-edm,Trimble,S 5
-edm,Trimble,S 6
-edm,Trimble,S 7
-edm,Trimble,S 8
-edm,Trimble,S 9
-edm,Trimble,C 5
-edm,Trimble,C 3
-edm,Trimble,C 5 HP
+hygro,DELTA OHM,HD 2301.0R - HP472ACR
+hygro,Kestrel,1000
+hygro,Kestrel,2000
+hygro,Kestrel,2500
+hygro,Kestrel,3000
+hygro,Kestrel,3500
+hygro,Kestrel,4000
+hygro,Kestrel,4200
+hygro,Kestrel,4250
+hygro,Kestrel,4300
+hygro,Kestrel,4400
+hygro,Kestrel,4500
+hygro,Kestrel,3500 DT
+hygro,Kestrel,4500 HDR
+level,GeoMax,ZDL 700
+level,Leica,DNA 03
+level,Leica,DNA 10
 level,Leica,LS 10
 level,Leica,LS 15
 level,Leica,Sprinter 150
 level,Leica,Sprinter 150M
 level,Leica,Sprinter 250M
-level,Leica,DNA 03
-level,Leica,DNA 10
-level,GeoMax,ZDL 700
-level,Trimble,DiNi 0.3
-level,Trimble,DiNi 0.7
+level,Sokkia,B Series
 level,Sokkia,SDL 1X
 level,Sokkia,SDL 30
 level,Sokkia,SDL 50
-level,Sokkia,B Series
-level,Trimble,DiNi 21
-level,Trimble,DiNi 22
 level,Topcon,DL 502
 level,Topcon,DL 503
-staff,Leica,GSS 111
-staff,Leica,GSS 113
-staff,Leica,GPCL3
-staff,Leica,GKNL4F
-staff,Leica,GKNL4M
-staff,Leica,GTL4M 
-staff,Leica,GTL4C
-prism,Leica,GPH1P
-prism,Leica,GPR121
-prism,Leica,GPR111
-prism,Leica,GPH1
-prism,Leica,GPR1
-prism,Leica,GZT4
-prism,Leica,GMP101
-prism,Leica,GMP111
-prism,Leica,GMP111-0
-prism,Leica,GPR105
-prism,Leica,GRZ4
-prism,Leica,GRZ122
-prism,Leica,GRZ101
-prism,Leica,MPR122
+level,Trimble,DiNi 0.3
+level,Trimble,DiNi 0.7
+level,Trimble,DiNi 21
+level,Trimble,DiNi 22
 prism,Leica,CPR111
 prism,Leica,GMP004
+prism,Leica,GMP101
 prism,Leica,GMP104
+prism,Leica,GMP111
+prism,Leica,GMP111-0
+prism,Leica,GPH1
+prism,Leica,GPH1P
+prism,Leica,GPR1
+prism,Leica,GPR105
+prism,Leica,GPR111
+prism,Leica,GPR121
+prism,Leica,GRZ101
+prism,Leica,GRZ122
+prism,Leica,GRZ4
+prism,Leica,GZT4
+prism,Leica,MPR122
+prism,Sokkia,0/30 Poly prism
 prism,Sokkia,360 Robotic Prism
 prism,Sokkia,APO1
 prism,Sokkia,APO1S
@@ -210,65 +235,43 @@ prism,Sokkia,CST optima
 prism,Sokkia,Mini prism middle bubble
 prism,Sokkia,Mini prism side bubble
 prism,Sokkia,Plastic mini prism
-prism,Sokkia,0/30 Poly prism
+prism,Topcon,ATP1
 prism,Trimble,360 Prism
+prism,Trimble,Large Monitoring Prism
 prism,Trimble,Mini Prism
 prism,Trimble,Small Monitoring Prism
 prism,Trimble,Traverse Prism (-35mm)
-prism,Trimble,Large Monitoring Prism
-prism,Topcon,ATP1
-baro,DRUCK,DPI740
+staff,Leica,GKNL4F
+staff,Leica,GKNL4M
+staff,Leica,GPCL3
+staff,Leica,GSS 111
+staff,Leica,GSS 113
+staff,Leica,GTL4C
+staff,Leica,GTL4MÂ 
+staff,Trimble,BD 05
+staff,Trimble,FD 10
+staff,Trimble,LD 05
+staff,Trimble,LD 11
+staff,Trimble,LD 12
+staff,Trimble,LD 12/b
+staff,Trimble,LD 13
+staff,Trimble,LD 13b
+staff,Trimble,LD 13w
+staff,Trimble,LD 21
+staff,Trimble,LD 23
+staff,Trimble,LD 24
+staff,Trimble,LD 25
 thermo,DELTA OHM,HD 2301.0R - HP472ACR
-hygro,DELTA OHM,HD 2301.0R - HP472ACR
-baro,Kestrel,1000
-baro,Kestrel,2000
-baro,Kestrel,2500
-baro,Kestrel,3000
-baro,Kestrel,3500
-baro,Kestrel,3500 DT
-baro,Kestrel,4000
-baro,Kestrel,4200
-baro,Kestrel,4250
-baro,Kestrel,4300
-baro,Kestrel,4400
-baro,Kestrel,4500
-baro,Kestrel,4500 HDR
 thermo,Kestrel,1000
 thermo,Kestrel,2000
 thermo,Kestrel,2500
 thermo,Kestrel,3000
 thermo,Kestrel,3500
-thermo,Kestrel,3500 DT
 thermo,Kestrel,4000
 thermo,Kestrel,4200
 thermo,Kestrel,4250
 thermo,Kestrel,4300
 thermo,Kestrel,4400
 thermo,Kestrel,4500
+thermo,Kestrel,3500 DT
 thermo,Kestrel,4500 HDR
-hygro,Kestrel,1000
-hygro,Kestrel,2000
-hygro,Kestrel,2500
-hygro,Kestrel,3000
-hygro,Kestrel,3500
-hygro,Kestrel,3500 DT
-hygro,Kestrel,4000
-hygro,Kestrel,4200
-hygro,Kestrel,4250
-hygro,Kestrel,4300
-hygro,Kestrel,4400
-hygro,Kestrel,4500
-hygro,Kestrel,4500 HDR
-staff,Trimble,LD 05
-staff,Trimble,BD 05
-staff,Trimble,FD 10
-staff,Trimble,LD 11
-staff,Trimble,LD 21
-staff,Trimble,LD 12
-staff,Trimble,LD 12/b
-staff,Trimble,LD 13
-staff,Trimble,LD 13b
-staff,Trimble,LD 13w
-staff,Trimble,LD 23
-staff,Trimble,LD 24
-staff,Trimble,LD 25

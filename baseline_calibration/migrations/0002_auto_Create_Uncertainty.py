@@ -32,7 +32,7 @@ from django.core.files.storage import FileSystemStorage
 Default_budget = {
     'name' : 'Default',
     'Company': 'Landgate',
-    'std_dev_of_zero':0.0002
+    'std_dev_of_zero':0.00029
     }
 
 sources = [

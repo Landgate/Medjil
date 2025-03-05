@@ -235,6 +235,7 @@ def edm_std_function(edm_observations, stddev_0_adj):
     #y = Ax + B
     A = model.coef_[0]
     B = model.intercept_
+    # The below has been changed based on Ruegers advice in Baseline Review item [A48]
     # if B < 0 :
     #     B=0
     #     A=np.average(std_dev)
@@ -589,7 +590,7 @@ def validate_survey2(pillar_survey, baseline=None, calibrations=None,
                 
         if pillar_survey.hygrometer:
             if not calibrations.get('hygro') and pillar_survey.hygro_calib_applied:
-                Errs.append(f'There is no calibration record for the hygrometer {pillar_survey.hygrometer}')
+                Wrns.append(f'There is no calibration record for the hygrometer {pillar_survey.hygrometer}')
             elif not calibrations.get('hygro'):
                 Errs.append(f'There is no calibration record for {pillar_survey.hygrometer}')
                 Errs.append('Hygrometer calibration certificates need to be current for the date of survey: '

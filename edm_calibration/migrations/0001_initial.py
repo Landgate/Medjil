@@ -92,7 +92,7 @@ class Migration(migrations.Migration):
                     models.BooleanField(
                         default=True,
                         help_text="The thermometer calibration correction has been applied prior to data import.",
-                        verbose_name="thermometer calibration corrections applied",
+                        verbose_name="thermometer calibration corrections applied or not required",
                     ),
                 ),
                 (
@@ -100,7 +100,7 @@ class Migration(migrations.Migration):
                     models.BooleanField(
                         default=True,
                         help_text="The barometer calibration correction has been applied prior to data import.",
-                        verbose_name="barometer calibration corrections applied",
+                        verbose_name="barometer calibration corrections applied or not required",
                     ),
                 ),
                 (
@@ -108,7 +108,7 @@ class Migration(migrations.Migration):
                     models.BooleanField(
                         default=True,
                         help_text="The hygrometer correction has been applied prior to data import.",
-                        verbose_name="Hygrometer calibration corrections applied",
+                        verbose_name="Hygrometer calibration corrections applied or not required",
                     ),
                 ),
                 (

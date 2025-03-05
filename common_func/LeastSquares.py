@@ -100,7 +100,8 @@ def ISO_test_a(Insts, chi_test, Rnge=[{'distance': 100}]):
         for d in Rnge:
             edm_spec = c0 + d['distance'] * ppm /1000000
             d['Manu_Spec'] = sqrt( c1**2 + edm_spec**2)
-            d['test_value'] = (chi2.ppf(0.95, dof) / dof) * d['Manu_Spec']
+            # ref ISO 17123:4 eq 21
+            d['test_value'] = sqrt(chi2.ppf(0.95, dof) / dof) * d['Manu_Spec']
             d['accept'] = chi_test['So'] < d['test_value']
         test_a = {
             'test': 'A',

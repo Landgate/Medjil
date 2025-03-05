@@ -102,8 +102,7 @@ class BulkEDMIReportForm(forms.Form):
     # Form used for bulk downloading calibration html reports
     # called by .view def bulk_report_download
     baseline = forms.ModelChoiceField(
-        queryset=CalibrationSite.objects.filter(
-            site_type='baseline'), 
+        queryset=CalibrationSite.objects.none(),
         label="Select Baseline")
     from_date = forms.DateField(
         widget=forms.DateInput(attrs={'type': 'date'}),
@@ -113,6 +112,16 @@ class BulkEDMIReportForm(forms.Form):
         widget=forms.DateInput(attrs={'type': 'date'}), 
         label="To Date",
         required=False)
+    
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        if user:
+            locations = list(user.locations.values_list('statecode', flat=True))
+            queryset = CalibrationSite.objects.filter(
+                Q(site_type='baseline') & Q(state__statecode__in=locations)
+            )
+            self.fields['baseline'].queryset = queryset
     
     
 class uPillarSurveyForm(forms.ModelForm):

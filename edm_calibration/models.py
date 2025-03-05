@@ -108,14 +108,14 @@ class uPillarSurvey(models.Model):
              help_text="Hygrometer, if used for survey",
              related_name="ufield_hygrometer")
     thermo_calib_applied = models.BooleanField(default=True,
-              verbose_name= 'thermometer calibration corrections applied',
+              verbose_name= 'thermometer calibration corrections applied or not required',
               help_text="The thermometer calibration correction"
                " has been applied prior to data import.")
     baro_calib_applied = models.BooleanField(default=True,
-              verbose_name= 'barometer calibration corrections applied',
+              verbose_name= 'barometer calibration corrections applied or not required',
               help_text="The barometer calibration correction has been applied prior to data import.")
     hygro_calib_applied = models.BooleanField(default=True,
-              verbose_name= 'Hygrometer calibration corrections applied',
+              verbose_name= 'Hygrometer calibration corrections applied or not required',
               help_text="The hygrometer correction has been applied prior to data import.")
     
     uncertainty_budget = models.ForeignKey(Uncertainty_Budget, on_delete = models.PROTECT,

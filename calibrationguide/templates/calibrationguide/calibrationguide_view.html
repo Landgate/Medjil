@@ -91,14 +91,14 @@
             <b>Medjil User Guides</b>
             <hr><hr>
             <div class="py-2"></div>
-            <a href="{% url 'calibrationguide:medjil-guide' %}" target="_blank" class="text-sm">General User Guide</a>
+            <a href="{{ medjil_guide.medjil_book.url }}" target="_blank" class="text-sm">General User Guide</a>
             <br>
             {% if user.is_staff %}
                 <div class="py-2"></div>
-                <a href="{% url 'calibrationguide:medjil-staff' %}" target="_blank" class="text-sm">Barcoded Staff Calibration</a>
+                <a href="{{ medjil_staff.content_book.url }}" target="_blank" class="text-sm">Barcoded Staff Calibration</a>
                 <br>
                 <div class="py-2"></div>
-                <a href="{% url 'calibrationguide:medjil-baseline' %}" target="_blank" class="text-sm">EDM Baseline Calibration</a>
+                <a href="{{ medjil_baseline.content_book.url }}" target="_blank" class="text-sm">EDM Baseline Calibration</a>
             {% endif %}
         </div>
         <br>

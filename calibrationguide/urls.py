@@ -28,10 +28,6 @@ urlpatterns = [
     path('create-medjil-guide/', views.medjil_guide_create, name='create-medjil-guide'),
     path('create-medjil-calib-guide/', views.medjil_guide_to_calib_create, name='create-medjil-calib-guide'),
     
-    path('medjil-guide/', views.display_medjil_guide, name='medjil-guide'),
-    path('medjil-baseline/', views.display_medjil_calib_baseline, name='medjil-baseline'),
-    path('medjil-staff/', views.display_medjil_calib_staff, name='medjil-staff'),
-
     path('manuals/', views.manual_view, name='manual_view'), 
     path('read_manual/<str:manual_name>', views.read_manual, name='read_manual'), 
 ]
