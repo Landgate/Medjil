@@ -273,9 +273,7 @@ def intercomparison(request, id=None):
             instance.html_report = html_report
             instance.save()
             
-            return render(request, 
-                          'edm_calibration/intercomparison_report_display.html',
-                          {'html_report': html_report})
+            return redirect('edm_calibration:intercomparison_report', id=instance.id)
 
     return render(request, 'edm_calibration/intercomparison_edit.html', {'form': form})
 

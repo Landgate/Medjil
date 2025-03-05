@@ -134,8 +134,9 @@ class uPillarSurvey(models.Model):
               null=True,
               blank=True,
               max_length=1000,
+              help_text="Uploaded copy of digital records or scanned fieldnotes.",
               validators=[validate_file_size],
-              verbose_name= 'Scanned fieldnotes')
+              verbose_name= 'Field record') 
     
     certificate = models.OneToOneField(
          EDMI_certificate, on_delete = models.SET_NULL , null = True, blank=True)

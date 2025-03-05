@@ -23,7 +23,7 @@ from common_func.Convert import (
 from math import sqrt, sin, cos, radians, pi
 from datetime import date
 from statistics import mean
-from scipy.stats import t
+from scipy.stats import t, linregress
 from sklearn.linear_model import LinearRegression
 from geodepy.survey import (
     radiations,
@@ -224,17 +224,12 @@ def edm_std_function(edm_observations, stddev_0_adj):
         std = o['std_slope_dist'] if o['std_slope_dist'] != 0 else stddev_0_adj
         std_dev.append(std)
     
-    # Convert lists to numpy arrays for faster operations
-    dist = np.array(dist).reshape((-1, 1))
-    std_dev = np.array(std_dev)
-    
-    # Perform linear regression
-    model = LinearRegression()
-    model.fit(dist, std_dev)
+    # Calculate the linear regression
+    slope, intercept, _, _, _ = linregress(dist, std_dev)
     
     #y = Ax + B
-    A = model.coef_[0]
-    B = model.intercept_
+    A = slope
+    B = intercept
     # The below has been changed based on Ruegers advice in Baseline Review item [A48]
     # if B < 0 :
     #     B=0
@@ -242,7 +237,31 @@ def edm_std_function(edm_observations, stddev_0_adj):
     
     return {'A':A, 'B':B}
 
+def hd_std_function (pillars, raw_lvl_obs):
+    # Find the first pillar
+    min_std = 10000000000
+    for pillar in raw_lvl_obs.values():
+        if pillar['rl_standard_deviation']<min_std:
+            min_std = pillar['rl_standard_deviation']
+            from_pillar=pillars.get(name=pillar['pillar'])
+            
+    sqrt_dists = []  # Distances in km
+    std_dev = []
+    for pillar in raw_lvl_obs.values():
+        to_pillar=pillars.get(name=pillar['pillar'])
+        d, _ = joins(
+            from_pillar.easting, from_pillar.northing,
+            to_pillar.easting, to_pillar.northing)
+        sqrt_dists.append(sqrt(d/1000))
+        std_dev.append(
+            float(pillar['rl_standard_deviation']))
 
+    # Calculate the linear regression
+    slope, intercept, _, _, _ = linregress(sqrt_dists, std_dev)
+
+    # y = Ax + B
+    return {'A':slope, 'B':intercept}
+    
     #-------------------------------------------------------------------------------#
     #---------------------------- Functions for UNCERTAINTY ------------------------#
     #-------------------------------------------------------------------------------#
@@ -930,7 +949,7 @@ def add_certified_dist_uc2(o, pillar_survey, uc_sources, std_dev_matrix, dof):
 
     return cd_uc
 
-def add_surveyed_uc2(o, edm_trend, pillar_survey, uc_sources, alignment_survey):
+def add_surveyed_uc2(o, edm_trend, hd_trend, pillar_survey, uc_sources, alignment_survey):
     """
     Adds surveyed uncertainties to the uncertainty budget based on the pillar survey model instance.
     :param o: Observation data dictionary.
@@ -956,35 +975,26 @@ def add_surveyed_uc2(o, edm_trend, pillar_survey, uc_sources, alignment_survey):
                 'degrees_of_freedom': 30,
                 'description': (
                     'Linear regression on EDM distance standard deviations '
-                    f'UC = k x ({edm_trend["A"] * 1000:.6f} x L + {edm_trend["B"] * 1000:.2f}) mm'
+                    f'UC = k x ({edm_trend["B"] * 1000:.2f} mm + {edm_trend["A"] * 1000:.3f} ppm)'
                 )
             }
         )
 
     # '10' - Pillar Certified Height Differences
     if pillar_survey.uncertainty_budget.auto_hgts:
-        frm_rl = alignment_survey[o['from_pillar']]
-        to_rl = alignment_survey[o['to_pillar']]
-
-        frm_rl['std_dev'] = (
-            float(frm_rl['rl_uncertainty']) / float(frm_rl['k_rl_uncertainty'])
-        )
-        to_rl['std_dev'] = (
-            float(to_rl['rl_uncertainty']) / float(to_rl['k_rl_uncertainty'])
-        )
-        km = abs((to_rl['std_dev']/12)**2 - (frm_rl['std_dev']/12)**2) #Even if it is not 12rootK this should still work,
-        comb_std = sqrt(km * 12)
-
         surveyed_uc.append(
             {
                 'group': '10',
                 'ab_type': 'B',
                 'distribution': 'N',
                 'units': 'm',
-                'std_dev': comb_std,
-                'degrees_of_freedom': 30,
+                'std_dev': sqrt(o['slope_dist']/1000) * hd_trend['A'] + hd_trend['B'],
                 'k': t.ppf(1 - 0.025, df=30),
-                'description': 'Pillar certified height differences'
+                'degrees_of_freedom': 30,
+                'description': (
+                    'Pillar height difference by linear regression as a function of the square root of distance '
+                    f'UC = k x ({hd_trend["A"] * 1000:.2f} x √(km) + {hd_trend["B"] * 1000:.2f}) mm'
+                )
             }
         )
 
@@ -1002,9 +1012,16 @@ def add_surveyed_uc2(o, edm_trend, pillar_survey, uc_sources, alignment_survey):
                 float(to_os['os_uncertainty']) / float(to_os['k_os_uncertainty'])
             )
 
-        comb_std = sqrt(
-            frm_os['OS_std_dev']**2 + to_os['OS_std_dev']**2
-        )
+        # comb_std = sqrt(
+        #     frm_os['OS_std_dev']**2 + to_os['OS_std_dev']**2
+        # )
+        # change made based on Ruegers advice in Baseline Review item [A23]
+        if frm_os['OS_std_dev'] < 0.0001:
+            comb_std = to_os['OS_std_dev']
+        elif to_os['OS_std_dev'] < 0.0001:
+            comb_std = frm_os['OS_std_dev']
+        else:
+            comb_std = min([frm_os['OS_std_dev'], to_os['OS_std_dev']])
 
         surveyed_uc.append(
             {

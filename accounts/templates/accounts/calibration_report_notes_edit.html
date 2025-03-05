@@ -73,5 +73,36 @@
         </form>
     </div>
 </article>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const siteSelect = document.getElementById('id_site');
+    const pillarSelect = document.getElementById('id_pillar');
 
+    const allPillarOptions = [
+        {% for option in form.fields.pillar.queryset %}
+            "{{ option }}",
+        {% endfor %}
+    ];
+
+    siteSelect.addEventListener('change', function() {
+        const selectedSite = siteSelect.options[siteSelect.selectedIndex].text;
+        const sitePrefix = selectedSite.split(' ')[0]; // Get the prefix (e.g., "Curtin")
+
+        // Clear current options in id_pillar
+        while (pillarSelect.options.length > 1) {
+            pillarSelect.remove(1);
+        }
+
+        // Add filtered options to id_pillar
+        allPillarOptions.forEach(function(optionText) {
+            if (optionText.startsWith(sitePrefix)) {
+                const option = document.createElement('option');
+                option.text = optionText;
+                option.value = optionText;
+                pillarSelect.add(option);
+            }
+        });
+    });
+});
+</script>
 {% endblock %}

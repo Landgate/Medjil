@@ -178,7 +178,8 @@ class CompanyForm(forms.ModelForm):
         
         widgets = {
             'company_name' : forms.TextInput(attrs={'placeholder':'Enter a company, e.g., Landgate'}),
-            'company_abbrev' : forms.TextInput(attrs={'placeholder':'Give an abbreviation, e.g., LG'}),
+            'company_abbrev' : forms.TextInput(attrs={'placeholder':'Enter a short abbreviation, e.g., LG'}),
+            'company_address' : forms.TextInput(attrs={'placeholder':'e.g., 1 Midland Square, MIDLAND WA 6056'}),
         }
 
     def clean_company_abbrev(self):

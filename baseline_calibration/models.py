@@ -457,8 +457,9 @@ class Pillar_Survey(models.Model):
         null=True,
         blank=True,
         max_length=1000,
+        help_text="Uploaded copy of digital records or scanned fieldnotes.",
         validators=[validate_file_size],
-        verbose_name= 'Scanned fieldnotes')    
+        verbose_name= 'Field record')    
     
     class Meta:
         ordering = ['baseline','survey_date']

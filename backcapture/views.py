@@ -255,13 +255,13 @@ def create_medjil_model(rx, request, commit_errors):
             rx_model['type'] = 'pu'
             if rx_model['is_pulse'] =='False': rx_model['type'] ='ph'
             if len(rx_model['manu_ref_refrac_index']) == 0:
-                rx_model['manu_ref_refrac_index'] = '999999999'
+                rx_model['manu_ref_refrac_index'] = None
             if len(rx_model['frequency']) == 0:
-                rx_model['frequency'] = '999999999'
+                rx_model['frequency'] = None
             if len(rx_model['unit_length']) == 0:
-                rx_model['unit_length'] = '999999999'
+                rx_model['unit_length'] = None
             if len(rx_model['carrier_wavelength']) == 0:
-                rx_model['carrier_wavelength'] = '999999999'
+                rx_model['carrier_wavelength'] = None
             try:
                 rx_model['medjil_specs_pk'], created = (
                     EDM_Specification.objects.get_or_create(
@@ -282,7 +282,7 @@ def create_medjil_model(rx, request, commit_errors):
                     rx_model['medjil_specs_pk'], created = (
                         EDM_Specification.objects.get_or_create(
                             edm_make_name = make,
-                            edm_model_name = model + ' .exe)',
+                            edm_model_name = model + '.bak',
                             edm_owner = request.user.company,
                             edm_type = rx_model['type'],
                             manu_unc_const = float(zpc) * 2,
@@ -307,7 +307,7 @@ def create_medjil_insts(rx, request, commit_errors):
             if rx_inst['inst_type'] == 'E':
                 rx_inst['medjil_pk'], _ = EDM_Inst.objects.get_or_create(
                     edm_number = rx_inst['serial_number'],
-                    edm_custodian = request.user,
+                    edm_custodian = None,
                     comment = rx_inst['comments'],
                     edm_specs = specs)
         except:
@@ -316,7 +316,7 @@ def create_medjil_insts(rx, request, commit_errors):
                 if rx_inst['inst_type'] == 'E':
                     rx_inst['medjil_pk'], _ = EDM_Inst.objects.get_or_create(
                         edm_number = rx_inst['serial_number'] + '.bak',
-                        edm_custodian = request.user,
+                        edm_custodian = None,
                         comment = rx_inst['comments'],
                         edm_specs = specs)
             except Exception as e:
@@ -326,7 +326,7 @@ def create_medjil_insts(rx, request, commit_errors):
             if rx_inst['inst_type'] == 'P':
                 rx_inst['medjil_pk'], _ = Prism_Inst.objects.get_or_create(
                     prism_number = rx_inst['serial_number'],
-                    prism_custodian = request.user,
+                    prism_custodian = None,
                     comment = rx_inst['comments'],
                     prism_specs = specs)
         except:
@@ -334,7 +334,7 @@ def create_medjil_insts(rx, request, commit_errors):
                 if rx_inst['inst_type'] == 'P':
                     rx_inst['medjil_pk'], _ = Prism_Inst.objects.get_or_create(
                         prism_number = rx_inst['serial_number'] + '.bak',
-                        prism_custodian = request.user,
+                        prism_custodian = None,
                         comment = rx_inst['comments'],
                         prism_specs = specs)
             except Exception as e:

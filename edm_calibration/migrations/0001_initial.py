@@ -84,7 +84,7 @@ class Migration(migrations.Migration):
                     models.BooleanField(
                         default=True,
                         help_text="Meterological corrections have been applied in the EDM instrument.",
-                        verbose_name="Atmospheric corrections applied to EDM data",
+                        verbose_name="Atmospheric corrections have been applied to imported EDM data",
                     ),
                 ),
                 (
@@ -148,9 +148,10 @@ class Migration(migrations.Migration):
                         blank=True,
                         null=True,
                         max_length=1000,
+                        help_text='Uploaded copy of digital records or scanned fieldnotes.',
                         upload_to=edm_calibration.models.get_upload_to_location,
                         validators=[common_func.validators.validate_file_size], 
-                        verbose_name="Scanned fieldnotes",
+                        verbose_name="Field record",
                     ),
                 ),
                 (

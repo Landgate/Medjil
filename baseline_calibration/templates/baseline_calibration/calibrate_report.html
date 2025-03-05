@@ -436,8 +436,8 @@
                 <td>{{c.uc_budget.11.std_dev|multiply:c.uc_budget.11.k|sigfigs:2}}</td>
                 <td>{{c.uc_budget.11.k|floatformat:2}}</td>
                 <td>{{c.reduced_level|floatformat:3}}</td>
-                <td>{{c.uc_budget.10.std_dev|multiply:c.uc_budget.10.k|sigfigs:2}}</td>
-                <td>{{c.uc_budget.10.k|floatformat:2}}</td>
+                <td>{{c.rl_standard_deviation|multiply:2|sigfigs:2}}</td>
+                <td>2.00</td>
             </tr>
         {% endfor %}
     </table>
@@ -594,8 +594,8 @@
         {% for p in alignment_survey %}
             <tr>
                 <td>{{ p.pillar }}</td>
-                <td>{{ p.reduced_level|floatformat:3 }}</td>
-                <td>{{ p.rl_uncertainty|floatformat:3 }}</td>
+                <td>{{ p.reduced_level|floatformat:4 }}</td>
+                <td>{{ p.rl_uncertainty|floatformat:4 }}</td>
             </tr>
         {% endfor %}
     </table>

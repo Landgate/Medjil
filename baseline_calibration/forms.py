@@ -442,14 +442,17 @@ class BulkBaselineReportForm(forms.Form):
     # called by .view def bulk_report_download    
     baseline = forms.ModelChoiceField(
         queryset=CalibrationSite.objects.none(),
-        label="Select Baseline")
+        label="Select Baseline",
+        help_text="Reports only exported for select the baseline.")
     from_date = forms.DateField(
         widget=forms.DateInput(attrs={'type': 'date'}),
         label="From Date",
+        help_text='Leave blank for all date ranges',
         required=False)
     to_date = forms.DateField(
         widget=forms.DateInput(attrs={'type': 'date'}), 
         label="To Date",
+        help_text='Leave blank for all date ranges',
         required=False)
     
     def __init__(self, *args, **kwargs):

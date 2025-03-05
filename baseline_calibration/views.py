@@ -71,6 +71,7 @@ from common_func.SurveyReductions import (
     add_surveyed_uc2,
     adjust_alignment_survey,
     reduce_sets_of_obs, 
+    hd_std_function,
     edm_std_function, 
     offset_slope_correction,
     refline_std_dev, 
@@ -607,8 +608,8 @@ def edm_observations_update(request, id):
 @user_passes_test(is_staff)
 @login_required(login_url="/accounts/login")
 def compute_calibration(request, id):
-    try:
-    # if 1==1:
+    # try:
+    if 1==1:
         # Retrieve the Pillar Survey instance and baseline dictionary of records
         pillar_survey = get_object_or_404(
             Pillar_Survey.objects.select_related(
@@ -727,8 +728,12 @@ def compute_calibration(request, id):
             p['reduced_level'] = float(raw_lvl_obs[k]['reduced_level'])
             p['rl_uncertainty'] = float(raw_lvl_obs[k]['rl_standard_deviation'])*2
             p['k_rl_uncertainty'] = 2
-        
+            
         edm_observations = reduce_sets_of_obs(raw_edm_obs)
+        
+        hd_trend = hd_std_function(
+            baseline['pillars'],
+            raw_lvl_obs)
         
         edm_trend = edm_std_function(
             edm_observations,
@@ -759,7 +764,7 @@ def compute_calibration(request, id):
                                     + o['Slope_Correction'])
     
             #----------------- Calculate Uncertainties -----------------#
-            o['uc_sources'] = add_surveyed_uc2(o, edm_trend,
+            o['uc_sources'] = add_surveyed_uc2(o, edm_trend, hd_trend,
                                               pillar_survey,
                                               uc_budget['sources'],
                                               alignment_survey)
@@ -863,9 +868,10 @@ def compute_calibration(request, id):
             cd['from_pillar'] = pillars[0]
             cd['delta_os'] = get_delta_os(alignment_survey,cd)
             cd['reduced_level'] = float(raw_lvl_obs[p]['reduced_level'])
+            cd['rl_standard_deviation'] = float(raw_lvl_obs[p]['rl_standard_deviation'])
         
             #--------------------- Add Type B --------------------------------------#
-            cd['uc_sources'] = add_surveyed_uc2(cd, edm_trend,
+            cd['uc_sources'] = add_surveyed_uc2(cd, edm_trend, hd_trend,
                                                pillar_survey,
                                                uc_budget['sources'],
                                                alignment_survey)
@@ -1041,7 +1047,7 @@ def compute_calibration(request, id):
         
         return render(request, 'baseline_calibration/display_report.html', context)
     
-    except Exception as e:
-        messages.error(request, f"An error occurred: {str(e)}")
-        return render(request, 'baseline_calibration/errors_report.html', 
-                      {})
+    # except Exception as e:
+    #     messages.error(request, f"An error occurred: {str(e)}")
+    #     return render(request, 'baseline_calibration/errors_report.html', 
+    #                   {})
