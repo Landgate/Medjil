@@ -1116,7 +1116,7 @@
                      specified
                      in metres (m) or millimetres (mm). All error sources belonging to this group will be combined
                      before the
-                     contribution to the total uncertainty of the calibration according to the following formula 4.7
+                     contribution to the total uncertainty of the calibration according to the following formula 5.7
                   </p>
                   <p>
                      <b>Temperature</b> = Uncertainty related to the temperature can be specified in degrees Celsius
@@ -1301,7 +1301,7 @@
                         <p>&emsp;&emsp;D<sub>ij</sub> = Distance between pillar i and pillar j
                         </p>
                         <p>&emsp;&emsp;A and B = parameters of the linear equation</p>
-                        <p>&emsp;&emsp;k = t<sub>(95%,100)</sub>
+                        <p>&emsp;&emsp;k = t<sub>(95%,30)</sub>
                      </li>
                      <li>Humidity - Hygrometer calibrated correction factor - Hygrometers used for baseline calibration
                         surveys must have a calibration certificate that indicates the uncertainty of the readings. Medjil will
@@ -1313,21 +1313,8 @@
                         degrees of freedom and a coverage factor of √3.</li>
                      <li>Offsets - Offsets - Table 5.4 shows the results of a typical alignment survey. The offset of
                         each pillar is surveyed from multiple pillars. The offset results with the same ‘To Pillar’ are
-                        grouped into sets, then the average and experimental standard deviations of these sets are tabulated.
-                        The uncertainty of each offset is derived from the standard deviation of the offset measurements at
-                        both the ‘From Pillar’ and the ‘To Pillar’.
-                        <div>$$ {\rm uc}_o=k\sqrt{\left(o_i^2+o_j^2\right)}\ \ \ (Eq. 5.19) $$ </div>
-                        <p>Where:</p>
-                        <p>&emsp;&emsp;uc<sub>o</sub> = Expanded uncertainty of the offset between pillar i and pillar j
-                        </p>
-                        <p>&emsp;&emsp;o<sub>i</sub> = Tabulated experimental standard deviation of the ‘From Pillar’
-                        </p>
-                        <p>&emsp;&emsp;o<sub>j</sub> = Tabulated experimental standard deviation of the ‘To Pillar’</p>
-                        <p>&emsp;&emsp;k = t<sub>(95%,30)</sub>
-                        </p>
-                        <p>This uncertainty source is assigned 30 degrees of freedom and the coverage factor is the
-                           t-student at 95% and 30 degrees of freedom t<sub>(95%,30)</sub>
-                        </p>
+                        grouped into sets, then the average and experimental standard deviations of these sets are computed.
+                        When determining the uncertainty of offsets between pillars i and j, the smallest non-zero uncertainty is adpoted as the combined uncertainty.
                      </li>
                      <li>Pressure - Barometer calibrated correction factor - Barometers used for calibration surveys
                         must have a calibration certificate that indicates the uncertainty of the readings. Medjil will automatically
@@ -1349,7 +1336,7 @@
                         inter-pillar distances are calculated from the CoFactorMatrix of baseline calibrations. This is
                         done by creating a design matrix for every combination of pillars and calculating another
                         CoFactorMatrix according to the formula:
-                        <div>$$ Q_2=A_2QA_2^T\ \ \ (Eq. 5.20)$$ </div>
+                        <div>$$ Q_2=A_2QA_2^T\ \ \ (Eq. 5.19)$$ </div>
                         <p>Where:</p>
                         <p>&emsp;&emsp;Q<sub>2</sub> = The secondary CoFactorMatrix</p>
                         <p>&emsp;&emsp;Q = The CoFactorMatrix from the LSA of calibrating a baseline</p>
@@ -1360,7 +1347,7 @@
                            calibration.
                            The inter-pillar distance standard uncertainties that correspond to EDMI calibrations are
                            used to calculate the ‘Uncertainty of Certified Distances’ according to the formula:</p>
-                        <p>&emsp;&emsp;uc<sub>ij</sub> = k * S<sub>ij</sub></p>
+                        <div>$$ uc_{ij} = k * S_{ij}\ \ \ (Eq. 5.20)$$</div>
                         <p>Where:</p>
                         <p>&emsp;&emsp;uc<sub>ij</sub> = Expanded uncertainty of a distance between pillar i and pillar
                            j</p>
