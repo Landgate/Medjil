@@ -733,7 +733,7 @@ def compute_calibration(request, id):
         
         hd_trend = hd_std_function(
             baseline['pillars'],
-            raw_lvl_obs)
+            raw_lvl_obs = raw_lvl_obs)
         
         edm_trend = edm_std_function(
             edm_observations,

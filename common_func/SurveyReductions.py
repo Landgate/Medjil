@@ -237,24 +237,37 @@ def edm_std_function(edm_observations, stddev_0_adj):
     
     return {'A':A, 'B':B}
 
-def hd_std_function (pillars, raw_lvl_obs):
+def hd_std_function (pillars, raw_lvl_obs=None, certified_dists=None):
     # Find the first pillar
     min_std = 10000000000
-    for pillar in raw_lvl_obs.values():
-        if pillar['rl_standard_deviation']<min_std:
-            min_std = pillar['rl_standard_deviation']
-            from_pillar=pillars.get(name=pillar['pillar'])
+    hgts = []
+    if raw_lvl_obs:
+        for lvl in raw_lvl_obs.values():
+            hgts.append(
+                {'name':lvl['pillar'], 'std_dev':lvl['rl_standard_deviation']})
+            if lvl['rl_standard_deviation']<min_std:
+                min_std = lvl['rl_standard_deviation']
+                from_pillar=pillars.get(name=lvl['pillar'])
+    
+    if certified_dists:
+        for name, dist in certified_dists.items():
+            hgts.append(
+                {'name':name,
+                 'std_dev':dist['rl_uncertainty'] /dist['k_rl_uncertainty']})
+            if dist['rl_uncertainty'] <min_std:
+                min_std = dist['rl_uncertainty']
+                from_pillar = pillars.get(name=name)
             
     sqrt_dists = []  # Distances in km
     std_dev = []
-    for pillar in raw_lvl_obs.values():
-        to_pillar=pillars.get(name=pillar['pillar'])
+    for pillar in hgts:
+        to_pillar=pillars.get(name=pillar['name'])
         d, _ = joins(
             from_pillar.easting, from_pillar.northing,
             to_pillar.easting, to_pillar.northing)
         sqrt_dists.append(sqrt(d/1000))
         std_dev.append(
-            float(pillar['rl_standard_deviation']))
+            float(pillar['std_dev']))
 
     # Calculate the linear regression
     slope, intercept, _, _, _ = linregress(sqrt_dists, std_dev)

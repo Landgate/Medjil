@@ -45,6 +45,7 @@ from common_func.Convert import (
 from common_func.SurveyReductions import (
     validate_survey2,
     apply_calib,
+    hd_std_function,
     edm_std_function,
     offset_slope_correction,
     slope_certified_dist,
@@ -498,6 +499,10 @@ def compute_calibration(request, id):
             std_list=['slope_dist'],
             mask_by='use_for_distance')
         
+        hd_trend = hd_std_function(
+            baseline_data['pillars'],
+            certified_dists = baseline_data['certified_dist'])
+        
         edm_trend = edm_std_function(
             edm_observations, 
             uc_budget['stddev_0_adj'])           #y = Ax + B
@@ -534,7 +539,7 @@ def compute_calibration(request, id):
                 baseline_data['std_dev_matrix'],
                 baseline_data['calibrated_baseline'].results.degrees_of_freedom)
             
-            o['uc_sources'] = add_surveyed_uc2(o, edm_trend,
+            o['uc_sources'] = add_surveyed_uc2(o, edm_trend, hd_trend,
                                                pillar_survey,
                                                o['uc_sources'],
                                                baseline_data['certified_dist'])
