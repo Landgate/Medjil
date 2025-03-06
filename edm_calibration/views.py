@@ -571,7 +571,7 @@ def compute_calibration(request, id):
                      o['Reduced_distance']]
             # Do not test for cyclic errors if unit length is not specified
             if pillar_survey.edm.edm_specs.unit_length:
-                d_term = ((2*pi*o['Reduced_distance'])
+                d_term = ((2*pi*o['slope_dist'])
                           / pillar_survey.edm.edm_specs.unit_length)
                 o['d_term'] = d_term
                 a_row.extend([
