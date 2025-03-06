@@ -244,7 +244,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=30)),
-                ('std_dev_of_zero_adjustment', models.DecimalField(decimal_places=4, help_text='Standard deviation applied to set of observations when all measured distances in set of observations are the same. (m)', max_digits=5, validators=[django.core.validators.MinValueValidator(5e-05)])),
+                ('std_dev_of_zero_adjustment', models.DecimalField(decimal_places=4, help_text='Standard deviation applied to set of observations when all measured distances in set of observations are exactly the same. (m)', max_digits=5, validators=[django.core.validators.MinValueValidator(5e-05)])),
                 ('company', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='accounts.company')),
                 ('auto_EDMI_scf',models.BooleanField(default=True, help_text="EDM Scale factor - EDMI Reg13 Scale correction factor")),
                 ('auto_EDMI_scf_drift',models.BooleanField(default=True, help_text="EDM Scale factor - EDM Scale correction factor (drift over time)")),

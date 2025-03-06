@@ -95,7 +95,7 @@ class Uncertainty_Budget(models.Model):
         default=0.00029, # Default set according to BASELINE review JM Rueger item [A47]
         validators = [MinValueValidator(0.00005)],
         help_text = "Standard deviation applied to set of observations when all"
-                    " measured distances in set of observations are ezactly the same. (m)")
+                    " measured distances in set of observations are exactly the same. (m)")
     
     # boolean fields to opt for populating uncertainty sources from register.
     auto_EDMI_scf = models.BooleanField(
