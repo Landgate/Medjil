@@ -611,13 +611,14 @@
                </p>
                <div>
                   $$
-                  v_i=zpc+scf*D^C_i+1C\sin{\left(2\pi\frac{D_i}{U}\right)+2C\cos{\left(2\pi\frac{D_i}{U}\right)+3C\sin{\left(4\pi\frac{D_i}{U}\right)+4C\cos{\left(4\pi\frac{D_i}{U}\right)}}}}+(D^C_i-D_i)\
+                  v_i=zpc+scf*D_i+1C\sin{\left(2\pi\frac{D^S_i}{U}\right)+2C\cos{\left(2\pi\frac{D^S_i}{U}\right)+3C\sin{\left(4\pi\frac{D^S_i}{U}\right)+4C\cos{\left(4\pi\frac{D^S_i}{U}\right)}}}}+(D^C_i-D_i)\
                   \ \ (Eq. 3.2)$$
                </div>
                <p>Where:</p>
                <p>&emsp;&emsp;v<sub>i</sub> = Residual is the difference between certified distance and the adjusted
                   observed distance</p>
-               <p>&emsp;&emsp;D<sub>i</sub> = Observed distance</p>
+               <div>$$D_i\ \ \ = Observed\ distance $$ </div>
+               <div>$$D^S_i\ \ \ = Slope\ distance $$ </div>
                <div>$$D_i^C\ \ \ = Certified\ baseline\ distance $$ </div>
                <p>The angular values (sin and cos values) are expressed in radians.</p>
                <p>Further the n observation equations for all distances measured on a certified baseline can be
@@ -628,7 +629,7 @@
                <div>$$ V=\left[\begin{matrix}v_1\\v_2\\...\\v_n\\\end{matrix}\right]\ \ \ (Eq. 3.4) $$ </div>
                <div>
                   $$
-                  A=\left[\begin{matrix}1&D_1&\sin{2\pi\frac{D_1}{U}}&\cos{2\pi\frac{D_1}{U}}&\sin{4\pi\frac{D_1}{U}}&\cos{4\pi\frac{D_1}{U}}\\1&D_2&\sin{2\pi\frac{D_2}{U}}&\cos{2\pi\frac{D_2}{U}}&\sin{4\pi\frac{D_2}{U}}&\cos{4\pi\frac{D_2}{U}}\\...&...&...&...&...&...\\1&D_n&\sin{2\pi\frac{D_n}{U}}&\cos{2\pi\frac{D_n}{U}}&\sin{4\pi\frac{D_n}{U}}&\cos{4\pi\frac{D_n}{U}}\\\end{matrix}\right]\
+                  A=\left[\begin{matrix}1&D_1&\sin{2\pi\frac{D^S_1}{U}}&\cos{2\pi\frac{D^S_1}{U}}&\sin{4\pi\frac{D^S_1}{U}}&\cos{4\pi\frac{D^S_1}{U}}\\1&D_2&\sin{2\pi\frac{D^S_2}{U}}&\cos{2\pi\frac{D^S_2}{U}}&\sin{4\pi\frac{D^S_2}{U}}&\cos{4\pi\frac{D^S_2}{U}}\\...&...&...&...&...&...\\1&D_n&\sin{2\pi\frac{D^S_n}{U}}&\cos{2\pi\frac{D^S_n}{U}}&\sin{4\pi\frac{D^S_n}{U}}&\cos{4\pi\frac{D^S_n}{U}}\\\end{matrix}\right]\
                   \ \ (Eq. 3.5)$$
                </div>
                <div>
