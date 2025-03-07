@@ -794,7 +794,7 @@ def compute_calibration(request, id):
                         o['uc_combined']['std_dev']**2)
             matrix_P.append(P_row)
              
-        matrix_y, vcv_matrix, chi_test, residuals = LSA(matrix_A, matrix_x, matrix_P)
+        matrix_y, _, lsa_stats, residuals = LSA(matrix_A, matrix_x, matrix_P)
         
         for o in edm_observations.values():
             o['residual'] = residuals[o['id']]['residual']
@@ -807,7 +807,7 @@ def compute_calibration(request, id):
                 ISO_test_b(
                     {'dof': prev.results.degrees_of_freedom,
                      'So': prev.results.experimental_std_dev},
-                    chi_test
+                    lsa_stats
                 )
             )
         else:
@@ -820,11 +820,10 @@ def compute_calibration(request, id):
             ISO_test_c(
                 matrix_y[-1]['value'],
                 matrix_y[-1]['std_dev'],
-                chi_test))
+                lsa_stats))
         
         #-------------- Extract pillar to pillar uncertainties from VCV---------------#
-        # Formula 6.10 (6.13) - Adjustment Computation (Ghilani) 4th Edition
-        
+        # Formula 6.10 (6.13) - Adjustment Computation (Ghilani) 4th Edition        
         vcv_A = []
         bay = []
         for i0, p0 in enumerate(pillars[:-1]):
@@ -837,9 +836,8 @@ def compute_calibration(request, id):
                 bay.append(p0+' - '+ p1)
                 vcv_A.append(A_row)
         
-        
         vcv_A = np.array(vcv_A, dtype=object)
-        sigma_vv = vcv_A @ vcv_matrix @ vcv_A.T
+        sigma_vv = vcv_A @ lsa_stats['variance_covariance'] @ vcv_A.T
         
         # save data to session and commit form Submit
         request.session['bay_' + str(id)] = bay
@@ -875,7 +873,7 @@ def compute_calibration(request, id):
                                                pillar_survey,
                                                uc_budget['sources'],
                                                alignment_survey)
-            cd['uc_sources'] = add_typeB(cd['uc_sources'], d, matrix_y, chi_test['dof'])
+            cd['uc_sources'] = add_typeB(cd['uc_sources'], d, matrix_y, lsa_stats['dof'])
         
             cd['uc_budget'] = refline_std_dev(cd, 
                                               alignment_survey,
@@ -1020,7 +1018,7 @@ def compute_calibration(request, id):
                    'calib':calib,
                    'baseline': baseline,
                    'certified_dists': certified_dists,
-                   'chi_test':chi_test,
+                   'chi_test':lsa_stats,
                    'ISO_test':ISO_test,
                    'alignment_survey': alignment_survey,
                    'edm_observations': edm_observations,
@@ -1035,8 +1033,8 @@ def compute_calibration(request, id):
         request.session['pillar_survey_result_' + str(id)] = {
             'zero_point_correction': matrix_y[n]['value'],
             'zpc_uncertainty': matrix_y[n]['std_dev'],
-            'degrees_of_freedom': chi_test['dof'],
-            'experimental_std_dev': chi_test['So'],
+            'degrees_of_freedom': lsa_stats['dof'],
+            'experimental_std_dev': lsa_stats['So'],
             'html_report': html_report
             }           
         

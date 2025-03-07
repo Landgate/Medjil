@@ -406,6 +406,11 @@
 </div>
 <div class="text-center">
     <h2>Certified Baseline Distances</h2>
+    <div class="flexbox-container_IB">
+        <div class="flexbox-item_800_IB flexbox-item-left_IB">
+            <p>All certified distances are from pillar {{ certified_dists.0.from_pillar }} and on the same horizontal and vertical plane at a reference height of {{ baseline.site.reference_height|floatformat:3 }} mAHD. Slope corrections on reduced distances have been calculated using an earth radius of {{ baseline.d_radius|floatformat:3 }} m.</p>
+        </div>
+    </div>
     <table style="margin-left:auto;margin-right:auto;font-size:10.0pt;width:800px;">
         <tr>
             <th class="text-center">To</th>
@@ -435,23 +440,19 @@
                 <td>{{c.delta_os|floatformat:3}}</td>
                 <td>{{c.uc_budget.11.std_dev|multiply:c.uc_budget.11.k|sigfigs:2}}</td>
                 <td>{{c.uc_budget.11.k|floatformat:2}}</td>
-                <td>{{c.reduced_level|floatformat:3}}</td>
+                <td>{{c.reduced_level|floatformat:4}}</td>
                 <td>{{c.rl_standard_deviation|multiply:2|sigfigs:2}}</td>
                 <td>2.00</td>
             </tr>
         {% endfor %}
     </table>
     <div class="flexbox-container_IB">
-        <div class="flexbox-item_800_IB flexbox-item-left_IB">
-            <p>All certified distances are from pillar {{ certified_dists.0.from_pillar }} and on the same horizontal and vertical plane at a reference height of {{ baseline.site.reference_height|floatformat:3 }} mAHD.</p>
-        </div>
-    </div>
-    <div class="flexbox-container_IB">
         <div class="flexbox-item_800_IB flexbox-item-right_IB">
             {% if pillar_survey.some_lum_adopted %}
                 <i>* LUM has been adopted</i><br>
             {% endif %}
-            <i>*k - Coverage factor for Expanded Uncertainty (95%)</i>
+            <i>*k - Coverage factor for Expanded Uncertainty (95%)</i><br>
+            <i>^ Uncertainties of parameters have been adjusted by the square root of a-posteriori variance factor</i>
         </div>
     </div>
 </div>
@@ -467,11 +468,11 @@
             <td class="text-left">95%</td>
         </tr>
         <tr>
-            <td class="text-left">Estimated Variance Factor</td>
+            <td class="text-left">A-posteriori Variance Factor</td>
             <td class="text-left"> {{ chi_test.Variance|floatformat:2 }}</td>
         </tr>
         <tr>
-            <td class="text-left">Experimental Standard Deviation (m)</td>
+            <td class="text-left">Experimental Standard Deviation of a single measured distance, s (m)</td>
             <td class="text-left"> {{ chi_test.So|floatformat:5 }}</td>
         </tr>
         <tr>
@@ -663,7 +664,7 @@
                 {% with edm_observations|first as o %}
                     <tr>
                         <th class="text-center" colspan = '2'>Pillars</th>
-                        <th class="text-center" colspan = '{{ o.uc_budget|length }}'>Standard Deviation (mm)</th>
+                        <th class="text-center" colspan = '{{ o.uc_budget|length }}'>Apriori Standard Deviation (mm)</th>
                     </tr>
                     <tr>
                         <th onclick="sortTable(this)" class="text-center">From</th>
@@ -679,13 +680,9 @@
                     <tr>
                         <td>{{o.from_pillar}}</td>
                         <td>{{o.to_pillar}}</td>
-                        <!--Uncertainties-->
+                        <!--Standard Deviation (mm)-->
                         {% for s in o.apriori_uc_budget.values %}
-                            {% if s.units == 'm' %}
-                                <td>{{ s.ui|multiply:1000|sigfigs:2 }}</td>
-                            {% else %}
-                                <td>{{ s.ui|sigfigs:2 }}</td>
-                            {% endif %}
+                            <td>{{ s.ui|multiply:1000|sigfigs:2 }}</td>
                         {% endfor %}
                     </tr>
                 {% endfor %}
@@ -813,7 +810,7 @@
                             <th onclick="sortTable(this)" class="text-center">Slope Dist. {{ forloop.counter }}</th>
                         {% endfor %}
                             <th onclick="sortTable(this)" class="text-center">Slope Dist. (m)</th>
-                            <th onclick="sortTable(this)" class="text-center">Dist. Std (mm)</th>
+                            <th onclick="sortTable(this)" class="text-center">Dist. Std Dev (mm)</th>
                             <th onclick="sortTable(this)" class="text-center">Offset</th>
                             <th onclick="sortTable(this)" class="text-center">Delta Height</th>
                             <th onclick="sortTable(this)" class="text-center">EDMI Calibration</th>

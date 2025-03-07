@@ -198,8 +198,9 @@ def offset_slope_correction(o, level_observations, alignment_survey, d_radius, h
     return o
 
 
-def slope_certified_dist(o, certified_dist, d_radius):
-    h_ref = mean([float(o['reduced_level']) for o in certified_dist.values()])
+def slope_certified_dist(o, certified_dist, d_radius, h_ref=None):
+    if h_ref==None:
+        h_ref = mean([float(o['reduced_level']) for o in certified_dist.values()])
 
     rl1, rl2, delta_rl = get_delta_rl(certified_dist, o)
     
@@ -234,7 +235,6 @@ def edm_std_function(edm_observations, stddev_0_adj):
     # if B < 0 :
     #     B=0
     #     A=np.average(std_dev)
-    
     return {'A':A, 'B':B}
 
 def hd_std_function (pillars, raw_lvl_obs=None, certified_dists=None):
@@ -265,9 +265,9 @@ def hd_std_function (pillars, raw_lvl_obs=None, certified_dists=None):
         d, _ = joins(
             from_pillar.easting, from_pillar.northing,
             to_pillar.easting, to_pillar.northing)
-        sqrt_dists.append(sqrt(d/1000))
+        sqrt_dists.append(sqrt(d/1000)) # m to km
         std_dev.append(
-            float(pillar['std_dev']))
+            float(pillar['std_dev']))   # std_dev in m
 
     # Calculate the linear regression
     slope, intercept, _, _, _ = linregress(sqrt_dists, std_dev)
@@ -988,7 +988,7 @@ def add_surveyed_uc2(o, edm_trend, hd_trend, pillar_survey, uc_sources, alignmen
                 'degrees_of_freedom': 30,
                 'description': (
                     'Linear regression on EDM distance standard deviations '
-                    f'UC = k x ({edm_trend["B"] * 1000:.2f} mm + {edm_trend["A"] * 1000:.3f} ppm)'
+                    f'UC = k x ({edm_trend["B"] * 1000:.2f} mm + {edm_trend["A"] * 1000000:.3f} ppm)'
                 )
             }
         )
@@ -1001,7 +1001,7 @@ def add_surveyed_uc2(o, edm_trend, hd_trend, pillar_survey, uc_sources, alignmen
                 'ab_type': 'B',
                 'distribution': 'N',
                 'units': 'm',
-                'std_dev': sqrt(o['slope_dist']/1000) * hd_trend['A'] + hd_trend['B'],
+                'std_dev': sqrt(o['slope_dist']/1000) * hd_trend['A'] + hd_trend['B'], # std_dev in m
                 'k': t.ppf(1 - 0.025, df=30),
                 'degrees_of_freedom': 30,
                 'description': (

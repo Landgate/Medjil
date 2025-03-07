@@ -281,6 +281,11 @@
 </div>
 <div class="text-center">
     <h2>Certified Baseline Distances Used</h2>
+    <div class="flexbox-container_IB">
+        <div class="flexbox-item_800_IB flexbox-item-left_IB">
+            <p>All certified distances are from pillar {{ baseline.pillars.0.name }} and on the same horizontal and vertical plane at a reference height of {{ baseline.calibrated_baseline.results.reference_height|floatformat:3 }} mAHD. Slope corrections on reduced distances have been calculated using an earth radius of {{ baseline.d_radius|floatformat:3 }} m.</p>
+        </div>
+    </div>
     <table style="margin-left:auto;margin-right:auto;font-size:10.0pt;width:800px;">
         <tr>
             <th class="text-center">To</th>
@@ -309,17 +314,12 @@
                 <td>{{c.offset|floatformat:3}}</td>
                 <td>{{c.os_uncertainty|sigfigs:2}}</td>
                 <td>{{c.k_os_uncertainty|floatformat:2}}</td>
-                <td>{{c.reduced_level|floatformat:3}}</td>
+                <td>{{c.reduced_level|floatformat:4}}</td>
                 <td>{{c.rl_uncertainty|sigfigs:2}}</td>
                 <td>{{c.k_rl_uncertainty|floatformat:2}}</td>
             </tr>
         {% endfor %}
     </table>
-    <div class="flexbox-container_IB">
-        <div class="flexbox-item_800_IB flexbox-item-left_IB">
-            <p>All certified distances are from pillar {{ baseline.pillars.0.name }} and on the same horizontal and vertical plane at a reference height of {{ baseline.calibrated_baseline.results.reference_height|floatformat:3 }} mAHD.</p>
-        </div>
-    </div>
     <div class="flexbox-container_IB">
         <div class="flexbox-item_800_IB flexbox-item-right_IB">
             <i>*k - Coverage factor for Expanded Uncertainty (95%)</i>
@@ -330,45 +330,6 @@
             <hr>
         </div>
     </div>
-</div>
-<div>
-    <h2 class="text-center">Least Squares Adjustment Summary</h2>
-    <table style="margin-left:auto;margin-right:auto;font-size:10.0pt;width:800px;">
-        <tr>
-            <th>Description</th>
-            <th>Value</th>
-        </tr>
-        <tr>
-            <td class="text-left">Confidence Level</td>
-            <td class="text-left">95%</td>
-        </tr>
-        <tr>
-            <td class="text-left">A-priori Scale Factor Applied</td>
-            <td class="text-left"> {{ pillar_survey.scalar|floatformat:2 }}</td>
-        </tr>
-        <tr>
-            <td class="text-left">Estimated Variance Factor</td>
-            <td class="text-left"> {{ chi_test.Variance|floatformat:2 }}</td>
-        </tr>
-        <tr>
-            <td class="text-left">Experimental Standard Deviation of a single measured distance, s.</td>
-            <td class="text-left"> {{ chi_test.So|floatformat:5 }} (m)</td>
-        </tr>
-        <tr>
-            <td class="text-left">Number of Degrees of Freedom</td>
-            <td class="text-left"> {{ chi_test.dof }}</td>
-        </tr>
-        <tr>
-            <td class="text-left">Coverage Factor</td>
-            <td class="text-left"> {{ chi_test.k|floatformat:2 }}</td>
-        </tr>
-        <tr>
-            <td class="text-left">Chi-Square Test of the Variance Factor &nbsp;&nbsp;&nbsp;&nbsp;({{ chi_test.chi_lower|floatformat:3 }} &#60 {{ chi_test.Variance|floatformat:3 }} &#60 {{ chi_test.chi_upper|floatformat:3 }})</td>
-            <td class="text-left">
-                <B>{{ chi_test.test }}</B>
-            </td>
-        </tr>
-    </table>
 </div>
 <div>
     <h2 class="text-center">Estimated Instrument Correction</h2>
@@ -448,6 +409,11 @@
                 </tr>
             {% endfor %}
         </table>
+        <div class="flexbox-container_IB">
+            <div class="flexbox-item_800_IB flexbox-item-right_IB">
+                <i>^ Uncertainties of parameters have been adjusted by the square root of a-posteriori variance factor</i>
+            </div>
+        </div>
     </div>
     <div class="flexbox-container_IB">
         <div class="flexbox-item_800_IB">
@@ -530,7 +496,51 @@
                 </tr>
             {% endfor %}
         </table>
+        <div class="flexbox-container_IB">
+            <div class="flexbox-item_800_IB flexbox-item-right_IB">
+                <i>^ uncertainties of parameters have been adjusted by the square root of a-posteriori variance factor</i>
+            </div>
+        </div>
     </div>
+</div>
+<div>
+    <h2 class="text-center">Least Squares Adjustment Summary</h2>
+    <table style="margin-left:auto;margin-right:auto;font-size:10.0pt;width:800px;">
+        <tr>
+            <th>Description</th>
+            <th>Value</th>
+        </tr>
+        <tr>
+            <td class="text-left">Confidence Level</td>
+            <td class="text-left">95%</td>
+        </tr>
+        <tr>
+            <td class="text-left">A-priori Scale Factor Applied</td>
+            <td class="text-left"> {{ pillar_survey.scalar|floatformat:2 }}</td>
+        </tr>
+        <tr>
+            <td class="text-left">A-posteriori Variance Factor</td>
+            <td class="text-left"> {{ chi_test.Variance|floatformat:2 }}</td>
+        </tr>
+        <tr>
+            <td class="text-left">Experimental Standard Deviation of a single observation, s.</td>
+            <td class="text-left"> {{ chi_test.So|floatformat:5 }} (m)</td>
+        </tr>
+        <tr>
+            <td class="text-left">Number of Degrees of Freedom</td>
+            <td class="text-left"> {{ chi_test.dof }}</td>
+        </tr>
+        <tr>
+            <td class="text-left">Coverage Factor</td>
+            <td class="text-left"> {{ chi_test.k|floatformat:2 }}</td>
+        </tr>
+        <tr>
+            <td class="text-left">Chi-Square Test of the Variance Factor &nbsp;&nbsp;&nbsp;&nbsp;({{ chi_test.chi_lower|floatformat:3 }} &#60 {{ chi_test.Variance|floatformat:3 }} &#60 {{ chi_test.chi_upper|floatformat:3 }})</td>
+            <td class="text-left">
+                <B>{{ chi_test.test }}</B>
+            </td>
+        </tr>
+    </table>
 </div>
 <div class="text-center">
     <h2>Statistical Tests</h2>
@@ -708,7 +718,7 @@
                 {% with edm_observations|first as o %}
                     <tr>
                         <th class="text-center" colspan = '2'>Pillars</th>
-                        <th class="text-center" colspan = '{{ o.uc_budget|length }}'>Standard Deviation (mm)</th>
+                        <th class="text-center" colspan = '{{ o.uc_budget|length }}'>Apriori Standard Deviation (mm)</th>
                     </tr>
                     <tr>
                         <th onclick="sortTable(this)" class="text-center">From</th>
@@ -724,7 +734,7 @@
                     <tr>
                         <td>{{o.from_pillar}}</td>
                         <td>{{o.to_pillar}}</td>
-                        <!--Uncertainties-->
+                        <!--Standard Deviation (mm)-->
                         {% for s in o.apriori_uc_budget.values %}
                             <td>{{ s.ui|multiply:1000|sigfigs:2 }}</td>
                         {% endfor %}

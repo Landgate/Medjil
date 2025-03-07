@@ -523,7 +523,8 @@ def compute_calibration(request, id):
             
             o['certified_slope_dist'] = (slope_certified_dist(o,
                                          baseline_data['certified_dist'],
-                                         baseline_data['d_radius']))
+                                         baseline_data['d_radius'],
+                                         baseline_data['calibrated_baseline'].results.reference_height))
             o['diff_to_certified_sd'] = (o['slope_dist']
                                          - o['certified_slope_dist'])
             
@@ -570,6 +571,7 @@ def compute_calibration(request, id):
             a_row = [1,
                      o['Reduced_distance']]
             # Do not test for cyclic errors if unit length is not specified
+            # See also Rueger 1984e eq. 15a
             if pillar_survey.edm.edm_specs.unit_length:
                 d_term = ((2*pi*o['slope_dist'])
                           / pillar_survey.edm.edm_specs.unit_length)
