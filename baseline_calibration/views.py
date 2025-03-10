@@ -321,7 +321,8 @@ def certified_distances_home(request, id):
                     '#00FF00', '#008000', '#00FFFF', '#008080', 
                     '#0000FF', '#000080', '#FF00FF', '#800080']
     
-    labels = [pillar_survey.survey_date for pillar_survey in pillar_surveys]
+    labels = [pillar_survey.survey_date for pillar_survey in pillar_surveys 
+              if pillar_survey.results.status == 'publish']
     dataset1 = []
     dataset2 = []
     dataset3 = []
