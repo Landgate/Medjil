@@ -222,6 +222,15 @@ class uPillarSurveyForm(forms.ModelForm):
             raise forms.ValidationError("The computation date cannot be in the future!")
         return computation_date
 
+    def clean(self):
+        cleaned_data = super().clean()
+        site = cleaned_data.get('site')
+        calibrated_baseline = cleaned_data.get('calibrated_baseline')
+        
+        if site is None and calibrated_baseline:
+            cleaned_data['site'] = calibrated_baseline.baseline
+        
+        return cleaned_data
 
 class UploadSurveyFilesForm(forms.Form):
     edm_file = forms.FileField(
