@@ -298,6 +298,7 @@ td .submit-button {
   border: none; 
   box-shadow: none;
   margin: auto auto;
+  text-align: center;
 }
 
 .approvals-form input[type=email],
