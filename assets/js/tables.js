@@ -62,7 +62,7 @@ function getColumnIndex(header) {
     }
     columnIndex += th.colSpan || 1;
   }
-  console.log(columnIndex);
+  
   return columnIndex;
 }
 
