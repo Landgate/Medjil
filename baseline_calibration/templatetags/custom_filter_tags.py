@@ -36,3 +36,14 @@ def sigfigs(x, sig):
     if rnd <= 0: rnd=0
     fmt="{:."+str(rnd)+"f}"
     return(fmt.format(aVal))
+
+
+@register.filter
+def style_for_E(value):
+    if abs(value) > 1:
+        # style with red fill
+        return 'style="background-color:rgba(255, 0, 0, 0.4);"'
+    elif abs(value) > 0.75:
+        # style with orange fill
+        return 'style="background-color:rgba(255, 165, 0, 0.4);"'
+    return ''

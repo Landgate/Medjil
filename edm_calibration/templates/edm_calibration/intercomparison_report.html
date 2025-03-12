@@ -201,7 +201,7 @@
                             <td>{{rw.lab_uc|sigfigs:2}}</td>
                             <td>{{rw.ref|floatformat:5}}</td>
                             <td>{{rw.ref_uc|sigfigs:2}}</td>
-                            <td>{{rw.E|floatformat:2}}</td>
+                            <td {{ rw.E|style_for_E|safe }}>{{ rw.E|floatformat:2 }}</td>
                         </tr>
                     {% endfor %}
                 </table>
