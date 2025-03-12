@@ -43,7 +43,6 @@ def guide_view(request):
     calib_locations = Location.objects.filter(id__in=location_list)
     
     medjil_guide = MedjilUserGuide.objects.first()
-    print(medjil_guide)
     medjil_baseline = MedjilGuideToSiteCalibration.objects.filter(site_type='baseline').first()
     medjil_staff = MedjilGuideToSiteCalibration.objects.filter(site_type='range').first()
     

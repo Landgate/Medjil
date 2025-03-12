@@ -27,6 +27,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from formtools.wizard.views import NamedUrlSessionWizardView
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
+from django.db.models import Q
 
 # Forms
 from .forms import (CountryForm, 
@@ -48,8 +49,13 @@ from baseline_calibration.models import Certified_Distance
 # Create your views here.
 @login_required(login_url="/accounts/login") 
 def site_home(request):
-    staff_ranges = CalibrationSite.objects.filter(site_type = 'staff_range')
-    baselines = CalibrationSite.objects.filter(site_type = 'baseline')
+    locations = list(request.user.locations.values_list('statecode', flat=True))
+    calibration_sites = CalibrationSite.objects.filter(
+        Q(state__statecode__in = locations)).order_by(
+            'state__statecode', 'site_name')
+    
+    staff_ranges = calibration_sites.filter(site_type = 'staff_range')
+    baselines = calibration_sites.filter(site_type = 'baseline')
     
     filter_states = CalibrationSite.objects.filter(country__name__exact = 'Australia').order_by('state').values('state').distinct()
     state_list = [('None', '--- Select one ---'),]
@@ -133,7 +139,7 @@ def pillar_create(request, id):
     existPillarNumbers = []
     existingPillarInfo = {}
     if Pillar.objects.all().exists():
-        pillar_numbers = Pillar.objects.all().values('name')
+        pillar_numbers = Pillar.objects.filter(site_id = site_id.id).values('name')
         for pillar in pillar_numbers:
             existPillarNumbers.append(int(pillar['name']))
 

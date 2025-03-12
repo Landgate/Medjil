@@ -24,7 +24,7 @@ from .models import *
 @admin.register(uPillarSurvey, site=admin_site)
 class UPillarSurveyAdmin(admin.ModelAdmin):
     list_display = ['calibrated_baseline', 'survey_date', 'observer', 'job_number', 'edm']
-    list_filter = ['site']
+    list_filter = ['site', 'edm__edm_specs__edm_owner']
     ordering = ['site', 'survey_date']
 
 @admin.register(uEdmObservation, site=admin_site)
@@ -42,7 +42,7 @@ try:
     @admin.register(uPillarSurvey, site=medjil_super_site)
     class UPillarSurveyAdmin(admin.ModelAdmin):
         list_display = ['calibrated_baseline', 'survey_date', 'observer', 'job_number', 'edm']
-        list_filter = ['site']
+        list_filter = ['site', 'edm__edm_specs__edm_owner']
         ordering = ['site', 'survey_date']
 
     @admin.register(uEdmObservation, site=medjil_super_site)
