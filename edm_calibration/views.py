@@ -709,15 +709,19 @@ def compute_calibration(request, id):
         
         # Perform ISO statistical tests
         ISO_test=[]
+        max_dist = max([round(d['distance'],0) for d in baseline_data['certified_dist'].values()])
         ISO_test.append(
             ISO_test_a(
                 pillar_survey,
                 chi_test,
                 [{'distance':50},
-                 {'distance':100},
-                 {'distance':200},
-                 {'distance':400}, 
-                 {'distance':600}])
+                 {'distance':150},
+                 {'distance':300}, 
+                 {'distance':max_dist},
+                 {'distance':max_dist*2},
+                 {'distance':max_dist*3},
+                 {'distance':max_dist*4}],
+                max_dist)
             )
         
         if calibrations['edmi']:

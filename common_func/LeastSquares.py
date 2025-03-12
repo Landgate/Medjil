@@ -50,9 +50,9 @@ def LSA(A, x, P=None):
     vcv = variance_factor * Q
     
     # (ISO 17123-4:2012 eq.14 & Baseline Eq eq.7.5)
-    # Make sure that the Weight matrix is scaled so that max value is 1.
+    # Make sure that the Weight matrix is scaled so that average value is 1.
     # Ghilani (2017) 16.10 & Example 16.6 (4)
-    W = P / np.max(P)
+    W = P / np.average(np.diagonal(P))
     So = sqrt((r.T @ W @ r) / dof)
 
     # Standard residuals
@@ -99,7 +99,7 @@ def LSA(A, x, P=None):
     return matrix_y, Q, lsa_stats, residuals
 
 
-def ISO_test_a(Insts, lsa_stats, Rnge=[{'distance': 100}]):
+def ISO_test_a(Insts, lsa_stats, Rnge=[{'distance': 100}], max_dist=100):
     try:
         # Please note the database units for specifications are in mm
         k0 = float(Insts.edm.edm_specs.manu_unc_k)
@@ -108,16 +108,24 @@ def ISO_test_a(Insts, lsa_stats, Rnge=[{'distance': 100}]):
         k1 = float(Insts.prism.prism_specs.manu_unc_k)
         c1 = (float(Insts.prism.prism_specs.manu_unc_const)/1000) / k1
         dof = lsa_stats['dof']
-        
+        q_xx = lsa_stats['variance_covariance']
+                
         for d in Rnge:
             edm_spec = c0 + d['distance'] * ppm /1000000
             d['Manu_Spec'] = sqrt( c1**2 + edm_spec**2)
+            # Rueger (1984e) eq. 29
+            vector_f = [1, d['distance'], 1, 0, 1, 0][:len(q_xx)]
+            vector_f = np.array(vector_f)
+            q_ff = vector_f @ q_xx @ vector_f.T
+            sigma_ic = sqrt(q_ff)
+            # Rueger (1984e) eq. 32
+            d['test_value'] = t.ppf(0.975, dof) * sigma_ic            
             # ref ISO 17123:4 eq 21
-            d['test_value'] = sqrt(chi2.ppf(0.95, dof) / dof) * d['Manu_Spec']
-            d['accept'] = lsa_stats['So'] < d['test_value']
+            d['accept'] = d['test_value'] < d['Manu_Spec']
+            if d['distance'] > max_dist: d['extraoplated'] = "*"
         test_a = {
             'test': 'A',
-            'hypothesis': 'The experimental standard deviation, s, is smaller than or equal to the manufacturers specifications for the Instrument and prism combination.',
+            'hypothesis': 'The experimental standard deviations are smaller than or equal to the manufacturers specifications for the Instrument and prism combination.',
             'test_ranges': Rnge,
             'accept': False not in [a['accept'] for a in Rnge]
         }

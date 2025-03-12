@@ -523,8 +523,8 @@
             <td class="text-left"> {{ chi_test.Variance|floatformat:2 }}</td>
         </tr>
         <tr>
-            <td class="text-left">Experimental Standard Deviation of a single observation, s.</td>
-            <td class="text-left"> {{ chi_test.So|floatformat:5 }} (m)</td>
+            <td class="text-left">Experimental Standard Deviation of a single observation, s</td>
+            <td class="text-left"> {{ chi_test.So|multiply:1000|floatformat:2 }} mm</td>
         </tr>
         <tr>
             <td class="text-left">Number of Degrees of Freedom</td>
@@ -566,13 +566,16 @@
                             </tr>
                             {% for d in t.test_ranges %}
                                 <tr>
-                                    <td>{{ d.distance }}</td>
+                                    <td>{{ d.distance|floatformat:0 }}</td>
                                     <td>{{ d.Manu_Spec|floatformat:4 }}</td>
-                                    <td>{{ d.test_value|floatformat:4 }}</td>
+                                    <td>{{ d.test_value|floatformat:4 }} {{ d.extraoplated }}</td>
                                     <td>{{ d.accept }}</td>
                                 </tr>
                             {% endfor %}
                         </table>
+                        <div class="text-right">
+                            <i>* Values based on extrapolation</i>
+                        </div>
                     </td>
                 {% else %}
                     <td class="text-left">{{ t.hypothesis|linebreaks }}</td>
@@ -978,8 +981,8 @@
             <td class="text-left">95%</td>
         </tr>
         <tr>
-            <td class="text-left">Experimental Standard Deviation of a single measured distance (m)</td>
-            <td class="text-left"> {{ iso_full_test.chi_test.So|floatformat:5 }}</td>
+            <td class="text-left">Experimental Standard Deviation of a single measured distance, s.</td>
+            <td class="text-left"> {{ iso_full_test.chi_test.So|multiply:1000|floatformat:2 }} mm</td>
         </tr>
         <tr>
             <td class="text-left">Number of Degrees of Freedom</td>
