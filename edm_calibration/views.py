@@ -696,8 +696,9 @@ def compute_calibration(request, id):
         for o in edm_observations.values():
             o['residual'] = residuals[o['id']]['residual']
             o['std_residual'] = residuals[o['id']]['std_residual']
-            o['iso_residual'] = iso_residuals[o['id']]['residual']
-            o['iso_std_residual'] = iso_residuals[o['id']]['std_residual']
+            if iso_residuals: 
+                o['iso_residual'] = iso_residuals[o['id']]['residual']
+                o['iso_std_residual'] = iso_residuals[o['id']]['std_residual']
             o['uc_sources'] = add_typeA(o, matrix_y, chi_test['dof'])      
             o['uc_budget'] = refline_std_dev(
                 o, 
