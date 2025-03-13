@@ -254,22 +254,19 @@
                resources:</p>
             <ul>
                <li>“Instructions on the Verification of Electronic Distance Meters according to section 10, Weights and
-                  Measures (National Standards) Act, 1960” written by Dr. J. M. Rüeger, School of Surveying, University
-                  of New South Wales. P.O. Box 1, Kensington, N.S.W. 2033</li>
-               <li>“Instructions on the measurements of subsidiary standards of length in the form of EDM calibration
-                  baselines using distance meters as prescribed by the National Standards Commission: written by Dr.
-                  J.M.Rüeger, School of Surveying, University of New South Wales. P.O. Box 1, Kensington, N.S.W. 2033
-               </li>
-               <li>“Electronic Distance Measurements” J.M.Rüeger, 1996</li>
-               <li>Draft Verifying Authorities Handbook 2001</li>
+                  Measures (National Standards) Act, 1960” by Dr. J. M. Rüeger, School of Surveying, University of New South Wales</li>
+               <li>“Instructions on the Verification of Electro-Optical Short-Range Distance Meters on Subsidiary Standards
+               	 of Length in the Form of EDM Calibration Baselines", J.M.Rüeger, School of Surveying, University of New South Wales, 1984</li>
+               <li>“Electronic Distance Measurements”, J.M.Rüeger, 1996</li>
+               <li>Draft Verifying Authorities Handbook, 2001</li>
                <li>IAG resolutions at it’s XXIIth General Assembly in Birmingham, 1999</li>
                <li>Optics and optical instruments - Field procedures for testing geodetic and surveying instruments, ISO
                   17123-4:2012</li>
                <li>Evaluation of measurement data - Guide to the expression of uncertainty in measurement (GUM), JCGM
-                  100:2008 </li>
-               <li>Review of the Western Australian BASELINE Calibration Software for Electronic Distance Measuring
-                  (EDM)
-                  Instruments prepared for the Surveyor General of New South Wales by J.M.Rüeger 2019</li>
+                  100:2008</li>
+               <li>"Review of the Western Australian BASELINE Calibration Software for Electronic Distance Measuring
+                  (EDM) Instruments", prepared for the Surveyor General of New South Wales, J.M.Rüeger, 2019</li>
+               <li>"Elementary Surveying - An Introduction to Geomatics", 14th Edition, C.D.Ghilani and P.R.Wolf, 2014</li>
             </ul>
             <br>
             <p>The Draft Verifying Authorities (VA) Handbook 2001 is intended for use by verifying authorities which are
@@ -2030,11 +2027,13 @@
 
                <div id="EDMI-Chapter7_1_1">
                   <h4>7.1.1 Hypothesis A</h4>
-                  <p>This null hypothesis states that the calculated experimental standard deviation, s, is smaller than
+                  <p>This null hypothesis states that the calculated experimental standard deviation, s<sub>D</sub>, is smaller than
                      or equal to the manufacturers specifications value &sigma;.</p>
                   <p>The null hypothesis is not rejected if the following condition is fulfilled:</p>
-                  <div>$$ s_0\le\sigma\times\sqrt{\frac{\chi_{1-\alpha}^2(\nu)}{\nu}}\ \ \ \ (Eq. 7.1) $$</div>
+                  <div>$$ s_D\le\sigma×t_{1-α} (ν)\ \ \ \ (Eq. 7.1) $$</div>
                   <p>Otherwise, the null hypothesis is rejected.</p>
+                  <p>The experimental standard deviations are calculated and the tests are performed for several typical distances in meters: 50, 150, 300, MaxDistance, 2xMaxDistance, 3xMaxDistance, 4xMaxDistance where the MaxDistance is the maximum distance at which the instrument was clibrated.</p>
+               		<p>For detaileds of calculating experimental standard deviations refer to ISO 17123:4 equation 29, Rueger (1984) equasion 27 and Ghilani and Wolf (2014) equasion 16.10 & Example 16.6 (4).</p>
                </div>
                <div id="EDMI-Chapter7_1_2">
                   <h4>7.1.2 Hypothesis B</h4>
@@ -2056,7 +2055,7 @@
                   <p>Otherwise, the null hypothesis is rejected.</p>
                </div>
             </div>
-            <div id="EDMI-Chapter7_2">
+            <div id="EDMI-Chapter7_2">17123
                <h3>7.2 Endnotes</h3>
                <p>The EDMI and Baseline calibration reports display endnotes. These endnotes explain assumptions
                   and decisions made during the compuutation of the calibration. Custom endnotes can also be predefined
@@ -2111,7 +2110,7 @@
 
       <div class="mt-3 mb-3">
          <p><strong>Copyright © 2020-2025 Western Australian Land Information Authority</strong></p>
-         <p>Last updated: 5 March 2025</p>
+         <p>Last updated: 13 March 2025</p>
       </div>
    </div>
 </div>
