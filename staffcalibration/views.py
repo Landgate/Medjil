@@ -18,6 +18,7 @@
 import csv
 from math import sqrt
 import numpy as np
+from datetime import datetime
 from django.conf import settings
 from django.contrib import messages
 from django.shortcuts import render, redirect
@@ -599,6 +600,7 @@ def print_report(request, id):
                 'adj_correction': adj_correction,
                 'temp_correction_factors':temp_correction_factors,
                 'staff_errors_intervals': staff_errors_intervals,
+                'current_year': datetime.today().year,
         } 
         result = generate_pdf('staffcalibration/pdf_staff_report.html', file_object=resp, context=context)
         return result 

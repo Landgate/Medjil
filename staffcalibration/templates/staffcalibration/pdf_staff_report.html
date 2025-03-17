@@ -101,7 +101,7 @@
     						<td><strong> Levelling Staff Calibration </strong></td>
     					</tr>
     					<tr>
-    						<td style="font-size:9pt">Version: 2023.0.1 (November 2023) </td>
+    						<td style="font-size:9pt">Version: 2025.0.2 (March 2025) </td>
     					</tr>
     				</table>
     				
@@ -120,11 +120,8 @@
     	<table>
     		<tr class="tr-top">
     			<td style="font-size:8pt;font-weight:bold;text-align:center">
-					&copy; Western Australia Land Information Authority 2023
+					&copy; Western Australia Land Information Authority {{ current_year }}
 				</td>
-    		</tr>
-    		<tr>
-    			<td style="font-size:8pt;font-weight:bold;text-align:center"> {{ today }}</td>
     		</tr>
     		<tr>
     			<td style="font-size:7pt;text-align:center"> This calibration is only valid at the time of testing. Damage or wear can affect the staff length and regular re-testing is recommended.</td>
@@ -169,7 +166,7 @@
 	    	</tr>
 	    <table>
 	    <hr>
-	    <p>Correction Factor: <strong>{{calibration.scale_factor|floatformat:6}} </strong>at 25.0°C. Note that Correction Factor is temperature dependent.</p>
+	    <p>Correction Factor: <strong>{{calibration.scale_factor|floatformat:6}} </strong>at 25.0°C. Note that the Correction is temperature dependent.</p>
 		<p>Apply the correction factor to your observed height difference (&Delta;H<sub>obs</sub>) as &rarr; &Delta;H<sub>corrected</sub> = ((((T<sub>ave</sub> - 25.0) x 10<sup>-6</sup>x{{ calibration.inst_staff.thermal_coefficient|floatformat:1 }})+1) x {{ calibration.scale_factor|floatformat:6}}) x &Delta;H<sub>obs</sub>, where T<sub>ave</sub> is the observed temperature during the measurement.
 		</p>
 		<p>Graduation Uncertainty: <strong>{{ calibration.grad_uncertainty|floatformat:5 }} </strong> metres at 95% confidence interval</p>
