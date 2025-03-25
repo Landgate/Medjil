@@ -439,32 +439,3 @@ class AccreditationForm(forms.ModelForm):
                        'required': False})
            }
 
-
-class BulkBaselineReportForm(forms.Form):
-    # Form used for bulk downloading calibration html reports
-    # called by .view def bulk_report_download    
-    baseline = forms.ModelChoiceField(
-        queryset=CalibrationSite.objects.none(),
-        label="Select Baseline",
-        help_text="Reports only exported for select the baseline.")
-    from_date = forms.DateField(
-        widget=forms.DateInput(attrs={'type': 'date'}),
-        label="From Date",
-        help_text='Leave blank for all date ranges',
-        required=False)
-    to_date = forms.DateField(
-        widget=forms.DateInput(attrs={'type': 'date'}), 
-        label="To Date",
-        help_text='Leave blank for all date ranges',
-        required=False)
-    
-    def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user', None)
-        super().__init__(*args, **kwargs)
-        if user:
-            locations = list(user.locations.values_list('statecode', flat=True))
-            queryset = CalibrationSite.objects.filter(
-                Q(site_type='baseline') & Q(state__statecode__in=locations)
-            )
-            self.fields['baseline'].queryset = queryset
-            

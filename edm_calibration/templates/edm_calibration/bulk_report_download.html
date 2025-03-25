@@ -22,11 +22,31 @@
 {% block content %}
 
 <article class="post">
-    <div class="flexbox-container_IB">
-        <div class="flexbox-item_800_IB">
-            <form id='id_html_form' style="font-size:10.0pt;width:4500px;" action="" class="site-form" method="post" enctype="multipart/form-data">
+    <div class="post-content">
+         <br>
+         <h2 class="text-center">Bulk Download of Calibration Reports</h2>
+         <p class="text-center"><i>Select calibration type on the left to download date range of reports.</i></p>
+         <hr>
+        <div class="flex-with-sidebar">
+             <div class="left-sidebar">
+                <a href="{% url 'edm_calibration:bulk_report_download' calibration_type='B' %}">                
+                    <button class={% if calibration_type == 'B' %}"active"{% else %}"tablinks"{% endif %}>
+                    Baseline Calibrations
+                    </button>
+                </a>
+                <a href="{% url 'edm_calibration:bulk_report_download' calibration_type='E' %}">                
+                    <button class={% if calibration_type == 'E' %}"active"{% else %}"tablinks"{% endif %}>
+                    EDMI Calibrations
+                    </button>
+                </a>      
+             </div>
+            <form id='id_html_form' style="font-size:10.0pt;width:600px;" action="" class="site-form" method="post" enctype="multipart/form-data">
                 <div class="mb-5 site-form-header bg-indigo-300 rounded px-2">
-                    <h1 style="text-align:center">Bulk Download of EDMI Calibration Reports</h1>
+                    {% if calibration_type == 'B' %}
+                        <h1 style="text-align:center">Bulk Download of Baseline Calibration Reports</h1>
+                    {% elif calibration_type == 'E' %}
+                        <h1 style="text-align:center">Bulk Download of EDMI Calibration Reports</h1>
+                    {% endif %}
                 </div>
                 {% if form.non_field_errors %}
                     <div class="mt-1 mb-2 non-field-errors">

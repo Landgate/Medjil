@@ -24,7 +24,8 @@ urlpatterns = [
     path('', views.edm_calibration_home, name = 'edm_calibration_home'),
     path('certificate/<int:id>', views.certificate, name = 'certificate'),
     path('report/<int:id>', views.report, name = 'report'),
-    path('bulk_report_download/', views.bulk_report_download, name = 'bulk_report_download'),
+    path('bulk_report_download/<slug:calibration_type>', views.bulk_report_download, name = 'bulk_report_download'),
+    
     path('intercomparison_home', views.intercomparison_home, name = 'intercomparison_home'),
     path('intercomparison/<slug:id>', views.intercomparison, name = 'intercomparison'),
     path('intercomparison_report/<int:id>', views.intercomparison_report, name = 'intercomparison_report'),

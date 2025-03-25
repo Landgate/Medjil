@@ -64,7 +64,7 @@ from .forms import (
     EDM_ObservationForm,
     PillarSurveyApprovals,
     IntercomparisonForm,
-    BulkEDMIReportForm
+    BulkReportForm
     )
 from .models import (
     EDMI_certificate,
@@ -79,6 +79,7 @@ from common_func.LeastSquares import (
     ISO_test_c)
 from common_func.validators import try_delete_protected
 from baseline_calibration.models import (
+    Pillar_Survey,
     Uncertainty_Budget_Source)
 
 
@@ -281,9 +282,9 @@ def intercomparison(request, id=None):
 
 @login_required(login_url="/accounts/login")
 @user_passes_test(is_staff)
-def bulk_report_download(request):
+def bulk_report_download(request, calibration_type):
     if request.method == 'POST':
-        form = BulkEDMIReportForm(request.POST, user=request.user)
+        form = BulkReportForm(request.POST,user=request.user)
         if form.is_valid():
             baseline = form.cleaned_data['baseline']
             from_date = form.cleaned_data['from_date']
@@ -296,30 +297,42 @@ def bulk_report_download(request):
                 to_date = date.today() + timedelta(days=1)
             
             # Filter based on date range
-            data = uPillarSurvey.objects.filter(
-                site=baseline,
-                survey_date__range=[from_date, to_date]
-            ).select_related('certificate').values('certificate__html_report')
-            
+            baseline_name = baseline.site_name
+            if calibration_type == 'B':
+                f_name = f"{baseline_name}_baseline_clibration_reports.html"
+                data = Pillar_Survey.objects.filter(
+                    baseline=baseline,
+                    survey_date__range=[from_date, to_date]
+                ).values("results__html_report")
+            else:
+                f_name = f"{baseline_name}_edmi_clibration_reports.html"
+                data = uPillarSurvey.objects.filter(
+                    site=baseline,
+                    survey_date__range=[from_date, to_date]
+                ).select_related('certificate').values('certificate__html_report')
+                
+                
             if not data.exists():
                 # No data found, return to form with an error message
                 return render(request, 'edm_calibration/bulk_report_download.html', {
                     'form': form,
+                    'calibration_type':calibration_type,
                     'error': 'No data found for the selected baseline and date range.'
                 })
             
-            baseline_name = baseline.site_name
             df = pd.DataFrame(data)
             # Create a response object and set the appropriate headers
             response = HttpResponse(content_type='text/csv')
-            response['Content-Disposition'] = f'attachment; filename="{baseline_name}_edmi_clibration_reports.html"'
+            response['Content-Disposition'] = f'attachment; filename={f_name}'
             # Write the DataFrame to the response without the header
             df.to_csv(path_or_buf=response, index=False, header=False)
             return response
     else:
-        form = BulkEDMIReportForm(user=request.user)
+        form = BulkReportForm(user=request.user)
 
-    return render(request, 'edm_calibration/bulk_report_download.html', {'form': form})
+    return render(request, 'edm_calibration/bulk_report_download.html', 
+                  {'form': form,
+                   'calibration_type':calibration_type})
 
 
 @login_required(login_url="/accounts/login")   

@@ -24,7 +24,6 @@ app_name = 'baseline_calibration'
 urlpatterns = [
     path('', views.calibration_home, name = 'calibration_home'),
     path('report/<int:id>', views.report, name = 'report'),
-    path('bulk_report_download/', views.bulk_report_download, name = 'bulk_report_download'),
     
     path('uc_budgets/', views.uc_budgets, name = 'uc_budgets'),
     path('uc_budget/create/', views.uc_budget_create, name = 'uc_budget_create'),

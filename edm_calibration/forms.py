@@ -99,7 +99,7 @@ class IntercomparisonForm(forms.ModelForm):
         }
 
 
-class BulkEDMIReportForm(forms.Form):
+class BulkReportForm(forms.Form):
     # Form used for bulk downloading calibration html reports
     # called by .view def bulk_report_download
     baseline = forms.ModelChoiceField(

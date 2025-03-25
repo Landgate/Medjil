@@ -188,15 +188,9 @@
                         </li>
                         {% if user.is_staff %}
                         <li class="sub-items">
-                            <a href="{% url 'baseline_calibration:bulk_report_download' %}">
-                                <div class="sub-item-header">Baseline Calibration Data Downloads</div>
-                                <div class="sub-item-description">Bulk download of Baseline calibration reports</div>
-                            </a>  
-                        </li>
-                        <li class="sub-items">
-                            <a href="{% url 'edm_calibration:bulk_report_download' %}">
-                                <div class="sub-item-header">EDMI Calibration Data Downloads</div>
-                                <div class="sub-item-description">Bulk download of Baseline calibration reports</div>
+                            <a href="{% url 'edm_calibration:bulk_report_download' calibration_type='B' %}">
+                                <div class="sub-item-header">Data Downloads</div>
+                                <div class="sub-item-description">Bulk download of calibration reports</div>
                             </a>  
                         </li>  
                         {% endif %}
