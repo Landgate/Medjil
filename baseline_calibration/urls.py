@@ -31,8 +31,8 @@ urlpatterns = [
     path('uc_budget/<int:id>/edit/', views.uc_budget_edit, name = 'uc_budget_edit'),
     path('uc_budget/<int:id>/delete/', views.uc_budget_delete, name = 'uc_budget_delete'),
     
-    path('accreditations/', views.accreditations, name = 'accreditations'),
-    path('accreditations/<slug:id>/edit/', views.accreditation_edit, name = 'accreditation_edit'),
+    path('accreditations/<slug:accreditation_disp>/', views.accreditations, name = 'accreditations'),
+    path('accreditations/<slug:id>/<slug:accreditation_disp>/edit/', views.accreditation_edit, name = 'accreditation_edit'),
     path('accreditations/<int:id>/delete/', views.accreditation_delete, name = 'accreditation_delete'),
 
     path('certified_distances/<int:id>', views.certified_distances_home, name = 'certified_distances_home'),

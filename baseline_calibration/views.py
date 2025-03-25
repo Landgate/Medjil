@@ -245,23 +245,30 @@ def uc_budget_delete(request, id):
 
 
 @login_required(login_url="/accounts/login") 
-def accreditations(request):
+def accreditations(request, accreditation_disp):
+    accredited_types = [
+        {'abbr':x[0], 'name':x[1]} 
+        for x in Accreditation.accredited_type.field.choices]
+    
     # Only list records that belong to company
     accreditation_list = Accreditation.objects.filter(
-        accredited_company = request.user.company)
+        accredited_company = request.user.company,
+        accredited_type = accreditation_disp)
     
     context = {
+        'accreditation_disp': accreditation_disp,
+        'accredited_types': accredited_types,
         'accreditation_list': accreditation_list}
     
     return render(request, 'baseline_calibration/accreditation_list.html', context)
 
 
 @login_required(login_url="/accounts/login") 
-def accreditation_edit(request, id=None):
+def accreditation_edit(request, accreditation_disp, id=None):
     context = {}
     # if id==None this is a new accredittion.
     if id == 'None':
-        accreditation = AccreditationForm(request.POST or None,
+        accreditation_form = AccreditationForm(request.POST or None,
                                           request.FILES or None,
                                           user=request.user)
         context['Header'] = 'Input Accreditation Details'
@@ -271,24 +278,26 @@ def accreditation_edit(request, id=None):
             accredited_company=request.user.company)
         obj.valid_from_date = obj.valid_from_date.isoformat()
         obj.valid_to_date = obj.valid_to_date.isoformat()
-        accreditation = AccreditationForm(request.POST or None,
+        accreditation_form = AccreditationForm(request.POST or None,
                                           request.FILES or None,
                                           instance=obj,
                                           user=request.user)
 
         context['Header'] = 'Edit Accreditation Details'
     
-    if accreditation.is_valid():
-        accreditation.save()  
+    if accreditation_form.is_valid():
+        accreditation = accreditation_form.save(commit=False)
+        accreditation.accredited_type = accreditation_disp
+        accreditation.save()
         # Save the pk if this has been called during calibration with add_btn.
-        request.session['new_instance'] = accreditation.instance.pk
+        request.session['new_instance'] = accreditation.pk
         next_url = request.POST.get('next')
         if next_url:
             return redirect(next_url)
         else:
             return redirect('baseline_calibration:accreditations')
         
-    context['form'] = accreditation
+    context['form'] = accreditation_form
     
     return render(request, 'baseline_calibration/accreditation_form.html', context)
 
@@ -609,8 +618,8 @@ def edm_observations_update(request, id):
 @user_passes_test(is_staff)
 @login_required(login_url="/accounts/login")
 def compute_calibration(request, id):
-    # try:
-    if 1==1:
+    try:
+    # if 1==1:
         # Retrieve the Pillar Survey instance and baseline dictionary of records
         pillar_survey = get_object_or_404(
             Pillar_Survey.objects.select_related(
@@ -1046,7 +1055,7 @@ def compute_calibration(request, id):
         
         return render(request, 'baseline_calibration/display_report.html', context)
     
-    # except Exception as e:
-    #     messages.error(request, f"An error occurred: {str(e)}")
-    #     return render(request, 'baseline_calibration/errors_report.html', 
-    #                   {})
+    except Exception as e:
+        messages.error(request, f"An error occurred: {str(e)}")
+        return render(request, 'baseline_calibration/errors_report.html', 
+                      {})

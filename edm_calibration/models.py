@@ -25,6 +25,7 @@ from django.db.models import Q
 from datetime import date
 
 from baseline_calibration.models import (
+    Accreditation,
     Uncertainty_Budget,
     Pillar_Survey)
 from common_func.validators import (
@@ -92,7 +93,7 @@ class uPillarSurvey(models.Model):
     prism = models.ForeignKey(Prism_Inst, on_delete = models.PROTECT,
               help_text="Prism used for survey")
     mets_applied = models.BooleanField(default=True,
-              verbose_name= 'Atmospheric corrections applied to EDM data',
+              verbose_name= 'Atmospheric corrections have been applied to imported EDM data',
               help_text="Meterological corrections have been applied in the EDM instrument.")
     
     thermometer = models.ForeignKey(Mets_Inst, on_delete = models.PROTECT,
@@ -123,6 +124,13 @@ class uPillarSurvey(models.Model):
     scalar = models.DecimalField(max_digits=6, decimal_places=2, default=1.00,
               verbose_name= 'a-priori scalar',
               help_text="a-priori standard uncertainties are multiplied by the a-priori scalar")
+    apply_lum = models.BooleanField(default=False,
+              verbose_name= 'Apply LUM to underestimated uncertainties',
+              help_text="The Least Uncertainty of Measurement specified in the company's accreditation is applied if a posteriori uncertainties are less than LUM.")
+    e_accreditation = models.ForeignKey(
+        Accreditation, on_delete = models.SET_NULL, 
+        null = True, blank=True,
+        help_text="Accreditaion and LUM for EDM Instrumentation calibration.")
     outlier_criterion = models.DecimalField(max_digits=2, decimal_places=1, default=2,
               validators=[MinValueValidator(0), MaxValueValidator(5)],
               help_text="Number of standard deviations for outlier detection threashold.",

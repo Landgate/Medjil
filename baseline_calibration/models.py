@@ -47,6 +47,15 @@ class Accreditation(models.Model):
             instance.accredited_company.company_abbrev, 
             creation_date+'-'+ filename)
     
+    accredited_types = (
+        ('B','Baseline Calibration'),
+        ('E', 'EDMI Calibration'),
+        )
+    
+    accredited_type = models.CharField(
+        max_length=1,
+        choices=accredited_types,
+        help_text="The physical quantity that the authority is accredited to calibrate.",)
     accredited_company = models.ForeignKey(
         Company, on_delete = models.PROTECT)
     valid_from_date = models.DateField(
@@ -74,7 +83,7 @@ class Accreditation(models.Model):
                  
     class Meta:
         ordering = ['accredited_company','valid_to_date']
-        unique_together = ('accredited_company','valid_from_date','valid_to_date',)
+        unique_together = ('accredited_type', 'accredited_company','valid_from_date','valid_to_date',)
         verbose_name = "Company Accreditations"
         
     def get_absolute_url(self):

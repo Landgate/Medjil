@@ -80,7 +80,7 @@
                             {% endif %}
                             {% if field.name == "accreditation" %}
                                 <button style="width:35px; height:35px" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" type="button" id="id_add_btn"
-                                onclick="cacheForm(this);window.location.href='{% url "baseline_calibration:accreditation_edit" id=None%}?next={{request.path}}'">&#43;</button>
+                                onclick="cacheForm(this);window.location.href='{% url "baseline_calibration:accreditation_edit" accreditation_disp="B" id=None%}?next={{request.path}}'">&#43;</button>
                             {% endif %}
                             {% if field.name == "uncertainty_budget" %}
                                 <button style="width:35px; height:35px" class="ml-3 px-2 py-1 bg-green-400 border-transparent hover:border-gray-900 rounded text-lg text-white cursor-pointer" type="button" id="id_add_btn"

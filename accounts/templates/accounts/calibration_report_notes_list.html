@@ -19,14 +19,14 @@
 {% load static %}
 {% block content %}
 <article class="post">	
-{% if messages %}
-	<ul class="message-list">
-	{% for message in messages %}
-		<li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|safe }}</li>
-	{% endfor %}
-</ul>
- <br>
-{% endif %} 
+    {% if messages %}
+    	<ul class="message-list">
+    	{% for message in messages %}
+    		<li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|safe }}</li>
+    	{% endfor %}
+    </ul>
+     <br>
+    {% endif %} 
    <br>
    <h2 class="text-center">List of Calibration Report Endnotes</h2>
    <p class="text-center"><i>For more information about Report Endnotes, please refer to the technical manual</i><a href= "{% url 'calibrationguide:read_manual' manual_name='edmi_calibration_manual.html' %}#EDMI-Chapter7_2" target="_blank" onclick="return PopupTechnicalManual(this);"> &#x1F6C8</a></p>

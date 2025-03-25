@@ -57,6 +57,7 @@ class PillarSurveyForm(forms.ModelForm):
         self.fields['computation_date'].initial = date.today().isoformat()
         self.fields['survey_date'].initial = date.today().isoformat()
         self.fields['accreditation'].initial = Accreditation.objects.filter(
+            accredited_type = 'B',
             valid_from_date__lte = date.today().isoformat(),
             valid_to_date__gte = date.today().isoformat(),
             accredited_company = user.company).order_by(
@@ -83,7 +84,8 @@ class PillarSurveyForm(forms.ModelForm):
             mets_specs__inst_type = 'hygro',
             mets_specs__mets_owner = user.company)
         self.fields['accreditation'].queryset = Accreditation.objects.filter(
-            accredited_company = user.company)
+            accredited_company = user.company,
+            accredited_type = 'B')
         self.fields['uncertainty_budget'].queryset = Uncertainty_Budget.objects.filter(
             Q(company = user.company) | 
             Q(name = 'Default', company__company_name = 'Landgate'))
@@ -161,7 +163,7 @@ class PillarSurveyForm(forms.ModelForm):
     
     def pulse_edm_mets_applied(self):
         mets_applied = self.cleaned_data['mets_applied']
-        if not mets_applied and self.cleaned_data['edm'].edm_specs.edm_type =='pu':
+        if not mets_applied and self.cleaned_data['edm'].edm_specs.edm_type =='pu' and not self.cleaned_data['edm'].edm_specs.atmos_corr_formula:
             raise forms.ValidationError("Pulse instruments must have mets applied!")
         return mets_applied
     
@@ -424,6 +426,7 @@ class AccreditationForm(forms.ModelForm):
     class Meta:
         model = Accreditation
         fields = '__all__'
+        exclude = ('accredited_type',)
 
         widgets = {
             'statement': forms.Textarea(attrs={'class': 'text-area2'}),

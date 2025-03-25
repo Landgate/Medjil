@@ -411,7 +411,11 @@
         </table>
         <div class="flexbox-container_IB">
             <div class="flexbox-item_800_IB flexbox-item-right_IB">
-                <i>^ Uncertainties of parameters have been adjusted by the square root of a-posteriori variance factor</i>
+            {% if pillar_survey.lum_has_been_applied %}
+                <i>* LUM values have been adopted.</i>
+            {% else %}
+                <i>^ Uncertainties of parameters have been adjusted by the square root of a-posteriori variance factor.</i>
+            {% endif %}
             </div>
         </div>
     </div>
@@ -498,7 +502,11 @@
         </table>
         <div class="flexbox-container_IB">
             <div class="flexbox-item_800_IB flexbox-item-right_IB">
-                <i>^ uncertainties of parameters have been adjusted by the square root of a-posteriori variance factor</i>
+            {% if pillar_survey.lum_has_been_applied %}
+                <i>* LUM values have been adopted.</i>
+            {% else %}
+                <i>^ Uncertainties of parameters have been adjusted by the square root of a-posteriori variance factor.</i>
+            {% endif %}
             </div>
         </div>
     </div>

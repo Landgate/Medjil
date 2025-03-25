@@ -189,7 +189,7 @@ class CompanyForm(forms.ModelForm):
 class calibration_report_notesForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
-        locations = list(user.locations.values_list('statecode', flat=True))        
+        locations = list(user.locations.values_list('statecode', flat=True))
         super(calibration_report_notesForm, self).__init__(*args, **kwargs) 
         
         if not user.company.company_name == 'Landgate':
@@ -197,7 +197,8 @@ class calibration_report_notesForm(forms.ModelForm):
         self.fields['verifying_authority'].queryset = Company.objects.filter(
             company_name = user.company)
         self.fields['accreditation'].queryset = Accreditation.objects.filter(
-            accredited_company = user.company)
+            accredited_company = user.company,
+            accredited_type = 'B')
         self.fields['site'].queryset = CalibrationSite.objects.filter(
             Q(site_type = 'baseline') &
             Q(state__statecode__in = locations))

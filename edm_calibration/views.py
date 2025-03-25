@@ -657,6 +657,42 @@ def compute_calibration(request, id):
             # remove 2 parameters to maybe run again
             matrix_A = [a[:-2] for a in matrix_A]
         
+        # Apply LUM if required
+        zpc_uncertainty = matrix_y[0]['uncertainty']
+        scf_uncertainty = matrix_y[1]['uncertainty']
+        if pillar_survey.apply_lum:
+            if pillar_survey.e_accreditation:
+                min_dist = min([round(d['distance'],3) for d in baseline_data['certified_dist'].values() if d['distance'] !=0])
+                test_value0 = min_dist * scf_uncertainty + zpc_uncertainty
+                test_value1 = (
+                    min_dist * pillar_survey.e_accreditation.LUM_ppm*1000000 
+                    + pillar_survey.e_accreditation.LUM_constant)
+                if scf_uncertainty < pillar_survey.e_accreditation.LUM_ppm*1000000:
+                    pillar_survey.lum_has_been_applied = True
+                    report_notes.append(
+                        f'The scale-correction-factor uncertainty of {round(scf_uncertainty*1000000,2)}ppm calculated from the least squares adjustment is less than the' \
+                        f' specified Least Uncertainty of Measurement (LUM) from Accreditation {pillar_survey.e_accreditation}' \
+                        f' ({+ pillar_survey.e_accreditation.LUM_constant}mm + {pillar_survey.e_accreditation.LUM_ppm}ppm).'\
+                        f' The LUM has been applied to the published scale-correction-factor uncertainty.'
+                        )                        
+                    matrix_y[1]['uncertainty'] = pillar_survey.e_accreditation.LUM_ppm/1000000
+                    matrix_y[1]['std_dev'] = (pillar_survey.e_accreditation.LUM_ppm/1000000)/chi_test['k']
+                
+                if test_value0 < test_value1:
+                    pillar_survey.lum_has_been_applied = True
+                    report_notes.append(
+                        f'The uncertainty calculated from the least squares adjustment at the shortest baseline distance of {min_dist}m is less than the' \
+                        f' specified Least Uncertainty of Measurement (LUM) from Accreditation {pillar_survey.e_accreditation}' \
+                        f' ({+ pillar_survey.e_accreditation.LUM_constant}mm + {pillar_survey.e_accreditation.LUM_ppm}ppm).'\
+                        f' The LUM has been applied to the published zero-point-correction uncertainty instead of the uncertainty' \
+                        f' value of {round(zpc_uncertainty*1000,2)}mm calculated by the least squares adjustment.'
+                        )
+                    matrix_y[0]['uncertainty'] = pillar_survey.e_accreditation.LUM_constant/1000
+                    matrix_y[0]['std_dev'] = (pillar_survey.e_accreditation.LUM_constant/1000)/chi_test['k']
+            else:
+                validation_errors['Warnings'].append(
+                    'The user requested the Least Uncertainty of Measurement (LUM) to be applied to underestimated uncertianties, but no accreditaion and LUM threashold values were found.')
+        
         # populate a dictionary for certificate
         ini_edmi_certificate = {
             'edm':pillar_survey.edm,
@@ -670,8 +706,8 @@ def compute_calibration(request, id):
             'scale_correction_factor': matrix_y[1]['value'] + 1,
             'scf_uncertainty': matrix_y[1]['uncertainty'],
             'scf_coverage_factor': chi_test['k'],
-            'index': matrix_y[0]['value']*1000,
-            'scale': (matrix_y[1]['value'])*1000000
+            'index': zpc_uncertainty*1000,
+            'scale': scf_uncertainty*1000000
             }
         if len(matrix_y)>2:
             ini_edmi_certificate.update({

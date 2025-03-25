@@ -192,16 +192,18 @@ def create_medjil_accreditation(rx, commit_errors, request):
     # Commit an accreditaion to use for backcaptured data
     medjil_accreditation = Accreditation.objects.filter(
         accredited_company = request.user.company,
+        accredited_type = 'B',
         statement = 'Unknown accreditation from BaselineDLI backcaptured data').first()
     if not medjil_accreditation:
         try:
             medjil_accreditation = Accreditation.objects.create(
                 accredited_company = request.user.company,
+                accredited_type = 'B',
                 valid_from_date = '1900-01-01',
                 valid_to_date = '2022-01-01',
                 LUM_constant = rx['Standard']['F']['StandardConstant'],
                 LUM_ppm = rx['Standard']['F']['StandardScale'],
-                statement = 'Unknown accreditation from BaselineDLI backcaptured data')    
+                statement = 'Unknown accreditation from BaselineDLI backcaptured data')
         except Exception as e:
             commit_errors.append(
                 f'Error creating generic accreditation in Medjil: {e}')

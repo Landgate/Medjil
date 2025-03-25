@@ -26,6 +26,7 @@ from .models import (
     Intercomparison)
 
 from baseline_calibration.models import (
+    Accreditation,
     Uncertainty_Budget,
     Pillar_Survey)
 from instruments.models import (
@@ -130,8 +131,8 @@ class BulkEDMIReportForm(forms.Form):
 class uPillarSurveyForm(forms.ModelForm):
     # was CalibrateEdmForm
     def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user', None)
-        locations = list(user.locations.values_list('statecode', flat=True))
+        self.user = kwargs.pop('user', None)
+        locations = list(self.user.locations.values_list('statecode', flat=True))
         super(uPillarSurveyForm, self).__init__(*args, **kwargs)
         
         self.fields['survey_date'].initial = date.today().isoformat()
@@ -143,24 +144,24 @@ class uPillarSurveyForm(forms.ModelForm):
         self.fields['calibrated_baseline'].queryset = Pillar_Survey.objects.filter(
             baseline__state__statecode__in = locations)
         self.fields['uncertainty_budget'].queryset = Uncertainty_Budget.objects.filter(
-            Q(company = user.company) | 
+            Q(company = self.user.company) | 
             Q(name = 'Default', company__company_name = 'Landgate'))
         self.fields['auto_base_calibration'].required = False
         self.fields['calibrated_baseline'].required = False
 
         self.fields['edm'].queryset = EDM_Inst.objects.filter(
-            edm_specs__edm_owner = user.company)
+            edm_specs__edm_owner = self.user.company)
         self.fields['prism'].queryset = Prism_Inst.objects.filter(
-            prism_specs__prism_owner = user.company)
+            prism_specs__prism_owner = self.user.company)
         self.fields['thermometer'].queryset = Mets_Inst.objects.filter(
             mets_specs__inst_type = 'thermo',
-            mets_specs__mets_owner = user.company)
+            mets_specs__mets_owner = self.user.company)
         self.fields['barometer'].queryset = Mets_Inst.objects.filter(
             mets_specs__inst_type = 'baro',
-            mets_specs__mets_owner = user.company)
+            mets_specs__mets_owner = self.user.company)
         self.fields['hygrometer'].queryset = Mets_Inst.objects.filter(
             mets_specs__inst_type = 'hygro',
-            mets_specs__mets_owner = user.company)
+            mets_specs__mets_owner = self.user.company)
             
     class Meta:
         model = uPillarSurvey
@@ -198,6 +199,7 @@ class uPillarSurveyForm(forms.ModelForm):
            'hygro_calib_applied': forms.CheckboxInput(attrs={'class': 'page1'}),
             
            'uncertainty_budget': forms.Select(attrs={'class': 'page2'}),
+           'apply_lum': forms.CheckboxInput(attrs={'class': 'page2'}),
            'scalar': forms.NumberInput(
                attrs={'placeholder':'observation standard uncertianties are multiplied by the a-priori scalar',
                       'class': 'page2'}),
@@ -226,11 +228,20 @@ class uPillarSurveyForm(forms.ModelForm):
         cleaned_data = super().clean()
         site = cleaned_data.get('site')
         calibrated_baseline = cleaned_data.get('calibrated_baseline')
+        survey_date = cleaned_data.get('survey_date')
         
         if site is None and calibrated_baseline:
             cleaned_data['site'] = calibrated_baseline.baseline
         
+        cleaned_data['e_accreditation'] = Accreditation.objects.filter(
+            accredited_type = 'E',
+            valid_from_date__lte = survey_date,
+            valid_to_date__gte = survey_date,
+            accredited_company = self.user.company).order_by(
+                '-valid_to_date').first()
+        
         return cleaned_data
+
 
 class UploadSurveyFilesForm(forms.Form):
     edm_file = forms.FileField(
