@@ -15,7 +15,7 @@
    limitations under the License.
 
 '''
-from django.urls import path, include, reverse_lazy
+from django.urls import path, reverse_lazy
 from django.contrib.auth import views as auth_views
 from django.views.generic.base import RedirectView
 from . import views
@@ -42,6 +42,7 @@ urlpatterns = [
     path('password_reset_complete/', auth_views.PasswordResetCompleteView.as_view( template_name="registration/password_reset_complete.html"), name='password_reset_complete'),
     path('user_profile/', views.user_profile, name='user_profile'),
     path('user_profile/<email>/', views.user_update_for_admin, name='user_update_for_admin'),
+    path('user_accounts/accounts/<email>/reset_mfa', views.user_reset_mfa, name='user_reset_mfa'),
     path('user_accounts/accounts/<email>/delete', views.user_delete_for_admin, name='user_delete_for_admin'),
     path('company/<id>/update', views.company_update, name = 'company_update'),
     path('company/<id>/delete', views.company_delete, name = 'company_delete'),

@@ -55,9 +55,12 @@
 				{% csrf_token %}
 				{{ form }}
 			</div>
-	
+        	
 			<div class="button-container">
     			<button type="button" onclick="window.location.href='{% url 'accounts:user_account' %}'" class="cancelbtn bg-red-500 hover:bg-red-300">Cancel</button>
+    			{% if request.user.is_staff %}
+    			<button type="button" onclick="window.location.href='{% url 'accounts:user_reset_mfa' email=form.instance.email %}'" class="cancelbtn bg-blue-500 hover:bg-blue-300">Reset MFA</button>
+    			{% endif %}
 				<button class="submit-button bg-green-500 hover:bg-green-400" type="submit">Update</button>
 			</div>
 		</form>

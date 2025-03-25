@@ -389,6 +389,16 @@ def user_update_for_admin(request, email):
         }
     return render(request, 'accounts/user_profile_update.html', context)
 
+
+# Reset user mfa - possible by admin/staff only
+@user_passes_test(is_staff)
+def user_reset_mfa(request, email):
+    ttotpdevice = MedjilTOTPDevice.objects.filter(user__email = email).first()
+    if ttotpdevice: try_delete_protected(request, ttotpdevice)
+    
+    return redirect ('accounts:user_account')
+    
+
 # Delete user - possible by admin/staff only
 @user_passes_test(is_staff)
 def user_delete_for_admin(request, email):
@@ -438,9 +448,12 @@ def user_account(request):
 
     # other users
     if request.user.is_staff:
-        user_list = CustomUser.objects.all().exclude(is_staff=True).order_by('id')
+        locations = list(request.user.locations.values_list('statecode', flat=True))
+        user_list = CustomUser.objects.filter(
+            locations__statecode__in = locations
+            ).exclude(is_staff=True).order_by('company','email')
     else:
-        user_list = CustomUser.objects.filter(company=request.user.company).order_by('date_joined')
+        user_list = CustomUser.objects.filter(company=request.user.company).order_by('email')
     user_page = Paginator(user_list, 25) # Show 25 list per page.
     user_page_number = request.GET.get('page')
     user_page_obj = user_page.get_page(user_page_number)
