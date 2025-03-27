@@ -397,7 +397,6 @@ def adjust(request, id):
 
         dato = rawDataSet[rawDataSet[:,1]== x]
         if len(dato) == 1:
-            # dato = dato[0]
             interval = dato[0][1]
             obs_hdiff = '{:.5f}'.format(float(dato[0][-1]));
             adj_hdiff = '{:.5f}'.format(float(dato[0][-1]));
@@ -408,7 +407,7 @@ def adjust(request, id):
             unc = '{:.2f}'.format(float(dato[0][-3])*1000*1.96)
             # Construct list
             output_adj.append([
-                interval, adj_hdiff, obs_hdiff, resid, std_dev, std_resid, unc
+                interval, adj_hdiff, obs_hdiff, resid, std_dev, stdev_resid, std_resid
             ])
             output_hdiff.append([
                 interval, adj_hdiff, unc, len(dato)

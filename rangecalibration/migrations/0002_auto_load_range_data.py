@@ -355,7 +355,7 @@ def upload_range_data(apps, schema_editor):
                             unc = '{:.2f}'.format(float(dato[0][-3])*1000*1.96)
                             # Construct list
                             output_adj.append([
-                                interval, adj_hdiff, obs_hdiff, resid, std_dev, std_resid, unc
+                                interval, adj_hdiff, obs_hdiff, resid, std_dev, stdev_resid, std_resid
                             ])
                             output_hdiff.append([
                                 interval, adj_hdiff, unc, len(dato)

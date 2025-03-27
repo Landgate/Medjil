@@ -39,6 +39,7 @@ def update_range_table(range_obj, from_to_pillar, month_number):
     hdiff = np.array(hdiff, dtype=object)
     i = 0
     for from_to in from_to_pillar['from_to']:
+        
         i += 1
         try:
             match_from_to = hdiff[hdiff[:,:,0]==from_to]
@@ -47,38 +48,30 @@ def update_range_table(range_obj, from_to_pillar, month_number):
             paramObj['count'].append(0)
             paramObj['mean'].append(np.nan)
             paramObj['std_dev'].append(np.nan)
-        # if data length is more than or equal to one, perform the following:
-        if len(match_from_to) == 1: 
+        # Calculate the mean of observations on each range
+        if len(match_from_to) == 1:                                            # if obs == 1
             dato = np.array(match_from_to[:,1:3], dtype=float)
-            paramObj['count'].append(1)
+            paramObj['count'].append(len(dato))
             paramObj['mean'].append('{:07.5f}'.format(dato[0]))
             paramObj['std_dev'].append('{:04.3f}'.format(dato[2]))
-        elif len(match_from_to) == 2: 
+        elif len(match_from_to) == 2:                                          # if obs == 2 => average it
             dato = np.array(match_from_to[:,1:3], dtype=float)
-            percent_change = (dato[:,0][0]-dato[:,0][1])/dato[:,0][1]*100
-            if abs(percent_change) < 1.:
-                paramObj['count'].append(len(dato))
-                paramObj['mean'].append('{:07.5f}'.format(dato[:, 0].mean()))
-                paramObj['std_dev'].append('{:04.3f}'.format(dato[:,1].mean()))
-            else:
-                paramObj['count'].append(1)
-                paramObj['mean'].append('{:07.5f}'.format(dato[:,0][1]))
-                paramObj['std_dev'].append('{:04.3f}'.format(dato[:,1][1]))
-        else:
-            z_threshold = 1.4
+
+            paramObj['count'].append(len(dato))
+            paramObj['mean'].append('{:07.5f}'.format(dato[:, 0].mean()))
+            paramObj['std_dev'].append('{:04.3f}'.format(dato[:,1].mean()))
+        else:                                                                  # if obs > 2 => average it based mad
             dato = np.array(match_from_to[:,1:3], dtype=float)
-            
-            if dato[:,0].std() != 0:
-                z_score = (dato[:,0]-dato[:,0].mean())/dato[:,0].std()
-                # print("Z Score: ", z_score)
-                dato1 = dato[abs(z_score)<z_threshold]
-                paramObj['count'].append(len(dato1))
-                paramObj['mean'].append('{:07.5f}'.format(dato1[:,0].mean()))
-                paramObj['std_dev'].append('{:04.3f}'.format(dato1[:,1].mean()))
-            else:
-                paramObj['count'].append(len(dato))
-                paramObj['mean'].append('{:07.5f}'.format(dato[:,0].mean()))
-                paramObj['std_dev'].append('{:04.3f}'.format(dato[:,1].mean()))
+            madato = np.sum(abs(dato[:,0]-dato[:,0].mean()))/len(dato)
+            madatodev = 0.6745*(abs(dato[:,0]-dato[:,0].mean()))/madato
+            if len(madatodev) == 3:
+                ind = madatodev.argsort()[:2]
+            elif len(madatodev) > 3:
+                ind = madatodev.argsort()[:3]
+
+            paramObj['count'].append(len(dato))
+            paramObj['mean'].append('{:07.5f}'.format(dato[ind,0].mean()))
+            paramObj['std_dev'].append('{:04.3f}'.format(dato[ind,1].mean()))
     # Update the Range Param Values
     range_obj.update(**{monthText:  paramObj} )
 
