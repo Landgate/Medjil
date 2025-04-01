@@ -67,10 +67,12 @@ from .forms import (
     BulkReportForm
     )
 from .models import (
-    EDMI_certificate,
     uPillarSurvey,
     uEdmObservation,
     Intercomparison
+    )
+from instruments.models import (
+    EDMI_certificate,
     )
 from common_func.LeastSquares import (
     LSA,
@@ -258,7 +260,7 @@ def intercomparison(request, id=None):
                 while dist <= max(distances):
                     dataset['data'].append({
                         'x': dist,
-                        'y':certificate.apply_calibration(dist)[1]
+                        'y':certificate.apply_calibration(dist)[0] - dist
                         })
                     dist+= form.cleaned_data['edm'].edm_specs.unit_length / 4
                 graph1_datasets.append(dataset)
