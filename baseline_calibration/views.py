@@ -17,22 +17,19 @@
 '''
 from collections import OrderedDict
 from copy import deepcopy
-from datetime import date, timedelta
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.core.serializers.json import DjangoJSONEncoder
-from django.db import transaction
+from django.db import transaction, IntegrityError
 from django.db.models import Q, Count, Prefetch
 from django.forms import formset_factory, modelformset_factory
 from django.forms.models import model_to_dict
-from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
 import json
 from math import sqrt
 from statistics import mean
 import numpy as np
-import pandas as pd
 
 from calibrationsites.models import Pillar
 from .forms import (
@@ -282,21 +279,24 @@ def accreditation_edit(request, accreditation_disp, id=None):
                                           request.FILES or None,
                                           instance=obj,
                                           user=request.user)
-
         context['Header'] = 'Edit Accreditation Details'
     
     if accreditation_form.is_valid():
         accreditation = accreditation_form.save(commit=False)
         accreditation.accredited_type = accreditation_disp
-        accreditation.save()
-        # Save the pk if this has been called during calibration with add_btn.
-        request.session['new_instance'] = accreditation.pk
-        next_url = request.POST.get('next')
-        if next_url:
-            return redirect(next_url)
-        else:
-            return redirect('baseline_calibration:accreditations')
-        
+        try:
+            with transaction.atomic():
+                accreditation.save()
+                # Save the pk if this has been called during calibration with add_btn.
+                request.session['new_instance'] = accreditation.pk            
+                next_url = request.GET.get('next') or request.POST.get('next')
+                if next_url:
+                    return redirect(next_url)
+                else:
+                    return redirect('baseline_calibration:accreditations', accreditation_disp=accreditation_disp)
+        except IntegrityError as e:
+            accreditation_form.add_error(None, f'Data Error :{e}')
+            
     context['form'] = accreditation_form
     
     return render(request, 'baseline_calibration/accreditation_form.html', context)
