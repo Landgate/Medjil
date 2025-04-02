@@ -311,7 +311,8 @@ def accreditation_delete(request, id):
 
     try_delete_protected(request, delete_obj)
     
-    return redirect('baseline_calibration:accreditations')
+    previous_url = request.META.get('HTTP_REFERER', 'baseline_calibration:accreditations')
+    return redirect(previous_url)
 
 
 @login_required(login_url="/accounts/login") 
