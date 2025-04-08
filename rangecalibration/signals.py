@@ -39,7 +39,6 @@ def update_range_table(range_obj, from_to_pillar, month_number):
     hdiff = np.array(hdiff, dtype=object)
     i = 0
     for from_to in from_to_pillar['from_to']:
-        
         i += 1
         try:
             match_from_to = hdiff[hdiff[:,:,0]==from_to]
